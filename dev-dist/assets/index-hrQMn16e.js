@@ -25651,7 +25651,7 @@ function AppSidebar() {
 						"data-prohibitions": "[editContent]",
 						src: logo_academy_2_82c76_default,
 						alt: "Observatório Academy",
-						className: "h-10 w-auto object-contain mix-blend-screen invert hue-rotate-180 opacity-95 transition-transform duration-300 group-hover:scale-105"
+						className: "h-10 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-300 group-hover:scale-105"
 					})
 				})
 			}),
@@ -25829,7 +25829,7 @@ function TopHeader({ onMenuClick }) {
 							"data-prohibitions": "[editContent]",
 							src: logo_academy_2_82c76_default,
 							alt: "Observatório Academy",
-							className: "h-9 w-auto object-contain mix-blend-screen invert hue-rotate-180 opacity-95 transition-transform duration-300 group-hover:scale-105"
+							className: "h-9 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-300 group-hover:scale-105"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							"data-uid": "src/components/TopHeader.tsx:30:13",
 							"data-prohibitions": "[]",
@@ -26605,7 +26605,7 @@ function Login() {
 				"data-prohibitions": "[editContent]",
 				src: logo_academy_2_82c76_default,
 				alt: "Observatório Academy",
-				className: "h-24 w-auto object-contain mix-blend-screen invert hue-rotate-180 opacity-95 transition-transform duration-500 hover:scale-105 drop-shadow-md"
+				className: "h-24 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-500 hover:scale-105 drop-shadow-md"
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 			"data-uid": "src/pages/auth/Login.tsx:28:7",
@@ -27517,7 +27517,7 @@ function PublicHeader() {
 						"data-prohibitions": "[editContent]",
 						src: logo_academy_2_82c76_default,
 						alt: "Observatório Academy",
-						className: "h-10 w-auto object-contain mix-blend-screen invert hue-rotate-180 opacity-95 transition-transform duration-300 group-hover:scale-105"
+						className: "h-10 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-300 group-hover:scale-105"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
@@ -37453,4 +37453,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BoYucTwP.js.map
+//# sourceMappingURL=index-hrQMn16e.js.map
