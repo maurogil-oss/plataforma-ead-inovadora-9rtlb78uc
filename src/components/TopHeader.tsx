@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { LogOut, Menu } from 'lucide-react'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
   const { user, logout } = useAuthStore()
@@ -22,14 +22,7 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
             </Button>
           )}
           <Link to="/" className="flex items-center gap-3 group">
-            <img
-              src={logoUrl}
-              alt="Observatório Academy"
-              className="h-9 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-300 group-hover:scale-105"
-            />
-            <span className="hidden sm:inline-block font-bold text-foreground tracking-tight group-hover:text-[#176a7e] transition-colors">
-              Observatório Academy
-            </span>
+            <Logo className="h-9 w-auto transition-transform duration-300 group-hover:scale-105 text-foreground" />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 ml-6 border-l border-border pl-6">

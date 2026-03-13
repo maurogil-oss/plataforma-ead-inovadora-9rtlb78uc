@@ -17,7 +17,7 @@ import {
   Phone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 const getNavigation = (role?: string) => {
   switch (role) {
@@ -59,11 +59,7 @@ export function AppSidebar() {
     <div className="flex h-full w-72 flex-col border-r bg-slate-900 text-slate-300">
       <div className="flex h-20 items-center px-6 border-b border-slate-800 bg-slate-950">
         <Link to="/" className="flex items-center gap-3 w-full group">
-          <img
-            src={logoUrl}
-            alt="Observatório Academy"
-            className="h-10 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-300 group-hover:scale-105"
-          />
+          <Logo className="h-10 w-auto transition-transform duration-300 group-hover:scale-105 text-white" />
         </Link>
       </div>
 

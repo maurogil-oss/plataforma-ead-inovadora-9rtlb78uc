@@ -1,18 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 export function PublicHeader() {
   return (
     <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group">
-          <img
-            src={logoUrl}
-            alt="Observatório Academy"
-            className="h-10 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-300 group-hover:scale-105"
-          />
+          <Logo className="h-10 w-auto transition-transform duration-300 group-hover:scale-105 text-foreground" />
         </Link>
         <nav className="hidden md:flex gap-8">
           <Link

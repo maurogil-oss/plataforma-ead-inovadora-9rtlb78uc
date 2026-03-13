@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ShieldCheck, GraduationCap, Presentation } from 'lucide-react'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 export default function Login() {
   const user = useAuthStore((s) => s.user)
@@ -18,11 +18,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
       <div className="flex flex-col items-center gap-4 mb-8">
-        <img
-          src={logoUrl}
-          alt="Observatório Academy"
-          className="h-24 w-auto object-contain mix-blend-screen invert hue-rotate-15 opacity-95 transition-transform duration-500 hover:scale-105 drop-shadow-md"
-        />
+        <Logo className="h-24 w-auto transition-transform duration-500 hover:scale-105 drop-shadow-md text-foreground" />
       </div>
 
       <Card className="w-full max-w-md shadow-xl border-border bg-card">

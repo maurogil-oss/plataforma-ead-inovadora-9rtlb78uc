@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Mail, Save, AlertCircle } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 export default function NotificationSettings() {
   const { toast } = useToast()
@@ -64,12 +64,8 @@ export default function NotificationSettings() {
         </div>
         <div className="p-8 md:p-12 bg-slate-50 flex-1">
           <div className="bg-white max-w-2xl mx-auto w-full rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="text-center p-8 bg-slate-900 border-b border-slate-100">
-              <img
-                src={logoUrl}
-                alt="Observatório Academy (DEMO)"
-                className="h-14 mx-auto brightness-0 invert"
-              />
+            <div className="text-center p-8 bg-slate-900 border-b border-slate-100 flex justify-center">
+              <Logo className="h-14 w-auto text-white" />
             </div>
             <div className="p-8 space-y-6 text-slate-800">
               <h2 className="text-2xl font-bold border-b border-slate-100 pb-4 text-slate-900">

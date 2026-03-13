@@ -2839,17 +2839,8 @@ section[aria-label='Notifications alt+T'] {
 .opacity-90{
   opacity: 0.9;
 }
-.opacity-95{
-  opacity: 0.95;
-}
 .opacity-\[0\.03\]{
   opacity: 0.03;
-}
-.mix-blend-multiply{
-  mix-blend-mode: multiply;
-}
-.mix-blend-screen{
-  mix-blend-mode: screen;
 }
 .shadow-2xl{
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
@@ -2925,24 +2916,12 @@ section[aria-label='Notifications alt+T'] {
   --tw-blur: blur(64px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
-.brightness-0{
-  --tw-brightness: brightness(0);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
 .drop-shadow-md{
   --tw-drop-shadow: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 .drop-shadow-sm{
   --tw-drop-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
-.hue-rotate-15{
-  --tw-hue-rotate: hue-rotate(15deg);
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
-.invert{
-  --tw-invert: invert(100%);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 .filter{
@@ -3404,10 +3383,6 @@ section[aria-label='Notifications alt+T'] {
 }
 .group:hover .group-hover\:bg-\[\#176a7e\]\/10{
   background-color: rgb(23 106 126 / 0.1);
-}
-.group:hover .group-hover\:text-\[\#176a7e\]{
-  --tw-text-opacity: 1;
-  color: rgb(23 106 126 / var(--tw-text-opacity, 1));
 }
 .group:hover .group-hover\:text-foreground{
   color: hsl(var(--foreground));

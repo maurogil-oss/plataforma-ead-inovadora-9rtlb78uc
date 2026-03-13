@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Lightbulb, Users, Target, Shield, Award } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 export default function About() {
   const pillars = [
@@ -48,11 +48,7 @@ export default function About() {
       <header className="border-b border-border bg-card sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <img
-              src={logoUrl}
-              alt="Observatório Academy"
-              className="h-10 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
-            />
+            <Logo className="h-10 w-auto transition-transform duration-300 group-hover:scale-105 text-foreground" />
           </Link>
           <Button variant="ghost" asChild>
             <Link to="/">
@@ -67,11 +63,7 @@ export default function About() {
         <section className="py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1200/800?q=education&color=gray&dpr=1')] opacity-5 bg-cover bg-center" />
           <div className="container mx-auto px-4 text-center max-w-4xl relative z-10">
-            <img
-              src={logoUrl}
-              alt="Logo Observatório Academy"
-              className="h-28 mx-auto mb-10 w-auto object-contain mix-blend-multiply drop-shadow-sm transition-transform duration-500 hover:scale-105"
-            />
+            <Logo className="h-28 mx-auto mb-10 w-auto drop-shadow-sm transition-transform duration-500 hover:scale-105 text-slate-900" />
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-slate-900">
               Sobre o Observatório Academy
             </h1>
@@ -140,11 +132,7 @@ export default function About() {
 
       <footer className="py-10 bg-slate-900">
         <div className="container mx-auto px-4 text-center text-slate-400">
-          <img
-            src={logoUrl}
-            alt="Logo"
-            className="h-8 w-auto mx-auto mb-6 object-contain mix-blend-screen invert opacity-50 hover:opacity-100 transition-opacity"
-          />
+          <Logo className="h-8 w-auto mx-auto mb-6 opacity-50 hover:opacity-100 transition-opacity text-white" />
           <p>
             &copy; {new Date().getFullYear()} Observatório Academy (DEMO). Todos os direitos
             reservados.

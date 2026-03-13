@@ -1,20 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, BookOpen, CheckCircle2, GraduationCap, Layout, Play } from 'lucide-react'
-import logoUrl from '@/assets/logo-academy-2-82c76.png'
+import { Logo } from '@/components/Logo'
 
 export default function Index() {
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src={logoUrl}
-              alt="Observatório Academy (DEMO)"
-              className="h-12 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
-            />
-          </div>
+          <Link to="/" className="flex items-center gap-3">
+            <Logo className="h-12 w-auto text-foreground drop-shadow-sm" />
+          </Link>
           <nav className="hidden md:flex gap-8">
             <Link
               to="/cursos"
@@ -171,11 +167,7 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div className="col-span-1 md:col-span-2 space-y-6">
               <div className="flex items-center gap-3">
-                <img
-                  src={logoUrl}
-                  alt="Observatório Academy"
-                  className="h-12 object-contain mix-blend-screen brightness-0 invert opacity-90"
-                />
+                <Logo className="h-12 text-white opacity-90" />
               </div>
               <p className="text-base text-slate-400 max-w-sm leading-relaxed">
                 Transformando o futuro da educação através de tecnologia, inovação e excelência
