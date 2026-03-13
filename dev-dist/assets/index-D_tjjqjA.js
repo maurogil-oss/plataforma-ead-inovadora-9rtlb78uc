@@ -17303,133 +17303,8 @@ function useViewTransitionState(to, { relative } = {}) {
 	return matchPath(path.pathname, nextPath) != null || matchPath(path.pathname, currentPath) != null;
 }
 //#endregion
-//#region src/hooks/use-toast.ts
-var import_client = require_client();
-var TOAST_LIMIT = 1;
-var TOAST_REMOVE_DELAY = 1e6;
-var count$2 = 0;
-function genId() {
-	count$2 = (count$2 + 1) % Number.MAX_SAFE_INTEGER;
-	return count$2.toString();
-}
-var toastTimeouts = /* @__PURE__ */ new Map();
-var addToRemoveQueue = (toastId) => {
-	if (toastTimeouts.has(toastId)) return;
-	const timeout = setTimeout(() => {
-		toastTimeouts.delete(toastId);
-		dispatch({
-			type: "REMOVE_TOAST",
-			toastId
-		});
-	}, TOAST_REMOVE_DELAY);
-	toastTimeouts.set(toastId, timeout);
-};
-var reducer = (state, action) => {
-	switch (action.type) {
-		case "ADD_TOAST": return {
-			...state,
-			toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT)
-		};
-		case "UPDATE_TOAST": return {
-			...state,
-			toasts: state.toasts.map((t) => t.id === action.toast.id ? {
-				...t,
-				...action.toast
-			} : t)
-		};
-		case "DISMISS_TOAST": {
-			const { toastId } = action;
-			if (toastId) addToRemoveQueue(toastId);
-			else state.toasts.forEach((toast) => {
-				addToRemoveQueue(toast.id);
-			});
-			return {
-				...state,
-				toasts: state.toasts.map((t) => t.id === toastId || toastId === void 0 ? {
-					...t,
-					open: false
-				} : t)
-			};
-		}
-		case "REMOVE_TOAST":
-			if (action.toastId === void 0) return {
-				...state,
-				toasts: []
-			};
-			return {
-				...state,
-				toasts: state.toasts.filter((t) => t.id !== action.toastId)
-			};
-	}
-};
-var listeners = [];
-var memoryState = { toasts: [] };
-function dispatch(action) {
-	memoryState = reducer(memoryState, action);
-	listeners.forEach((listener) => {
-		listener(memoryState);
-	});
-}
-function toast$1({ ...props }) {
-	const id = genId();
-	const update = (props) => dispatch({
-		type: "UPDATE_TOAST",
-		toast: {
-			...props,
-			id
-		}
-	});
-	const dismiss = () => dispatch({
-		type: "DISMISS_TOAST",
-		toastId: id
-	});
-	dispatch({
-		type: "ADD_TOAST",
-		toast: {
-			...props,
-			id,
-			open: true,
-			onOpenChange: (open) => {
-				if (!open) dismiss();
-			}
-		}
-	});
-	return {
-		id,
-		dismiss,
-		update
-	};
-}
-function useToast() {
-	const [state, setState] = import_react.useState(memoryState);
-	import_react.useEffect(() => {
-		listeners.push(setState);
-		return () => {
-			const index = listeners.indexOf(setState);
-			if (index > -1) listeners.splice(index, 1);
-		};
-	}, [state]);
-	return {
-		...state,
-		toast: toast$1,
-		dismiss: (toastId) => dispatch({
-			type: "DISMISS_TOAST",
-			toastId
-		})
-	};
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+primitive@1.1.3/node_modules/@radix-ui/primitive/dist/index.mjs
-var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
-typeof window !== "undefined" && window.document && window.document.createElement;
-function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
-	return function handleEvent(event) {
-		originalEventHandler?.(event);
-		if (checkForDefaultPrevented === false || !event.defaultPrevented) return ourEventHandler?.(event);
-	};
-}
-//#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-compose-refs@1.1.2_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-compose-refs/dist/index.mjs
+var import_client = require_client();
 function setRef(ref, value) {
 	if (typeof ref === "function") return ref(value);
 	else if (ref !== null && ref !== void 0) ref.current = value;
@@ -17654,98 +17529,24 @@ var require_react_jsx_runtime_development = /* @__PURE__ */ __commonJSMin(((expo
 	})();
 }));
 //#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-context@1.1.2_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-slot@1.2.4_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-slot/dist/index.mjs
 var import_jsx_runtime = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_react_jsx_runtime_development();
 })))();
-function createContext2(rootComponentName, defaultContext) {
-	const Context = import_react.createContext(defaultContext);
-	const Provider = (props) => {
-		const { children, ...context } = props;
-		const value = import_react.useMemo(() => context, Object.values(context));
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
-			value,
-			children
-		});
-	};
-	Provider.displayName = rootComponentName + "Provider";
-	function useContext2(consumerName) {
-		const context = import_react.useContext(Context);
-		if (context) return context;
-		if (defaultContext !== void 0) return defaultContext;
-		throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-	}
-	return [Provider, useContext2];
+var REACT_LAZY_TYPE = Symbol.for("react.lazy");
+var use = import_react[" use ".trim().toString()];
+function isPromiseLike(value) {
+	return typeof value === "object" && value !== null && "then" in value;
 }
-function createContextScope$1(scopeName, createContextScopeDeps = []) {
-	let defaultContexts = [];
-	function createContext3(rootComponentName, defaultContext) {
-		const BaseContext = import_react.createContext(defaultContext);
-		const index = defaultContexts.length;
-		defaultContexts = [...defaultContexts, defaultContext];
-		const Provider = (props) => {
-			const { scope, children, ...context } = props;
-			const Context = scope?.[scopeName]?.[index] || BaseContext;
-			const value = import_react.useMemo(() => context, Object.values(context));
-			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
-				value,
-				children
-			});
-		};
-		Provider.displayName = rootComponentName + "Provider";
-		function useContext2(consumerName, scope) {
-			const Context = scope?.[scopeName]?.[index] || BaseContext;
-			const context = import_react.useContext(Context);
-			if (context) return context;
-			if (defaultContext !== void 0) return defaultContext;
-			throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-		}
-		return [Provider, useContext2];
-	}
-	const createScope = () => {
-		const scopeContexts = defaultContexts.map((defaultContext) => {
-			return import_react.createContext(defaultContext);
-		});
-		return function useScope(scope) {
-			const contexts = scope?.[scopeName] || scopeContexts;
-			return import_react.useMemo(() => ({ [`__scope${scopeName}`]: {
-				...scope,
-				[scopeName]: contexts
-			} }), [scope, contexts]);
-		};
-	};
-	createScope.scopeName = scopeName;
-	return [createContext3, composeContextScopes$1(createScope, ...createContextScopeDeps)];
+function isLazyComponent(element) {
+	return element != null && typeof element === "object" && "$$typeof" in element && element.$$typeof === REACT_LAZY_TYPE && "_payload" in element && isPromiseLike(element._payload);
 }
-function composeContextScopes$1(...scopes) {
-	const baseScope = scopes[0];
-	if (scopes.length === 1) return baseScope;
-	const createScope = () => {
-		const scopeHooks = scopes.map((createScope2) => ({
-			useScope: createScope2(),
-			scopeName: createScope2.scopeName
-		}));
-		return function useComposedScopes(overrideScopes) {
-			const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-				const currentScope = useScope(overrideScopes)[`__scope${scopeName}`];
-				return {
-					...nextScopes2,
-					...currentScope
-				};
-			}, {});
-			return import_react.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-		};
-	};
-	createScope.scopeName = baseScope.scopeName;
-	return createScope;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-slot@1.2.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-slot/dist/index.mjs
 /* @__NO_SIDE_EFFECTS__ */
 function createSlot$1(ownerName) {
 	const SlotClone = /* @__PURE__ */ createSlotClone$1(ownerName);
 	const Slot2 = import_react.forwardRef((props, forwardedRef) => {
-		const { children, ...slotProps } = props;
+		let { children, ...slotProps } = props;
+		if (isLazyComponent(children) && typeof use === "function") children = use(children._payload);
 		const childrenArray = import_react.Children.toArray(children);
 		const slottable = childrenArray.find(isSlottable$1);
 		if (slottable) {
@@ -17771,10 +17572,12 @@ function createSlot$1(ownerName) {
 	Slot2.displayName = `${ownerName}.Slot`;
 	return Slot2;
 }
+var Slot$2 = /* @__PURE__ */ createSlot$1("Slot");
 /* @__NO_SIDE_EFFECTS__ */
 function createSlotClone$1(ownerName) {
 	const SlotClone = import_react.forwardRef((props, forwardedRef) => {
-		const { children, ...slotProps } = props;
+		let { children, ...slotProps } = props;
+		if (isLazyComponent(children) && typeof use === "function") children = use(children._payload);
 		if (import_react.isValidElement(children)) {
 			const childrenRef = getElementRef$2(children);
 			const props2 = mergeProps$1(slotProps, children.props);
@@ -17787,15 +17590,6 @@ function createSlotClone$1(ownerName) {
 	return SlotClone;
 }
 var SLOTTABLE_IDENTIFIER$1 = Symbol("radix.slottable");
-/* @__NO_SIDE_EFFECTS__ */
-function createSlottable(ownerName) {
-	const Slottable2 = ({ children }) => {
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children });
-	};
-	Slottable2.displayName = `${ownerName}.Slottable`;
-	Slottable2.__radixId = SLOTTABLE_IDENTIFIER$1;
-	return Slottable2;
-}
 function isSlottable$1(child) {
 	return import_react.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER$1;
 }
@@ -17831,1048 +17625,6 @@ function getElementRef$2(element) {
 	if (mayWarn) return element.props.ref;
 	return element.props.ref || element.ref;
 }
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-collection@1.1.7_@types+react-dom@19.2.3_@types+react@19.2.14__@types+r_161926fa2509d0b7370b60b8bb4eb8b0/node_modules/@radix-ui/react-collection/dist/index.mjs
-function createCollection(name) {
-	const PROVIDER_NAME = name + "CollectionProvider";
-	const [createCollectionContext, createCollectionScope] = createContextScope$1(PROVIDER_NAME);
-	const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(PROVIDER_NAME, {
-		collectionRef: { current: null },
-		itemMap: /* @__PURE__ */ new Map()
-	});
-	const CollectionProvider = (props) => {
-		const { scope, children } = props;
-		const ref = import_react.useRef(null);
-		const itemMap = import_react.useRef(/* @__PURE__ */ new Map()).current;
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionProviderImpl, {
-			scope,
-			itemMap,
-			collectionRef: ref,
-			children
-		});
-	};
-	CollectionProvider.displayName = PROVIDER_NAME;
-	const COLLECTION_SLOT_NAME = name + "CollectionSlot";
-	const CollectionSlotImpl = /* @__PURE__ */ createSlot$1(COLLECTION_SLOT_NAME);
-	const CollectionSlot = import_react.forwardRef((props, forwardedRef) => {
-		const { scope, children } = props;
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionSlotImpl, {
-			ref: useComposedRefs(forwardedRef, useCollectionContext(COLLECTION_SLOT_NAME, scope).collectionRef),
-			children
-		});
-	});
-	CollectionSlot.displayName = COLLECTION_SLOT_NAME;
-	const ITEM_SLOT_NAME = name + "CollectionItemSlot";
-	const ITEM_DATA_ATTR = "data-radix-collection-item";
-	const CollectionItemSlotImpl = /* @__PURE__ */ createSlot$1(ITEM_SLOT_NAME);
-	const CollectionItemSlot = import_react.forwardRef((props, forwardedRef) => {
-		const { scope, children, ...itemData } = props;
-		const ref = import_react.useRef(null);
-		const composedRefs = useComposedRefs(forwardedRef, ref);
-		const context = useCollectionContext(ITEM_SLOT_NAME, scope);
-		import_react.useEffect(() => {
-			context.itemMap.set(ref, {
-				ref,
-				...itemData
-			});
-			return () => void context.itemMap.delete(ref);
-		});
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionItemSlotImpl, {
-			[ITEM_DATA_ATTR]: "",
-			ref: composedRefs,
-			children
-		});
-	});
-	CollectionItemSlot.displayName = ITEM_SLOT_NAME;
-	function useCollection(scope) {
-		const context = useCollectionContext(name + "CollectionConsumer", scope);
-		return import_react.useCallback(() => {
-			const collectionNode = context.collectionRef.current;
-			if (!collectionNode) return [];
-			const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
-			return Array.from(context.itemMap.values()).sort((a, b) => orderedNodes.indexOf(a.ref.current) - orderedNodes.indexOf(b.ref.current));
-		}, [context.collectionRef, context.itemMap]);
-	}
-	return [
-		{
-			Provider: CollectionProvider,
-			Slot: CollectionSlot,
-			ItemSlot: CollectionItemSlot
-		},
-		useCollection,
-		createCollectionScope
-	];
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-primitive@2.1.3_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_1181ea5061ec9212248424669240e4ec/node_modules/@radix-ui/react-primitive/dist/index.mjs
-var Primitive$1 = [
-	"a",
-	"button",
-	"div",
-	"form",
-	"h2",
-	"h3",
-	"img",
-	"input",
-	"label",
-	"li",
-	"nav",
-	"ol",
-	"p",
-	"select",
-	"span",
-	"svg",
-	"ul"
-].reduce((primitive, node) => {
-	const Slot = /* @__PURE__ */ createSlot$1(`Primitive.${node}`);
-	const Node = import_react.forwardRef((props, forwardedRef) => {
-		const { asChild, ...primitiveProps } = props;
-		const Comp = asChild ? Slot : node;
-		if (typeof window !== "undefined") window[Symbol.for("radix-ui")] = true;
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Comp, {
-			...primitiveProps,
-			ref: forwardedRef
-		});
-	});
-	Node.displayName = `Primitive.${node}`;
-	return {
-		...primitive,
-		[node]: Node
-	};
-}, {});
-function dispatchDiscreteCustomEvent(target, event) {
-	if (target) import_react_dom.flushSync(() => target.dispatchEvent(event));
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-callback-ref@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
-function useCallbackRef$1(callback) {
-	const callbackRef = import_react.useRef(callback);
-	import_react.useEffect(() => {
-		callbackRef.current = callback;
-	});
-	return import_react.useMemo(() => (...args) => callbackRef.current?.(...args), []);
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-escape-keydown@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-escape-keydown/dist/index.mjs
-function useEscapeKeydown(onEscapeKeyDownProp, ownerDocument = globalThis?.document) {
-	const onEscapeKeyDown = useCallbackRef$1(onEscapeKeyDownProp);
-	import_react.useEffect(() => {
-		const handleKeyDown = (event) => {
-			if (event.key === "Escape") onEscapeKeyDown(event);
-		};
-		ownerDocument.addEventListener("keydown", handleKeyDown, { capture: true });
-		return () => ownerDocument.removeEventListener("keydown", handleKeyDown, { capture: true });
-	}, [onEscapeKeyDown, ownerDocument]);
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-dismissable-layer@1.1.11_@types+react-dom@19.2.3_@types+react@19.2.14___3d3960154a4c07d09bb90cb341135fc5/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
-var DISMISSABLE_LAYER_NAME = "DismissableLayer";
-var CONTEXT_UPDATE = "dismissableLayer.update";
-var POINTER_DOWN_OUTSIDE = "dismissableLayer.pointerDownOutside";
-var FOCUS_OUTSIDE = "dismissableLayer.focusOutside";
-var originalBodyPointerEvents;
-var DismissableLayerContext = import_react.createContext({
-	layers: /* @__PURE__ */ new Set(),
-	layersWithOutsidePointerEventsDisabled: /* @__PURE__ */ new Set(),
-	branches: /* @__PURE__ */ new Set()
-});
-var DismissableLayer = import_react.forwardRef((props, forwardedRef) => {
-	const { disableOutsidePointerEvents = false, onEscapeKeyDown, onPointerDownOutside, onFocusOutside, onInteractOutside, onDismiss, ...layerProps } = props;
-	const context = import_react.useContext(DismissableLayerContext);
-	const [node, setNode] = import_react.useState(null);
-	const ownerDocument = node?.ownerDocument ?? globalThis?.document;
-	const [, force] = import_react.useState({});
-	const composedRefs = useComposedRefs(forwardedRef, (node2) => setNode(node2));
-	const layers = Array.from(context.layers);
-	const [highestLayerWithOutsidePointerEventsDisabled] = [...context.layersWithOutsidePointerEventsDisabled].slice(-1);
-	const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(highestLayerWithOutsidePointerEventsDisabled);
-	const index = node ? layers.indexOf(node) : -1;
-	const isBodyPointerEventsDisabled = context.layersWithOutsidePointerEventsDisabled.size > 0;
-	const isPointerEventsEnabled = index >= highestLayerWithOutsidePointerEventsDisabledIndex;
-	const pointerDownOutside = usePointerDownOutside((event) => {
-		const target = event.target;
-		const isPointerDownOnBranch = [...context.branches].some((branch) => branch.contains(target));
-		if (!isPointerEventsEnabled || isPointerDownOnBranch) return;
-		onPointerDownOutside?.(event);
-		onInteractOutside?.(event);
-		if (!event.defaultPrevented) onDismiss?.();
-	}, ownerDocument);
-	const focusOutside = useFocusOutside((event) => {
-		const target = event.target;
-		if ([...context.branches].some((branch) => branch.contains(target))) return;
-		onFocusOutside?.(event);
-		onInteractOutside?.(event);
-		if (!event.defaultPrevented) onDismiss?.();
-	}, ownerDocument);
-	useEscapeKeydown((event) => {
-		if (!(index === context.layers.size - 1)) return;
-		onEscapeKeyDown?.(event);
-		if (!event.defaultPrevented && onDismiss) {
-			event.preventDefault();
-			onDismiss();
-		}
-	}, ownerDocument);
-	import_react.useEffect(() => {
-		if (!node) return;
-		if (disableOutsidePointerEvents) {
-			if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
-				originalBodyPointerEvents = ownerDocument.body.style.pointerEvents;
-				ownerDocument.body.style.pointerEvents = "none";
-			}
-			context.layersWithOutsidePointerEventsDisabled.add(node);
-		}
-		context.layers.add(node);
-		dispatchUpdate();
-		return () => {
-			if (disableOutsidePointerEvents && context.layersWithOutsidePointerEventsDisabled.size === 1) ownerDocument.body.style.pointerEvents = originalBodyPointerEvents;
-		};
-	}, [
-		node,
-		ownerDocument,
-		disableOutsidePointerEvents,
-		context
-	]);
-	import_react.useEffect(() => {
-		return () => {
-			if (!node) return;
-			context.layers.delete(node);
-			context.layersWithOutsidePointerEventsDisabled.delete(node);
-			dispatchUpdate();
-		};
-	}, [node, context]);
-	import_react.useEffect(() => {
-		const handleUpdate = () => force({});
-		document.addEventListener(CONTEXT_UPDATE, handleUpdate);
-		return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
-	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...layerProps,
-		ref: composedRefs,
-		style: {
-			pointerEvents: isBodyPointerEventsDisabled ? isPointerEventsEnabled ? "auto" : "none" : void 0,
-			...props.style
-		},
-		onFocusCapture: composeEventHandlers(props.onFocusCapture, focusOutside.onFocusCapture),
-		onBlurCapture: composeEventHandlers(props.onBlurCapture, focusOutside.onBlurCapture),
-		onPointerDownCapture: composeEventHandlers(props.onPointerDownCapture, pointerDownOutside.onPointerDownCapture)
-	});
-});
-DismissableLayer.displayName = DISMISSABLE_LAYER_NAME;
-var BRANCH_NAME = "DismissableLayerBranch";
-var DismissableLayerBranch = import_react.forwardRef((props, forwardedRef) => {
-	const context = import_react.useContext(DismissableLayerContext);
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, ref);
-	import_react.useEffect(() => {
-		const node = ref.current;
-		if (node) {
-			context.branches.add(node);
-			return () => {
-				context.branches.delete(node);
-			};
-		}
-	}, [context.branches]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...props,
-		ref: composedRefs
-	});
-});
-DismissableLayerBranch.displayName = BRANCH_NAME;
-function usePointerDownOutside(onPointerDownOutside, ownerDocument = globalThis?.document) {
-	const handlePointerDownOutside = useCallbackRef$1(onPointerDownOutside);
-	const isPointerInsideReactTreeRef = import_react.useRef(false);
-	const handleClickRef = import_react.useRef(() => {});
-	import_react.useEffect(() => {
-		const handlePointerDown = (event) => {
-			if (event.target && !isPointerInsideReactTreeRef.current) {
-				let handleAndDispatchPointerDownOutsideEvent2 = function() {
-					handleAndDispatchCustomEvent$1(POINTER_DOWN_OUTSIDE, handlePointerDownOutside, eventDetail, { discrete: true });
-				};
-				const eventDetail = { originalEvent: event };
-				if (event.pointerType === "touch") {
-					ownerDocument.removeEventListener("click", handleClickRef.current);
-					handleClickRef.current = handleAndDispatchPointerDownOutsideEvent2;
-					ownerDocument.addEventListener("click", handleClickRef.current, { once: true });
-				} else handleAndDispatchPointerDownOutsideEvent2();
-			} else ownerDocument.removeEventListener("click", handleClickRef.current);
-			isPointerInsideReactTreeRef.current = false;
-		};
-		const timerId = window.setTimeout(() => {
-			ownerDocument.addEventListener("pointerdown", handlePointerDown);
-		}, 0);
-		return () => {
-			window.clearTimeout(timerId);
-			ownerDocument.removeEventListener("pointerdown", handlePointerDown);
-			ownerDocument.removeEventListener("click", handleClickRef.current);
-		};
-	}, [ownerDocument, handlePointerDownOutside]);
-	return { onPointerDownCapture: () => isPointerInsideReactTreeRef.current = true };
-}
-function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
-	const handleFocusOutside = useCallbackRef$1(onFocusOutside);
-	const isFocusInsideReactTreeRef = import_react.useRef(false);
-	import_react.useEffect(() => {
-		const handleFocus = (event) => {
-			if (event.target && !isFocusInsideReactTreeRef.current) handleAndDispatchCustomEvent$1(FOCUS_OUTSIDE, handleFocusOutside, { originalEvent: event }, { discrete: false });
-		};
-		ownerDocument.addEventListener("focusin", handleFocus);
-		return () => ownerDocument.removeEventListener("focusin", handleFocus);
-	}, [ownerDocument, handleFocusOutside]);
-	return {
-		onFocusCapture: () => isFocusInsideReactTreeRef.current = true,
-		onBlurCapture: () => isFocusInsideReactTreeRef.current = false
-	};
-}
-function dispatchUpdate() {
-	const event = new CustomEvent(CONTEXT_UPDATE);
-	document.dispatchEvent(event);
-}
-function handleAndDispatchCustomEvent$1(name, handler, detail, { discrete }) {
-	const target = detail.originalEvent.target;
-	const event = new CustomEvent(name, {
-		bubbles: false,
-		cancelable: true,
-		detail
-	});
-	if (handler) target.addEventListener(name, handler, { once: true });
-	if (discrete) dispatchDiscreteCustomEvent(target, event);
-	else target.dispatchEvent(event);
-}
-var Root$10 = DismissableLayer;
-var Branch = DismissableLayerBranch;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-layout-effect@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs
-var useLayoutEffect2 = globalThis?.document ? import_react.useLayoutEffect : () => {};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-portal@1.1.9_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react_7668895bec2444446faa4e0f4eb5244b/node_modules/@radix-ui/react-portal/dist/index.mjs
-var PORTAL_NAME$5 = "Portal";
-var Portal$3 = import_react.forwardRef((props, forwardedRef) => {
-	const { container: containerProp, ...portalProps } = props;
-	const [mounted, setMounted] = import_react.useState(false);
-	useLayoutEffect2(() => setMounted(true), []);
-	const container = containerProp || mounted && globalThis?.document?.body;
-	return container ? import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...portalProps,
-		ref: forwardedRef
-	}), container) : null;
-});
-Portal$3.displayName = PORTAL_NAME$5;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-presence@1.1.5_@types+react-dom@19.2.3_@types+react@19.2.14__@types+rea_c01c26c80b5ab5e3ecefbda6eca51ad1/node_modules/@radix-ui/react-presence/dist/index.mjs
-function useStateMachine(initialState, machine) {
-	return import_react.useReducer((state, event) => {
-		return machine[state][event] ?? state;
-	}, initialState);
-}
-var Presence = (props) => {
-	const { present, children } = props;
-	const presence = usePresence(present);
-	const child = typeof children === "function" ? children({ present: presence.isPresent }) : import_react.Children.only(children);
-	const ref = useComposedRefs(presence.ref, getElementRef$1(child));
-	return typeof children === "function" || presence.isPresent ? import_react.cloneElement(child, { ref }) : null;
-};
-Presence.displayName = "Presence";
-function usePresence(present) {
-	const [node, setNode] = import_react.useState();
-	const stylesRef = import_react.useRef(null);
-	const prevPresentRef = import_react.useRef(present);
-	const prevAnimationNameRef = import_react.useRef("none");
-	const [state, send] = useStateMachine(present ? "mounted" : "unmounted", {
-		mounted: {
-			UNMOUNT: "unmounted",
-			ANIMATION_OUT: "unmountSuspended"
-		},
-		unmountSuspended: {
-			MOUNT: "mounted",
-			ANIMATION_END: "unmounted"
-		},
-		unmounted: { MOUNT: "mounted" }
-	});
-	import_react.useEffect(() => {
-		const currentAnimationName = getAnimationName(stylesRef.current);
-		prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
-	}, [state]);
-	useLayoutEffect2(() => {
-		const styles = stylesRef.current;
-		const wasPresent = prevPresentRef.current;
-		if (wasPresent !== present) {
-			const prevAnimationName = prevAnimationNameRef.current;
-			const currentAnimationName = getAnimationName(styles);
-			if (present) send("MOUNT");
-			else if (currentAnimationName === "none" || styles?.display === "none") send("UNMOUNT");
-			else if (wasPresent && prevAnimationName !== currentAnimationName) send("ANIMATION_OUT");
-			else send("UNMOUNT");
-			prevPresentRef.current = present;
-		}
-	}, [present, send]);
-	useLayoutEffect2(() => {
-		if (node) {
-			let timeoutId;
-			const ownerWindow = node.ownerDocument.defaultView ?? window;
-			const handleAnimationEnd = (event) => {
-				const isCurrentAnimation = getAnimationName(stylesRef.current).includes(CSS.escape(event.animationName));
-				if (event.target === node && isCurrentAnimation) {
-					send("ANIMATION_END");
-					if (!prevPresentRef.current) {
-						const currentFillMode = node.style.animationFillMode;
-						node.style.animationFillMode = "forwards";
-						timeoutId = ownerWindow.setTimeout(() => {
-							if (node.style.animationFillMode === "forwards") node.style.animationFillMode = currentFillMode;
-						});
-					}
-				}
-			};
-			const handleAnimationStart = (event) => {
-				if (event.target === node) prevAnimationNameRef.current = getAnimationName(stylesRef.current);
-			};
-			node.addEventListener("animationstart", handleAnimationStart);
-			node.addEventListener("animationcancel", handleAnimationEnd);
-			node.addEventListener("animationend", handleAnimationEnd);
-			return () => {
-				ownerWindow.clearTimeout(timeoutId);
-				node.removeEventListener("animationstart", handleAnimationStart);
-				node.removeEventListener("animationcancel", handleAnimationEnd);
-				node.removeEventListener("animationend", handleAnimationEnd);
-			};
-		} else send("ANIMATION_END");
-	}, [node, send]);
-	return {
-		isPresent: ["mounted", "unmountSuspended"].includes(state),
-		ref: import_react.useCallback((node2) => {
-			stylesRef.current = node2 ? getComputedStyle(node2) : null;
-			setNode(node2);
-		}, [])
-	};
-}
-function getAnimationName(styles) {
-	return styles?.animationName || "none";
-}
-function getElementRef$1(element) {
-	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.ref;
-	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.props.ref;
-	return element.props.ref || element.ref;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-controllable-state@1.2.2_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
-var useInsertionEffect = import_react[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({ prop, defaultProp, onChange = () => {}, caller }) {
-	const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
-		defaultProp,
-		onChange
-	});
-	const isControlled = prop !== void 0;
-	const value = isControlled ? prop : uncontrolledProp;
-	{
-		const isControlledRef = import_react.useRef(prop !== void 0);
-		import_react.useEffect(() => {
-			const wasControlled = isControlledRef.current;
-			if (wasControlled !== isControlled) {
-				const from = wasControlled ? "controlled" : "uncontrolled";
-				const to = isControlled ? "controlled" : "uncontrolled";
-				console.warn(`${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`);
-			}
-			isControlledRef.current = isControlled;
-		}, [isControlled, caller]);
-	}
-	return [value, import_react.useCallback((nextValue) => {
-		if (isControlled) {
-			const value2 = isFunction$1(nextValue) ? nextValue(prop) : nextValue;
-			if (value2 !== prop) onChangeRef.current?.(value2);
-		} else setUncontrolledProp(nextValue);
-	}, [
-		isControlled,
-		prop,
-		setUncontrolledProp,
-		onChangeRef
-	])];
-}
-function useUncontrolledState({ defaultProp, onChange }) {
-	const [value, setValue] = import_react.useState(defaultProp);
-	const prevValueRef = import_react.useRef(value);
-	const onChangeRef = import_react.useRef(onChange);
-	useInsertionEffect(() => {
-		onChangeRef.current = onChange;
-	}, [onChange]);
-	import_react.useEffect(() => {
-		if (prevValueRef.current !== value) {
-			onChangeRef.current?.(value);
-			prevValueRef.current = value;
-		}
-	}, [value, prevValueRef]);
-	return [
-		value,
-		setValue,
-		onChangeRef
-	];
-}
-function isFunction$1(value) {
-	return typeof value === "function";
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-visually-hidden@1.2.3_@types+react-dom@19.2.3_@types+react@19.2.14__@ty_fa89646d7248b32d1762bf88948f6339/node_modules/@radix-ui/react-visually-hidden/dist/index.mjs
-var VISUALLY_HIDDEN_STYLES = Object.freeze({
-	position: "absolute",
-	border: 0,
-	width: 1,
-	height: 1,
-	padding: 0,
-	margin: -1,
-	overflow: "hidden",
-	clip: "rect(0, 0, 0, 0)",
-	whiteSpace: "nowrap",
-	wordWrap: "normal"
-});
-var NAME$3 = "VisuallyHidden";
-var VisuallyHidden = import_react.forwardRef((props, forwardedRef) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
-		...props,
-		ref: forwardedRef,
-		style: {
-			...VISUALLY_HIDDEN_STYLES,
-			...props.style
-		}
-	});
-});
-VisuallyHidden.displayName = NAME$3;
-var Root$9 = VisuallyHidden;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-toast@1.2.15_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react_4581e89c6ba13e4159ce65546c8b2a16/node_modules/@radix-ui/react-toast/dist/index.mjs
-var PROVIDER_NAME$1 = "ToastProvider";
-var [Collection$4, useCollection$4, createCollectionScope$4] = createCollection("Toast");
-var [createToastContext, createToastScope] = createContextScope$1("Toast", [createCollectionScope$4]);
-var [ToastProviderProvider, useToastProviderContext] = createToastContext(PROVIDER_NAME$1);
-var ToastProvider$1 = (props) => {
-	const { __scopeToast, label = "Notification", duration = 5e3, swipeDirection = "right", swipeThreshold = 50, children } = props;
-	const [viewport, setViewport] = import_react.useState(null);
-	const [toastCount, setToastCount] = import_react.useState(0);
-	const isFocusedToastEscapeKeyDownRef = import_react.useRef(false);
-	const isClosePausedRef = import_react.useRef(false);
-	if (!label.trim()) console.error(`Invalid prop \`label\` supplied to \`${PROVIDER_NAME$1}\`. Expected non-empty \`string\`.`);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$4.Provider, {
-		scope: __scopeToast,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastProviderProvider, {
-			scope: __scopeToast,
-			label,
-			duration,
-			swipeDirection,
-			swipeThreshold,
-			toastCount,
-			viewport,
-			onViewportChange: setViewport,
-			onToastAdd: import_react.useCallback(() => setToastCount((prevCount) => prevCount + 1), []),
-			onToastRemove: import_react.useCallback(() => setToastCount((prevCount) => prevCount - 1), []),
-			isFocusedToastEscapeKeyDownRef,
-			isClosePausedRef,
-			children
-		})
-	});
-};
-ToastProvider$1.displayName = PROVIDER_NAME$1;
-var VIEWPORT_NAME$1 = "ToastViewport";
-var VIEWPORT_DEFAULT_HOTKEY = ["F8"];
-var VIEWPORT_PAUSE = "toast.viewportPause";
-var VIEWPORT_RESUME = "toast.viewportResume";
-var ToastViewport$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, hotkey = VIEWPORT_DEFAULT_HOTKEY, label = "Notifications ({hotkey})", ...viewportProps } = props;
-	const context = useToastProviderContext(VIEWPORT_NAME$1, __scopeToast);
-	const getItems = useCollection$4(__scopeToast);
-	const wrapperRef = import_react.useRef(null);
-	const headFocusProxyRef = import_react.useRef(null);
-	const tailFocusProxyRef = import_react.useRef(null);
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, ref, context.onViewportChange);
-	const hotkeyLabel = hotkey.join("+").replace(/Key/g, "").replace(/Digit/g, "");
-	const hasToasts = context.toastCount > 0;
-	import_react.useEffect(() => {
-		const handleKeyDown = (event) => {
-			if (hotkey.length !== 0 && hotkey.every((key) => event[key] || event.code === key)) ref.current?.focus();
-		};
-		document.addEventListener("keydown", handleKeyDown);
-		return () => document.removeEventListener("keydown", handleKeyDown);
-	}, [hotkey]);
-	import_react.useEffect(() => {
-		const wrapper = wrapperRef.current;
-		const viewport = ref.current;
-		if (hasToasts && wrapper && viewport) {
-			const handlePause = () => {
-				if (!context.isClosePausedRef.current) {
-					const pauseEvent = new CustomEvent(VIEWPORT_PAUSE);
-					viewport.dispatchEvent(pauseEvent);
-					context.isClosePausedRef.current = true;
-				}
-			};
-			const handleResume = () => {
-				if (context.isClosePausedRef.current) {
-					const resumeEvent = new CustomEvent(VIEWPORT_RESUME);
-					viewport.dispatchEvent(resumeEvent);
-					context.isClosePausedRef.current = false;
-				}
-			};
-			const handleFocusOutResume = (event) => {
-				if (!wrapper.contains(event.relatedTarget)) handleResume();
-			};
-			const handlePointerLeaveResume = () => {
-				if (!wrapper.contains(document.activeElement)) handleResume();
-			};
-			wrapper.addEventListener("focusin", handlePause);
-			wrapper.addEventListener("focusout", handleFocusOutResume);
-			wrapper.addEventListener("pointermove", handlePause);
-			wrapper.addEventListener("pointerleave", handlePointerLeaveResume);
-			window.addEventListener("blur", handlePause);
-			window.addEventListener("focus", handleResume);
-			return () => {
-				wrapper.removeEventListener("focusin", handlePause);
-				wrapper.removeEventListener("focusout", handleFocusOutResume);
-				wrapper.removeEventListener("pointermove", handlePause);
-				wrapper.removeEventListener("pointerleave", handlePointerLeaveResume);
-				window.removeEventListener("blur", handlePause);
-				window.removeEventListener("focus", handleResume);
-			};
-		}
-	}, [hasToasts, context.isClosePausedRef]);
-	const getSortedTabbableCandidates = import_react.useCallback(({ tabbingDirection }) => {
-		const tabbableCandidates = getItems().map((toastItem) => {
-			const toastNode = toastItem.ref.current;
-			const toastTabbableCandidates = [toastNode, ...getTabbableCandidates$1(toastNode)];
-			return tabbingDirection === "forwards" ? toastTabbableCandidates : toastTabbableCandidates.reverse();
-		});
-		return (tabbingDirection === "forwards" ? tabbableCandidates.reverse() : tabbableCandidates).flat();
-	}, [getItems]);
-	import_react.useEffect(() => {
-		const viewport = ref.current;
-		if (viewport) {
-			const handleKeyDown = (event) => {
-				const isMetaKey = event.altKey || event.ctrlKey || event.metaKey;
-				if (event.key === "Tab" && !isMetaKey) {
-					const focusedElement = document.activeElement;
-					const isTabbingBackwards = event.shiftKey;
-					if (event.target === viewport && isTabbingBackwards) {
-						headFocusProxyRef.current?.focus();
-						return;
-					}
-					const sortedCandidates = getSortedTabbableCandidates({ tabbingDirection: isTabbingBackwards ? "backwards" : "forwards" });
-					const index = sortedCandidates.findIndex((candidate) => candidate === focusedElement);
-					if (focusFirst$3(sortedCandidates.slice(index + 1))) event.preventDefault();
-					else isTabbingBackwards ? headFocusProxyRef.current?.focus() : tailFocusProxyRef.current?.focus();
-				}
-			};
-			viewport.addEventListener("keydown", handleKeyDown);
-			return () => viewport.removeEventListener("keydown", handleKeyDown);
-		}
-	}, [getItems, getSortedTabbableCandidates]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Branch, {
-		ref: wrapperRef,
-		role: "region",
-		"aria-label": label.replace("{hotkey}", hotkeyLabel),
-		tabIndex: -1,
-		style: { pointerEvents: hasToasts ? void 0 : "none" },
-		children: [
-			hasToasts && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FocusProxy, {
-				ref: headFocusProxyRef,
-				onFocusFromOutsideViewport: () => {
-					focusFirst$3(getSortedTabbableCandidates({ tabbingDirection: "forwards" }));
-				}
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$4.Slot, {
-				scope: __scopeToast,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.ol, {
-					tabIndex: -1,
-					...viewportProps,
-					ref: composedRefs
-				})
-			}),
-			hasToasts && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FocusProxy, {
-				ref: tailFocusProxyRef,
-				onFocusFromOutsideViewport: () => {
-					focusFirst$3(getSortedTabbableCandidates({ tabbingDirection: "backwards" }));
-				}
-			})
-		]
-	});
-});
-ToastViewport$1.displayName = VIEWPORT_NAME$1;
-var FOCUS_PROXY_NAME = "ToastFocusProxy";
-var FocusProxy = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, onFocusFromOutsideViewport, ...proxyProps } = props;
-	const context = useToastProviderContext(FOCUS_PROXY_NAME, __scopeToast);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHidden, {
-		tabIndex: 0,
-		...proxyProps,
-		ref: forwardedRef,
-		style: { position: "fixed" },
-		onFocus: (event) => {
-			const prevFocusedElement = event.relatedTarget;
-			if (!context.viewport?.contains(prevFocusedElement)) onFocusFromOutsideViewport();
-		}
-	});
-});
-FocusProxy.displayName = FOCUS_PROXY_NAME;
-var TOAST_NAME = "Toast";
-var TOAST_SWIPE_START = "toast.swipeStart";
-var TOAST_SWIPE_MOVE = "toast.swipeMove";
-var TOAST_SWIPE_CANCEL = "toast.swipeCancel";
-var TOAST_SWIPE_END = "toast.swipeEnd";
-var Toast$2 = import_react.forwardRef((props, forwardedRef) => {
-	const { forceMount, open: openProp, defaultOpen, onOpenChange, ...toastProps } = props;
-	const [open, setOpen] = useControllableState({
-		prop: openProp,
-		defaultProp: defaultOpen ?? true,
-		onChange: onOpenChange,
-		caller: TOAST_NAME
-	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || open,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastImpl, {
-			open,
-			...toastProps,
-			ref: forwardedRef,
-			onClose: () => setOpen(false),
-			onPause: useCallbackRef$1(props.onPause),
-			onResume: useCallbackRef$1(props.onResume),
-			onSwipeStart: composeEventHandlers(props.onSwipeStart, (event) => {
-				event.currentTarget.setAttribute("data-swipe", "start");
-			}),
-			onSwipeMove: composeEventHandlers(props.onSwipeMove, (event) => {
-				const { x, y } = event.detail.delta;
-				event.currentTarget.setAttribute("data-swipe", "move");
-				event.currentTarget.style.setProperty("--radix-toast-swipe-move-x", `${x}px`);
-				event.currentTarget.style.setProperty("--radix-toast-swipe-move-y", `${y}px`);
-			}),
-			onSwipeCancel: composeEventHandlers(props.onSwipeCancel, (event) => {
-				event.currentTarget.setAttribute("data-swipe", "cancel");
-				event.currentTarget.style.removeProperty("--radix-toast-swipe-move-x");
-				event.currentTarget.style.removeProperty("--radix-toast-swipe-move-y");
-				event.currentTarget.style.removeProperty("--radix-toast-swipe-end-x");
-				event.currentTarget.style.removeProperty("--radix-toast-swipe-end-y");
-			}),
-			onSwipeEnd: composeEventHandlers(props.onSwipeEnd, (event) => {
-				const { x, y } = event.detail.delta;
-				event.currentTarget.setAttribute("data-swipe", "end");
-				event.currentTarget.style.removeProperty("--radix-toast-swipe-move-x");
-				event.currentTarget.style.removeProperty("--radix-toast-swipe-move-y");
-				event.currentTarget.style.setProperty("--radix-toast-swipe-end-x", `${x}px`);
-				event.currentTarget.style.setProperty("--radix-toast-swipe-end-y", `${y}px`);
-				setOpen(false);
-			})
-		})
-	});
-});
-Toast$2.displayName = TOAST_NAME;
-var [ToastInteractiveProvider, useToastInteractiveContext] = createToastContext(TOAST_NAME, { onClose() {} });
-var ToastImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, type = "foreground", duration: durationProp, open, onClose, onEscapeKeyDown, onPause, onResume, onSwipeStart, onSwipeMove, onSwipeCancel, onSwipeEnd, ...toastProps } = props;
-	const context = useToastProviderContext(TOAST_NAME, __scopeToast);
-	const [node, setNode] = import_react.useState(null);
-	const composedRefs = useComposedRefs(forwardedRef, (node2) => setNode(node2));
-	const pointerStartRef = import_react.useRef(null);
-	const swipeDeltaRef = import_react.useRef(null);
-	const duration = durationProp || context.duration;
-	const closeTimerStartTimeRef = import_react.useRef(0);
-	const closeTimerRemainingTimeRef = import_react.useRef(duration);
-	const closeTimerRef = import_react.useRef(0);
-	const { onToastAdd, onToastRemove } = context;
-	const handleClose = useCallbackRef$1(() => {
-		if (node?.contains(document.activeElement)) context.viewport?.focus();
-		onClose();
-	});
-	const startTimer = import_react.useCallback((duration2) => {
-		if (!duration2 || duration2 === Infinity) return;
-		window.clearTimeout(closeTimerRef.current);
-		closeTimerStartTimeRef.current = (/* @__PURE__ */ new Date()).getTime();
-		closeTimerRef.current = window.setTimeout(handleClose, duration2);
-	}, [handleClose]);
-	import_react.useEffect(() => {
-		const viewport = context.viewport;
-		if (viewport) {
-			const handleResume = () => {
-				startTimer(closeTimerRemainingTimeRef.current);
-				onResume?.();
-			};
-			const handlePause = () => {
-				const elapsedTime = (/* @__PURE__ */ new Date()).getTime() - closeTimerStartTimeRef.current;
-				closeTimerRemainingTimeRef.current = closeTimerRemainingTimeRef.current - elapsedTime;
-				window.clearTimeout(closeTimerRef.current);
-				onPause?.();
-			};
-			viewport.addEventListener(VIEWPORT_PAUSE, handlePause);
-			viewport.addEventListener(VIEWPORT_RESUME, handleResume);
-			return () => {
-				viewport.removeEventListener(VIEWPORT_PAUSE, handlePause);
-				viewport.removeEventListener(VIEWPORT_RESUME, handleResume);
-			};
-		}
-	}, [
-		context.viewport,
-		duration,
-		onPause,
-		onResume,
-		startTimer
-	]);
-	import_react.useEffect(() => {
-		if (open && !context.isClosePausedRef.current) startTimer(duration);
-	}, [
-		open,
-		duration,
-		context.isClosePausedRef,
-		startTimer
-	]);
-	import_react.useEffect(() => {
-		onToastAdd();
-		return () => onToastRemove();
-	}, [onToastAdd, onToastRemove]);
-	const announceTextContent = import_react.useMemo(() => {
-		return node ? getAnnounceTextContent(node) : null;
-	}, [node]);
-	if (!context.viewport) return null;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [announceTextContent && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastAnnounce, {
-		__scopeToast,
-		role: "status",
-		"aria-live": type === "foreground" ? "assertive" : "polite",
-		children: announceTextContent
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastInteractiveProvider, {
-		scope: __scopeToast,
-		onClose: handleClose,
-		children: import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$4.ItemSlot, {
-			scope: __scopeToast,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$10, {
-				asChild: true,
-				onEscapeKeyDown: composeEventHandlers(onEscapeKeyDown, () => {
-					if (!context.isFocusedToastEscapeKeyDownRef.current) handleClose();
-					context.isFocusedToastEscapeKeyDownRef.current = false;
-				}),
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.li, {
-					tabIndex: 0,
-					"data-state": open ? "open" : "closed",
-					"data-swipe-direction": context.swipeDirection,
-					...toastProps,
-					ref: composedRefs,
-					style: {
-						userSelect: "none",
-						touchAction: "none",
-						...props.style
-					},
-					onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-						if (event.key !== "Escape") return;
-						onEscapeKeyDown?.(event.nativeEvent);
-						if (!event.nativeEvent.defaultPrevented) {
-							context.isFocusedToastEscapeKeyDownRef.current = true;
-							handleClose();
-						}
-					}),
-					onPointerDown: composeEventHandlers(props.onPointerDown, (event) => {
-						if (event.button !== 0) return;
-						pointerStartRef.current = {
-							x: event.clientX,
-							y: event.clientY
-						};
-					}),
-					onPointerMove: composeEventHandlers(props.onPointerMove, (event) => {
-						if (!pointerStartRef.current) return;
-						const x = event.clientX - pointerStartRef.current.x;
-						const y = event.clientY - pointerStartRef.current.y;
-						const hasSwipeMoveStarted = Boolean(swipeDeltaRef.current);
-						const isHorizontalSwipe = ["left", "right"].includes(context.swipeDirection);
-						const clamp = ["left", "up"].includes(context.swipeDirection) ? Math.min : Math.max;
-						const clampedX = isHorizontalSwipe ? clamp(0, x) : 0;
-						const clampedY = !isHorizontalSwipe ? clamp(0, y) : 0;
-						const moveStartBuffer = event.pointerType === "touch" ? 10 : 2;
-						const delta = {
-							x: clampedX,
-							y: clampedY
-						};
-						const eventDetail = {
-							originalEvent: event,
-							delta
-						};
-						if (hasSwipeMoveStarted) {
-							swipeDeltaRef.current = delta;
-							handleAndDispatchCustomEvent(TOAST_SWIPE_MOVE, onSwipeMove, eventDetail, { discrete: false });
-						} else if (isDeltaInDirection(delta, context.swipeDirection, moveStartBuffer)) {
-							swipeDeltaRef.current = delta;
-							handleAndDispatchCustomEvent(TOAST_SWIPE_START, onSwipeStart, eventDetail, { discrete: false });
-							event.target.setPointerCapture(event.pointerId);
-						} else if (Math.abs(x) > moveStartBuffer || Math.abs(y) > moveStartBuffer) pointerStartRef.current = null;
-					}),
-					onPointerUp: composeEventHandlers(props.onPointerUp, (event) => {
-						const delta = swipeDeltaRef.current;
-						const target = event.target;
-						if (target.hasPointerCapture(event.pointerId)) target.releasePointerCapture(event.pointerId);
-						swipeDeltaRef.current = null;
-						pointerStartRef.current = null;
-						if (delta) {
-							const toast = event.currentTarget;
-							const eventDetail = {
-								originalEvent: event,
-								delta
-							};
-							if (isDeltaInDirection(delta, context.swipeDirection, context.swipeThreshold)) handleAndDispatchCustomEvent(TOAST_SWIPE_END, onSwipeEnd, eventDetail, { discrete: true });
-							else handleAndDispatchCustomEvent(TOAST_SWIPE_CANCEL, onSwipeCancel, eventDetail, { discrete: true });
-							toast.addEventListener("click", (event2) => event2.preventDefault(), { once: true });
-						}
-					})
-				})
-			})
-		}), context.viewport)
-	})] });
-});
-var ToastAnnounce = (props) => {
-	const { __scopeToast, children, ...announceProps } = props;
-	const context = useToastProviderContext(TOAST_NAME, __scopeToast);
-	const [renderAnnounceText, setRenderAnnounceText] = import_react.useState(false);
-	const [isAnnounced, setIsAnnounced] = import_react.useState(false);
-	useNextFrame(() => setRenderAnnounceText(true));
-	import_react.useEffect(() => {
-		const timer = window.setTimeout(() => setIsAnnounced(true), 1e3);
-		return () => window.clearTimeout(timer);
-	}, []);
-	return isAnnounced ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$3, {
-		asChild: true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHidden, {
-			...announceProps,
-			children: renderAnnounceText && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-				context.label,
-				" ",
-				children
-			] })
-		})
-	});
-};
-var TITLE_NAME$1 = "ToastTitle";
-var ToastTitle$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, ...titleProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...titleProps,
-		ref: forwardedRef
-	});
-});
-ToastTitle$1.displayName = TITLE_NAME$1;
-var DESCRIPTION_NAME$1 = "ToastDescription";
-var ToastDescription$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, ...descriptionProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...descriptionProps,
-		ref: forwardedRef
-	});
-});
-ToastDescription$1.displayName = DESCRIPTION_NAME$1;
-var ACTION_NAME = "ToastAction";
-var ToastAction$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { altText, ...actionProps } = props;
-	if (!altText.trim()) {
-		console.error(`Invalid prop \`altText\` supplied to \`${ACTION_NAME}\`. Expected non-empty \`string\`.`);
-		return null;
-	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastAnnounceExclude, {
-		altText,
-		asChild: true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastClose$1, {
-			...actionProps,
-			ref: forwardedRef
-		})
-	});
-});
-ToastAction$1.displayName = ACTION_NAME;
-var CLOSE_NAME$1 = "ToastClose";
-var ToastClose$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, ...closeProps } = props;
-	const interactiveContext = useToastInteractiveContext(CLOSE_NAME$1, __scopeToast);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastAnnounceExclude, {
-		asChild: true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
-			type: "button",
-			...closeProps,
-			ref: forwardedRef,
-			onClick: composeEventHandlers(props.onClick, interactiveContext.onClose)
-		})
-	});
-});
-ToastClose$1.displayName = CLOSE_NAME$1;
-var ToastAnnounceExclude = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeToast, altText, ...announceExcludeProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		"data-radix-toast-announce-exclude": "",
-		"data-radix-toast-announce-alt": altText || void 0,
-		...announceExcludeProps,
-		ref: forwardedRef
-	});
-});
-function getAnnounceTextContent(container) {
-	const textContent = [];
-	Array.from(container.childNodes).forEach((node) => {
-		if (node.nodeType === node.TEXT_NODE && node.textContent) textContent.push(node.textContent);
-		if (isHTMLElement$1(node)) {
-			const isHidden = node.ariaHidden || node.hidden || node.style.display === "none";
-			const isExcluded = node.dataset.radixToastAnnounceExclude === "";
-			if (!isHidden) if (isExcluded) {
-				const altText = node.dataset.radixToastAnnounceAlt;
-				if (altText) textContent.push(altText);
-			} else textContent.push(...getAnnounceTextContent(node));
-		}
-	});
-	return textContent;
-}
-function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
-	const currentTarget = detail.originalEvent.currentTarget;
-	const event = new CustomEvent(name, {
-		bubbles: true,
-		cancelable: true,
-		detail
-	});
-	if (handler) currentTarget.addEventListener(name, handler, { once: true });
-	if (discrete) dispatchDiscreteCustomEvent(currentTarget, event);
-	else currentTarget.dispatchEvent(event);
-}
-var isDeltaInDirection = (delta, direction, threshold = 0) => {
-	const deltaX = Math.abs(delta.x);
-	const deltaY = Math.abs(delta.y);
-	const isDeltaX = deltaX > deltaY;
-	if (direction === "left" || direction === "right") return isDeltaX && deltaX > threshold;
-	else return !isDeltaX && deltaY > threshold;
-};
-function useNextFrame(callback = () => {}) {
-	const fn = useCallbackRef$1(callback);
-	useLayoutEffect2(() => {
-		let raf1 = 0;
-		let raf2 = 0;
-		raf1 = window.requestAnimationFrame(() => raf2 = window.requestAnimationFrame(fn));
-		return () => {
-			window.cancelAnimationFrame(raf1);
-			window.cancelAnimationFrame(raf2);
-		};
-	}, [fn]);
-}
-function isHTMLElement$1(node) {
-	return node.nodeType === node.ELEMENT_NODE;
-}
-function getTabbableCandidates$1(container) {
-	const nodes = [];
-	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: (node) => {
-		const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
-		if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP;
-		return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-	} });
-	while (walker.nextNode()) nodes.push(walker.currentNode);
-	return nodes;
-}
-function focusFirst$3(candidates) {
-	const previouslyFocusedElement = document.activeElement;
-	return candidates.some((candidate) => {
-		if (candidate === previouslyFocusedElement) return true;
-		candidate.focus();
-		return document.activeElement !== previouslyFocusedElement;
-	});
-}
-var Provider$1 = ToastProvider$1;
-var Viewport$1 = ToastViewport$1;
-var Root2$5 = Toast$2;
-var Title$1 = ToastTitle$1;
-var Description$1 = ToastDescription$1;
-var Action = ToastAction$1;
-var Close$1 = ToastClose$1;
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs
 function r(e) {
@@ -19061,6 +17813,13 @@ var ArrowLeft = createLucideIcon("arrow-left", [["path", {
 	d: "M19 12H5",
 	key: "x3x0zl"
 }]]);
+var ArrowRight = createLucideIcon("arrow-right", [["path", {
+	d: "M5 12h14",
+	key: "1ays0h"
+}], ["path", {
+	d: "m12 5 7 7-7 7",
+	key: "xquz4c"
+}]]);
 var ArrowUpRight = createLucideIcon("arrow-up-right", [["path", {
 	d: "M7 7h10v10",
 	key: "1tivn9"
@@ -19068,24 +17827,22 @@ var ArrowUpRight = createLucideIcon("arrow-up-right", [["path", {
 	d: "M7 17 17 7",
 	key: "1vkiza"
 }]]);
-var BellRing = createLucideIcon("bell-ring", [
-	["path", {
-		d: "M10.268 21a2 2 0 0 0 3.464 0",
-		key: "vwvbt9"
-	}],
-	["path", {
-		d: "M22 8c0-2.3-.8-4.3-2-6",
-		key: "5bb3ad"
-	}],
-	["path", {
-		d: "M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326",
-		key: "11g9vi"
-	}],
-	["path", {
-		d: "M4 2C2.8 3.7 2 5.7 2 8",
-		key: "tap9e0"
-	}]
-]);
+var Award = createLucideIcon("award", [["path", {
+	d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
+	key: "1yiouv"
+}], ["circle", {
+	cx: "12",
+	cy: "8",
+	r: "6",
+	key: "1vp47v"
+}]]);
+var Bell = createLucideIcon("bell", [["path", {
+	d: "M10.268 21a2 2 0 0 0 3.464 0",
+	key: "vwvbt9"
+}], ["path", {
+	d: "M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326",
+	key: "11g9vi"
+}]]);
 var BookOpen = createLucideIcon("book-open", [["path", {
 	d: "M12 7v14",
 	key: "1akyts"
@@ -19093,20 +17850,13 @@ var BookOpen = createLucideIcon("book-open", [["path", {
 	d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
 	key: "ruj8y"
 }]]);
-var ChartNoAxesColumnIncreasing = createLucideIcon("chart-no-axes-column-increasing", [
-	["path", {
-		d: "M5 21v-6",
-		key: "1hz6c0"
-	}],
-	["path", {
-		d: "M12 21V9",
-		key: "uvy0l4"
-	}],
-	["path", {
-		d: "M19 21V3",
-		key: "11j9sm"
-	}]
-]);
+var ChartPie = createLucideIcon("chart-pie", [["path", {
+	d: "M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z",
+	key: "pzmjnu"
+}], ["path", {
+	d: "M21.21 15.89A10 10 0 1 1 8 2.83",
+	key: "k2fpak"
+}]]);
 var Check = createLucideIcon("check", [["path", {
 	d: "M20 6 9 17l-5-5",
 	key: "1gmf2c"
@@ -19115,20 +17865,47 @@ var ChevronDown = createLucideIcon("chevron-down", [["path", {
 	d: "m6 9 6 6 6-6",
 	key: "qrunsl"
 }]]);
-var ChevronRight = createLucideIcon("chevron-right", [["path", {
-	d: "m9 18 6-6-6-6",
-	key: "mthhwq"
-}]]);
 var ChevronUp = createLucideIcon("chevron-up", [["path", {
 	d: "m18 15-6-6-6 6",
 	key: "153udz"
 }]]);
+var CircleAlert = createLucideIcon("circle-alert", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["line", {
+		x1: "12",
+		x2: "12",
+		y1: "8",
+		y2: "12",
+		key: "1pkeuh"
+	}],
+	["line", {
+		x1: "12",
+		x2: "12.01",
+		y1: "16",
+		y2: "16",
+		key: "4dfq90"
+	}]
+]);
 var CircleCheckBig = createLucideIcon("circle-check-big", [["path", {
 	d: "M21.801 10A10 10 0 1 1 17 3.335",
 	key: "yps3ct"
 }], ["path", {
 	d: "m9 11 3 3L22 4",
 	key: "1pflzl"
+}]]);
+var CircleCheck = createLucideIcon("circle-check", [["circle", {
+	cx: "12",
+	cy: "12",
+	r: "10",
+	key: "1mglay"
+}], ["path", {
+	d: "m9 12 2 2 4-4",
+	key: "dzmm74"
 }]]);
 var CirclePlay = createLucideIcon("circle-play", [["path", {
 	d: "M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z",
@@ -19153,6 +17930,22 @@ var CirclePlus = createLucideIcon("circle-plus", [
 	["path", {
 		d: "M12 8v8",
 		key: "napkw2"
+	}]
+]);
+var CircleQuestionMark = createLucideIcon("circle-question-mark", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["path", {
+		d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3",
+		key: "1u773s"
+	}],
+	["path", {
+		d: "M12 17h.01",
+		key: "p32p05"
 	}]
 ]);
 var CircleX = createLucideIcon("circle-x", [
@@ -19212,23 +18005,6 @@ var CreditCard = createLucideIcon("credit-card", [["rect", {
 	y2: "10",
 	key: "1b3vmo"
 }]]);
-var Database = createLucideIcon("database", [
-	["ellipse", {
-		cx: "12",
-		cy: "5",
-		rx: "9",
-		ry: "3",
-		key: "msslwz"
-	}],
-	["path", {
-		d: "M3 5V19A9 3 0 0 0 21 19V5",
-		key: "1wlel7"
-	}],
-	["path", {
-		d: "M3 12A9 3 0 0 0 21 12",
-		key: "mv7ke4"
-	}]
-]);
 var DollarSign = createLucideIcon("dollar-sign", [["line", {
 	x1: "12",
 	x2: "12",
@@ -19414,6 +18190,20 @@ var LayoutDashboard = createLucideIcon("layout-dashboard", [
 		key: "ldoo1y"
 	}]
 ]);
+var Lightbulb = createLucideIcon("lightbulb", [
+	["path", {
+		d: "M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5",
+		key: "1gvzjb"
+	}],
+	["path", {
+		d: "M9 18h6",
+		key: "x1upvd"
+	}],
+	["path", {
+		d: "M10 22h4",
+		key: "ceow96"
+	}]
+]);
 var Link2 = createLucideIcon("link-2", [
 	["path", {
 		d: "M9 17H7A5 5 0 0 1 7 7h2",
@@ -19450,6 +18240,20 @@ var Lock = createLucideIcon("lock", [["rect", {
 	d: "M7 11V7a5 5 0 0 1 10 0v4",
 	key: "fwvmzm"
 }]]);
+var LogOut = createLucideIcon("log-out", [
+	["path", {
+		d: "m16 17 5-5-5-5",
+		key: "1bji2h"
+	}],
+	["path", {
+		d: "M21 12H9",
+		key: "dn1m92"
+	}],
+	["path", {
+		d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4",
+		key: "1uf3rs"
+	}]
+]);
 var Mail = createLucideIcon("mail", [["path", {
 	d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7",
 	key: "132q7q"
@@ -19461,7 +18265,7 @@ var Mail = createLucideIcon("mail", [["path", {
 	rx: "2",
 	key: "izxlao"
 }]]);
-var Menu$1 = createLucideIcon("menu", [
+var Menu = createLucideIcon("menu", [
 	["path", {
 		d: "M4 5h16",
 		key: "1tepv9"
@@ -19486,6 +18290,24 @@ var PanelLeft = createLucideIcon("panel-left", [["rect", {
 	d: "M9 3v18",
 	key: "fh3hqa"
 }]]);
+var PanelsTopLeft = createLucideIcon("panels-top-left", [
+	["rect", {
+		width: "18",
+		height: "18",
+		x: "3",
+		y: "3",
+		rx: "2",
+		key: "afitv7"
+	}],
+	["path", {
+		d: "M3 9h18",
+		key: "1pudct"
+	}],
+	["path", {
+		d: "M9 21V9",
+		key: "1oto5p"
+	}]
+]);
 var Percent = createLucideIcon("percent", [
 	["line", {
 		x1: "19",
@@ -19507,6 +18329,10 @@ var Percent = createLucideIcon("percent", [
 		key: "1mdrzq"
 	}]
 ]);
+var Play = createLucideIcon("play", [["path", {
+	d: "M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z",
+	key: "10ikf1"
+}]]);
 var Plus = createLucideIcon("plus", [["path", {
 	d: "M5 12h14",
 	key: "1ays0h"
@@ -19560,6 +18386,29 @@ var Save = createLucideIcon("save", [
 		key: "t51u73"
 	}]
 ]);
+var Settings = createLucideIcon("settings", [["path", {
+	d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
+	key: "1i5ecw"
+}], ["circle", {
+	cx: "12",
+	cy: "12",
+	r: "3",
+	key: "1v7zrd"
+}]]);
+var ShieldAlert = createLucideIcon("shield-alert", [
+	["path", {
+		d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+		key: "oel41y"
+	}],
+	["path", {
+		d: "M12 8v4",
+		key: "1got3b"
+	}],
+	["path", {
+		d: "M12 16h.01",
+		key: "1drbdi"
+	}]
+]);
 var ShieldCheck = createLucideIcon("shield-check", [["path", {
 	d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
 	key: "oel41y"
@@ -19567,23 +18416,16 @@ var ShieldCheck = createLucideIcon("shield-check", [["path", {
 	d: "m9 12 2 2 4-4",
 	key: "dzmm74"
 }]]);
+var Shield = createLucideIcon("shield", [["path", {
+	d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+	key: "oel41y"
+}]]);
 var SquarePen = createLucideIcon("square-pen", [["path", {
 	d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7",
 	key: "1m0v6g"
 }], ["path", {
 	d: "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z",
 	key: "ohrbg2"
-}]]);
-var SquarePlay = createLucideIcon("square-play", [["rect", {
-	x: "3",
-	y: "3",
-	width: "18",
-	height: "18",
-	rx: "2",
-	key: "h1oib"
-}], ["path", {
-	d: "M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z",
-	key: "kmsa83"
 }]]);
 var Tag = createLucideIcon("tag", [["path", {
 	d: "M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z",
@@ -19595,6 +18437,26 @@ var Tag = createLucideIcon("tag", [["path", {
 	fill: "currentColor",
 	key: "kqv944"
 }]]);
+var Target = createLucideIcon("target", [
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "10",
+		key: "1mglay"
+	}],
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "6",
+		key: "1vlfrh"
+	}],
+	["circle", {
+		cx: "12",
+		cy: "12",
+		r: "2",
+		key: "1c9p78"
+	}]
+]);
 var Trash2 = createLucideIcon("trash-2", [
 	["path", {
 		d: "M10 11v6",
@@ -19665,6 +18527,22 @@ var X = createLucideIcon("x", [["path", {
 	d: "m6 6 12 12",
 	key: "d8bk6v"
 }]]);
+//#endregion
+//#region src/hooks/use-mobile.tsx
+var MOBILE_BREAKPOINT = 768;
+function useIsMobile() {
+	const [isMobile, setIsMobile] = import_react.useState(void 0);
+	import_react.useEffect(() => {
+		const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+		const onChange = () => {
+			setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+		};
+		mql.addEventListener("change", onChange);
+		setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+		return () => mql.removeEventListener("change", onChange);
+	}, []);
+	return !!isMobile;
+}
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/tailwind-merge@2.6.1/node_modules/tailwind-merge/dist/bundle-mjs.mjs
 var CLASS_PART_SEPARATOR = "-";
@@ -21083,1092 +19961,2135 @@ var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
 * @param inputs - Array of class names
 * @returns Merged class names
 */
-function cn$1(...inputs) {
+function cn(...inputs) {
 	return twMerge(clsx(inputs));
 }
 //#endregion
-//#region src/components/ui/toast.tsx
-var ToastProvider = Provider$1;
-var ToastViewport = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport$1, {
-	"data-uid": "src/components/ui/toast.tsx:15:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]", className),
-	...props
-}));
-ToastViewport.displayName = Viewport$1.displayName;
-var toastVariants = cva("group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full", {
-	variants: { variant: {
-		default: "border bg-background text-foreground",
-		destructive: "destructive group border-destructive bg-destructive text-destructive-foreground"
-	} },
-	defaultVariants: { variant: "default" }
+//#region src/components/ui/button.tsx
+var buttonVariants = cva("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", {
+	variants: {
+		variant: {
+			default: "bg-primary text-primary-foreground hover:bg-primary/90",
+			destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+			outline: "border border-input bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
+			secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+			ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
+			link: "text-foreground underline-offset-4 hover:underline"
+		},
+		size: {
+			default: "h-10 px-4 py-2",
+			sm: "h-9 rounded-md px-3",
+			lg: "h-11 rounded-md px-8",
+			icon: "h-10 w-10"
+		}
+	},
+	defaultVariants: {
+		variant: "default",
+		size: "default"
+	}
 });
-var Toast$1 = import_react.forwardRef(({ className, variant, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2$5, {
-		"data-uid": "src/components/ui/toast.tsx:47:5",
+var Button = import_react.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$2 : "button", {
+		"data-uid": "src/components/ui/button.tsx:44:7",
 		"data-prohibitions": "[editContent]",
+		className: cn(buttonVariants({
+			variant,
+			size,
+			className
+		})),
 		ref,
-		className: cn$1(toastVariants({ variant }), className),
 		...props
 	});
 });
-Toast$1.displayName = Root2$5.displayName;
-var ToastAction = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Action, {
-	"data-uid": "src/components/ui/toast.tsx:60:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive", className),
-	...props
-}));
-ToastAction.displayName = Action.displayName;
-var ToastClose = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Close$1, {
-	"data-uid": "src/components/ui/toast.tsx:75:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600", className),
-	"toast-close": "",
-	...props,
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-		"data-uid": "src/components/ui/toast.tsx:84:5",
+Button.displayName = "Button";
+//#endregion
+//#region src/components/ui/input.tsx
+var Input = import_react.forwardRef(({ className, type, ...props }, ref) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+		"data-uid": "src/components/ui/input.tsx:9:7",
 		"data-prohibitions": "[editContent]",
-		className: "h-4 w-4"
-	})
-}));
-ToastClose.displayName = Close$1.displayName;
-var ToastTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Title$1, {
-	"data-uid": "src/components/ui/toast.tsx:93:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("text-sm font-semibold", className),
-	...props
-}));
-ToastTitle.displayName = Title$1.displayName;
-var ToastDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description$1, {
-	"data-uid": "src/components/ui/toast.tsx:101:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("text-sm opacity-90", className),
-	...props
-}));
-ToastDescription.displayName = Description$1.displayName;
-//#endregion
-//#region src/components/ui/toaster.tsx
-function Toaster$2() {
-	const { toasts } = useToast();
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ToastProvider, {
-		"data-uid": "src/components/ui/toaster.tsx:16:5",
-		"data-prohibitions": "[editContent]",
-		children: [toasts.map(function({ id, title, description, action, ...props }) {
-			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Toast$1, {
-				"data-uid": "src/components/ui/toaster.tsx:19:11",
-				"data-prohibitions": "[editContent]",
-				...props,
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/ui/toaster.tsx:20:13",
-						"data-prohibitions": "[editContent]",
-						className: "grid gap-1",
-						children: [title && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastTitle, {
-							"data-uid": "src/components/ui/toaster.tsx:21:25",
-							"data-prohibitions": "[editContent]",
-							children: title
-						}), description && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastDescription, {
-							"data-uid": "src/components/ui/toaster.tsx:22:31",
-							"data-prohibitions": "[editContent]",
-							children: description
-						})]
-					}),
-					action,
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastClose, {
-						"data-uid": "src/components/ui/toaster.tsx:25:13",
-						"data-prohibitions": "[editContent]"
-					})
-				]
-			}, id);
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ToastViewport, {
-			"data-uid": "src/components/ui/toaster.tsx:29:7",
-			"data-prohibitions": "[editContent]"
-		})]
-	});
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/next-themes@0.4.6_react-dom@19.2.4_react@19.2.4__react@19.2.4/node_modules/next-themes/dist/index.mjs
-var M = (e, i, s, u, m, a, l, h) => {
-	let d = document.documentElement, w = ["light", "dark"];
-	function p(n) {
-		(Array.isArray(e) ? e : [e]).forEach((y) => {
-			let k = y === "class", S = k && a ? m.map((f) => a[f] || f) : m;
-			k ? (d.classList.remove(...S), d.classList.add(a && a[n] ? a[n] : n)) : d.setAttribute(y, n);
-		}), R(n);
-	}
-	function R(n) {
-		h && w.includes(n) && (d.style.colorScheme = n);
-	}
-	function c() {
-		return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-	}
-	if (u) p(u);
-	else try {
-		let n = localStorage.getItem(i) || s;
-		p(l && n === "system" ? c() : n);
-	} catch (n) {}
-}, x = import_react.createContext(void 0), U = {
-	setTheme: (e) => {},
-	themes: []
-}, z = () => {
-	var e;
-	return (e = import_react.useContext(x)) != null ? e : U;
-};
-import_react.memo(({ forcedTheme: e, storageKey: i, attribute: s, enableSystem: u, enableColorScheme: m, defaultTheme: a, value: l, themes: h, nonce: d, scriptProps: w }) => {
-	let p = JSON.stringify([
-		s,
-		i,
-		a,
-		e,
-		h,
-		l,
-		u,
-		m
-	]).slice(1, -1);
-	return import_react.createElement("script", {
-		...w,
-		suppressHydrationWarning: !0,
-		nonce: typeof window == "undefined" ? d : "",
-		dangerouslySetInnerHTML: { __html: `(${M.toString()})(${p})` }
-	});
-});
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/sonner@2.0.7_react-dom@19.2.4_react@19.2.4__react@19.2.4/node_modules/sonner/dist/index.mjs
-function __insertCSS(code) {
-	if (!code || typeof document == "undefined") return;
-	let head = document.head || document.getElementsByTagName("head")[0];
-	let style = document.createElement("style");
-	style.type = "text/css";
-	head.appendChild(style);
-	style.styleSheet ? style.styleSheet.cssText = code : style.appendChild(document.createTextNode(code));
-}
-var getAsset = (type) => {
-	switch (type) {
-		case "success": return SuccessIcon;
-		case "info": return InfoIcon;
-		case "warning": return WarningIcon;
-		case "error": return ErrorIcon;
-		default: return null;
-	}
-};
-var bars = Array(12).fill(0);
-var Loader = ({ visible, className }) => {
-	return /* @__PURE__ */ import_react.createElement("div", {
-		className: ["sonner-loading-wrapper", className].filter(Boolean).join(" "),
-		"data-visible": visible
-	}, /* @__PURE__ */ import_react.createElement("div", { className: "sonner-spinner" }, bars.map((_, i) => /* @__PURE__ */ import_react.createElement("div", {
-		className: "sonner-loading-bar",
-		key: `spinner-bar-${i}`
-	}))));
-};
-var SuccessIcon = /* @__PURE__ */ import_react.createElement("svg", {
-	xmlns: "http://www.w3.org/2000/svg",
-	viewBox: "0 0 20 20",
-	fill: "currentColor",
-	height: "20",
-	width: "20"
-}, /* @__PURE__ */ import_react.createElement("path", {
-	fillRule: "evenodd",
-	d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z",
-	clipRule: "evenodd"
-}));
-var WarningIcon = /* @__PURE__ */ import_react.createElement("svg", {
-	xmlns: "http://www.w3.org/2000/svg",
-	viewBox: "0 0 24 24",
-	fill: "currentColor",
-	height: "20",
-	width: "20"
-}, /* @__PURE__ */ import_react.createElement("path", {
-	fillRule: "evenodd",
-	d: "M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z",
-	clipRule: "evenodd"
-}));
-var InfoIcon = /* @__PURE__ */ import_react.createElement("svg", {
-	xmlns: "http://www.w3.org/2000/svg",
-	viewBox: "0 0 20 20",
-	fill: "currentColor",
-	height: "20",
-	width: "20"
-}, /* @__PURE__ */ import_react.createElement("path", {
-	fillRule: "evenodd",
-	d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z",
-	clipRule: "evenodd"
-}));
-var ErrorIcon = /* @__PURE__ */ import_react.createElement("svg", {
-	xmlns: "http://www.w3.org/2000/svg",
-	viewBox: "0 0 20 20",
-	fill: "currentColor",
-	height: "20",
-	width: "20"
-}, /* @__PURE__ */ import_react.createElement("path", {
-	fillRule: "evenodd",
-	d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z",
-	clipRule: "evenodd"
-}));
-var CloseIcon = /* @__PURE__ */ import_react.createElement("svg", {
-	xmlns: "http://www.w3.org/2000/svg",
-	width: "12",
-	height: "12",
-	viewBox: "0 0 24 24",
-	fill: "none",
-	stroke: "currentColor",
-	strokeWidth: "1.5",
-	strokeLinecap: "round",
-	strokeLinejoin: "round"
-}, /* @__PURE__ */ import_react.createElement("line", {
-	x1: "18",
-	y1: "6",
-	x2: "6",
-	y2: "18"
-}), /* @__PURE__ */ import_react.createElement("line", {
-	x1: "6",
-	y1: "6",
-	x2: "18",
-	y2: "18"
-}));
-var useIsDocumentHidden = () => {
-	const [isDocumentHidden, setIsDocumentHidden] = import_react.useState(document.hidden);
-	import_react.useEffect(() => {
-		const callback = () => {
-			setIsDocumentHidden(document.hidden);
-		};
-		document.addEventListener("visibilitychange", callback);
-		return () => window.removeEventListener("visibilitychange", callback);
-	}, []);
-	return isDocumentHidden;
-};
-var toastsCounter = 1;
-var Observer = class {
-	constructor() {
-		this.subscribe = (subscriber) => {
-			this.subscribers.push(subscriber);
-			return () => {
-				const index = this.subscribers.indexOf(subscriber);
-				this.subscribers.splice(index, 1);
-			};
-		};
-		this.publish = (data) => {
-			this.subscribers.forEach((subscriber) => subscriber(data));
-		};
-		this.addToast = (data) => {
-			this.publish(data);
-			this.toasts = [...this.toasts, data];
-		};
-		this.create = (data) => {
-			var _data_id;
-			const { message, ...rest } = data;
-			const id = typeof (data == null ? void 0 : data.id) === "number" || ((_data_id = data.id) == null ? void 0 : _data_id.length) > 0 ? data.id : toastsCounter++;
-			const alreadyExists = this.toasts.find((toast) => {
-				return toast.id === id;
-			});
-			const dismissible = data.dismissible === void 0 ? true : data.dismissible;
-			if (this.dismissedToasts.has(id)) this.dismissedToasts.delete(id);
-			if (alreadyExists) this.toasts = this.toasts.map((toast) => {
-				if (toast.id === id) {
-					this.publish({
-						...toast,
-						...data,
-						id,
-						title: message
-					});
-					return {
-						...toast,
-						...data,
-						id,
-						dismissible,
-						title: message
-					};
-				}
-				return toast;
-			});
-			else this.addToast({
-				title: message,
-				...rest,
-				dismissible,
-				id
-			});
-			return id;
-		};
-		this.dismiss = (id) => {
-			if (id) {
-				this.dismissedToasts.add(id);
-				requestAnimationFrame(() => this.subscribers.forEach((subscriber) => subscriber({
-					id,
-					dismiss: true
-				})));
-			} else this.toasts.forEach((toast) => {
-				this.subscribers.forEach((subscriber) => subscriber({
-					id: toast.id,
-					dismiss: true
-				}));
-			});
-			return id;
-		};
-		this.message = (message, data) => {
-			return this.create({
-				...data,
-				message
-			});
-		};
-		this.error = (message, data) => {
-			return this.create({
-				...data,
-				message,
-				type: "error"
-			});
-		};
-		this.success = (message, data) => {
-			return this.create({
-				...data,
-				type: "success",
-				message
-			});
-		};
-		this.info = (message, data) => {
-			return this.create({
-				...data,
-				type: "info",
-				message
-			});
-		};
-		this.warning = (message, data) => {
-			return this.create({
-				...data,
-				type: "warning",
-				message
-			});
-		};
-		this.loading = (message, data) => {
-			return this.create({
-				...data,
-				type: "loading",
-				message
-			});
-		};
-		this.promise = (promise, data) => {
-			if (!data) return;
-			let id = void 0;
-			if (data.loading !== void 0) id = this.create({
-				...data,
-				promise,
-				type: "loading",
-				message: data.loading,
-				description: typeof data.description !== "function" ? data.description : void 0
-			});
-			const p = Promise.resolve(promise instanceof Function ? promise() : promise);
-			let shouldDismiss = id !== void 0;
-			let result;
-			const originalPromise = p.then(async (response) => {
-				result = ["resolve", response];
-				if (import_react.isValidElement(response)) {
-					shouldDismiss = false;
-					this.create({
-						id,
-						type: "default",
-						message: response
-					});
-				} else if (isHttpResponse(response) && !response.ok) {
-					shouldDismiss = false;
-					const promiseData = typeof data.error === "function" ? await data.error(`HTTP error! status: ${response.status}`) : data.error;
-					const description = typeof data.description === "function" ? await data.description(`HTTP error! status: ${response.status}`) : data.description;
-					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
-					this.create({
-						id,
-						type: "error",
-						description,
-						...toastSettings
-					});
-				} else if (response instanceof Error) {
-					shouldDismiss = false;
-					const promiseData = typeof data.error === "function" ? await data.error(response) : data.error;
-					const description = typeof data.description === "function" ? await data.description(response) : data.description;
-					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
-					this.create({
-						id,
-						type: "error",
-						description,
-						...toastSettings
-					});
-				} else if (data.success !== void 0) {
-					shouldDismiss = false;
-					const promiseData = typeof data.success === "function" ? await data.success(response) : data.success;
-					const description = typeof data.description === "function" ? await data.description(response) : data.description;
-					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
-					this.create({
-						id,
-						type: "success",
-						description,
-						...toastSettings
-					});
-				}
-			}).catch(async (error) => {
-				result = ["reject", error];
-				if (data.error !== void 0) {
-					shouldDismiss = false;
-					const promiseData = typeof data.error === "function" ? await data.error(error) : data.error;
-					const description = typeof data.description === "function" ? await data.description(error) : data.description;
-					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
-					this.create({
-						id,
-						type: "error",
-						description,
-						...toastSettings
-					});
-				}
-			}).finally(() => {
-				if (shouldDismiss) {
-					this.dismiss(id);
-					id = void 0;
-				}
-				data.finally == null || data.finally.call(data);
-			});
-			const unwrap = () => new Promise((resolve, reject) => originalPromise.then(() => result[0] === "reject" ? reject(result[1]) : resolve(result[1])).catch(reject));
-			if (typeof id !== "string" && typeof id !== "number") return { unwrap };
-			else return Object.assign(id, { unwrap });
-		};
-		this.custom = (jsx, data) => {
-			const id = (data == null ? void 0 : data.id) || toastsCounter++;
-			this.create({
-				jsx: jsx(id),
-				id,
-				...data
-			});
-			return id;
-		};
-		this.getActiveToasts = () => {
-			return this.toasts.filter((toast) => !this.dismissedToasts.has(toast.id));
-		};
-		this.subscribers = [];
-		this.toasts = [];
-		this.dismissedToasts = /* @__PURE__ */ new Set();
-	}
-};
-var ToastState = new Observer();
-var toastFunction = (message, data) => {
-	const id = (data == null ? void 0 : data.id) || toastsCounter++;
-	ToastState.addToast({
-		title: message,
-		...data,
-		id
-	});
-	return id;
-};
-var isHttpResponse = (data) => {
-	return data && typeof data === "object" && "ok" in data && typeof data.ok === "boolean" && "status" in data && typeof data.status === "number";
-};
-var basicToast = toastFunction;
-var getHistory = () => ToastState.toasts;
-var getToasts = () => ToastState.getActiveToasts();
-var toast = Object.assign(basicToast, {
-	success: ToastState.success,
-	info: ToastState.info,
-	warning: ToastState.warning,
-	error: ToastState.error,
-	custom: ToastState.custom,
-	message: ToastState.message,
-	promise: ToastState.promise,
-	dismiss: ToastState.dismiss,
-	loading: ToastState.loading
-}, {
-	getHistory,
-	getToasts
-});
-__insertCSS("[data-sonner-toaster][dir=ltr],html[dir=ltr]{--toast-icon-margin-start:-3px;--toast-icon-margin-end:4px;--toast-svg-margin-start:-1px;--toast-svg-margin-end:0px;--toast-button-margin-start:auto;--toast-button-margin-end:0;--toast-close-button-start:0;--toast-close-button-end:unset;--toast-close-button-transform:translate(-35%, -35%)}[data-sonner-toaster][dir=rtl],html[dir=rtl]{--toast-icon-margin-start:4px;--toast-icon-margin-end:-3px;--toast-svg-margin-start:0px;--toast-svg-margin-end:-1px;--toast-button-margin-start:0;--toast-button-margin-end:auto;--toast-close-button-start:unset;--toast-close-button-end:0;--toast-close-button-transform:translate(35%, -35%)}[data-sonner-toaster]{position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1:hsl(0, 0%, 99%);--gray2:hsl(0, 0%, 97.3%);--gray3:hsl(0, 0%, 95.1%);--gray4:hsl(0, 0%, 93%);--gray5:hsl(0, 0%, 90.9%);--gray6:hsl(0, 0%, 88.7%);--gray7:hsl(0, 0%, 85.8%);--gray8:hsl(0, 0%, 78%);--gray9:hsl(0, 0%, 56.1%);--gray10:hsl(0, 0%, 52.3%);--gray11:hsl(0, 0%, 43.5%);--gray12:hsl(0, 0%, 9%);--border-radius:8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:0;z-index:999999999;transition:transform .4s ease}@media (hover:none) and (pointer:coarse){[data-sonner-toaster][data-lifted=true]{transform:none}}[data-sonner-toaster][data-x-position=right]{right:var(--offset-right)}[data-sonner-toaster][data-x-position=left]{left:var(--offset-left)}[data-sonner-toaster][data-x-position=center]{left:50%;transform:translateX(-50%)}[data-sonner-toaster][data-y-position=top]{top:var(--offset-top)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--offset-bottom)}[data-sonner-toast]{--y:translateY(100%);--lift-amount:calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:0;overflow-wrap:anywhere}[data-sonner-toast][data-styled=true]{padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px rgba(0,0,0,.1);width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}[data-sonner-toast]:focus-visible{box-shadow:0 4px 12px rgba(0,0,0,.1),0 0 0 2px rgba(0,0,0,.2)}[data-sonner-toast][data-y-position=top]{top:0;--y:translateY(-100%);--lift:1;--lift-amount:calc(1 * var(--gap))}[data-sonner-toast][data-y-position=bottom]{bottom:0;--y:translateY(100%);--lift:-1;--lift-amount:calc(var(--lift) * var(--gap))}[data-sonner-toast][data-styled=true] [data-description]{font-weight:400;line-height:1.4;color:#3f3f3f}[data-rich-colors=true][data-sonner-toast][data-styled=true] [data-description]{color:inherit}[data-sonner-toaster][data-sonner-theme=dark] [data-description]{color:#e8e8e8}[data-sonner-toast][data-styled=true] [data-title]{font-weight:500;line-height:1.5;color:inherit}[data-sonner-toast][data-styled=true] [data-icon]{display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}[data-sonner-toast][data-promise=true] [data-icon]>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}[data-sonner-toast][data-styled=true] [data-icon]>*{flex-shrink:0}[data-sonner-toast][data-styled=true] [data-icon] svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}[data-sonner-toast][data-styled=true] [data-content]{display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;font-weight:500;cursor:pointer;outline:0;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}[data-sonner-toast][data-styled=true] [data-button]:focus-visible{box-shadow:0 0 0 2px rgba(0,0,0,.4)}[data-sonner-toast][data-styled=true] [data-button]:first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}[data-sonner-toast][data-styled=true] [data-cancel]{color:var(--normal-text);background:rgba(0,0,0,.08)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast][data-styled=true] [data-cancel]{background:rgba(255,255,255,.3)}[data-sonner-toast][data-styled=true] [data-close-button]{position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);background:var(--normal-bg);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast][data-styled=true] [data-close-button]:focus-visible{box-shadow:0 4px 12px rgba(0,0,0,.1),0 0 0 2px rgba(0,0,0,.2)}[data-sonner-toast][data-styled=true] [data-disabled=true]{cursor:not-allowed}[data-sonner-toast][data-styled=true]:hover [data-close-button]:hover{background:var(--gray2);border-color:var(--gray5)}[data-sonner-toast][data-swiping=true]::before{content:'';position:absolute;left:-100%;right:-100%;height:100%;z-index:-1}[data-sonner-toast][data-y-position=top][data-swiping=true]::before{bottom:50%;transform:scaleY(3) translateY(50%)}[data-sonner-toast][data-y-position=bottom][data-swiping=true]::before{top:50%;transform:scaleY(3) translateY(-50%)}[data-sonner-toast][data-swiping=false][data-removed=true]::before{content:'';position:absolute;inset:0;transform:scaleY(2)}[data-sonner-toast][data-expanded=true]::after{content:'';position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}[data-sonner-toast][data-mounted=true]{--y:translateY(0);opacity:1}[data-sonner-toast][data-expanded=false][data-front=false]{--scale:var(--toasts-before) * 0.05 + 1;--y:translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}[data-sonner-toast]>*{transition:opacity .4s}[data-sonner-toast][data-x-position=right]{right:0}[data-sonner-toast][data-x-position=left]{left:0}[data-sonner-toast][data-expanded=false][data-front=false][data-styled=true]>*{opacity:0}[data-sonner-toast][data-visible=false]{opacity:0;pointer-events:none}[data-sonner-toast][data-mounted=true][data-expanded=true]{--y:translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}[data-sonner-toast][data-removed=true][data-front=true][data-swipe-out=false]{--y:translateY(calc(var(--lift) * -100%));opacity:0}[data-sonner-toast][data-removed=true][data-front=false][data-swipe-out=false][data-expanded=true]{--y:translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}[data-sonner-toast][data-removed=true][data-front=false][data-swipe-out=false][data-expanded=false]{--y:translateY(40%);opacity:0;transition:transform .5s,opacity .2s}[data-sonner-toast][data-removed=true][data-front=false]::before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y,0)) translateX(var(--swipe-amount-x,0));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{from{transform:var(--y) translateX(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translateX(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{from{transform:var(--y) translateX(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translateX(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{from{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{from{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width:600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-sonner-theme=light]{--normal-bg:#fff;--normal-border:var(--gray4);--normal-text:var(--gray12);--success-bg:hsl(143, 85%, 96%);--success-border:hsl(145, 92%, 87%);--success-text:hsl(140, 100%, 27%);--info-bg:hsl(208, 100%, 97%);--info-border:hsl(221, 91%, 93%);--info-text:hsl(210, 92%, 45%);--warning-bg:hsl(49, 100%, 97%);--warning-border:hsl(49, 91%, 84%);--warning-text:hsl(31, 92%, 45%);--error-bg:hsl(359, 100%, 97%);--error-border:hsl(359, 100%, 94%);--error-text:hsl(360, 100%, 45%)}[data-sonner-toaster][data-sonner-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg:#000;--normal-border:hsl(0, 0%, 20%);--normal-text:var(--gray1)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg:#fff;--normal-border:var(--gray3);--normal-text:var(--gray12)}[data-sonner-toaster][data-sonner-theme=dark]{--normal-bg:#000;--normal-bg-hover:hsl(0, 0%, 12%);--normal-border:hsl(0, 0%, 20%);--normal-border-hover:hsl(0, 0%, 25%);--normal-text:var(--gray1);--success-bg:hsl(150, 100%, 6%);--success-border:hsl(147, 100%, 12%);--success-text:hsl(150, 86%, 65%);--info-bg:hsl(215, 100%, 6%);--info-border:hsl(223, 43%, 17%);--info-text:hsl(216, 87%, 65%);--warning-bg:hsl(64, 100%, 6%);--warning-border:hsl(60, 100%, 9%);--warning-text:hsl(46, 87%, 65%);--error-bg:hsl(358, 76%, 10%);--error-border:hsl(357, 89%, 16%);--error-text:hsl(358, 100%, 81%)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size:16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:first-child{animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}100%{opacity:.15}}@media (prefers-reduced-motion){.sonner-loading-bar,[data-sonner-toast],[data-sonner-toast]>*{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}");
-function isAction(action) {
-	return action.label !== void 0;
-}
-var VISIBLE_TOASTS_AMOUNT = 3;
-var VIEWPORT_OFFSET = "24px";
-var MOBILE_VIEWPORT_OFFSET = "16px";
-var TOAST_LIFETIME = 4e3;
-var TOAST_WIDTH = 356;
-var GAP = 14;
-var SWIPE_THRESHOLD = 45;
-var TIME_BEFORE_UNMOUNT = 200;
-function cn(...classes) {
-	return classes.filter(Boolean).join(" ");
-}
-function getDefaultSwipeDirections(position) {
-	const [y, x] = position.split("-");
-	const directions = [];
-	if (y) directions.push(y);
-	if (x) directions.push(x);
-	return directions;
-}
-var Toast = (props) => {
-	var _toast_classNames, _toast_classNames1, _toast_classNames2, _toast_classNames3, _toast_classNames4, _toast_classNames5, _toast_classNames6, _toast_classNames7, _toast_classNames8;
-	const { invert: ToasterInvert, toast, unstyled, interacting, setHeights, visibleToasts, heights, index, toasts, expanded, removeToast, defaultRichColors, closeButton: closeButtonFromToaster, style, cancelButtonStyle, actionButtonStyle, className = "", descriptionClassName = "", duration: durationFromToaster, position, gap, expandByDefault, classNames, icons, closeButtonAriaLabel = "Close toast" } = props;
-	const [swipeDirection, setSwipeDirection] = import_react.useState(null);
-	const [swipeOutDirection, setSwipeOutDirection] = import_react.useState(null);
-	const [mounted, setMounted] = import_react.useState(false);
-	const [removed, setRemoved] = import_react.useState(false);
-	const [swiping, setSwiping] = import_react.useState(false);
-	const [swipeOut, setSwipeOut] = import_react.useState(false);
-	const [isSwiped, setIsSwiped] = import_react.useState(false);
-	const [offsetBeforeRemove, setOffsetBeforeRemove] = import_react.useState(0);
-	const [initialHeight, setInitialHeight] = import_react.useState(0);
-	const remainingTime = import_react.useRef(toast.duration || durationFromToaster || TOAST_LIFETIME);
-	const dragStartTime = import_react.useRef(null);
-	const toastRef = import_react.useRef(null);
-	const isFront = index === 0;
-	const isVisible = index + 1 <= visibleToasts;
-	const toastType = toast.type;
-	const dismissible = toast.dismissible !== false;
-	const toastClassname = toast.className || "";
-	const toastDescriptionClassname = toast.descriptionClassName || "";
-	const heightIndex = import_react.useMemo(() => heights.findIndex((height) => height.toastId === toast.id) || 0, [heights, toast.id]);
-	const closeButton = import_react.useMemo(() => {
-		var _toast_closeButton;
-		return (_toast_closeButton = toast.closeButton) != null ? _toast_closeButton : closeButtonFromToaster;
-	}, [toast.closeButton, closeButtonFromToaster]);
-	const duration = import_react.useMemo(() => toast.duration || durationFromToaster || TOAST_LIFETIME, [toast.duration, durationFromToaster]);
-	const closeTimerStartTimeRef = import_react.useRef(0);
-	const offset = import_react.useRef(0);
-	const lastCloseTimerStartTimeRef = import_react.useRef(0);
-	const pointerStartRef = import_react.useRef(null);
-	const [y, x] = position.split("-");
-	const toastsHeightBefore = import_react.useMemo(() => {
-		return heights.reduce((prev, curr, reducerIndex) => {
-			if (reducerIndex >= heightIndex) return prev;
-			return prev + curr.height;
-		}, 0);
-	}, [heights, heightIndex]);
-	const isDocumentHidden = useIsDocumentHidden();
-	const invert = toast.invert || ToasterInvert;
-	const disabled = toastType === "loading";
-	offset.current = import_react.useMemo(() => heightIndex * gap + toastsHeightBefore, [heightIndex, toastsHeightBefore]);
-	import_react.useEffect(() => {
-		remainingTime.current = duration;
-	}, [duration]);
-	import_react.useEffect(() => {
-		setMounted(true);
-	}, []);
-	import_react.useEffect(() => {
-		const toastNode = toastRef.current;
-		if (toastNode) {
-			const height = toastNode.getBoundingClientRect().height;
-			setInitialHeight(height);
-			setHeights((h) => [{
-				toastId: toast.id,
-				height,
-				position: toast.position
-			}, ...h]);
-			return () => setHeights((h) => h.filter((height) => height.toastId !== toast.id));
-		}
-	}, [setHeights, toast.id]);
-	import_react.useLayoutEffect(() => {
-		if (!mounted) return;
-		const toastNode = toastRef.current;
-		const originalHeight = toastNode.style.height;
-		toastNode.style.height = "auto";
-		const newHeight = toastNode.getBoundingClientRect().height;
-		toastNode.style.height = originalHeight;
-		setInitialHeight(newHeight);
-		setHeights((heights) => {
-			if (!heights.find((height) => height.toastId === toast.id)) return [{
-				toastId: toast.id,
-				height: newHeight,
-				position: toast.position
-			}, ...heights];
-			else return heights.map((height) => height.toastId === toast.id ? {
-				...height,
-				height: newHeight
-			} : height);
-		});
-	}, [
-		mounted,
-		toast.title,
-		toast.description,
-		setHeights,
-		toast.id,
-		toast.jsx,
-		toast.action,
-		toast.cancel
-	]);
-	const deleteToast = import_react.useCallback(() => {
-		setRemoved(true);
-		setOffsetBeforeRemove(offset.current);
-		setHeights((h) => h.filter((height) => height.toastId !== toast.id));
-		setTimeout(() => {
-			removeToast(toast);
-		}, TIME_BEFORE_UNMOUNT);
-	}, [
-		toast,
-		removeToast,
-		setHeights,
-		offset
-	]);
-	import_react.useEffect(() => {
-		if (toast.promise && toastType === "loading" || toast.duration === Infinity || toast.type === "loading") return;
-		let timeoutId;
-		const pauseTimer = () => {
-			if (lastCloseTimerStartTimeRef.current < closeTimerStartTimeRef.current) {
-				const elapsedTime = (/* @__PURE__ */ new Date()).getTime() - closeTimerStartTimeRef.current;
-				remainingTime.current = remainingTime.current - elapsedTime;
-			}
-			lastCloseTimerStartTimeRef.current = (/* @__PURE__ */ new Date()).getTime();
-		};
-		const startTimer = () => {
-			if (remainingTime.current === Infinity) return;
-			closeTimerStartTimeRef.current = (/* @__PURE__ */ new Date()).getTime();
-			timeoutId = setTimeout(() => {
-				toast.onAutoClose == null || toast.onAutoClose.call(toast, toast);
-				deleteToast();
-			}, remainingTime.current);
-		};
-		if (expanded || interacting || isDocumentHidden) pauseTimer();
-		else startTimer();
-		return () => clearTimeout(timeoutId);
-	}, [
-		expanded,
-		interacting,
-		toast,
-		toastType,
-		isDocumentHidden,
-		deleteToast
-	]);
-	import_react.useEffect(() => {
-		if (toast.delete) {
-			deleteToast();
-			toast.onDismiss == null || toast.onDismiss.call(toast, toast);
-		}
-	}, [deleteToast, toast.delete]);
-	function getLoadingIcon() {
-		var _toast_classNames;
-		if (icons == null ? void 0 : icons.loading) {
-			var _toast_classNames1;
-			return /* @__PURE__ */ import_react.createElement("div", {
-				className: cn(classNames == null ? void 0 : classNames.loader, toast == null ? void 0 : (_toast_classNames1 = toast.classNames) == null ? void 0 : _toast_classNames1.loader, "sonner-loader"),
-				"data-visible": toastType === "loading"
-			}, icons.loading);
-		}
-		return /* @__PURE__ */ import_react.createElement(Loader, {
-			className: cn(classNames == null ? void 0 : classNames.loader, toast == null ? void 0 : (_toast_classNames = toast.classNames) == null ? void 0 : _toast_classNames.loader),
-			visible: toastType === "loading"
-		});
-	}
-	const icon = toast.icon || (icons == null ? void 0 : icons[toastType]) || getAsset(toastType);
-	var _toast_richColors, _icons_close;
-	return /* @__PURE__ */ import_react.createElement("li", {
-		tabIndex: 0,
-		ref: toastRef,
-		className: cn(className, toastClassname, classNames == null ? void 0 : classNames.toast, toast == null ? void 0 : (_toast_classNames = toast.classNames) == null ? void 0 : _toast_classNames.toast, classNames == null ? void 0 : classNames.default, classNames == null ? void 0 : classNames[toastType], toast == null ? void 0 : (_toast_classNames1 = toast.classNames) == null ? void 0 : _toast_classNames1[toastType]),
-		"data-sonner-toast": "",
-		"data-rich-colors": (_toast_richColors = toast.richColors) != null ? _toast_richColors : defaultRichColors,
-		"data-styled": !Boolean(toast.jsx || toast.unstyled || unstyled),
-		"data-mounted": mounted,
-		"data-promise": Boolean(toast.promise),
-		"data-swiped": isSwiped,
-		"data-removed": removed,
-		"data-visible": isVisible,
-		"data-y-position": y,
-		"data-x-position": x,
-		"data-index": index,
-		"data-front": isFront,
-		"data-swiping": swiping,
-		"data-dismissible": dismissible,
-		"data-type": toastType,
-		"data-invert": invert,
-		"data-swipe-out": swipeOut,
-		"data-swipe-direction": swipeOutDirection,
-		"data-expanded": Boolean(expanded || expandByDefault && mounted),
-		"data-testid": toast.testId,
-		style: {
-			"--index": index,
-			"--toasts-before": index,
-			"--z-index": toasts.length - index,
-			"--offset": `${removed ? offsetBeforeRemove : offset.current}px`,
-			"--initial-height": expandByDefault ? "auto" : `${initialHeight}px`,
-			...style,
-			...toast.style
-		},
-		onDragEnd: () => {
-			setSwiping(false);
-			setSwipeDirection(null);
-			pointerStartRef.current = null;
-		},
-		onPointerDown: (event) => {
-			if (event.button === 2) return;
-			if (disabled || !dismissible) return;
-			dragStartTime.current = /* @__PURE__ */ new Date();
-			setOffsetBeforeRemove(offset.current);
-			event.target.setPointerCapture(event.pointerId);
-			if (event.target.tagName === "BUTTON") return;
-			setSwiping(true);
-			pointerStartRef.current = {
-				x: event.clientX,
-				y: event.clientY
-			};
-		},
-		onPointerUp: () => {
-			var _toastRef_current, _toastRef_current1, _dragStartTime_current;
-			if (swipeOut || !dismissible) return;
-			pointerStartRef.current = null;
-			const swipeAmountX = Number(((_toastRef_current = toastRef.current) == null ? void 0 : _toastRef_current.style.getPropertyValue("--swipe-amount-x").replace("px", "")) || 0);
-			const swipeAmountY = Number(((_toastRef_current1 = toastRef.current) == null ? void 0 : _toastRef_current1.style.getPropertyValue("--swipe-amount-y").replace("px", "")) || 0);
-			const timeTaken = (/* @__PURE__ */ new Date()).getTime() - ((_dragStartTime_current = dragStartTime.current) == null ? void 0 : _dragStartTime_current.getTime());
-			const swipeAmount = swipeDirection === "x" ? swipeAmountX : swipeAmountY;
-			const velocity = Math.abs(swipeAmount) / timeTaken;
-			if (Math.abs(swipeAmount) >= SWIPE_THRESHOLD || velocity > .11) {
-				setOffsetBeforeRemove(offset.current);
-				toast.onDismiss == null || toast.onDismiss.call(toast, toast);
-				if (swipeDirection === "x") setSwipeOutDirection(swipeAmountX > 0 ? "right" : "left");
-				else setSwipeOutDirection(swipeAmountY > 0 ? "down" : "up");
-				deleteToast();
-				setSwipeOut(true);
-				return;
-			} else {
-				var _toastRef_current2, _toastRef_current3;
-				(_toastRef_current2 = toastRef.current) == null || _toastRef_current2.style.setProperty("--swipe-amount-x", `0px`);
-				(_toastRef_current3 = toastRef.current) == null || _toastRef_current3.style.setProperty("--swipe-amount-y", `0px`);
-			}
-			setIsSwiped(false);
-			setSwiping(false);
-			setSwipeDirection(null);
-		},
-		onPointerMove: (event) => {
-			var _window_getSelection, _toastRef_current, _toastRef_current1;
-			if (!pointerStartRef.current || !dismissible) return;
-			if (((_window_getSelection = window.getSelection()) == null ? void 0 : _window_getSelection.toString().length) > 0) return;
-			const yDelta = event.clientY - pointerStartRef.current.y;
-			const xDelta = event.clientX - pointerStartRef.current.x;
-			var _props_swipeDirections;
-			const swipeDirections = (_props_swipeDirections = props.swipeDirections) != null ? _props_swipeDirections : getDefaultSwipeDirections(position);
-			if (!swipeDirection && (Math.abs(xDelta) > 1 || Math.abs(yDelta) > 1)) setSwipeDirection(Math.abs(xDelta) > Math.abs(yDelta) ? "x" : "y");
-			let swipeAmount = {
-				x: 0,
-				y: 0
-			};
-			const getDampening = (delta) => {
-				return 1 / (1.5 + Math.abs(delta) / 20);
-			};
-			if (swipeDirection === "y") {
-				if (swipeDirections.includes("top") || swipeDirections.includes("bottom")) if (swipeDirections.includes("top") && yDelta < 0 || swipeDirections.includes("bottom") && yDelta > 0) swipeAmount.y = yDelta;
-				else {
-					const dampenedDelta = yDelta * getDampening(yDelta);
-					swipeAmount.y = Math.abs(dampenedDelta) < Math.abs(yDelta) ? dampenedDelta : yDelta;
-				}
-			} else if (swipeDirection === "x") {
-				if (swipeDirections.includes("left") || swipeDirections.includes("right")) if (swipeDirections.includes("left") && xDelta < 0 || swipeDirections.includes("right") && xDelta > 0) swipeAmount.x = xDelta;
-				else {
-					const dampenedDelta = xDelta * getDampening(xDelta);
-					swipeAmount.x = Math.abs(dampenedDelta) < Math.abs(xDelta) ? dampenedDelta : xDelta;
-				}
-			}
-			if (Math.abs(swipeAmount.x) > 0 || Math.abs(swipeAmount.y) > 0) setIsSwiped(true);
-			(_toastRef_current = toastRef.current) == null || _toastRef_current.style.setProperty("--swipe-amount-x", `${swipeAmount.x}px`);
-			(_toastRef_current1 = toastRef.current) == null || _toastRef_current1.style.setProperty("--swipe-amount-y", `${swipeAmount.y}px`);
-		}
-	}, closeButton && !toast.jsx && toastType !== "loading" ? /* @__PURE__ */ import_react.createElement("button", {
-		"aria-label": closeButtonAriaLabel,
-		"data-disabled": disabled,
-		"data-close-button": true,
-		onClick: disabled || !dismissible ? () => {} : () => {
-			deleteToast();
-			toast.onDismiss == null || toast.onDismiss.call(toast, toast);
-		},
-		className: cn(classNames == null ? void 0 : classNames.closeButton, toast == null ? void 0 : (_toast_classNames2 = toast.classNames) == null ? void 0 : _toast_classNames2.closeButton)
-	}, (_icons_close = icons == null ? void 0 : icons.close) != null ? _icons_close : CloseIcon) : null, (toastType || toast.icon || toast.promise) && toast.icon !== null && ((icons == null ? void 0 : icons[toastType]) !== null || toast.icon) ? /* @__PURE__ */ import_react.createElement("div", {
-		"data-icon": "",
-		className: cn(classNames == null ? void 0 : classNames.icon, toast == null ? void 0 : (_toast_classNames3 = toast.classNames) == null ? void 0 : _toast_classNames3.icon)
-	}, toast.promise || toast.type === "loading" && !toast.icon ? toast.icon || getLoadingIcon() : null, toast.type !== "loading" ? icon : null) : null, /* @__PURE__ */ import_react.createElement("div", {
-		"data-content": "",
-		className: cn(classNames == null ? void 0 : classNames.content, toast == null ? void 0 : (_toast_classNames4 = toast.classNames) == null ? void 0 : _toast_classNames4.content)
-	}, /* @__PURE__ */ import_react.createElement("div", {
-		"data-title": "",
-		className: cn(classNames == null ? void 0 : classNames.title, toast == null ? void 0 : (_toast_classNames5 = toast.classNames) == null ? void 0 : _toast_classNames5.title)
-	}, toast.jsx ? toast.jsx : typeof toast.title === "function" ? toast.title() : toast.title), toast.description ? /* @__PURE__ */ import_react.createElement("div", {
-		"data-description": "",
-		className: cn(descriptionClassName, toastDescriptionClassname, classNames == null ? void 0 : classNames.description, toast == null ? void 0 : (_toast_classNames6 = toast.classNames) == null ? void 0 : _toast_classNames6.description)
-	}, typeof toast.description === "function" ? toast.description() : toast.description) : null), /* @__PURE__ */ import_react.isValidElement(toast.cancel) ? toast.cancel : toast.cancel && isAction(toast.cancel) ? /* @__PURE__ */ import_react.createElement("button", {
-		"data-button": true,
-		"data-cancel": true,
-		style: toast.cancelButtonStyle || cancelButtonStyle,
-		onClick: (event) => {
-			if (!isAction(toast.cancel)) return;
-			if (!dismissible) return;
-			toast.cancel.onClick == null || toast.cancel.onClick.call(toast.cancel, event);
-			deleteToast();
-		},
-		className: cn(classNames == null ? void 0 : classNames.cancelButton, toast == null ? void 0 : (_toast_classNames7 = toast.classNames) == null ? void 0 : _toast_classNames7.cancelButton)
-	}, toast.cancel.label) : null, /* @__PURE__ */ import_react.isValidElement(toast.action) ? toast.action : toast.action && isAction(toast.action) ? /* @__PURE__ */ import_react.createElement("button", {
-		"data-button": true,
-		"data-action": true,
-		style: toast.actionButtonStyle || actionButtonStyle,
-		onClick: (event) => {
-			if (!isAction(toast.action)) return;
-			toast.action.onClick == null || toast.action.onClick.call(toast.action, event);
-			if (event.defaultPrevented) return;
-			deleteToast();
-		},
-		className: cn(classNames == null ? void 0 : classNames.actionButton, toast == null ? void 0 : (_toast_classNames8 = toast.classNames) == null ? void 0 : _toast_classNames8.actionButton)
-	}, toast.action.label) : null);
-};
-function getDocumentDirection() {
-	if (typeof window === "undefined") return "ltr";
-	if (typeof document === "undefined") return "ltr";
-	const dirAttribute = document.documentElement.getAttribute("dir");
-	if (dirAttribute === "auto" || !dirAttribute) return window.getComputedStyle(document.documentElement).direction;
-	return dirAttribute;
-}
-function assignOffset(defaultOffset, mobileOffset) {
-	const styles = {};
-	[defaultOffset, mobileOffset].forEach((offset, index) => {
-		const isMobile = index === 1;
-		const prefix = isMobile ? "--mobile-offset" : "--offset";
-		const defaultValue = isMobile ? MOBILE_VIEWPORT_OFFSET : VIEWPORT_OFFSET;
-		function assignAll(offset) {
-			[
-				"top",
-				"right",
-				"bottom",
-				"left"
-			].forEach((key) => {
-				styles[`${prefix}-${key}`] = typeof offset === "number" ? `${offset}px` : offset;
-			});
-		}
-		if (typeof offset === "number" || typeof offset === "string") assignAll(offset);
-		else if (typeof offset === "object") [
-			"top",
-			"right",
-			"bottom",
-			"left"
-		].forEach((key) => {
-			if (offset[key] === void 0) styles[`${prefix}-${key}`] = defaultValue;
-			else styles[`${prefix}-${key}`] = typeof offset[key] === "number" ? `${offset[key]}px` : offset[key];
-		});
-		else assignAll(defaultValue);
-	});
-	return styles;
-}
-var Toaster$1 = /* @__PURE__ */ import_react.forwardRef(function Toaster(props, ref) {
-	const { id, invert, position = "bottom-right", hotkey = ["altKey", "KeyT"], expand, closeButton, className, offset, mobileOffset, theme = "light", richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, containerAriaLabel = "Notifications" } = props;
-	const [toasts, setToasts] = import_react.useState([]);
-	const filteredToasts = import_react.useMemo(() => {
-		if (id) return toasts.filter((toast) => toast.toasterId === id);
-		return toasts.filter((toast) => !toast.toasterId);
-	}, [toasts, id]);
-	const possiblePositions = import_react.useMemo(() => {
-		return Array.from(new Set([position].concat(filteredToasts.filter((toast) => toast.position).map((toast) => toast.position))));
-	}, [filteredToasts, position]);
-	const [heights, setHeights] = import_react.useState([]);
-	const [expanded, setExpanded] = import_react.useState(false);
-	const [interacting, setInteracting] = import_react.useState(false);
-	const [actualTheme, setActualTheme] = import_react.useState(theme !== "system" ? theme : typeof window !== "undefined" ? window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" : "light");
-	const listRef = import_react.useRef(null);
-	const hotkeyLabel = hotkey.join("+").replace(/Key/g, "").replace(/Digit/g, "");
-	const lastFocusedElementRef = import_react.useRef(null);
-	const isFocusWithinRef = import_react.useRef(false);
-	const removeToast = import_react.useCallback((toastToRemove) => {
-		setToasts((toasts) => {
-			var _toasts_find;
-			if (!((_toasts_find = toasts.find((toast) => toast.id === toastToRemove.id)) == null ? void 0 : _toasts_find.delete)) ToastState.dismiss(toastToRemove.id);
-			return toasts.filter(({ id }) => id !== toastToRemove.id);
-		});
-	}, []);
-	import_react.useEffect(() => {
-		return ToastState.subscribe((toast) => {
-			if (toast.dismiss) {
-				requestAnimationFrame(() => {
-					setToasts((toasts) => toasts.map((t) => t.id === toast.id ? {
-						...t,
-						delete: true
-					} : t));
-				});
-				return;
-			}
-			setTimeout(() => {
-				import_react_dom.flushSync(() => {
-					setToasts((toasts) => {
-						const indexOfExistingToast = toasts.findIndex((t) => t.id === toast.id);
-						if (indexOfExistingToast !== -1) return [
-							...toasts.slice(0, indexOfExistingToast),
-							{
-								...toasts[indexOfExistingToast],
-								...toast
-							},
-							...toasts.slice(indexOfExistingToast + 1)
-						];
-						return [toast, ...toasts];
-					});
-				});
-			});
-		});
-	}, [toasts]);
-	import_react.useEffect(() => {
-		if (theme !== "system") {
-			setActualTheme(theme);
-			return;
-		}
-		if (theme === "system") if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) setActualTheme("dark");
-		else setActualTheme("light");
-		if (typeof window === "undefined") return;
-		const darkMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-		try {
-			darkMediaQuery.addEventListener("change", ({ matches }) => {
-				if (matches) setActualTheme("dark");
-				else setActualTheme("light");
-			});
-		} catch (error) {
-			darkMediaQuery.addListener(({ matches }) => {
-				try {
-					if (matches) setActualTheme("dark");
-					else setActualTheme("light");
-				} catch (e) {
-					console.error(e);
-				}
-			});
-		}
-	}, [theme]);
-	import_react.useEffect(() => {
-		if (toasts.length <= 1) setExpanded(false);
-	}, [toasts]);
-	import_react.useEffect(() => {
-		const handleKeyDown = (event) => {
-			var _listRef_current;
-			if (hotkey.every((key) => event[key] || event.code === key)) {
-				var _listRef_current1;
-				setExpanded(true);
-				(_listRef_current1 = listRef.current) == null || _listRef_current1.focus();
-			}
-			if (event.code === "Escape" && (document.activeElement === listRef.current || ((_listRef_current = listRef.current) == null ? void 0 : _listRef_current.contains(document.activeElement)))) setExpanded(false);
-		};
-		document.addEventListener("keydown", handleKeyDown);
-		return () => document.removeEventListener("keydown", handleKeyDown);
-	}, [hotkey]);
-	import_react.useEffect(() => {
-		if (listRef.current) return () => {
-			if (lastFocusedElementRef.current) {
-				lastFocusedElementRef.current.focus({ preventScroll: true });
-				lastFocusedElementRef.current = null;
-				isFocusWithinRef.current = false;
-			}
-		};
-	}, [listRef.current]);
-	return /* @__PURE__ */ import_react.createElement("section", {
+		type,
+		className: cn("flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
 		ref,
-		"aria-label": `${containerAriaLabel} ${hotkeyLabel}`,
-		tabIndex: -1,
-		"aria-live": "polite",
-		"aria-relevant": "additions text",
-		"aria-atomic": "false",
-		suppressHydrationWarning: true
-	}, possiblePositions.map((position, index) => {
-		var _heights_;
-		const [y, x] = position.split("-");
-		if (!filteredToasts.length) return null;
-		return /* @__PURE__ */ import_react.createElement("ol", {
-			key: position,
-			dir: dir === "auto" ? getDocumentDirection() : dir,
-			tabIndex: -1,
-			ref: listRef,
-			className,
-			"data-sonner-toaster": true,
-			"data-sonner-theme": actualTheme,
-			"data-y-position": y,
-			"data-x-position": x,
-			style: {
-				"--front-toast-height": `${((_heights_ = heights[0]) == null ? void 0 : _heights_.height) || 0}px`,
-				"--width": `${TOAST_WIDTH}px`,
-				"--gap": `${gap}px`,
-				...style,
-				...assignOffset(offset, mobileOffset)
-			},
-			onBlur: (event) => {
-				if (isFocusWithinRef.current && !event.currentTarget.contains(event.relatedTarget)) {
-					isFocusWithinRef.current = false;
-					if (lastFocusedElementRef.current) {
-						lastFocusedElementRef.current.focus({ preventScroll: true });
-						lastFocusedElementRef.current = null;
-					}
-				}
-			},
-			onFocus: (event) => {
-				if (event.target instanceof HTMLElement && event.target.dataset.dismissible === "false") return;
-				if (!isFocusWithinRef.current) {
-					isFocusWithinRef.current = true;
-					lastFocusedElementRef.current = event.relatedTarget;
-				}
-			},
-			onMouseEnter: () => setExpanded(true),
-			onMouseMove: () => setExpanded(true),
-			onMouseLeave: () => {
-				if (!interacting) setExpanded(false);
-			},
-			onDragEnd: () => setExpanded(false),
-			onPointerDown: (event) => {
-				if (event.target instanceof HTMLElement && event.target.dataset.dismissible === "false") return;
-				setInteracting(true);
-			},
-			onPointerUp: () => setInteracting(false)
-		}, filteredToasts.filter((toast) => !toast.position && index === 0 || toast.position === position).map((toast, index) => {
-			var _toastOptions_duration, _toastOptions_closeButton;
-			return /* @__PURE__ */ import_react.createElement(Toast, {
-				key: toast.id,
-				icons,
-				index,
-				toast,
-				defaultRichColors: richColors,
-				duration: (_toastOptions_duration = toastOptions == null ? void 0 : toastOptions.duration) != null ? _toastOptions_duration : duration,
-				className: toastOptions == null ? void 0 : toastOptions.className,
-				descriptionClassName: toastOptions == null ? void 0 : toastOptions.descriptionClassName,
-				invert,
-				visibleToasts,
-				closeButton: (_toastOptions_closeButton = toastOptions == null ? void 0 : toastOptions.closeButton) != null ? _toastOptions_closeButton : closeButton,
-				interacting,
-				position,
-				style: toastOptions == null ? void 0 : toastOptions.style,
-				unstyled: toastOptions == null ? void 0 : toastOptions.unstyled,
-				classNames: toastOptions == null ? void 0 : toastOptions.classNames,
-				cancelButtonStyle: toastOptions == null ? void 0 : toastOptions.cancelButtonStyle,
-				actionButtonStyle: toastOptions == null ? void 0 : toastOptions.actionButtonStyle,
-				closeButtonAriaLabel: toastOptions == null ? void 0 : toastOptions.closeButtonAriaLabel,
-				removeToast,
-				toasts: filteredToasts.filter((t) => t.position == toast.position),
-				heights: heights.filter((h) => h.position == toast.position),
-				setHeights,
-				expandByDefault: expand,
-				gap,
-				expanded,
-				swipeDirections: props.swipeDirections
+		...props
+	});
+});
+Input.displayName = "Input";
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-primitive@2.1.4_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_0243fb2db8a1fb85ca77b8d9e5c2d650/node_modules/@radix-ui/react-primitive/dist/index.mjs
+var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
+var Primitive$1 = [
+	"a",
+	"button",
+	"div",
+	"form",
+	"h2",
+	"h3",
+	"img",
+	"input",
+	"label",
+	"li",
+	"nav",
+	"ol",
+	"p",
+	"select",
+	"span",
+	"svg",
+	"ul"
+].reduce((primitive, node) => {
+	const Slot = /* @__PURE__ */ createSlot$1(`Primitive.${node}`);
+	const Node = import_react.forwardRef((props, forwardedRef) => {
+		const { asChild, ...primitiveProps } = props;
+		const Comp = asChild ? Slot : node;
+		if (typeof window !== "undefined") window[Symbol.for("radix-ui")] = true;
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Comp, {
+			...primitiveProps,
+			ref: forwardedRef
+		});
+	});
+	Node.displayName = `Primitive.${node}`;
+	return {
+		...primitive,
+		[node]: Node
+	};
+}, {});
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-separator@1.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_aa2d5d85a81bb702303f0548763b9797/node_modules/@radix-ui/react-separator/dist/index.mjs
+var NAME$3 = "Separator";
+var DEFAULT_ORIENTATION = "horizontal";
+var ORIENTATIONS = ["horizontal", "vertical"];
+var Separator$2 = import_react.forwardRef((props, forwardedRef) => {
+	const { decorative, orientation: orientationProp = DEFAULT_ORIENTATION, ...domProps } = props;
+	const orientation = isValidOrientation(orientationProp) ? orientationProp : DEFAULT_ORIENTATION;
+	const ariaOrientation = orientation === "vertical" ? orientation : void 0;
+	const semanticProps = decorative ? { role: "none" } : {
+		"aria-orientation": ariaOrientation,
+		role: "separator"
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+		"data-orientation": orientation,
+		...semanticProps,
+		...domProps,
+		ref: forwardedRef
+	});
+});
+Separator$2.displayName = NAME$3;
+function isValidOrientation(orientation) {
+	return ORIENTATIONS.includes(orientation);
+}
+var Root$8 = Separator$2;
+//#endregion
+//#region src/components/ui/separator.tsx
+var Separator$1 = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
+	"data-uid": "src/components/ui/separator.tsx:11:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	decorative,
+	orientation,
+	className: cn("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className),
+	...props
+}));
+Separator$1.displayName = Root$8.displayName;
+typeof window !== "undefined" && window.document && window.document.createElement;
+function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
+	return function handleEvent(event) {
+		originalEventHandler?.(event);
+		if (checkForDefaultPrevented === false || !event.defaultPrevented) return ourEventHandler?.(event);
+	};
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-context@1.1.2_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
+function createContext2(rootComponentName, defaultContext) {
+	const Context = import_react.createContext(defaultContext);
+	const Provider = (props) => {
+		const { children, ...context } = props;
+		const value = import_react.useMemo(() => context, Object.values(context));
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
+			value,
+			children
+		});
+	};
+	Provider.displayName = rootComponentName + "Provider";
+	function useContext2(consumerName) {
+		const context = import_react.useContext(Context);
+		if (context) return context;
+		if (defaultContext !== void 0) return defaultContext;
+		throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+	}
+	return [Provider, useContext2];
+}
+function createContextScope$1(scopeName, createContextScopeDeps = []) {
+	let defaultContexts = [];
+	function createContext3(rootComponentName, defaultContext) {
+		const BaseContext = import_react.createContext(defaultContext);
+		const index = defaultContexts.length;
+		defaultContexts = [...defaultContexts, defaultContext];
+		const Provider = (props) => {
+			const { scope, children, ...context } = props;
+			const Context = scope?.[scopeName]?.[index] || BaseContext;
+			const value = import_react.useMemo(() => context, Object.values(context));
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
+				value,
+				children
 			});
+		};
+		Provider.displayName = rootComponentName + "Provider";
+		function useContext2(consumerName, scope) {
+			const Context = scope?.[scopeName]?.[index] || BaseContext;
+			const context = import_react.useContext(Context);
+			if (context) return context;
+			if (defaultContext !== void 0) return defaultContext;
+			throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+		}
+		return [Provider, useContext2];
+	}
+	const createScope = () => {
+		const scopeContexts = defaultContexts.map((defaultContext) => {
+			return import_react.createContext(defaultContext);
+		});
+		return function useScope(scope) {
+			const contexts = scope?.[scopeName] || scopeContexts;
+			return import_react.useMemo(() => ({ [`__scope${scopeName}`]: {
+				...scope,
+				[scopeName]: contexts
+			} }), [scope, contexts]);
+		};
+	};
+	createScope.scopeName = scopeName;
+	return [createContext3, composeContextScopes$1(createScope, ...createContextScopeDeps)];
+}
+function composeContextScopes$1(...scopes) {
+	const baseScope = scopes[0];
+	if (scopes.length === 1) return baseScope;
+	const createScope = () => {
+		const scopeHooks = scopes.map((createScope2) => ({
+			useScope: createScope2(),
+			scopeName: createScope2.scopeName
 		}));
-	}));
-});
+		return function useComposedScopes(overrideScopes) {
+			const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+				const currentScope = useScope(overrideScopes)[`__scope${scopeName}`];
+				return {
+					...nextScopes2,
+					...currentScope
+				};
+			}, {});
+			return import_react.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+		};
+	};
+	createScope.scopeName = baseScope.scopeName;
+	return createScope;
+}
 //#endregion
-//#region src/components/ui/sonner.tsx
-var Toaster = ({ ...props }) => {
-	const { theme = "system" } = z();
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$1, {
-		"data-uid": "src/components/ui/sonner.tsx:12:5",
-		"data-prohibitions": "[editContent]",
-		theme,
-		className: "toaster group",
-		toastOptions: { classNames: {
-			toast: "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-			description: "group-[.toast]:text-muted-foreground",
-			actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-			cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground"
-		} },
-		...props
-	});
-};
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-layout-effect@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs
+var useLayoutEffect2 = globalThis?.document ? import_react.useLayoutEffect : () => {};
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-id@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-id/dist/index.mjs
 var useReactId = import_react[" useId ".trim().toString()] || (() => void 0);
-var count$1 = 0;
+var count$2 = 0;
 function useId(deterministicId) {
 	const [id, setId] = import_react.useState(useReactId());
 	useLayoutEffect2(() => {
-		if (!deterministicId) setId((reactId) => reactId ?? String(count$1++));
+		if (!deterministicId) setId((reactId) => reactId ?? String(count$2++));
 	}, [deterministicId]);
 	return deterministicId || (id ? `radix-${id}` : "");
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-controllable-state@1.2.2_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
+var useInsertionEffect = import_react[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
+function useControllableState({ prop, defaultProp, onChange = () => {}, caller }) {
+	const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+		defaultProp,
+		onChange
+	});
+	const isControlled = prop !== void 0;
+	const value = isControlled ? prop : uncontrolledProp;
+	{
+		const isControlledRef = import_react.useRef(prop !== void 0);
+		import_react.useEffect(() => {
+			const wasControlled = isControlledRef.current;
+			if (wasControlled !== isControlled) {
+				const from = wasControlled ? "controlled" : "uncontrolled";
+				const to = isControlled ? "controlled" : "uncontrolled";
+				console.warn(`${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`);
+			}
+			isControlledRef.current = isControlled;
+		}, [isControlled, caller]);
+	}
+	return [value, import_react.useCallback((nextValue) => {
+		if (isControlled) {
+			const value2 = isFunction$1(nextValue) ? nextValue(prop) : nextValue;
+			if (value2 !== prop) onChangeRef.current?.(value2);
+		} else setUncontrolledProp(nextValue);
+	}, [
+		isControlled,
+		prop,
+		setUncontrolledProp,
+		onChangeRef
+	])];
+}
+function useUncontrolledState({ defaultProp, onChange }) {
+	const [value, setValue] = import_react.useState(defaultProp);
+	const prevValueRef = import_react.useRef(value);
+	const onChangeRef = import_react.useRef(onChange);
+	useInsertionEffect(() => {
+		onChangeRef.current = onChange;
+	}, [onChange]);
+	import_react.useEffect(() => {
+		if (prevValueRef.current !== value) {
+			onChangeRef.current?.(value);
+			prevValueRef.current = value;
+		}
+	}, [value, prevValueRef]);
+	return [
+		value,
+		setValue,
+		onChangeRef
+	];
+}
+function isFunction$1(value) {
+	return typeof value === "function";
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-slot@1.2.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-slot/dist/index.mjs
+/* @__NO_SIDE_EFFECTS__ */
+function createSlot(ownerName) {
+	const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
+	const Slot2 = import_react.forwardRef((props, forwardedRef) => {
+		const { children, ...slotProps } = props;
+		const childrenArray = import_react.Children.toArray(children);
+		const slottable = childrenArray.find(isSlottable);
+		if (slottable) {
+			const newElement = slottable.props.children;
+			const newChildren = childrenArray.map((child) => {
+				if (child === slottable) {
+					if (import_react.Children.count(newElement) > 1) return import_react.Children.only(null);
+					return import_react.isValidElement(newElement) ? newElement.props.children : null;
+				} else return child;
+			});
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SlotClone, {
+				...slotProps,
+				ref: forwardedRef,
+				children: import_react.isValidElement(newElement) ? import_react.cloneElement(newElement, void 0, newChildren) : null
+			});
+		}
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SlotClone, {
+			...slotProps,
+			ref: forwardedRef,
+			children
+		});
+	});
+	Slot2.displayName = `${ownerName}.Slot`;
+	return Slot2;
+}
+/* @__NO_SIDE_EFFECTS__ */
+function createSlotClone(ownerName) {
+	const SlotClone = import_react.forwardRef((props, forwardedRef) => {
+		const { children, ...slotProps } = props;
+		if (import_react.isValidElement(children)) {
+			const childrenRef = getElementRef$1(children);
+			const props2 = mergeProps(slotProps, children.props);
+			if (children.type !== import_react.Fragment) props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
+			return import_react.cloneElement(children, props2);
+		}
+		return import_react.Children.count(children) > 1 ? import_react.Children.only(null) : null;
+	});
+	SlotClone.displayName = `${ownerName}.SlotClone`;
+	return SlotClone;
+}
+var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
+/* @__NO_SIDE_EFFECTS__ */
+function createSlottable(ownerName) {
+	const Slottable2 = ({ children }) => {
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children });
+	};
+	Slottable2.displayName = `${ownerName}.Slottable`;
+	Slottable2.__radixId = SLOTTABLE_IDENTIFIER;
+	return Slottable2;
+}
+function isSlottable(child) {
+	return import_react.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
+}
+function mergeProps(slotProps, childProps) {
+	const overrideProps = { ...childProps };
+	for (const propName in childProps) {
+		const slotPropValue = slotProps[propName];
+		const childPropValue = childProps[propName];
+		if (/^on[A-Z]/.test(propName)) {
+			if (slotPropValue && childPropValue) overrideProps[propName] = (...args) => {
+				const result = childPropValue(...args);
+				slotPropValue(...args);
+				return result;
+			};
+			else if (slotPropValue) overrideProps[propName] = slotPropValue;
+		} else if (propName === "style") overrideProps[propName] = {
+			...slotPropValue,
+			...childPropValue
+		};
+		else if (propName === "className") overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
+	}
+	return {
+		...slotProps,
+		...overrideProps
+	};
+}
+function getElementRef$1(element) {
+	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+	if (mayWarn) return element.ref;
+	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+	if (mayWarn) return element.props.ref;
+	return element.props.ref || element.ref;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-primitive@2.1.3_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_1181ea5061ec9212248424669240e4ec/node_modules/@radix-ui/react-primitive/dist/index.mjs
+var Primitive = [
+	"a",
+	"button",
+	"div",
+	"form",
+	"h2",
+	"h3",
+	"img",
+	"input",
+	"label",
+	"li",
+	"nav",
+	"ol",
+	"p",
+	"select",
+	"span",
+	"svg",
+	"ul"
+].reduce((primitive, node) => {
+	const Slot = /* @__PURE__ */ createSlot(`Primitive.${node}`);
+	const Node = import_react.forwardRef((props, forwardedRef) => {
+		const { asChild, ...primitiveProps } = props;
+		const Comp = asChild ? Slot : node;
+		if (typeof window !== "undefined") window[Symbol.for("radix-ui")] = true;
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Comp, {
+			...primitiveProps,
+			ref: forwardedRef
+		});
+	});
+	Node.displayName = `Primitive.${node}`;
+	return {
+		...primitive,
+		[node]: Node
+	};
+}, {});
+function dispatchDiscreteCustomEvent(target, event) {
+	if (target) import_react_dom.flushSync(() => target.dispatchEvent(event));
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-callback-ref@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
+function useCallbackRef$1(callback) {
+	const callbackRef = import_react.useRef(callback);
+	import_react.useEffect(() => {
+		callbackRef.current = callback;
+	});
+	return import_react.useMemo(() => (...args) => callbackRef.current?.(...args), []);
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-escape-keydown@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-escape-keydown/dist/index.mjs
+function useEscapeKeydown(onEscapeKeyDownProp, ownerDocument = globalThis?.document) {
+	const onEscapeKeyDown = useCallbackRef$1(onEscapeKeyDownProp);
+	import_react.useEffect(() => {
+		const handleKeyDown = (event) => {
+			if (event.key === "Escape") onEscapeKeyDown(event);
+		};
+		ownerDocument.addEventListener("keydown", handleKeyDown, { capture: true });
+		return () => ownerDocument.removeEventListener("keydown", handleKeyDown, { capture: true });
+	}, [onEscapeKeyDown, ownerDocument]);
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-dismissable-layer@1.1.11_@types+react-dom@19.2.3_@types+react@19.2.14___3d3960154a4c07d09bb90cb341135fc5/node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
+var DISMISSABLE_LAYER_NAME = "DismissableLayer";
+var CONTEXT_UPDATE = "dismissableLayer.update";
+var POINTER_DOWN_OUTSIDE = "dismissableLayer.pointerDownOutside";
+var FOCUS_OUTSIDE = "dismissableLayer.focusOutside";
+var originalBodyPointerEvents;
+var DismissableLayerContext = import_react.createContext({
+	layers: /* @__PURE__ */ new Set(),
+	layersWithOutsidePointerEventsDisabled: /* @__PURE__ */ new Set(),
+	branches: /* @__PURE__ */ new Set()
+});
+var DismissableLayer = import_react.forwardRef((props, forwardedRef) => {
+	const { disableOutsidePointerEvents = false, onEscapeKeyDown, onPointerDownOutside, onFocusOutside, onInteractOutside, onDismiss, ...layerProps } = props;
+	const context = import_react.useContext(DismissableLayerContext);
+	const [node, setNode] = import_react.useState(null);
+	const ownerDocument = node?.ownerDocument ?? globalThis?.document;
+	const [, force] = import_react.useState({});
+	const composedRefs = useComposedRefs(forwardedRef, (node2) => setNode(node2));
+	const layers = Array.from(context.layers);
+	const [highestLayerWithOutsidePointerEventsDisabled] = [...context.layersWithOutsidePointerEventsDisabled].slice(-1);
+	const highestLayerWithOutsidePointerEventsDisabledIndex = layers.indexOf(highestLayerWithOutsidePointerEventsDisabled);
+	const index = node ? layers.indexOf(node) : -1;
+	const isBodyPointerEventsDisabled = context.layersWithOutsidePointerEventsDisabled.size > 0;
+	const isPointerEventsEnabled = index >= highestLayerWithOutsidePointerEventsDisabledIndex;
+	const pointerDownOutside = usePointerDownOutside((event) => {
+		const target = event.target;
+		const isPointerDownOnBranch = [...context.branches].some((branch) => branch.contains(target));
+		if (!isPointerEventsEnabled || isPointerDownOnBranch) return;
+		onPointerDownOutside?.(event);
+		onInteractOutside?.(event);
+		if (!event.defaultPrevented) onDismiss?.();
+	}, ownerDocument);
+	const focusOutside = useFocusOutside((event) => {
+		const target = event.target;
+		if ([...context.branches].some((branch) => branch.contains(target))) return;
+		onFocusOutside?.(event);
+		onInteractOutside?.(event);
+		if (!event.defaultPrevented) onDismiss?.();
+	}, ownerDocument);
+	useEscapeKeydown((event) => {
+		if (!(index === context.layers.size - 1)) return;
+		onEscapeKeyDown?.(event);
+		if (!event.defaultPrevented && onDismiss) {
+			event.preventDefault();
+			onDismiss();
+		}
+	}, ownerDocument);
+	import_react.useEffect(() => {
+		if (!node) return;
+		if (disableOutsidePointerEvents) {
+			if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
+				originalBodyPointerEvents = ownerDocument.body.style.pointerEvents;
+				ownerDocument.body.style.pointerEvents = "none";
+			}
+			context.layersWithOutsidePointerEventsDisabled.add(node);
+		}
+		context.layers.add(node);
+		dispatchUpdate();
+		return () => {
+			if (disableOutsidePointerEvents && context.layersWithOutsidePointerEventsDisabled.size === 1) ownerDocument.body.style.pointerEvents = originalBodyPointerEvents;
+		};
+	}, [
+		node,
+		ownerDocument,
+		disableOutsidePointerEvents,
+		context
+	]);
+	import_react.useEffect(() => {
+		return () => {
+			if (!node) return;
+			context.layers.delete(node);
+			context.layersWithOutsidePointerEventsDisabled.delete(node);
+			dispatchUpdate();
+		};
+	}, [node, context]);
+	import_react.useEffect(() => {
+		const handleUpdate = () => force({});
+		document.addEventListener(CONTEXT_UPDATE, handleUpdate);
+		return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
+	}, []);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		...layerProps,
+		ref: composedRefs,
+		style: {
+			pointerEvents: isBodyPointerEventsDisabled ? isPointerEventsEnabled ? "auto" : "none" : void 0,
+			...props.style
+		},
+		onFocusCapture: composeEventHandlers(props.onFocusCapture, focusOutside.onFocusCapture),
+		onBlurCapture: composeEventHandlers(props.onBlurCapture, focusOutside.onBlurCapture),
+		onPointerDownCapture: composeEventHandlers(props.onPointerDownCapture, pointerDownOutside.onPointerDownCapture)
+	});
+});
+DismissableLayer.displayName = DISMISSABLE_LAYER_NAME;
+var BRANCH_NAME = "DismissableLayerBranch";
+var DismissableLayerBranch = import_react.forwardRef((props, forwardedRef) => {
+	const context = import_react.useContext(DismissableLayerContext);
+	const ref = import_react.useRef(null);
+	const composedRefs = useComposedRefs(forwardedRef, ref);
+	import_react.useEffect(() => {
+		const node = ref.current;
+		if (node) {
+			context.branches.add(node);
+			return () => {
+				context.branches.delete(node);
+			};
+		}
+	}, [context.branches]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		...props,
+		ref: composedRefs
+	});
+});
+DismissableLayerBranch.displayName = BRANCH_NAME;
+function usePointerDownOutside(onPointerDownOutside, ownerDocument = globalThis?.document) {
+	const handlePointerDownOutside = useCallbackRef$1(onPointerDownOutside);
+	const isPointerInsideReactTreeRef = import_react.useRef(false);
+	const handleClickRef = import_react.useRef(() => {});
+	import_react.useEffect(() => {
+		const handlePointerDown = (event) => {
+			if (event.target && !isPointerInsideReactTreeRef.current) {
+				let handleAndDispatchPointerDownOutsideEvent2 = function() {
+					handleAndDispatchCustomEvent(POINTER_DOWN_OUTSIDE, handlePointerDownOutside, eventDetail, { discrete: true });
+				};
+				const eventDetail = { originalEvent: event };
+				if (event.pointerType === "touch") {
+					ownerDocument.removeEventListener("click", handleClickRef.current);
+					handleClickRef.current = handleAndDispatchPointerDownOutsideEvent2;
+					ownerDocument.addEventListener("click", handleClickRef.current, { once: true });
+				} else handleAndDispatchPointerDownOutsideEvent2();
+			} else ownerDocument.removeEventListener("click", handleClickRef.current);
+			isPointerInsideReactTreeRef.current = false;
+		};
+		const timerId = window.setTimeout(() => {
+			ownerDocument.addEventListener("pointerdown", handlePointerDown);
+		}, 0);
+		return () => {
+			window.clearTimeout(timerId);
+			ownerDocument.removeEventListener("pointerdown", handlePointerDown);
+			ownerDocument.removeEventListener("click", handleClickRef.current);
+		};
+	}, [ownerDocument, handlePointerDownOutside]);
+	return { onPointerDownCapture: () => isPointerInsideReactTreeRef.current = true };
+}
+function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
+	const handleFocusOutside = useCallbackRef$1(onFocusOutside);
+	const isFocusInsideReactTreeRef = import_react.useRef(false);
+	import_react.useEffect(() => {
+		const handleFocus = (event) => {
+			if (event.target && !isFocusInsideReactTreeRef.current) handleAndDispatchCustomEvent(FOCUS_OUTSIDE, handleFocusOutside, { originalEvent: event }, { discrete: false });
+		};
+		ownerDocument.addEventListener("focusin", handleFocus);
+		return () => ownerDocument.removeEventListener("focusin", handleFocus);
+	}, [ownerDocument, handleFocusOutside]);
+	return {
+		onFocusCapture: () => isFocusInsideReactTreeRef.current = true,
+		onBlurCapture: () => isFocusInsideReactTreeRef.current = false
+	};
+}
+function dispatchUpdate() {
+	const event = new CustomEvent(CONTEXT_UPDATE);
+	document.dispatchEvent(event);
+}
+function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
+	const target = detail.originalEvent.target;
+	const event = new CustomEvent(name, {
+		bubbles: false,
+		cancelable: true,
+		detail
+	});
+	if (handler) target.addEventListener(name, handler, { once: true });
+	if (discrete) dispatchDiscreteCustomEvent(target, event);
+	else target.dispatchEvent(event);
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-focus-scope@1.1.7_@types+react-dom@19.2.3_@types+react@19.2.14__@types+_f62f3af4ca2ba305a7aecf04c8534604/node_modules/@radix-ui/react-focus-scope/dist/index.mjs
+var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
+var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";
+var EVENT_OPTIONS$1 = {
+	bubbles: false,
+	cancelable: true
+};
+var FOCUS_SCOPE_NAME = "FocusScope";
+var FocusScope = import_react.forwardRef((props, forwardedRef) => {
+	const { loop = false, trapped = false, onMountAutoFocus: onMountAutoFocusProp, onUnmountAutoFocus: onUnmountAutoFocusProp, ...scopeProps } = props;
+	const [container, setContainer] = import_react.useState(null);
+	const onMountAutoFocus = useCallbackRef$1(onMountAutoFocusProp);
+	const onUnmountAutoFocus = useCallbackRef$1(onUnmountAutoFocusProp);
+	const lastFocusedElementRef = import_react.useRef(null);
+	const composedRefs = useComposedRefs(forwardedRef, (node) => setContainer(node));
+	const focusScope = import_react.useRef({
+		paused: false,
+		pause() {
+			this.paused = true;
+		},
+		resume() {
+			this.paused = false;
+		}
+	}).current;
+	import_react.useEffect(() => {
+		if (trapped) {
+			let handleFocusIn2 = function(event) {
+				if (focusScope.paused || !container) return;
+				const target = event.target;
+				if (container.contains(target)) lastFocusedElementRef.current = target;
+				else focus(lastFocusedElementRef.current, { select: true });
+			}, handleFocusOut2 = function(event) {
+				if (focusScope.paused || !container) return;
+				const relatedTarget = event.relatedTarget;
+				if (relatedTarget === null) return;
+				if (!container.contains(relatedTarget)) focus(lastFocusedElementRef.current, { select: true });
+			}, handleMutations2 = function(mutations) {
+				if (document.activeElement !== document.body) return;
+				for (const mutation of mutations) if (mutation.removedNodes.length > 0) focus(container);
+			};
+			document.addEventListener("focusin", handleFocusIn2);
+			document.addEventListener("focusout", handleFocusOut2);
+			const mutationObserver = new MutationObserver(handleMutations2);
+			if (container) mutationObserver.observe(container, {
+				childList: true,
+				subtree: true
+			});
+			return () => {
+				document.removeEventListener("focusin", handleFocusIn2);
+				document.removeEventListener("focusout", handleFocusOut2);
+				mutationObserver.disconnect();
+			};
+		}
+	}, [
+		trapped,
+		container,
+		focusScope.paused
+	]);
+	import_react.useEffect(() => {
+		if (container) {
+			focusScopesStack.add(focusScope);
+			const previouslyFocusedElement = document.activeElement;
+			if (!container.contains(previouslyFocusedElement)) {
+				const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS$1);
+				container.addEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
+				container.dispatchEvent(mountEvent);
+				if (!mountEvent.defaultPrevented) {
+					focusFirst$1(removeLinks(getTabbableCandidates(container)), { select: true });
+					if (document.activeElement === previouslyFocusedElement) focus(container);
+				}
+			}
+			return () => {
+				container.removeEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
+				setTimeout(() => {
+					const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS$1);
+					container.addEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
+					container.dispatchEvent(unmountEvent);
+					if (!unmountEvent.defaultPrevented) focus(previouslyFocusedElement ?? document.body, { select: true });
+					container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
+					focusScopesStack.remove(focusScope);
+				}, 0);
+			};
+		}
+	}, [
+		container,
+		onMountAutoFocus,
+		onUnmountAutoFocus,
+		focusScope
+	]);
+	const handleKeyDown = import_react.useCallback((event) => {
+		if (!loop && !trapped) return;
+		if (focusScope.paused) return;
+		const isTabKey = event.key === "Tab" && !event.altKey && !event.ctrlKey && !event.metaKey;
+		const focusedElement = document.activeElement;
+		if (isTabKey && focusedElement) {
+			const container2 = event.currentTarget;
+			const [first, last] = getTabbableEdges(container2);
+			if (!(first && last)) {
+				if (focusedElement === container2) event.preventDefault();
+			} else if (!event.shiftKey && focusedElement === last) {
+				event.preventDefault();
+				if (loop) focus(first, { select: true });
+			} else if (event.shiftKey && focusedElement === first) {
+				event.preventDefault();
+				if (loop) focus(last, { select: true });
+			}
+		}
+	}, [
+		loop,
+		trapped,
+		focusScope.paused
+	]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		tabIndex: -1,
+		...scopeProps,
+		ref: composedRefs,
+		onKeyDown: handleKeyDown
+	});
+});
+FocusScope.displayName = FOCUS_SCOPE_NAME;
+function focusFirst$1(candidates, { select = false } = {}) {
+	const previouslyFocusedElement = document.activeElement;
+	for (const candidate of candidates) {
+		focus(candidate, { select });
+		if (document.activeElement !== previouslyFocusedElement) return;
+	}
+}
+function getTabbableEdges(container) {
+	const candidates = getTabbableCandidates(container);
+	return [findVisible(candidates, container), findVisible(candidates.reverse(), container)];
+}
+function getTabbableCandidates(container) {
+	const nodes = [];
+	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: (node) => {
+		const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
+		if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP;
+		return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+	} });
+	while (walker.nextNode()) nodes.push(walker.currentNode);
+	return nodes;
+}
+function findVisible(elements, container) {
+	for (const element of elements) if (!isHidden(element, { upTo: container })) return element;
+}
+function isHidden(node, { upTo }) {
+	if (getComputedStyle(node).visibility === "hidden") return true;
+	while (node) {
+		if (upTo !== void 0 && node === upTo) return false;
+		if (getComputedStyle(node).display === "none") return true;
+		node = node.parentElement;
+	}
+	return false;
+}
+function isSelectableInput(element) {
+	return element instanceof HTMLInputElement && "select" in element;
+}
+function focus(element, { select = false } = {}) {
+	if (element && element.focus) {
+		const previouslyFocusedElement = document.activeElement;
+		element.focus({ preventScroll: true });
+		if (element !== previouslyFocusedElement && isSelectableInput(element) && select) element.select();
+	}
+}
+var focusScopesStack = createFocusScopesStack();
+function createFocusScopesStack() {
+	let stack = [];
+	return {
+		add(focusScope) {
+			const activeFocusScope = stack[0];
+			if (focusScope !== activeFocusScope) activeFocusScope?.pause();
+			stack = arrayRemove(stack, focusScope);
+			stack.unshift(focusScope);
+		},
+		remove(focusScope) {
+			stack = arrayRemove(stack, focusScope);
+			stack[0]?.resume();
+		}
+	};
+}
+function arrayRemove(array, item) {
+	const updatedArray = [...array];
+	const index = updatedArray.indexOf(item);
+	if (index !== -1) updatedArray.splice(index, 1);
+	return updatedArray;
+}
+function removeLinks(items) {
+	return items.filter((item) => item.tagName !== "A");
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-portal@1.1.9_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react_7668895bec2444446faa4e0f4eb5244b/node_modules/@radix-ui/react-portal/dist/index.mjs
+var PORTAL_NAME$3 = "Portal";
+var Portal$2 = import_react.forwardRef((props, forwardedRef) => {
+	const { container: containerProp, ...portalProps } = props;
+	const [mounted, setMounted] = import_react.useState(false);
+	useLayoutEffect2(() => setMounted(true), []);
+	const container = containerProp || mounted && globalThis?.document?.body;
+	return container ? import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		...portalProps,
+		ref: forwardedRef
+	}), container) : null;
+});
+Portal$2.displayName = PORTAL_NAME$3;
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-presence@1.1.5_@types+react-dom@19.2.3_@types+react@19.2.14__@types+rea_c01c26c80b5ab5e3ecefbda6eca51ad1/node_modules/@radix-ui/react-presence/dist/index.mjs
+function useStateMachine(initialState, machine) {
+	return import_react.useReducer((state, event) => {
+		return machine[state][event] ?? state;
+	}, initialState);
+}
+var Presence = (props) => {
+	const { present, children } = props;
+	const presence = usePresence(present);
+	const child = typeof children === "function" ? children({ present: presence.isPresent }) : import_react.Children.only(children);
+	const ref = useComposedRefs(presence.ref, getElementRef(child));
+	return typeof children === "function" || presence.isPresent ? import_react.cloneElement(child, { ref }) : null;
+};
+Presence.displayName = "Presence";
+function usePresence(present) {
+	const [node, setNode] = import_react.useState();
+	const stylesRef = import_react.useRef(null);
+	const prevPresentRef = import_react.useRef(present);
+	const prevAnimationNameRef = import_react.useRef("none");
+	const [state, send] = useStateMachine(present ? "mounted" : "unmounted", {
+		mounted: {
+			UNMOUNT: "unmounted",
+			ANIMATION_OUT: "unmountSuspended"
+		},
+		unmountSuspended: {
+			MOUNT: "mounted",
+			ANIMATION_END: "unmounted"
+		},
+		unmounted: { MOUNT: "mounted" }
+	});
+	import_react.useEffect(() => {
+		const currentAnimationName = getAnimationName(stylesRef.current);
+		prevAnimationNameRef.current = state === "mounted" ? currentAnimationName : "none";
+	}, [state]);
+	useLayoutEffect2(() => {
+		const styles = stylesRef.current;
+		const wasPresent = prevPresentRef.current;
+		if (wasPresent !== present) {
+			const prevAnimationName = prevAnimationNameRef.current;
+			const currentAnimationName = getAnimationName(styles);
+			if (present) send("MOUNT");
+			else if (currentAnimationName === "none" || styles?.display === "none") send("UNMOUNT");
+			else if (wasPresent && prevAnimationName !== currentAnimationName) send("ANIMATION_OUT");
+			else send("UNMOUNT");
+			prevPresentRef.current = present;
+		}
+	}, [present, send]);
+	useLayoutEffect2(() => {
+		if (node) {
+			let timeoutId;
+			const ownerWindow = node.ownerDocument.defaultView ?? window;
+			const handleAnimationEnd = (event) => {
+				const isCurrentAnimation = getAnimationName(stylesRef.current).includes(CSS.escape(event.animationName));
+				if (event.target === node && isCurrentAnimation) {
+					send("ANIMATION_END");
+					if (!prevPresentRef.current) {
+						const currentFillMode = node.style.animationFillMode;
+						node.style.animationFillMode = "forwards";
+						timeoutId = ownerWindow.setTimeout(() => {
+							if (node.style.animationFillMode === "forwards") node.style.animationFillMode = currentFillMode;
+						});
+					}
+				}
+			};
+			const handleAnimationStart = (event) => {
+				if (event.target === node) prevAnimationNameRef.current = getAnimationName(stylesRef.current);
+			};
+			node.addEventListener("animationstart", handleAnimationStart);
+			node.addEventListener("animationcancel", handleAnimationEnd);
+			node.addEventListener("animationend", handleAnimationEnd);
+			return () => {
+				ownerWindow.clearTimeout(timeoutId);
+				node.removeEventListener("animationstart", handleAnimationStart);
+				node.removeEventListener("animationcancel", handleAnimationEnd);
+				node.removeEventListener("animationend", handleAnimationEnd);
+			};
+		} else send("ANIMATION_END");
+	}, [node, send]);
+	return {
+		isPresent: ["mounted", "unmountSuspended"].includes(state),
+		ref: import_react.useCallback((node2) => {
+			stylesRef.current = node2 ? getComputedStyle(node2) : null;
+			setNode(node2);
+		}, [])
+	};
+}
+function getAnimationName(styles) {
+	return styles?.animationName || "none";
+}
+function getElementRef(element) {
+	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+	if (mayWarn) return element.ref;
+	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+	if (mayWarn) return element.props.ref;
+	return element.props.ref || element.ref;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-focus-guards@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-focus-guards/dist/index.mjs
+var count$1 = 0;
+function useFocusGuards() {
+	import_react.useEffect(() => {
+		const edgeGuards = document.querySelectorAll("[data-radix-focus-guard]");
+		document.body.insertAdjacentElement("afterbegin", edgeGuards[0] ?? createFocusGuard());
+		document.body.insertAdjacentElement("beforeend", edgeGuards[1] ?? createFocusGuard());
+		count$1++;
+		return () => {
+			if (count$1 === 1) document.querySelectorAll("[data-radix-focus-guard]").forEach((node) => node.remove());
+			count$1--;
+		};
+	}, []);
+}
+function createFocusGuard() {
+	const element = document.createElement("span");
+	element.setAttribute("data-radix-focus-guard", "");
+	element.tabIndex = 0;
+	element.style.outline = "none";
+	element.style.opacity = "0";
+	element.style.position = "fixed";
+	element.style.pointerEvents = "none";
+	return element;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/tslib@2.8.1/node_modules/tslib/tslib.es6.mjs
+var __assign = function() {
+	__assign = Object.assign || function __assign(t) {
+		for (var s, i = 1, n = arguments.length; i < n; i++) {
+			s = arguments[i];
+			for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+		}
+		return t;
+	};
+	return __assign.apply(this, arguments);
+};
+function __rest(s, e) {
+	var t = {};
+	for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	if (s != null && typeof Object.getOwnPropertySymbols === "function") {
+		for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+	}
+	return t;
+}
+function __spreadArray(to, from, pack) {
+	if (pack || arguments.length === 2) {
+		for (var i = 0, l = from.length, ar; i < l; i++) if (ar || !(i in from)) {
+			if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+			ar[i] = from[i];
+		}
+	}
+	return to.concat(ar || Array.prototype.slice.call(from));
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll-bar@2.3.8_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll-bar/dist/es2015/constants.js
+var zeroRightClassName = "right-scroll-bar-position";
+var fullWidthClassName = "width-before-scroll-bar";
+var noScrollbarsClassName = "with-scroll-bars-hidden";
+/**
+* Name of a CSS variable containing the amount of "hidden" scrollbar
+* ! might be undefined ! use will fallback!
+*/
+var removedBarSizeVariable = "--removed-body-scroll-bar-size";
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-callback-ref@1.3.3_@types+react@19.2.14_react@19.2.4/node_modules/use-callback-ref/dist/es2015/assignRef.js
+/**
+* Assigns a value for a given ref, no matter of the ref format
+* @param {RefObject} ref - a callback function or ref object
+* @param value - a new value
+*
+* @see https://github.com/theKashey/use-callback-ref#assignref
+* @example
+* const refObject = useRef();
+* const refFn = (ref) => {....}
+*
+* assignRef(refObject, "refValue");
+* assignRef(refFn, "refValue");
+*/
+function assignRef(ref, value) {
+	if (typeof ref === "function") ref(value);
+	else if (ref) ref.current = value;
+	return ref;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-callback-ref@1.3.3_@types+react@19.2.14_react@19.2.4/node_modules/use-callback-ref/dist/es2015/useRef.js
+/**
+* creates a MutableRef with ref change callback
+* @param initialValue - initial ref value
+* @param {Function} callback - a callback to run when value changes
+*
+* @example
+* const ref = useCallbackRef(0, (newValue, oldValue) => console.log(oldValue, '->', newValue);
+* ref.current = 1;
+* // prints 0 -> 1
+*
+* @see https://reactjs.org/docs/hooks-reference.html#useref
+* @see https://github.com/theKashey/use-callback-ref#usecallbackref---to-replace-reactuseref
+* @returns {MutableRefObject}
+*/
+function useCallbackRef(initialValue, callback) {
+	var ref = (0, import_react.useState)(function() {
+		return {
+			value: initialValue,
+			callback,
+			facade: {
+				get current() {
+					return ref.value;
+				},
+				set current(value) {
+					var last = ref.value;
+					if (last !== value) {
+						ref.value = value;
+						ref.callback(value, last);
+					}
+				}
+			}
+		};
+	})[0];
+	ref.callback = callback;
+	return ref.facade;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-callback-ref@1.3.3_@types+react@19.2.14_react@19.2.4/node_modules/use-callback-ref/dist/es2015/useMergeRef.js
+var useIsomorphicLayoutEffect = typeof window !== "undefined" ? import_react.useLayoutEffect : import_react.useEffect;
+var currentValues = /* @__PURE__ */ new WeakMap();
+/**
+* Merges two or more refs together providing a single interface to set their value
+* @param {RefObject|Ref} refs
+* @returns {MutableRefObject} - a new ref, which translates all changes to {refs}
+*
+* @see {@link mergeRefs} a version without buit-in memoization
+* @see https://github.com/theKashey/use-callback-ref#usemergerefs
+* @example
+* const Component = React.forwardRef((props, ref) => {
+*   const ownRef = useRef();
+*   const domRef = useMergeRefs([ref, ownRef]); // 👈 merge together
+*   return <div ref={domRef}>...</div>
+* }
+*/
+function useMergeRefs(refs, defaultValue) {
+	var callbackRef = useCallbackRef(defaultValue || null, function(newValue) {
+		return refs.forEach(function(ref) {
+			return assignRef(ref, newValue);
+		});
+	});
+	useIsomorphicLayoutEffect(function() {
+		var oldValue = currentValues.get(callbackRef);
+		if (oldValue) {
+			var prevRefs_1 = new Set(oldValue);
+			var nextRefs_1 = new Set(refs);
+			var current_1 = callbackRef.current;
+			prevRefs_1.forEach(function(ref) {
+				if (!nextRefs_1.has(ref)) assignRef(ref, null);
+			});
+			nextRefs_1.forEach(function(ref) {
+				if (!prevRefs_1.has(ref)) assignRef(ref, current_1);
+			});
+		}
+		currentValues.set(callbackRef, refs);
+	}, [refs]);
+	return callbackRef;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-sidecar@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/use-sidecar/dist/es2015/medium.js
+function ItoI(a) {
+	return a;
+}
+function innerCreateMedium(defaults, middleware) {
+	if (middleware === void 0) middleware = ItoI;
+	var buffer = [];
+	var assigned = false;
+	return {
+		read: function() {
+			if (assigned) throw new Error("Sidecar: could not `read` from an `assigned` medium. `read` could be used only with `useMedium`.");
+			if (buffer.length) return buffer[buffer.length - 1];
+			return defaults;
+		},
+		useMedium: function(data) {
+			var item = middleware(data, assigned);
+			buffer.push(item);
+			return function() {
+				buffer = buffer.filter(function(x) {
+					return x !== item;
+				});
+			};
+		},
+		assignSyncMedium: function(cb) {
+			assigned = true;
+			while (buffer.length) {
+				var cbs = buffer;
+				buffer = [];
+				cbs.forEach(cb);
+			}
+			buffer = {
+				push: function(x) {
+					return cb(x);
+				},
+				filter: function() {
+					return buffer;
+				}
+			};
+		},
+		assignMedium: function(cb) {
+			assigned = true;
+			var pendingQueue = [];
+			if (buffer.length) {
+				var cbs = buffer;
+				buffer = [];
+				cbs.forEach(cb);
+				pendingQueue = buffer;
+			}
+			var executeQueue = function() {
+				var cbs = pendingQueue;
+				pendingQueue = [];
+				cbs.forEach(cb);
+			};
+			var cycle = function() {
+				return Promise.resolve().then(executeQueue);
+			};
+			cycle();
+			buffer = {
+				push: function(x) {
+					pendingQueue.push(x);
+					cycle();
+				},
+				filter: function(filter) {
+					pendingQueue = pendingQueue.filter(filter);
+					return buffer;
+				}
+			};
+		}
+	};
+}
+function createSidecarMedium(options) {
+	if (options === void 0) options = {};
+	var medium = innerCreateMedium(null);
+	medium.options = __assign({
+		async: true,
+		ssr: false
+	}, options);
+	return medium;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-sidecar@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/use-sidecar/dist/es2015/exports.js
+var SideCar = function(_a) {
+	var sideCar = _a.sideCar, rest = __rest(_a, ["sideCar"]);
+	if (!sideCar) throw new Error("Sidecar: please provide `sideCar` property to import the right car");
+	var Target = sideCar.read();
+	if (!Target) throw new Error("Sidecar medium not found");
+	return import_react.createElement(Target, __assign({}, rest));
+};
+SideCar.isSideCarExport = true;
+function exportSidecar(medium, exported) {
+	medium.useMedium(exported);
+	return SideCar;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/medium.js
+var effectCar = createSidecarMedium();
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/UI.js
+var nothing = function() {};
+/**
+* Removes scrollbar from the page and contain the scroll within the Lock
+*/
+var RemoveScroll = import_react.forwardRef(function(props, parentRef) {
+	var ref = import_react.useRef(null);
+	var _a = import_react.useState({
+		onScrollCapture: nothing,
+		onWheelCapture: nothing,
+		onTouchMoveCapture: nothing
+	}), callbacks = _a[0], setCallbacks = _a[1];
+	var forwardProps = props.forwardProps, children = props.children, className = props.className, removeScrollBar = props.removeScrollBar, enabled = props.enabled, shards = props.shards, sideCar = props.sideCar, noRelative = props.noRelative, noIsolation = props.noIsolation, inert = props.inert, allowPinchZoom = props.allowPinchZoom, _b = props.as, Container = _b === void 0 ? "div" : _b, gapMode = props.gapMode, rest = __rest(props, [
+		"forwardProps",
+		"children",
+		"className",
+		"removeScrollBar",
+		"enabled",
+		"shards",
+		"sideCar",
+		"noRelative",
+		"noIsolation",
+		"inert",
+		"allowPinchZoom",
+		"as",
+		"gapMode"
+	]);
+	var SideCar = sideCar;
+	var containerRef = useMergeRefs([ref, parentRef]);
+	var containerProps = __assign(__assign({}, rest), callbacks);
+	return import_react.createElement(import_react.Fragment, null, enabled && import_react.createElement(SideCar, {
+		sideCar: effectCar,
+		removeScrollBar,
+		shards,
+		noRelative,
+		noIsolation,
+		inert,
+		setCallbacks,
+		allowPinchZoom: !!allowPinchZoom,
+		lockRef: ref,
+		gapMode
+	}), forwardProps ? import_react.cloneElement(import_react.Children.only(children), __assign(__assign({}, containerProps), { ref: containerRef })) : import_react.createElement(Container, __assign({}, containerProps, {
+		className,
+		ref: containerRef
+	}), children));
+});
+RemoveScroll.defaultProps = {
+	enabled: true,
+	removeScrollBar: true,
+	inert: false
+};
+RemoveScroll.classNames = {
+	fullWidth: fullWidthClassName,
+	zeroRight: zeroRightClassName
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/get-nonce@1.0.1/node_modules/get-nonce/dist/es2015/index.js
+var currentNonce;
+var getNonce = function() {
+	if (currentNonce) return currentNonce;
+	if (typeof __webpack_nonce__ !== "undefined") return __webpack_nonce__;
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-style-singleton@2.2.3_@types+react@19.2.14_react@19.2.4/node_modules/react-style-singleton/dist/es2015/singleton.js
+function makeStyleTag() {
+	if (!document) return null;
+	var tag = document.createElement("style");
+	tag.type = "text/css";
+	var nonce = getNonce();
+	if (nonce) tag.setAttribute("nonce", nonce);
+	return tag;
+}
+function injectStyles(tag, css) {
+	if (tag.styleSheet) tag.styleSheet.cssText = css;
+	else tag.appendChild(document.createTextNode(css));
+}
+function insertStyleTag(tag) {
+	(document.head || document.getElementsByTagName("head")[0]).appendChild(tag);
+}
+var stylesheetSingleton = function() {
+	var counter = 0;
+	var stylesheet = null;
+	return {
+		add: function(style) {
+			if (counter == 0) {
+				if (stylesheet = makeStyleTag()) {
+					injectStyles(stylesheet, style);
+					insertStyleTag(stylesheet);
+				}
+			}
+			counter++;
+		},
+		remove: function() {
+			counter--;
+			if (!counter && stylesheet) {
+				stylesheet.parentNode && stylesheet.parentNode.removeChild(stylesheet);
+				stylesheet = null;
+			}
+		}
+	};
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-style-singleton@2.2.3_@types+react@19.2.14_react@19.2.4/node_modules/react-style-singleton/dist/es2015/hook.js
+/**
+* creates a hook to control style singleton
+* @see {@link styleSingleton} for a safer component version
+* @example
+* ```tsx
+* const useStyle = styleHookSingleton();
+* ///
+* useStyle('body { overflow: hidden}');
+*/
+var styleHookSingleton = function() {
+	var sheet = stylesheetSingleton();
+	return function(styles, isDynamic) {
+		import_react.useEffect(function() {
+			sheet.add(styles);
+			return function() {
+				sheet.remove();
+			};
+		}, [styles && isDynamic]);
+	};
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-style-singleton@2.2.3_@types+react@19.2.14_react@19.2.4/node_modules/react-style-singleton/dist/es2015/component.js
+/**
+* create a Component to add styles on demand
+* - styles are added when first instance is mounted
+* - styles are removed when the last instance is unmounted
+* - changing styles in runtime does nothing unless dynamic is set. But with multiple components that can lead to the undefined behavior
+*/
+var styleSingleton = function() {
+	var useStyle = styleHookSingleton();
+	var Sheet = function(_a) {
+		var styles = _a.styles, dynamic = _a.dynamic;
+		useStyle(styles, dynamic);
+		return null;
+	};
+	return Sheet;
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll-bar@2.3.8_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll-bar/dist/es2015/utils.js
+var zeroGap = {
+	left: 0,
+	top: 0,
+	right: 0,
+	gap: 0
+};
+var parse = function(x) {
+	return parseInt(x || "", 10) || 0;
+};
+var getOffset = function(gapMode) {
+	var cs = window.getComputedStyle(document.body);
+	var left = cs[gapMode === "padding" ? "paddingLeft" : "marginLeft"];
+	var top = cs[gapMode === "padding" ? "paddingTop" : "marginTop"];
+	var right = cs[gapMode === "padding" ? "paddingRight" : "marginRight"];
+	return [
+		parse(left),
+		parse(top),
+		parse(right)
+	];
+};
+var getGapWidth = function(gapMode) {
+	if (gapMode === void 0) gapMode = "margin";
+	if (typeof window === "undefined") return zeroGap;
+	var offsets = getOffset(gapMode);
+	var documentWidth = document.documentElement.clientWidth;
+	var windowWidth = window.innerWidth;
+	return {
+		left: offsets[0],
+		top: offsets[1],
+		right: offsets[2],
+		gap: Math.max(0, windowWidth - documentWidth + offsets[2] - offsets[0])
+	};
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll-bar@2.3.8_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll-bar/dist/es2015/component.js
+var Style = styleSingleton();
+var lockAttribute = "data-scroll-locked";
+var getStyles = function(_a, allowRelative, gapMode, important) {
+	var left = _a.left, top = _a.top, right = _a.right, gap = _a.gap;
+	if (gapMode === void 0) gapMode = "margin";
+	return "\n  .".concat(noScrollbarsClassName, " {\n   overflow: hidden ").concat(important, ";\n   padding-right: ").concat(gap, "px ").concat(important, ";\n  }\n  body[").concat(lockAttribute, "] {\n    overflow: hidden ").concat(important, ";\n    overscroll-behavior: contain;\n    ").concat([
+		allowRelative && "position: relative ".concat(important, ";"),
+		gapMode === "margin" && "\n    padding-left: ".concat(left, "px;\n    padding-top: ").concat(top, "px;\n    padding-right: ").concat(right, "px;\n    margin-left:0;\n    margin-top:0;\n    margin-right: ").concat(gap, "px ").concat(important, ";\n    "),
+		gapMode === "padding" && "padding-right: ".concat(gap, "px ").concat(important, ";")
+	].filter(Boolean).join(""), "\n  }\n  \n  .").concat(zeroRightClassName, " {\n    right: ").concat(gap, "px ").concat(important, ";\n  }\n  \n  .").concat(fullWidthClassName, " {\n    margin-right: ").concat(gap, "px ").concat(important, ";\n  }\n  \n  .").concat(zeroRightClassName, " .").concat(zeroRightClassName, " {\n    right: 0 ").concat(important, ";\n  }\n  \n  .").concat(fullWidthClassName, " .").concat(fullWidthClassName, " {\n    margin-right: 0 ").concat(important, ";\n  }\n  \n  body[").concat(lockAttribute, "] {\n    ").concat(removedBarSizeVariable, ": ").concat(gap, "px;\n  }\n");
+};
+var getCurrentUseCounter = function() {
+	var counter = parseInt(document.body.getAttribute("data-scroll-locked") || "0", 10);
+	return isFinite(counter) ? counter : 0;
+};
+var useLockAttribute = function() {
+	import_react.useEffect(function() {
+		document.body.setAttribute(lockAttribute, (getCurrentUseCounter() + 1).toString());
+		return function() {
+			var newCounter = getCurrentUseCounter() - 1;
+			if (newCounter <= 0) document.body.removeAttribute(lockAttribute);
+			else document.body.setAttribute(lockAttribute, newCounter.toString());
+		};
+	}, []);
+};
+/**
+* Removes page scrollbar and blocks page scroll when mounted
+*/
+var RemoveScrollBar = function(_a) {
+	var noRelative = _a.noRelative, noImportant = _a.noImportant, _b = _a.gapMode, gapMode = _b === void 0 ? "margin" : _b;
+	useLockAttribute();
+	var gap = import_react.useMemo(function() {
+		return getGapWidth(gapMode);
+	}, [gapMode]);
+	return import_react.createElement(Style, { styles: getStyles(gap, !noRelative, gapMode, !noImportant ? "!important" : "") });
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js
+var passiveSupported = false;
+if (typeof window !== "undefined") try {
+	var options = Object.defineProperty({}, "passive", { get: function() {
+		passiveSupported = true;
+		return true;
+	} });
+	window.addEventListener("test", options, options);
+	window.removeEventListener("test", options, options);
+} catch (err) {
+	passiveSupported = false;
+}
+var nonPassive = passiveSupported ? { passive: false } : false;
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/handleScroll.js
+var alwaysContainsScroll = function(node) {
+	return node.tagName === "TEXTAREA";
+};
+var elementCanBeScrolled = function(node, overflow) {
+	if (!(node instanceof Element)) return false;
+	var styles = window.getComputedStyle(node);
+	return styles[overflow] !== "hidden" && !(styles.overflowY === styles.overflowX && !alwaysContainsScroll(node) && styles[overflow] === "visible");
+};
+var elementCouldBeVScrolled = function(node) {
+	return elementCanBeScrolled(node, "overflowY");
+};
+var elementCouldBeHScrolled = function(node) {
+	return elementCanBeScrolled(node, "overflowX");
+};
+var locationCouldBeScrolled = function(axis, node) {
+	var ownerDocument = node.ownerDocument;
+	var current = node;
+	do {
+		if (typeof ShadowRoot !== "undefined" && current instanceof ShadowRoot) current = current.host;
+		if (elementCouldBeScrolled(axis, current)) {
+			var _a = getScrollVariables(axis, current);
+			if (_a[1] > _a[2]) return true;
+		}
+		current = current.parentNode;
+	} while (current && current !== ownerDocument.body);
+	return false;
+};
+var getVScrollVariables = function(_a) {
+	return [
+		_a.scrollTop,
+		_a.scrollHeight,
+		_a.clientHeight
+	];
+};
+var getHScrollVariables = function(_a) {
+	return [
+		_a.scrollLeft,
+		_a.scrollWidth,
+		_a.clientWidth
+	];
+};
+var elementCouldBeScrolled = function(axis, node) {
+	return axis === "v" ? elementCouldBeVScrolled(node) : elementCouldBeHScrolled(node);
+};
+var getScrollVariables = function(axis, node) {
+	return axis === "v" ? getVScrollVariables(node) : getHScrollVariables(node);
+};
+var getDirectionFactor = function(axis, direction) {
+	/**
+	* If the element's direction is rtl (right-to-left), then scrollLeft is 0 when the scrollbar is at its rightmost position,
+	* and then increasingly negative as you scroll towards the end of the content.
+	* @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollLeft
+	*/
+	return axis === "h" && direction === "rtl" ? -1 : 1;
+};
+var handleScroll = function(axis, endTarget, event, sourceDelta, noOverscroll) {
+	var directionFactor = getDirectionFactor(axis, window.getComputedStyle(endTarget).direction);
+	var delta = directionFactor * sourceDelta;
+	var target = event.target;
+	var targetInLock = endTarget.contains(target);
+	var shouldCancelScroll = false;
+	var isDeltaPositive = delta > 0;
+	var availableScroll = 0;
+	var availableScrollTop = 0;
+	do {
+		if (!target) break;
+		var _a = getScrollVariables(axis, target), position = _a[0];
+		var elementScroll = _a[1] - _a[2] - directionFactor * position;
+		if (position || elementScroll) {
+			if (elementCouldBeScrolled(axis, target)) {
+				availableScroll += elementScroll;
+				availableScrollTop += position;
+			}
+		}
+		var parent_1 = target.parentNode;
+		target = parent_1 && parent_1.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? parent_1.host : parent_1;
+	} while (!targetInLock && target !== document.body || targetInLock && (endTarget.contains(target) || endTarget === target));
+	if (isDeltaPositive && (noOverscroll && Math.abs(availableScroll) < 1 || !noOverscroll && delta > availableScroll)) shouldCancelScroll = true;
+	else if (!isDeltaPositive && (noOverscroll && Math.abs(availableScrollTop) < 1 || !noOverscroll && -delta > availableScrollTop)) shouldCancelScroll = true;
+	return shouldCancelScroll;
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/SideEffect.js
+var getTouchXY = function(event) {
+	return "changedTouches" in event ? [event.changedTouches[0].clientX, event.changedTouches[0].clientY] : [0, 0];
+};
+var getDeltaXY = function(event) {
+	return [event.deltaX, event.deltaY];
+};
+var extractRef = function(ref) {
+	return ref && "current" in ref ? ref.current : ref;
+};
+var deltaCompare = function(x, y) {
+	return x[0] === y[0] && x[1] === y[1];
+};
+var generateStyle = function(id) {
+	return "\n  .block-interactivity-".concat(id, " {pointer-events: none;}\n  .allow-interactivity-").concat(id, " {pointer-events: all;}\n");
+};
+var idCounter = 0;
+var lockStack = [];
+function RemoveScrollSideCar(props) {
+	var shouldPreventQueue = import_react.useRef([]);
+	var touchStartRef = import_react.useRef([0, 0]);
+	var activeAxis = import_react.useRef();
+	var id = import_react.useState(idCounter++)[0];
+	var Style = import_react.useState(styleSingleton)[0];
+	var lastProps = import_react.useRef(props);
+	import_react.useEffect(function() {
+		lastProps.current = props;
+	}, [props]);
+	import_react.useEffect(function() {
+		if (props.inert) {
+			document.body.classList.add("block-interactivity-".concat(id));
+			var allow_1 = __spreadArray([props.lockRef.current], (props.shards || []).map(extractRef), true).filter(Boolean);
+			allow_1.forEach(function(el) {
+				return el.classList.add("allow-interactivity-".concat(id));
+			});
+			return function() {
+				document.body.classList.remove("block-interactivity-".concat(id));
+				allow_1.forEach(function(el) {
+					return el.classList.remove("allow-interactivity-".concat(id));
+				});
+			};
+		}
+	}, [
+		props.inert,
+		props.lockRef.current,
+		props.shards
+	]);
+	var shouldCancelEvent = import_react.useCallback(function(event, parent) {
+		if ("touches" in event && event.touches.length === 2 || event.type === "wheel" && event.ctrlKey) return !lastProps.current.allowPinchZoom;
+		var touch = getTouchXY(event);
+		var touchStart = touchStartRef.current;
+		var deltaX = "deltaX" in event ? event.deltaX : touchStart[0] - touch[0];
+		var deltaY = "deltaY" in event ? event.deltaY : touchStart[1] - touch[1];
+		var currentAxis;
+		var target = event.target;
+		var moveDirection = Math.abs(deltaX) > Math.abs(deltaY) ? "h" : "v";
+		if ("touches" in event && moveDirection === "h" && target.type === "range") return false;
+		var selection = window.getSelection();
+		var anchorNode = selection && selection.anchorNode;
+		if (anchorNode ? anchorNode === target || anchorNode.contains(target) : false) return false;
+		var canBeScrolledInMainDirection = locationCouldBeScrolled(moveDirection, target);
+		if (!canBeScrolledInMainDirection) return true;
+		if (canBeScrolledInMainDirection) currentAxis = moveDirection;
+		else {
+			currentAxis = moveDirection === "v" ? "h" : "v";
+			canBeScrolledInMainDirection = locationCouldBeScrolled(moveDirection, target);
+		}
+		if (!canBeScrolledInMainDirection) return false;
+		if (!activeAxis.current && "changedTouches" in event && (deltaX || deltaY)) activeAxis.current = currentAxis;
+		if (!currentAxis) return true;
+		var cancelingAxis = activeAxis.current || currentAxis;
+		return handleScroll(cancelingAxis, parent, event, cancelingAxis === "h" ? deltaX : deltaY, true);
+	}, []);
+	var shouldPrevent = import_react.useCallback(function(_event) {
+		var event = _event;
+		if (!lockStack.length || lockStack[lockStack.length - 1] !== Style) return;
+		var delta = "deltaY" in event ? getDeltaXY(event) : getTouchXY(event);
+		var sourceEvent = shouldPreventQueue.current.filter(function(e) {
+			return e.name === event.type && (e.target === event.target || event.target === e.shadowParent) && deltaCompare(e.delta, delta);
+		})[0];
+		if (sourceEvent && sourceEvent.should) {
+			if (event.cancelable) event.preventDefault();
+			return;
+		}
+		if (!sourceEvent) {
+			var shardNodes = (lastProps.current.shards || []).map(extractRef).filter(Boolean).filter(function(node) {
+				return node.contains(event.target);
+			});
+			if (shardNodes.length > 0 ? shouldCancelEvent(event, shardNodes[0]) : !lastProps.current.noIsolation) {
+				if (event.cancelable) event.preventDefault();
+			}
+		}
+	}, []);
+	var shouldCancel = import_react.useCallback(function(name, delta, target, should) {
+		var event = {
+			name,
+			delta,
+			target,
+			should,
+			shadowParent: getOutermostShadowParent(target)
+		};
+		shouldPreventQueue.current.push(event);
+		setTimeout(function() {
+			shouldPreventQueue.current = shouldPreventQueue.current.filter(function(e) {
+				return e !== event;
+			});
+		}, 1);
+	}, []);
+	var scrollTouchStart = import_react.useCallback(function(event) {
+		touchStartRef.current = getTouchXY(event);
+		activeAxis.current = void 0;
+	}, []);
+	var scrollWheel = import_react.useCallback(function(event) {
+		shouldCancel(event.type, getDeltaXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
+	}, []);
+	var scrollTouchMove = import_react.useCallback(function(event) {
+		shouldCancel(event.type, getTouchXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
+	}, []);
+	import_react.useEffect(function() {
+		lockStack.push(Style);
+		props.setCallbacks({
+			onScrollCapture: scrollWheel,
+			onWheelCapture: scrollWheel,
+			onTouchMoveCapture: scrollTouchMove
+		});
+		document.addEventListener("wheel", shouldPrevent, nonPassive);
+		document.addEventListener("touchmove", shouldPrevent, nonPassive);
+		document.addEventListener("touchstart", scrollTouchStart, nonPassive);
+		return function() {
+			lockStack = lockStack.filter(function(inst) {
+				return inst !== Style;
+			});
+			document.removeEventListener("wheel", shouldPrevent, nonPassive);
+			document.removeEventListener("touchmove", shouldPrevent, nonPassive);
+			document.removeEventListener("touchstart", scrollTouchStart, nonPassive);
+		};
+	}, []);
+	var removeScrollBar = props.removeScrollBar, inert = props.inert;
+	return import_react.createElement(import_react.Fragment, null, inert ? import_react.createElement(Style, { styles: generateStyle(id) }) : null, removeScrollBar ? import_react.createElement(RemoveScrollBar, {
+		noRelative: props.noRelative,
+		gapMode: props.gapMode
+	}) : null);
+}
+function getOutermostShadowParent(node) {
+	var shadowParent = null;
+	while (node !== null) {
+		if (node instanceof ShadowRoot) {
+			shadowParent = node.host;
+			node = node.host;
+		}
+		node = node.parentNode;
+	}
+	return shadowParent;
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/sidecar.js
+var sidecar_default = exportSidecar(effectCar, RemoveScrollSideCar);
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/Combination.js
+var ReactRemoveScroll = import_react.forwardRef(function(props, ref) {
+	return import_react.createElement(RemoveScroll, __assign({}, props, {
+		ref,
+		sideCar: sidecar_default
+	}));
+});
+ReactRemoveScroll.classNames = RemoveScroll.classNames;
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/aria-hidden@1.2.6/node_modules/aria-hidden/dist/es2015/index.js
+var getDefaultParent = function(originalTarget) {
+	if (typeof document === "undefined") return null;
+	return (Array.isArray(originalTarget) ? originalTarget[0] : originalTarget).ownerDocument.body;
+};
+var counterMap = /* @__PURE__ */ new WeakMap();
+var uncontrolledNodes = /* @__PURE__ */ new WeakMap();
+var markerMap = {};
+var lockCount = 0;
+var unwrapHost = function(node) {
+	return node && (node.host || unwrapHost(node.parentNode));
+};
+var correctTargets = function(parent, targets) {
+	return targets.map(function(target) {
+		if (parent.contains(target)) return target;
+		var correctedTarget = unwrapHost(target);
+		if (correctedTarget && parent.contains(correctedTarget)) return correctedTarget;
+		console.error("aria-hidden", target, "in not contained inside", parent, ". Doing nothing");
+		return null;
+	}).filter(function(x) {
+		return Boolean(x);
+	});
+};
+/**
+* Marks everything except given node(or nodes) as aria-hidden
+* @param {Element | Element[]} originalTarget - elements to keep on the page
+* @param [parentNode] - top element, defaults to document.body
+* @param {String} [markerName] - a special attribute to mark every node
+* @param {String} [controlAttribute] - html Attribute to control
+* @return {Undo} undo command
+*/
+var applyAttributeToOthers = function(originalTarget, parentNode, markerName, controlAttribute) {
+	var targets = correctTargets(parentNode, Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
+	if (!markerMap[markerName]) markerMap[markerName] = /* @__PURE__ */ new WeakMap();
+	var markerCounter = markerMap[markerName];
+	var hiddenNodes = [];
+	var elementsToKeep = /* @__PURE__ */ new Set();
+	var elementsToStop = new Set(targets);
+	var keep = function(el) {
+		if (!el || elementsToKeep.has(el)) return;
+		elementsToKeep.add(el);
+		keep(el.parentNode);
+	};
+	targets.forEach(keep);
+	var deep = function(parent) {
+		if (!parent || elementsToStop.has(parent)) return;
+		Array.prototype.forEach.call(parent.children, function(node) {
+			if (elementsToKeep.has(node)) deep(node);
+			else try {
+				var attr = node.getAttribute(controlAttribute);
+				var alreadyHidden = attr !== null && attr !== "false";
+				var counterValue = (counterMap.get(node) || 0) + 1;
+				var markerValue = (markerCounter.get(node) || 0) + 1;
+				counterMap.set(node, counterValue);
+				markerCounter.set(node, markerValue);
+				hiddenNodes.push(node);
+				if (counterValue === 1 && alreadyHidden) uncontrolledNodes.set(node, true);
+				if (markerValue === 1) node.setAttribute(markerName, "true");
+				if (!alreadyHidden) node.setAttribute(controlAttribute, "true");
+			} catch (e) {
+				console.error("aria-hidden: cannot operate on ", node, e);
+			}
+		});
+	};
+	deep(parentNode);
+	elementsToKeep.clear();
+	lockCount++;
+	return function() {
+		hiddenNodes.forEach(function(node) {
+			var counterValue = counterMap.get(node) - 1;
+			var markerValue = markerCounter.get(node) - 1;
+			counterMap.set(node, counterValue);
+			markerCounter.set(node, markerValue);
+			if (!counterValue) {
+				if (!uncontrolledNodes.has(node)) node.removeAttribute(controlAttribute);
+				uncontrolledNodes.delete(node);
+			}
+			if (!markerValue) node.removeAttribute(markerName);
+		});
+		lockCount--;
+		if (!lockCount) {
+			counterMap = /* @__PURE__ */ new WeakMap();
+			counterMap = /* @__PURE__ */ new WeakMap();
+			uncontrolledNodes = /* @__PURE__ */ new WeakMap();
+			markerMap = {};
+		}
+	};
+};
+/**
+* Marks everything except given node(or nodes) as aria-hidden
+* @param {Element | Element[]} originalTarget - elements to keep on the page
+* @param [parentNode] - top element, defaults to document.body
+* @param {String} [markerName] - a special attribute to mark every node
+* @return {Undo} undo command
+*/
+var hideOthers = function(originalTarget, parentNode, markerName) {
+	if (markerName === void 0) markerName = "data-aria-hidden";
+	var targets = Array.from(Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
+	var activeParentNode = parentNode || getDefaultParent(originalTarget);
+	if (!activeParentNode) return function() {
+		return null;
+	};
+	targets.push.apply(targets, Array.from(activeParentNode.querySelectorAll("[aria-live], script")));
+	return applyAttributeToOthers(targets, activeParentNode, markerName, "aria-hidden");
+};
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-dialog@1.1.15_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_779045218dc2799d336e7197abef9d38/node_modules/@radix-ui/react-dialog/dist/index.mjs
+var DIALOG_NAME = "Dialog";
+var [createDialogContext, createDialogScope] = createContextScope$1(DIALOG_NAME);
+var [DialogProvider, useDialogContext] = createDialogContext(DIALOG_NAME);
+var Dialog$1 = (props) => {
+	const { __scopeDialog, children, open: openProp, defaultOpen, onOpenChange, modal = true } = props;
+	const triggerRef = import_react.useRef(null);
+	const contentRef = import_react.useRef(null);
+	const [open, setOpen] = useControllableState({
+		prop: openProp,
+		defaultProp: defaultOpen ?? false,
+		onChange: onOpenChange,
+		caller: DIALOG_NAME
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogProvider, {
+		scope: __scopeDialog,
+		triggerRef,
+		contentRef,
+		contentId: useId(),
+		titleId: useId(),
+		descriptionId: useId(),
+		open,
+		onOpenChange: setOpen,
+		onOpenToggle: import_react.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+		modal,
+		children
+	});
+};
+Dialog$1.displayName = DIALOG_NAME;
+var TRIGGER_NAME$6 = "DialogTrigger";
+var DialogTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeDialog, ...triggerProps } = props;
+	const context = useDialogContext(TRIGGER_NAME$6, __scopeDialog);
+	const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		type: "button",
+		"aria-haspopup": "dialog",
+		"aria-expanded": context.open,
+		"aria-controls": context.contentId,
+		"data-state": getState$5(context.open),
+		...triggerProps,
+		ref: composedTriggerRef,
+		onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
+	});
+});
+DialogTrigger$1.displayName = TRIGGER_NAME$6;
+var PORTAL_NAME$2 = "DialogPortal";
+var [PortalProvider$1, usePortalContext$1] = createDialogContext(PORTAL_NAME$2, { forceMount: void 0 });
+var DialogPortal$1 = (props) => {
+	const { __scopeDialog, forceMount, children, container } = props;
+	const context = useDialogContext(PORTAL_NAME$2, __scopeDialog);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PortalProvider$1, {
+		scope: __scopeDialog,
+		forceMount,
+		children: import_react.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+			present: forceMount || context.open,
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$2, {
+				asChild: true,
+				container,
+				children: child
+			})
+		}))
+	});
+};
+DialogPortal$1.displayName = PORTAL_NAME$2;
+var OVERLAY_NAME = "DialogOverlay";
+var DialogOverlay$1 = import_react.forwardRef((props, forwardedRef) => {
+	const portalContext = usePortalContext$1(OVERLAY_NAME, props.__scopeDialog);
+	const { forceMount = portalContext.forceMount, ...overlayProps } = props;
+	const context = useDialogContext(OVERLAY_NAME, props.__scopeDialog);
+	return context.modal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || context.open,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogOverlayImpl, {
+			...overlayProps,
+			ref: forwardedRef
+		})
+	}) : null;
+});
+DialogOverlay$1.displayName = OVERLAY_NAME;
+var Slot$1 = /* @__PURE__ */ createSlot("DialogOverlay.RemoveScroll");
+var DialogOverlayImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeDialog, ...overlayProps } = props;
+	const context = useDialogContext(OVERLAY_NAME, __scopeDialog);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReactRemoveScroll, {
+		as: Slot$1,
+		allowPinchZoom: true,
+		shards: [context.contentRef],
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			"data-state": getState$5(context.open),
+			...overlayProps,
+			ref: forwardedRef,
+			style: {
+				pointerEvents: "auto",
+				...overlayProps.style
+			}
+		})
+	});
+});
+var CONTENT_NAME$6 = "DialogContent";
+var DialogContent$1 = import_react.forwardRef((props, forwardedRef) => {
+	const portalContext = usePortalContext$1(CONTENT_NAME$6, props.__scopeDialog);
+	const { forceMount = portalContext.forceMount, ...contentProps } = props;
+	const context = useDialogContext(CONTENT_NAME$6, props.__scopeDialog);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || context.open,
+		children: context.modal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentModal, {
+			...contentProps,
+			ref: forwardedRef
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentNonModal, {
+			...contentProps,
+			ref: forwardedRef
+		})
+	});
+});
+DialogContent$1.displayName = CONTENT_NAME$6;
+var DialogContentModal = import_react.forwardRef((props, forwardedRef) => {
+	const context = useDialogContext(CONTENT_NAME$6, props.__scopeDialog);
+	const contentRef = import_react.useRef(null);
+	const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef);
+	import_react.useEffect(() => {
+		const content = contentRef.current;
+		if (content) return hideOthers(content);
+	}, []);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentImpl, {
+		...props,
+		ref: composedRefs,
+		trapFocus: context.open,
+		disableOutsidePointerEvents: true,
+		onCloseAutoFocus: composeEventHandlers(props.onCloseAutoFocus, (event) => {
+			event.preventDefault();
+			context.triggerRef.current?.focus();
+		}),
+		onPointerDownOutside: composeEventHandlers(props.onPointerDownOutside, (event) => {
+			const originalEvent = event.detail.originalEvent;
+			const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+			if (originalEvent.button === 2 || ctrlLeftClick) event.preventDefault();
+		}),
+		onFocusOutside: composeEventHandlers(props.onFocusOutside, (event) => event.preventDefault())
+	});
+});
+var DialogContentNonModal = import_react.forwardRef((props, forwardedRef) => {
+	const context = useDialogContext(CONTENT_NAME$6, props.__scopeDialog);
+	const hasInteractedOutsideRef = import_react.useRef(false);
+	const hasPointerDownOutsideRef = import_react.useRef(false);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentImpl, {
+		...props,
+		ref: forwardedRef,
+		trapFocus: false,
+		disableOutsidePointerEvents: false,
+		onCloseAutoFocus: (event) => {
+			props.onCloseAutoFocus?.(event);
+			if (!event.defaultPrevented) {
+				if (!hasInteractedOutsideRef.current) context.triggerRef.current?.focus();
+				event.preventDefault();
+			}
+			hasInteractedOutsideRef.current = false;
+			hasPointerDownOutsideRef.current = false;
+		},
+		onInteractOutside: (event) => {
+			props.onInteractOutside?.(event);
+			if (!event.defaultPrevented) {
+				hasInteractedOutsideRef.current = true;
+				if (event.detail.originalEvent.type === "pointerdown") hasPointerDownOutsideRef.current = true;
+			}
+			const target = event.target;
+			if (context.triggerRef.current?.contains(target)) event.preventDefault();
+			if (event.detail.originalEvent.type === "focusin" && hasPointerDownOutsideRef.current) event.preventDefault();
+		}
+	});
+});
+var DialogContentImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeDialog, trapFocus, onOpenAutoFocus, onCloseAutoFocus, ...contentProps } = props;
+	const context = useDialogContext(CONTENT_NAME$6, __scopeDialog);
+	const contentRef = import_react.useRef(null);
+	const composedRefs = useComposedRefs(forwardedRef, contentRef);
+	useFocusGuards();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FocusScope, {
+		asChild: true,
+		loop: true,
+		trapped: trapFocus,
+		onMountAutoFocus: onOpenAutoFocus,
+		onUnmountAutoFocus: onCloseAutoFocus,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DismissableLayer, {
+			role: "dialog",
+			id: context.contentId,
+			"aria-describedby": context.descriptionId,
+			"aria-labelledby": context.titleId,
+			"data-state": getState$5(context.open),
+			...contentProps,
+			ref: composedRefs,
+			onDismiss: () => context.onOpenChange(false)
+		})
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TitleWarning, { titleId: context.titleId }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DescriptionWarning, {
+		contentRef,
+		descriptionId: context.descriptionId
+	})] })] });
+});
+var TITLE_NAME = "DialogTitle";
+var DialogTitle$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeDialog, ...titleProps } = props;
+	const context = useDialogContext(TITLE_NAME, __scopeDialog);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.h2, {
+		id: context.titleId,
+		...titleProps,
+		ref: forwardedRef
+	});
+});
+DialogTitle$1.displayName = TITLE_NAME;
+var DESCRIPTION_NAME = "DialogDescription";
+var DialogDescription$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeDialog, ...descriptionProps } = props;
+	const context = useDialogContext(DESCRIPTION_NAME, __scopeDialog);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.p, {
+		id: context.descriptionId,
+		...descriptionProps,
+		ref: forwardedRef
+	});
+});
+DialogDescription$1.displayName = DESCRIPTION_NAME;
+var CLOSE_NAME = "DialogClose";
+var DialogClose$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeDialog, ...closeProps } = props;
+	const context = useDialogContext(CLOSE_NAME, __scopeDialog);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+		type: "button",
+		...closeProps,
+		ref: forwardedRef,
+		onClick: composeEventHandlers(props.onClick, () => context.onOpenChange(false))
+	});
+});
+DialogClose$1.displayName = CLOSE_NAME;
+function getState$5(open) {
+	return open ? "open" : "closed";
+}
+var TITLE_WARNING_NAME = "DialogTitleWarning";
+var [WarningProvider, useWarningContext] = createContext2(TITLE_WARNING_NAME, {
+	contentName: CONTENT_NAME$6,
+	titleName: TITLE_NAME,
+	docsSlug: "dialog"
+});
+var TitleWarning = ({ titleId }) => {
+	const titleWarningContext = useWarningContext(TITLE_WARNING_NAME);
+	const MESSAGE = `\`${titleWarningContext.contentName}\` requires a \`${titleWarningContext.titleName}\` for the component to be accessible for screen reader users.
+
+If you want to hide the \`${titleWarningContext.titleName}\`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/${titleWarningContext.docsSlug}`;
+	import_react.useEffect(() => {
+		if (titleId) {
+			if (!document.getElementById(titleId)) console.error(MESSAGE);
+		}
+	}, [MESSAGE, titleId]);
+	return null;
+};
+var DESCRIPTION_WARNING_NAME = "DialogDescriptionWarning";
+var DescriptionWarning = ({ contentRef, descriptionId }) => {
+	const MESSAGE = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${useWarningContext(DESCRIPTION_WARNING_NAME).contentName}}.`;
+	import_react.useEffect(() => {
+		const describedById = contentRef.current?.getAttribute("aria-describedby");
+		if (descriptionId && describedById) {
+			if (!document.getElementById(descriptionId)) console.warn(MESSAGE);
+		}
+	}, [
+		MESSAGE,
+		contentRef,
+		descriptionId
+	]);
+	return null;
+};
+var Root$7 = Dialog$1;
+var Portal$1 = DialogPortal$1;
+var Overlay = DialogOverlay$1;
+var Content$3 = DialogContent$1;
+var Title = DialogTitle$1;
+var Description = DialogDescription$1;
+var Close = DialogClose$1;
+//#endregion
+//#region src/components/ui/sheet.tsx
+var Sheet = Root$7;
+var SheetPortal = Portal$1;
+var SheetOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
+	"data-uid": "src/components/ui/sheet.tsx:21:3",
+	"data-prohibitions": "[editContent]",
+	className: cn("fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
+	...props,
+	ref
+}));
+SheetOverlay.displayName = Overlay.displayName;
+var sheetVariants = cva("fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500", {
+	variants: { side: {
+		top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+		bottom: "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+		left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+		right: "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm"
+	} },
+	defaultVariants: { side: "right" }
+});
+var SheetContent = import_react.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SheetPortal, {
+	"data-uid": "src/components/ui/sheet.tsx:60:3",
+	"data-prohibitions": "[editContent]",
+	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SheetOverlay, {
+		"data-uid": "src/components/ui/sheet.tsx:61:5",
+		"data-prohibitions": "[editContent]"
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content$3, {
+		"data-uid": "src/components/ui/sheet.tsx:62:5",
+		"data-prohibitions": "[editContent]",
+		ref,
+		className: cn(sheetVariants({ side }), className),
+		...props,
+		children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Close, {
+			"data-uid": "src/components/ui/sheet.tsx:64:7",
+			"data-prohibitions": "[]",
+			className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
+				"data-uid": "src/components/ui/sheet.tsx:65:9",
+				"data-prohibitions": "[editContent]",
+				className: "h-4 w-4"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+				"data-uid": "src/components/ui/sheet.tsx:66:9",
+				"data-prohibitions": "[]",
+				className: "sr-only",
+				children: "Close"
+			})]
+		})]
+	})]
+}));
+SheetContent.displayName = Content$3.displayName;
+var SheetHeader = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/sheet.tsx:74:3",
+	"data-prohibitions": "[editContent]",
+	className: cn("flex flex-col space-y-2 text-center sm:text-left", className),
+	...props
+});
+SheetHeader.displayName = "SheetHeader";
+var SheetFooter = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/sheet.tsx:79:3",
+	"data-prohibitions": "[editContent]",
+	className: cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
+	...props
+});
+SheetFooter.displayName = "SheetFooter";
+var SheetTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Title, {
+	"data-uid": "src/components/ui/sheet.tsx:90:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("text-lg font-semibold text-foreground", className),
+	...props
+}));
+SheetTitle.displayName = Title.displayName;
+var SheetDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description, {
+	"data-uid": "src/components/ui/sheet.tsx:102:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("text-sm text-muted-foreground", className),
+	...props
+}));
+SheetDescription.displayName = Description.displayName;
+//#endregion
+//#region src/components/ui/skeleton.tsx
+function Skeleton({ className, ...props }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		"data-uid": "src/components/ui/skeleton.tsx:5:10",
+		"data-prohibitions": "[editContent]",
+		className: cn("animate-pulse rounded-md bg-muted", className),
+		...props
+	});
 }
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@floating-ui+utils@0.2.11/node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
@@ -23828,7 +23749,7 @@ var arrow = (options, deps) => {
 var NAME$2 = "Arrow";
 var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { children, width = 10, height = 5, ...arrowProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.svg, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.svg, {
 		...arrowProps,
 		ref: forwardedRef,
 		width,
@@ -23839,7 +23760,7 @@ var Arrow$1 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Arrow$1.displayName = NAME$2;
-var Root$8 = Arrow$1;
+var Root$6 = Arrow$1;
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-size@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-size/dist/index.mjs
 function useSize(element) {
@@ -23892,10 +23813,10 @@ var Popper = (props) => {
 	});
 };
 Popper.displayName = POPPER_NAME;
-var ANCHOR_NAME$1 = "PopperAnchor";
+var ANCHOR_NAME = "PopperAnchor";
 var PopperAnchor = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopePopper, virtualRef, ...anchorProps } = props;
-	const context = usePopperContext(ANCHOR_NAME$1, __scopePopper);
+	const context = usePopperContext(ANCHOR_NAME, __scopePopper);
 	const ref = import_react.useRef(null);
 	const composedRefs = useComposedRefs(forwardedRef, ref);
 	const anchorRef = import_react.useRef(null);
@@ -23904,17 +23825,17 @@ var PopperAnchor = import_react.forwardRef((props, forwardedRef) => {
 		anchorRef.current = virtualRef?.current || ref.current;
 		if (previousAnchor !== anchorRef.current) context.onAnchorChange(anchorRef.current);
 	});
-	return virtualRef ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+	return virtualRef ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 		...anchorProps,
 		ref: composedRefs
 	});
 });
-PopperAnchor.displayName = ANCHOR_NAME$1;
-var CONTENT_NAME$7 = "PopperContent";
-var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME$7);
+PopperAnchor.displayName = ANCHOR_NAME;
+var CONTENT_NAME$5 = "PopperContent";
+var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME$5);
 var PopperContent = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopePopper, side = "bottom", sideOffset = 0, align = "center", alignOffset = 0, arrowPadding = 0, avoidCollisions = true, collisionBoundary = [], collisionPadding: collisionPaddingProp = 0, sticky = "partial", hideWhenDetached = false, updatePositionStrategy = "optimized", onPlaced, ...contentProps } = props;
-	const context = usePopperContext(CONTENT_NAME$7, __scopePopper);
+	const context = usePopperContext(CONTENT_NAME$5, __scopePopper);
 	const [content, setContent] = import_react.useState(null);
 	const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
 	const [arrow$4, setArrow] = import_react.useState(null);
@@ -24014,7 +23935,7 @@ var PopperContent = import_react.forwardRef((props, forwardedRef) => {
 			arrowX,
 			arrowY,
 			shouldHideArrow: cannotCenterArrow,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 				"data-side": placedSide,
 				"data-align": placedAlign,
 				...contentProps,
@@ -24027,8 +23948,8 @@ var PopperContent = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-PopperContent.displayName = CONTENT_NAME$7;
-var ARROW_NAME$4 = "PopperArrow";
+PopperContent.displayName = CONTENT_NAME$5;
+var ARROW_NAME$2 = "PopperArrow";
 var OPPOSITE_SIDE = {
 	top: "bottom",
 	right: "left",
@@ -24037,7 +23958,7 @@ var OPPOSITE_SIDE = {
 };
 var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwardedRef) {
 	const { __scopePopper, ...arrowProps } = props;
-	const contentContext = useContentContext(ARROW_NAME$4, __scopePopper);
+	const contentContext = useContentContext(ARROW_NAME$2, __scopePopper);
 	const baseSide = OPPOSITE_SIDE[contentContext.placedSide];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 		ref: contentContext.onArrowChange,
@@ -24060,7 +23981,7 @@ var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwarded
 			}[contentContext.placedSide],
 			visibility: contentContext.shouldHideArrow ? "hidden" : void 0
 		},
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$8, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$6, {
 			...arrowProps,
 			ref: forwardedRef,
 			style: {
@@ -24070,7 +23991,7 @@ var PopperArrow = import_react.forwardRef(function PopperArrow2(props, forwarded
 		})
 	});
 });
-PopperArrow.displayName = ARROW_NAME$4;
+PopperArrow.displayName = ARROW_NAME$2;
 function isNotNull(value) {
 	return value !== null;
 }
@@ -24120,9 +24041,36 @@ var Anchor = PopperAnchor;
 var Content$2 = PopperContent;
 var Arrow = PopperArrow;
 //#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-visually-hidden@1.2.3_@types+react-dom@19.2.3_@types+react@19.2.14__@ty_fa89646d7248b32d1762bf88948f6339/node_modules/@radix-ui/react-visually-hidden/dist/index.mjs
+var VISUALLY_HIDDEN_STYLES = Object.freeze({
+	position: "absolute",
+	border: 0,
+	width: 1,
+	height: 1,
+	padding: 0,
+	margin: -1,
+	overflow: "hidden",
+	clip: "rect(0, 0, 0, 0)",
+	whiteSpace: "nowrap",
+	wordWrap: "normal"
+});
+var NAME$1 = "VisuallyHidden";
+var VisuallyHidden = import_react.forwardRef((props, forwardedRef) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+		...props,
+		ref: forwardedRef,
+		style: {
+			...VISUALLY_HIDDEN_STYLES,
+			...props.style
+		}
+	});
+});
+VisuallyHidden.displayName = NAME$1;
+var Root$5 = VisuallyHidden;
+//#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-tooltip@1.2.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_9074d9fb06315b089b2bee17c4c65951/node_modules/@radix-ui/react-tooltip/dist/index.mjs
 var [createTooltipContext, createTooltipScope] = createContextScope$1("Tooltip", [createPopperScope]);
-var usePopperScope$2 = createPopperScope();
+var usePopperScope$1 = createPopperScope();
 var PROVIDER_NAME = "TooltipProvider";
 var DEFAULT_DELAY_DURATION = 700;
 var TOOLTIP_OPEN = "tooltip.open";
@@ -24162,7 +24110,7 @@ var [TooltipContextProvider, useTooltipContext] = createTooltipContext(TOOLTIP_N
 var Tooltip$1 = (props) => {
 	const { __scopeTooltip, children, open: openProp, defaultOpen, onOpenChange, disableHoverableContent: disableHoverableContentProp, delayDuration: delayDurationProp } = props;
 	const providerContext = useTooltipProviderContext(TOOLTIP_NAME, props.__scopeTooltip);
-	const popperScope = usePopperScope$2(__scopeTooltip);
+	const popperScope = usePopperScope$1(__scopeTooltip);
 	const [trigger, setTrigger] = import_react.useState(null);
 	const contentId = useId();
 	const openTimerRef = import_react.useRef(0);
@@ -24243,12 +24191,12 @@ var Tooltip$1 = (props) => {
 	});
 };
 Tooltip$1.displayName = TOOLTIP_NAME;
-var TRIGGER_NAME$6 = "TooltipTrigger";
+var TRIGGER_NAME$5 = "TooltipTrigger";
 var TooltipTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeTooltip, ...triggerProps } = props;
-	const context = useTooltipContext(TRIGGER_NAME$6, __scopeTooltip);
-	const providerContext = useTooltipProviderContext(TRIGGER_NAME$6, __scopeTooltip);
-	const popperScope = usePopperScope$2(__scopeTooltip);
+	const context = useTooltipContext(TRIGGER_NAME$5, __scopeTooltip);
+	const providerContext = useTooltipProviderContext(TRIGGER_NAME$5, __scopeTooltip);
+	const popperScope = usePopperScope$1(__scopeTooltip);
 	const composedRefs = useComposedRefs(forwardedRef, import_react.useRef(null), context.onTriggerChange);
 	const isPointerDownRef = import_react.useRef(false);
 	const hasPointerMoveOpenedRef = import_react.useRef(false);
@@ -24259,7 +24207,7 @@ var TooltipTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
 		asChild: true,
 		...popperScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
 			"aria-describedby": context.open ? context.contentId : void 0,
 			"data-state": context.stateAttribute,
 			...triggerProps,
@@ -24288,18 +24236,18 @@ var TooltipTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-TooltipTrigger$1.displayName = TRIGGER_NAME$6;
-var PORTAL_NAME$4 = "TooltipPortal";
-var [PortalProvider$2, usePortalContext$2] = createTooltipContext(PORTAL_NAME$4, { forceMount: void 0 });
+TooltipTrigger$1.displayName = TRIGGER_NAME$5;
+var PORTAL_NAME$1 = "TooltipPortal";
+var [PortalProvider, usePortalContext] = createTooltipContext(PORTAL_NAME$1, { forceMount: void 0 });
 var TooltipPortal = (props) => {
 	const { __scopeTooltip, forceMount, children, container } = props;
-	const context = useTooltipContext(PORTAL_NAME$4, __scopeTooltip);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PortalProvider$2, {
+	const context = useTooltipContext(PORTAL_NAME$1, __scopeTooltip);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PortalProvider, {
 		scope: __scopeTooltip,
 		forceMount,
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
 			present: forceMount || context.open,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$3, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$2, {
 				asChild: true,
 				container,
 				children
@@ -24307,12 +24255,12 @@ var TooltipPortal = (props) => {
 		})
 	});
 };
-TooltipPortal.displayName = PORTAL_NAME$4;
-var CONTENT_NAME$6 = "TooltipContent";
+TooltipPortal.displayName = PORTAL_NAME$1;
+var CONTENT_NAME$4 = "TooltipContent";
 var TooltipContent$1 = import_react.forwardRef((props, forwardedRef) => {
-	const portalContext = usePortalContext$2(CONTENT_NAME$6, props.__scopeTooltip);
+	const portalContext = usePortalContext(CONTENT_NAME$4, props.__scopeTooltip);
 	const { forceMount = portalContext.forceMount, side = "top", ...contentProps } = props;
-	const context = useTooltipContext(CONTENT_NAME$6, props.__scopeTooltip);
+	const context = useTooltipContext(CONTENT_NAME$4, props.__scopeTooltip);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
 		present: forceMount || context.open,
 		children: context.disableHoverableContent ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContentImpl, {
@@ -24327,8 +24275,8 @@ var TooltipContent$1 = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 var TooltipContentHoverable = import_react.forwardRef((props, forwardedRef) => {
-	const context = useTooltipContext(CONTENT_NAME$6, props.__scopeTooltip);
-	const providerContext = useTooltipProviderContext(CONTENT_NAME$6, props.__scopeTooltip);
+	const context = useTooltipContext(CONTENT_NAME$4, props.__scopeTooltip);
+	const providerContext = useTooltipProviderContext(CONTENT_NAME$4, props.__scopeTooltip);
 	const ref = import_react.useRef(null);
 	const composedRefs = useComposedRefs(forwardedRef, ref);
 	const [pointerGraceArea, setPointerGraceArea] = import_react.useState(null);
@@ -24379,7 +24327,7 @@ var TooltipContentHoverable = import_react.forwardRef((props, forwardedRef) => {
 					y: event.clientY
 				};
 				const hasEnteredTarget = trigger?.contains(target) || content?.contains(target);
-				const isPointerOutsideGraceArea = !isPointInPolygon$1(pointerPosition, pointerGraceArea);
+				const isPointerOutsideGraceArea = !isPointInPolygon(pointerPosition, pointerGraceArea);
 				if (hasEnteredTarget) handleRemoveGraceArea();
 				else if (isPointerOutsideGraceArea) {
 					handleRemoveGraceArea();
@@ -24405,8 +24353,8 @@ var [VisuallyHiddenContentContextProvider, useVisuallyHiddenContentContext] = cr
 var Slottable = /* @__PURE__ */ createSlottable("TooltipContent");
 var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeTooltip, children, "aria-label": ariaLabel, onEscapeKeyDown, onPointerDownOutside, ...contentProps } = props;
-	const context = useTooltipContext(CONTENT_NAME$6, __scopeTooltip);
-	const popperScope = usePopperScope$2(__scopeTooltip);
+	const context = useTooltipContext(CONTENT_NAME$4, __scopeTooltip);
+	const popperScope = usePopperScope$1(__scopeTooltip);
 	const { onClose } = context;
 	import_react.useEffect(() => {
 		document.addEventListener(TOOLTIP_OPEN, onClose);
@@ -24444,7 +24392,7 @@ var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Slottable, { children }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHiddenContentContextProvider, {
 				scope: __scopeTooltip,
 				isInside: true,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$9, {
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
 					id: context.contentId,
 					role: "tooltip",
 					children: ariaLabel || children
@@ -24453,18 +24401,18 @@ var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-TooltipContent$1.displayName = CONTENT_NAME$6;
-var ARROW_NAME$3 = "TooltipArrow";
+TooltipContent$1.displayName = CONTENT_NAME$4;
+var ARROW_NAME$1 = "TooltipArrow";
 var TooltipArrow = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeTooltip, ...arrowProps } = props;
-	const popperScope = usePopperScope$2(__scopeTooltip);
-	return useVisuallyHiddenContentContext(ARROW_NAME$3, __scopeTooltip).isInside ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Arrow, {
+	const popperScope = usePopperScope$1(__scopeTooltip);
+	return useVisuallyHiddenContentContext(ARROW_NAME$1, __scopeTooltip).isInside ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Arrow, {
 		...popperScope,
 		...arrowProps,
 		ref: forwardedRef
 	});
 });
-TooltipArrow.displayName = ARROW_NAME$3;
+TooltipArrow.displayName = ARROW_NAME$1;
 function getExitSideFromRect(point, rect) {
 	const top = Math.abs(rect.top - point.y);
 	const bottom = Math.abs(rect.bottom - point.y);
@@ -24541,7 +24489,7 @@ function getPointsFromRect(rect) {
 		}
 	];
 }
-function isPointInPolygon$1(point, polygon) {
+function isPointInPolygon(point, polygon) {
 	const { x, y } = point;
 	let inside = false;
 	for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
@@ -24596,1659 +24544,23 @@ function getHullPresorted(points) {
 	else return upperHull.concat(lowerHull);
 }
 var Provider = TooltipProvider$1;
-var Root3$1 = Tooltip$1;
-var Trigger$4 = TooltipTrigger$1;
-var Content2$4 = TooltipContent$1;
+var Root3 = Tooltip$1;
+var Trigger$3 = TooltipTrigger$1;
+var Content2$2 = TooltipContent$1;
 //#endregion
 //#region src/components/ui/tooltip.tsx
 var TooltipProvider = Provider;
-var Tooltip = Root3$1;
-var TooltipTrigger = Trigger$4;
-var TooltipContent = import_react.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2$4, {
+var Tooltip = Root3;
+var TooltipTrigger = Trigger$3;
+var TooltipContent = import_react.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2$2, {
 	"data-uid": "src/components/ui/tooltip.tsx:17:3",
 	"data-prohibitions": "[editContent]",
 	ref,
 	sideOffset,
-	className: cn$1("z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]", className),
+	className: cn("z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]", className),
 	...props
 }));
-TooltipContent.displayName = Content2$4.displayName;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-slot@1.2.4_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-slot/dist/index.mjs
-var REACT_LAZY_TYPE = Symbol.for("react.lazy");
-var use = import_react[" use ".trim().toString()];
-function isPromiseLike(value) {
-	return typeof value === "object" && value !== null && "then" in value;
-}
-function isLazyComponent(element) {
-	return element != null && typeof element === "object" && "$$typeof" in element && element.$$typeof === REACT_LAZY_TYPE && "_payload" in element && isPromiseLike(element._payload);
-}
-/* @__NO_SIDE_EFFECTS__ */
-function createSlot(ownerName) {
-	const SlotClone = /* @__PURE__ */ createSlotClone(ownerName);
-	const Slot2 = import_react.forwardRef((props, forwardedRef) => {
-		let { children, ...slotProps } = props;
-		if (isLazyComponent(children) && typeof use === "function") children = use(children._payload);
-		const childrenArray = import_react.Children.toArray(children);
-		const slottable = childrenArray.find(isSlottable);
-		if (slottable) {
-			const newElement = slottable.props.children;
-			const newChildren = childrenArray.map((child) => {
-				if (child === slottable) {
-					if (import_react.Children.count(newElement) > 1) return import_react.Children.only(null);
-					return import_react.isValidElement(newElement) ? newElement.props.children : null;
-				} else return child;
-			});
-			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SlotClone, {
-				...slotProps,
-				ref: forwardedRef,
-				children: import_react.isValidElement(newElement) ? import_react.cloneElement(newElement, void 0, newChildren) : null
-			});
-		}
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SlotClone, {
-			...slotProps,
-			ref: forwardedRef,
-			children
-		});
-	});
-	Slot2.displayName = `${ownerName}.Slot`;
-	return Slot2;
-}
-var Slot$3 = /* @__PURE__ */ createSlot("Slot");
-/* @__NO_SIDE_EFFECTS__ */
-function createSlotClone(ownerName) {
-	const SlotClone = import_react.forwardRef((props, forwardedRef) => {
-		let { children, ...slotProps } = props;
-		if (isLazyComponent(children) && typeof use === "function") children = use(children._payload);
-		if (import_react.isValidElement(children)) {
-			const childrenRef = getElementRef(children);
-			const props2 = mergeProps(slotProps, children.props);
-			if (children.type !== import_react.Fragment) props2.ref = forwardedRef ? composeRefs(forwardedRef, childrenRef) : childrenRef;
-			return import_react.cloneElement(children, props2);
-		}
-		return import_react.Children.count(children) > 1 ? import_react.Children.only(null) : null;
-	});
-	SlotClone.displayName = `${ownerName}.SlotClone`;
-	return SlotClone;
-}
-var SLOTTABLE_IDENTIFIER = Symbol("radix.slottable");
-function isSlottable(child) {
-	return import_react.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
-}
-function mergeProps(slotProps, childProps) {
-	const overrideProps = { ...childProps };
-	for (const propName in childProps) {
-		const slotPropValue = slotProps[propName];
-		const childPropValue = childProps[propName];
-		if (/^on[A-Z]/.test(propName)) {
-			if (slotPropValue && childPropValue) overrideProps[propName] = (...args) => {
-				const result = childPropValue(...args);
-				slotPropValue(...args);
-				return result;
-			};
-			else if (slotPropValue) overrideProps[propName] = slotPropValue;
-		} else if (propName === "style") overrideProps[propName] = {
-			...slotPropValue,
-			...childPropValue
-		};
-		else if (propName === "className") overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
-	}
-	return {
-		...slotProps,
-		...overrideProps
-	};
-}
-function getElementRef(element) {
-	let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-	let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.ref;
-	getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-	mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-	if (mayWarn) return element.props.ref;
-	return element.props.ref || element.ref;
-}
-//#endregion
-//#region src/hooks/use-mobile.tsx
-var MOBILE_BREAKPOINT = 768;
-function useIsMobile() {
-	const [isMobile, setIsMobile] = import_react.useState(void 0);
-	import_react.useEffect(() => {
-		const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-		const onChange = () => {
-			setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-		};
-		mql.addEventListener("change", onChange);
-		setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-		return () => mql.removeEventListener("change", onChange);
-	}, []);
-	return !!isMobile;
-}
-//#endregion
-//#region src/components/ui/button.tsx
-var buttonVariants = cva("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", {
-	variants: {
-		variant: {
-			default: "bg-primary text-primary-foreground hover:bg-primary/90",
-			destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-			outline: "border border-input bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground",
-			secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-			ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
-			link: "text-foreground underline-offset-4 hover:underline"
-		},
-		size: {
-			default: "h-10 px-4 py-2",
-			sm: "h-9 rounded-md px-3",
-			lg: "h-11 rounded-md px-8",
-			icon: "h-10 w-10"
-		}
-	},
-	defaultVariants: {
-		variant: "default",
-		size: "default"
-	}
-});
-var Button = import_react.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$3 : "button", {
-		"data-uid": "src/components/ui/button.tsx:44:7",
-		"data-prohibitions": "[editContent]",
-		className: cn$1(buttonVariants({
-			variant,
-			size,
-			className
-		})),
-		ref,
-		...props
-	});
-});
-Button.displayName = "Button";
-//#endregion
-//#region src/components/ui/input.tsx
-var Input = import_react.forwardRef(({ className, type, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-		"data-uid": "src/components/ui/input.tsx:9:7",
-		"data-prohibitions": "[editContent]",
-		type,
-		className: cn$1("flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
-		ref,
-		...props
-	});
-});
-Input.displayName = "Input";
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-primitive@2.1.4_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_0243fb2db8a1fb85ca77b8d9e5c2d650/node_modules/@radix-ui/react-primitive/dist/index.mjs
-var Primitive = [
-	"a",
-	"button",
-	"div",
-	"form",
-	"h2",
-	"h3",
-	"img",
-	"input",
-	"label",
-	"li",
-	"nav",
-	"ol",
-	"p",
-	"select",
-	"span",
-	"svg",
-	"ul"
-].reduce((primitive, node) => {
-	const Slot = /* @__PURE__ */ createSlot(`Primitive.${node}`);
-	const Node = import_react.forwardRef((props, forwardedRef) => {
-		const { asChild, ...primitiveProps } = props;
-		const Comp = asChild ? Slot : node;
-		if (typeof window !== "undefined") window[Symbol.for("radix-ui")] = true;
-		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Comp, {
-			...primitiveProps,
-			ref: forwardedRef
-		});
-	});
-	Node.displayName = `Primitive.${node}`;
-	return {
-		...primitive,
-		[node]: Node
-	};
-}, {});
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-separator@1.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+re_aa2d5d85a81bb702303f0548763b9797/node_modules/@radix-ui/react-separator/dist/index.mjs
-var NAME$1 = "Separator";
-var DEFAULT_ORIENTATION = "horizontal";
-var ORIENTATIONS = ["horizontal", "vertical"];
-var Separator$3 = import_react.forwardRef((props, forwardedRef) => {
-	const { decorative, orientation: orientationProp = DEFAULT_ORIENTATION, ...domProps } = props;
-	const orientation = isValidOrientation(orientationProp) ? orientationProp : DEFAULT_ORIENTATION;
-	const ariaOrientation = orientation === "vertical" ? orientation : void 0;
-	const semanticProps = decorative ? { role: "none" } : {
-		"aria-orientation": ariaOrientation,
-		role: "separator"
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
-		"data-orientation": orientation,
-		...semanticProps,
-		...domProps,
-		ref: forwardedRef
-	});
-});
-Separator$3.displayName = NAME$1;
-function isValidOrientation(orientation) {
-	return ORIENTATIONS.includes(orientation);
-}
-var Root$7 = Separator$3;
-//#endregion
-//#region src/components/ui/separator.tsx
-var Separator$2 = import_react.forwardRef(({ className, orientation = "horizontal", decorative = true, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$7, {
-	"data-uid": "src/components/ui/separator.tsx:11:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	decorative,
-	orientation,
-	className: cn$1("shrink-0 bg-border", orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]", className),
-	...props
-}));
-Separator$2.displayName = Root$7.displayName;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-focus-scope@1.1.7_@types+react-dom@19.2.3_@types+react@19.2.14__@types+_f62f3af4ca2ba305a7aecf04c8534604/node_modules/@radix-ui/react-focus-scope/dist/index.mjs
-var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
-var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";
-var EVENT_OPTIONS$1 = {
-	bubbles: false,
-	cancelable: true
-};
-var FOCUS_SCOPE_NAME = "FocusScope";
-var FocusScope = import_react.forwardRef((props, forwardedRef) => {
-	const { loop = false, trapped = false, onMountAutoFocus: onMountAutoFocusProp, onUnmountAutoFocus: onUnmountAutoFocusProp, ...scopeProps } = props;
-	const [container, setContainer] = import_react.useState(null);
-	const onMountAutoFocus = useCallbackRef$1(onMountAutoFocusProp);
-	const onUnmountAutoFocus = useCallbackRef$1(onUnmountAutoFocusProp);
-	const lastFocusedElementRef = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, (node) => setContainer(node));
-	const focusScope = import_react.useRef({
-		paused: false,
-		pause() {
-			this.paused = true;
-		},
-		resume() {
-			this.paused = false;
-		}
-	}).current;
-	import_react.useEffect(() => {
-		if (trapped) {
-			let handleFocusIn2 = function(event) {
-				if (focusScope.paused || !container) return;
-				const target = event.target;
-				if (container.contains(target)) lastFocusedElementRef.current = target;
-				else focus(lastFocusedElementRef.current, { select: true });
-			}, handleFocusOut2 = function(event) {
-				if (focusScope.paused || !container) return;
-				const relatedTarget = event.relatedTarget;
-				if (relatedTarget === null) return;
-				if (!container.contains(relatedTarget)) focus(lastFocusedElementRef.current, { select: true });
-			}, handleMutations2 = function(mutations) {
-				if (document.activeElement !== document.body) return;
-				for (const mutation of mutations) if (mutation.removedNodes.length > 0) focus(container);
-			};
-			document.addEventListener("focusin", handleFocusIn2);
-			document.addEventListener("focusout", handleFocusOut2);
-			const mutationObserver = new MutationObserver(handleMutations2);
-			if (container) mutationObserver.observe(container, {
-				childList: true,
-				subtree: true
-			});
-			return () => {
-				document.removeEventListener("focusin", handleFocusIn2);
-				document.removeEventListener("focusout", handleFocusOut2);
-				mutationObserver.disconnect();
-			};
-		}
-	}, [
-		trapped,
-		container,
-		focusScope.paused
-	]);
-	import_react.useEffect(() => {
-		if (container) {
-			focusScopesStack.add(focusScope);
-			const previouslyFocusedElement = document.activeElement;
-			if (!container.contains(previouslyFocusedElement)) {
-				const mountEvent = new CustomEvent(AUTOFOCUS_ON_MOUNT, EVENT_OPTIONS$1);
-				container.addEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
-				container.dispatchEvent(mountEvent);
-				if (!mountEvent.defaultPrevented) {
-					focusFirst$2(removeLinks(getTabbableCandidates(container)), { select: true });
-					if (document.activeElement === previouslyFocusedElement) focus(container);
-				}
-			}
-			return () => {
-				container.removeEventListener(AUTOFOCUS_ON_MOUNT, onMountAutoFocus);
-				setTimeout(() => {
-					const unmountEvent = new CustomEvent(AUTOFOCUS_ON_UNMOUNT, EVENT_OPTIONS$1);
-					container.addEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
-					container.dispatchEvent(unmountEvent);
-					if (!unmountEvent.defaultPrevented) focus(previouslyFocusedElement ?? document.body, { select: true });
-					container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, onUnmountAutoFocus);
-					focusScopesStack.remove(focusScope);
-				}, 0);
-			};
-		}
-	}, [
-		container,
-		onMountAutoFocus,
-		onUnmountAutoFocus,
-		focusScope
-	]);
-	const handleKeyDown = import_react.useCallback((event) => {
-		if (!loop && !trapped) return;
-		if (focusScope.paused) return;
-		const isTabKey = event.key === "Tab" && !event.altKey && !event.ctrlKey && !event.metaKey;
-		const focusedElement = document.activeElement;
-		if (isTabKey && focusedElement) {
-			const container2 = event.currentTarget;
-			const [first, last] = getTabbableEdges(container2);
-			if (!(first && last)) {
-				if (focusedElement === container2) event.preventDefault();
-			} else if (!event.shiftKey && focusedElement === last) {
-				event.preventDefault();
-				if (loop) focus(first, { select: true });
-			} else if (event.shiftKey && focusedElement === first) {
-				event.preventDefault();
-				if (loop) focus(last, { select: true });
-			}
-		}
-	}, [
-		loop,
-		trapped,
-		focusScope.paused
-	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		tabIndex: -1,
-		...scopeProps,
-		ref: composedRefs,
-		onKeyDown: handleKeyDown
-	});
-});
-FocusScope.displayName = FOCUS_SCOPE_NAME;
-function focusFirst$2(candidates, { select = false } = {}) {
-	const previouslyFocusedElement = document.activeElement;
-	for (const candidate of candidates) {
-		focus(candidate, { select });
-		if (document.activeElement !== previouslyFocusedElement) return;
-	}
-}
-function getTabbableEdges(container) {
-	const candidates = getTabbableCandidates(container);
-	return [findVisible(candidates, container), findVisible(candidates.reverse(), container)];
-}
-function getTabbableCandidates(container) {
-	const nodes = [];
-	const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, { acceptNode: (node) => {
-		const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
-		if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP;
-		return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
-	} });
-	while (walker.nextNode()) nodes.push(walker.currentNode);
-	return nodes;
-}
-function findVisible(elements, container) {
-	for (const element of elements) if (!isHidden(element, { upTo: container })) return element;
-}
-function isHidden(node, { upTo }) {
-	if (getComputedStyle(node).visibility === "hidden") return true;
-	while (node) {
-		if (upTo !== void 0 && node === upTo) return false;
-		if (getComputedStyle(node).display === "none") return true;
-		node = node.parentElement;
-	}
-	return false;
-}
-function isSelectableInput(element) {
-	return element instanceof HTMLInputElement && "select" in element;
-}
-function focus(element, { select = false } = {}) {
-	if (element && element.focus) {
-		const previouslyFocusedElement = document.activeElement;
-		element.focus({ preventScroll: true });
-		if (element !== previouslyFocusedElement && isSelectableInput(element) && select) element.select();
-	}
-}
-var focusScopesStack = createFocusScopesStack();
-function createFocusScopesStack() {
-	let stack = [];
-	return {
-		add(focusScope) {
-			const activeFocusScope = stack[0];
-			if (focusScope !== activeFocusScope) activeFocusScope?.pause();
-			stack = arrayRemove(stack, focusScope);
-			stack.unshift(focusScope);
-		},
-		remove(focusScope) {
-			stack = arrayRemove(stack, focusScope);
-			stack[0]?.resume();
-		}
-	};
-}
-function arrayRemove(array, item) {
-	const updatedArray = [...array];
-	const index = updatedArray.indexOf(item);
-	if (index !== -1) updatedArray.splice(index, 1);
-	return updatedArray;
-}
-function removeLinks(items) {
-	return items.filter((item) => item.tagName !== "A");
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-focus-guards@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-focus-guards/dist/index.mjs
-var count = 0;
-function useFocusGuards() {
-	import_react.useEffect(() => {
-		const edgeGuards = document.querySelectorAll("[data-radix-focus-guard]");
-		document.body.insertAdjacentElement("afterbegin", edgeGuards[0] ?? createFocusGuard());
-		document.body.insertAdjacentElement("beforeend", edgeGuards[1] ?? createFocusGuard());
-		count++;
-		return () => {
-			if (count === 1) document.querySelectorAll("[data-radix-focus-guard]").forEach((node) => node.remove());
-			count--;
-		};
-	}, []);
-}
-function createFocusGuard() {
-	const element = document.createElement("span");
-	element.setAttribute("data-radix-focus-guard", "");
-	element.tabIndex = 0;
-	element.style.outline = "none";
-	element.style.opacity = "0";
-	element.style.position = "fixed";
-	element.style.pointerEvents = "none";
-	return element;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/tslib@2.8.1/node_modules/tslib/tslib.es6.mjs
-var __assign = function() {
-	__assign = Object.assign || function __assign(t) {
-		for (var s, i = 1, n = arguments.length; i < n; i++) {
-			s = arguments[i];
-			for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-		}
-		return t;
-	};
-	return __assign.apply(this, arguments);
-};
-function __rest(s, e) {
-	var t = {};
-	for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-	if (s != null && typeof Object.getOwnPropertySymbols === "function") {
-		for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
-	}
-	return t;
-}
-function __spreadArray(to, from, pack) {
-	if (pack || arguments.length === 2) {
-		for (var i = 0, l = from.length, ar; i < l; i++) if (ar || !(i in from)) {
-			if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-			ar[i] = from[i];
-		}
-	}
-	return to.concat(ar || Array.prototype.slice.call(from));
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll-bar@2.3.8_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll-bar/dist/es2015/constants.js
-var zeroRightClassName = "right-scroll-bar-position";
-var fullWidthClassName = "width-before-scroll-bar";
-var noScrollbarsClassName = "with-scroll-bars-hidden";
-/**
-* Name of a CSS variable containing the amount of "hidden" scrollbar
-* ! might be undefined ! use will fallback!
-*/
-var removedBarSizeVariable = "--removed-body-scroll-bar-size";
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-callback-ref@1.3.3_@types+react@19.2.14_react@19.2.4/node_modules/use-callback-ref/dist/es2015/assignRef.js
-/**
-* Assigns a value for a given ref, no matter of the ref format
-* @param {RefObject} ref - a callback function or ref object
-* @param value - a new value
-*
-* @see https://github.com/theKashey/use-callback-ref#assignref
-* @example
-* const refObject = useRef();
-* const refFn = (ref) => {....}
-*
-* assignRef(refObject, "refValue");
-* assignRef(refFn, "refValue");
-*/
-function assignRef(ref, value) {
-	if (typeof ref === "function") ref(value);
-	else if (ref) ref.current = value;
-	return ref;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-callback-ref@1.3.3_@types+react@19.2.14_react@19.2.4/node_modules/use-callback-ref/dist/es2015/useRef.js
-/**
-* creates a MutableRef with ref change callback
-* @param initialValue - initial ref value
-* @param {Function} callback - a callback to run when value changes
-*
-* @example
-* const ref = useCallbackRef(0, (newValue, oldValue) => console.log(oldValue, '->', newValue);
-* ref.current = 1;
-* // prints 0 -> 1
-*
-* @see https://reactjs.org/docs/hooks-reference.html#useref
-* @see https://github.com/theKashey/use-callback-ref#usecallbackref---to-replace-reactuseref
-* @returns {MutableRefObject}
-*/
-function useCallbackRef(initialValue, callback) {
-	var ref = (0, import_react.useState)(function() {
-		return {
-			value: initialValue,
-			callback,
-			facade: {
-				get current() {
-					return ref.value;
-				},
-				set current(value) {
-					var last = ref.value;
-					if (last !== value) {
-						ref.value = value;
-						ref.callback(value, last);
-					}
-				}
-			}
-		};
-	})[0];
-	ref.callback = callback;
-	return ref.facade;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-callback-ref@1.3.3_@types+react@19.2.14_react@19.2.4/node_modules/use-callback-ref/dist/es2015/useMergeRef.js
-var useIsomorphicLayoutEffect = typeof window !== "undefined" ? import_react.useLayoutEffect : import_react.useEffect;
-var currentValues = /* @__PURE__ */ new WeakMap();
-/**
-* Merges two or more refs together providing a single interface to set their value
-* @param {RefObject|Ref} refs
-* @returns {MutableRefObject} - a new ref, which translates all changes to {refs}
-*
-* @see {@link mergeRefs} a version without buit-in memoization
-* @see https://github.com/theKashey/use-callback-ref#usemergerefs
-* @example
-* const Component = React.forwardRef((props, ref) => {
-*   const ownRef = useRef();
-*   const domRef = useMergeRefs([ref, ownRef]); // 👈 merge together
-*   return <div ref={domRef}>...</div>
-* }
-*/
-function useMergeRefs(refs, defaultValue) {
-	var callbackRef = useCallbackRef(defaultValue || null, function(newValue) {
-		return refs.forEach(function(ref) {
-			return assignRef(ref, newValue);
-		});
-	});
-	useIsomorphicLayoutEffect(function() {
-		var oldValue = currentValues.get(callbackRef);
-		if (oldValue) {
-			var prevRefs_1 = new Set(oldValue);
-			var nextRefs_1 = new Set(refs);
-			var current_1 = callbackRef.current;
-			prevRefs_1.forEach(function(ref) {
-				if (!nextRefs_1.has(ref)) assignRef(ref, null);
-			});
-			nextRefs_1.forEach(function(ref) {
-				if (!prevRefs_1.has(ref)) assignRef(ref, current_1);
-			});
-		}
-		currentValues.set(callbackRef, refs);
-	}, [refs]);
-	return callbackRef;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-sidecar@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/use-sidecar/dist/es2015/medium.js
-function ItoI(a) {
-	return a;
-}
-function innerCreateMedium(defaults, middleware) {
-	if (middleware === void 0) middleware = ItoI;
-	var buffer = [];
-	var assigned = false;
-	return {
-		read: function() {
-			if (assigned) throw new Error("Sidecar: could not `read` from an `assigned` medium. `read` could be used only with `useMedium`.");
-			if (buffer.length) return buffer[buffer.length - 1];
-			return defaults;
-		},
-		useMedium: function(data) {
-			var item = middleware(data, assigned);
-			buffer.push(item);
-			return function() {
-				buffer = buffer.filter(function(x) {
-					return x !== item;
-				});
-			};
-		},
-		assignSyncMedium: function(cb) {
-			assigned = true;
-			while (buffer.length) {
-				var cbs = buffer;
-				buffer = [];
-				cbs.forEach(cb);
-			}
-			buffer = {
-				push: function(x) {
-					return cb(x);
-				},
-				filter: function() {
-					return buffer;
-				}
-			};
-		},
-		assignMedium: function(cb) {
-			assigned = true;
-			var pendingQueue = [];
-			if (buffer.length) {
-				var cbs = buffer;
-				buffer = [];
-				cbs.forEach(cb);
-				pendingQueue = buffer;
-			}
-			var executeQueue = function() {
-				var cbs = pendingQueue;
-				pendingQueue = [];
-				cbs.forEach(cb);
-			};
-			var cycle = function() {
-				return Promise.resolve().then(executeQueue);
-			};
-			cycle();
-			buffer = {
-				push: function(x) {
-					pendingQueue.push(x);
-					cycle();
-				},
-				filter: function(filter) {
-					pendingQueue = pendingQueue.filter(filter);
-					return buffer;
-				}
-			};
-		}
-	};
-}
-function createSidecarMedium(options) {
-	if (options === void 0) options = {};
-	var medium = innerCreateMedium(null);
-	medium.options = __assign({
-		async: true,
-		ssr: false
-	}, options);
-	return medium;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/use-sidecar@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/use-sidecar/dist/es2015/exports.js
-var SideCar = function(_a) {
-	var sideCar = _a.sideCar, rest = __rest(_a, ["sideCar"]);
-	if (!sideCar) throw new Error("Sidecar: please provide `sideCar` property to import the right car");
-	var Target = sideCar.read();
-	if (!Target) throw new Error("Sidecar medium not found");
-	return import_react.createElement(Target, __assign({}, rest));
-};
-SideCar.isSideCarExport = true;
-function exportSidecar(medium, exported) {
-	medium.useMedium(exported);
-	return SideCar;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/medium.js
-var effectCar = createSidecarMedium();
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/UI.js
-var nothing = function() {};
-/**
-* Removes scrollbar from the page and contain the scroll within the Lock
-*/
-var RemoveScroll = import_react.forwardRef(function(props, parentRef) {
-	var ref = import_react.useRef(null);
-	var _a = import_react.useState({
-		onScrollCapture: nothing,
-		onWheelCapture: nothing,
-		onTouchMoveCapture: nothing
-	}), callbacks = _a[0], setCallbacks = _a[1];
-	var forwardProps = props.forwardProps, children = props.children, className = props.className, removeScrollBar = props.removeScrollBar, enabled = props.enabled, shards = props.shards, sideCar = props.sideCar, noRelative = props.noRelative, noIsolation = props.noIsolation, inert = props.inert, allowPinchZoom = props.allowPinchZoom, _b = props.as, Container = _b === void 0 ? "div" : _b, gapMode = props.gapMode, rest = __rest(props, [
-		"forwardProps",
-		"children",
-		"className",
-		"removeScrollBar",
-		"enabled",
-		"shards",
-		"sideCar",
-		"noRelative",
-		"noIsolation",
-		"inert",
-		"allowPinchZoom",
-		"as",
-		"gapMode"
-	]);
-	var SideCar = sideCar;
-	var containerRef = useMergeRefs([ref, parentRef]);
-	var containerProps = __assign(__assign({}, rest), callbacks);
-	return import_react.createElement(import_react.Fragment, null, enabled && import_react.createElement(SideCar, {
-		sideCar: effectCar,
-		removeScrollBar,
-		shards,
-		noRelative,
-		noIsolation,
-		inert,
-		setCallbacks,
-		allowPinchZoom: !!allowPinchZoom,
-		lockRef: ref,
-		gapMode
-	}), forwardProps ? import_react.cloneElement(import_react.Children.only(children), __assign(__assign({}, containerProps), { ref: containerRef })) : import_react.createElement(Container, __assign({}, containerProps, {
-		className,
-		ref: containerRef
-	}), children));
-});
-RemoveScroll.defaultProps = {
-	enabled: true,
-	removeScrollBar: true,
-	inert: false
-};
-RemoveScroll.classNames = {
-	fullWidth: fullWidthClassName,
-	zeroRight: zeroRightClassName
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/get-nonce@1.0.1/node_modules/get-nonce/dist/es2015/index.js
-var currentNonce;
-var getNonce = function() {
-	if (currentNonce) return currentNonce;
-	if (typeof __webpack_nonce__ !== "undefined") return __webpack_nonce__;
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-style-singleton@2.2.3_@types+react@19.2.14_react@19.2.4/node_modules/react-style-singleton/dist/es2015/singleton.js
-function makeStyleTag() {
-	if (!document) return null;
-	var tag = document.createElement("style");
-	tag.type = "text/css";
-	var nonce = getNonce();
-	if (nonce) tag.setAttribute("nonce", nonce);
-	return tag;
-}
-function injectStyles(tag, css) {
-	if (tag.styleSheet) tag.styleSheet.cssText = css;
-	else tag.appendChild(document.createTextNode(css));
-}
-function insertStyleTag(tag) {
-	(document.head || document.getElementsByTagName("head")[0]).appendChild(tag);
-}
-var stylesheetSingleton = function() {
-	var counter = 0;
-	var stylesheet = null;
-	return {
-		add: function(style) {
-			if (counter == 0) {
-				if (stylesheet = makeStyleTag()) {
-					injectStyles(stylesheet, style);
-					insertStyleTag(stylesheet);
-				}
-			}
-			counter++;
-		},
-		remove: function() {
-			counter--;
-			if (!counter && stylesheet) {
-				stylesheet.parentNode && stylesheet.parentNode.removeChild(stylesheet);
-				stylesheet = null;
-			}
-		}
-	};
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-style-singleton@2.2.3_@types+react@19.2.14_react@19.2.4/node_modules/react-style-singleton/dist/es2015/hook.js
-/**
-* creates a hook to control style singleton
-* @see {@link styleSingleton} for a safer component version
-* @example
-* ```tsx
-* const useStyle = styleHookSingleton();
-* ///
-* useStyle('body { overflow: hidden}');
-*/
-var styleHookSingleton = function() {
-	var sheet = stylesheetSingleton();
-	return function(styles, isDynamic) {
-		import_react.useEffect(function() {
-			sheet.add(styles);
-			return function() {
-				sheet.remove();
-			};
-		}, [styles && isDynamic]);
-	};
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-style-singleton@2.2.3_@types+react@19.2.14_react@19.2.4/node_modules/react-style-singleton/dist/es2015/component.js
-/**
-* create a Component to add styles on demand
-* - styles are added when first instance is mounted
-* - styles are removed when the last instance is unmounted
-* - changing styles in runtime does nothing unless dynamic is set. But with multiple components that can lead to the undefined behavior
-*/
-var styleSingleton = function() {
-	var useStyle = styleHookSingleton();
-	var Sheet = function(_a) {
-		var styles = _a.styles, dynamic = _a.dynamic;
-		useStyle(styles, dynamic);
-		return null;
-	};
-	return Sheet;
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll-bar@2.3.8_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll-bar/dist/es2015/utils.js
-var zeroGap = {
-	left: 0,
-	top: 0,
-	right: 0,
-	gap: 0
-};
-var parse = function(x) {
-	return parseInt(x || "", 10) || 0;
-};
-var getOffset = function(gapMode) {
-	var cs = window.getComputedStyle(document.body);
-	var left = cs[gapMode === "padding" ? "paddingLeft" : "marginLeft"];
-	var top = cs[gapMode === "padding" ? "paddingTop" : "marginTop"];
-	var right = cs[gapMode === "padding" ? "paddingRight" : "marginRight"];
-	return [
-		parse(left),
-		parse(top),
-		parse(right)
-	];
-};
-var getGapWidth = function(gapMode) {
-	if (gapMode === void 0) gapMode = "margin";
-	if (typeof window === "undefined") return zeroGap;
-	var offsets = getOffset(gapMode);
-	var documentWidth = document.documentElement.clientWidth;
-	var windowWidth = window.innerWidth;
-	return {
-		left: offsets[0],
-		top: offsets[1],
-		right: offsets[2],
-		gap: Math.max(0, windowWidth - documentWidth + offsets[2] - offsets[0])
-	};
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll-bar@2.3.8_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll-bar/dist/es2015/component.js
-var Style = styleSingleton();
-var lockAttribute = "data-scroll-locked";
-var getStyles = function(_a, allowRelative, gapMode, important) {
-	var left = _a.left, top = _a.top, right = _a.right, gap = _a.gap;
-	if (gapMode === void 0) gapMode = "margin";
-	return "\n  .".concat(noScrollbarsClassName, " {\n   overflow: hidden ").concat(important, ";\n   padding-right: ").concat(gap, "px ").concat(important, ";\n  }\n  body[").concat(lockAttribute, "] {\n    overflow: hidden ").concat(important, ";\n    overscroll-behavior: contain;\n    ").concat([
-		allowRelative && "position: relative ".concat(important, ";"),
-		gapMode === "margin" && "\n    padding-left: ".concat(left, "px;\n    padding-top: ").concat(top, "px;\n    padding-right: ").concat(right, "px;\n    margin-left:0;\n    margin-top:0;\n    margin-right: ").concat(gap, "px ").concat(important, ";\n    "),
-		gapMode === "padding" && "padding-right: ".concat(gap, "px ").concat(important, ";")
-	].filter(Boolean).join(""), "\n  }\n  \n  .").concat(zeroRightClassName, " {\n    right: ").concat(gap, "px ").concat(important, ";\n  }\n  \n  .").concat(fullWidthClassName, " {\n    margin-right: ").concat(gap, "px ").concat(important, ";\n  }\n  \n  .").concat(zeroRightClassName, " .").concat(zeroRightClassName, " {\n    right: 0 ").concat(important, ";\n  }\n  \n  .").concat(fullWidthClassName, " .").concat(fullWidthClassName, " {\n    margin-right: 0 ").concat(important, ";\n  }\n  \n  body[").concat(lockAttribute, "] {\n    ").concat(removedBarSizeVariable, ": ").concat(gap, "px;\n  }\n");
-};
-var getCurrentUseCounter = function() {
-	var counter = parseInt(document.body.getAttribute("data-scroll-locked") || "0", 10);
-	return isFinite(counter) ? counter : 0;
-};
-var useLockAttribute = function() {
-	import_react.useEffect(function() {
-		document.body.setAttribute(lockAttribute, (getCurrentUseCounter() + 1).toString());
-		return function() {
-			var newCounter = getCurrentUseCounter() - 1;
-			if (newCounter <= 0) document.body.removeAttribute(lockAttribute);
-			else document.body.setAttribute(lockAttribute, newCounter.toString());
-		};
-	}, []);
-};
-/**
-* Removes page scrollbar and blocks page scroll when mounted
-*/
-var RemoveScrollBar = function(_a) {
-	var noRelative = _a.noRelative, noImportant = _a.noImportant, _b = _a.gapMode, gapMode = _b === void 0 ? "margin" : _b;
-	useLockAttribute();
-	var gap = import_react.useMemo(function() {
-		return getGapWidth(gapMode);
-	}, [gapMode]);
-	return import_react.createElement(Style, { styles: getStyles(gap, !noRelative, gapMode, !noImportant ? "!important" : "") });
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js
-var passiveSupported = false;
-if (typeof window !== "undefined") try {
-	var options = Object.defineProperty({}, "passive", { get: function() {
-		passiveSupported = true;
-		return true;
-	} });
-	window.addEventListener("test", options, options);
-	window.removeEventListener("test", options, options);
-} catch (err) {
-	passiveSupported = false;
-}
-var nonPassive = passiveSupported ? { passive: false } : false;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/handleScroll.js
-var alwaysContainsScroll = function(node) {
-	return node.tagName === "TEXTAREA";
-};
-var elementCanBeScrolled = function(node, overflow) {
-	if (!(node instanceof Element)) return false;
-	var styles = window.getComputedStyle(node);
-	return styles[overflow] !== "hidden" && !(styles.overflowY === styles.overflowX && !alwaysContainsScroll(node) && styles[overflow] === "visible");
-};
-var elementCouldBeVScrolled = function(node) {
-	return elementCanBeScrolled(node, "overflowY");
-};
-var elementCouldBeHScrolled = function(node) {
-	return elementCanBeScrolled(node, "overflowX");
-};
-var locationCouldBeScrolled = function(axis, node) {
-	var ownerDocument = node.ownerDocument;
-	var current = node;
-	do {
-		if (typeof ShadowRoot !== "undefined" && current instanceof ShadowRoot) current = current.host;
-		if (elementCouldBeScrolled(axis, current)) {
-			var _a = getScrollVariables(axis, current);
-			if (_a[1] > _a[2]) return true;
-		}
-		current = current.parentNode;
-	} while (current && current !== ownerDocument.body);
-	return false;
-};
-var getVScrollVariables = function(_a) {
-	return [
-		_a.scrollTop,
-		_a.scrollHeight,
-		_a.clientHeight
-	];
-};
-var getHScrollVariables = function(_a) {
-	return [
-		_a.scrollLeft,
-		_a.scrollWidth,
-		_a.clientWidth
-	];
-};
-var elementCouldBeScrolled = function(axis, node) {
-	return axis === "v" ? elementCouldBeVScrolled(node) : elementCouldBeHScrolled(node);
-};
-var getScrollVariables = function(axis, node) {
-	return axis === "v" ? getVScrollVariables(node) : getHScrollVariables(node);
-};
-var getDirectionFactor = function(axis, direction) {
-	/**
-	* If the element's direction is rtl (right-to-left), then scrollLeft is 0 when the scrollbar is at its rightmost position,
-	* and then increasingly negative as you scroll towards the end of the content.
-	* @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollLeft
-	*/
-	return axis === "h" && direction === "rtl" ? -1 : 1;
-};
-var handleScroll = function(axis, endTarget, event, sourceDelta, noOverscroll) {
-	var directionFactor = getDirectionFactor(axis, window.getComputedStyle(endTarget).direction);
-	var delta = directionFactor * sourceDelta;
-	var target = event.target;
-	var targetInLock = endTarget.contains(target);
-	var shouldCancelScroll = false;
-	var isDeltaPositive = delta > 0;
-	var availableScroll = 0;
-	var availableScrollTop = 0;
-	do {
-		if (!target) break;
-		var _a = getScrollVariables(axis, target), position = _a[0];
-		var elementScroll = _a[1] - _a[2] - directionFactor * position;
-		if (position || elementScroll) {
-			if (elementCouldBeScrolled(axis, target)) {
-				availableScroll += elementScroll;
-				availableScrollTop += position;
-			}
-		}
-		var parent_1 = target.parentNode;
-		target = parent_1 && parent_1.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? parent_1.host : parent_1;
-	} while (!targetInLock && target !== document.body || targetInLock && (endTarget.contains(target) || endTarget === target));
-	if (isDeltaPositive && (noOverscroll && Math.abs(availableScroll) < 1 || !noOverscroll && delta > availableScroll)) shouldCancelScroll = true;
-	else if (!isDeltaPositive && (noOverscroll && Math.abs(availableScrollTop) < 1 || !noOverscroll && -delta > availableScrollTop)) shouldCancelScroll = true;
-	return shouldCancelScroll;
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/SideEffect.js
-var getTouchXY = function(event) {
-	return "changedTouches" in event ? [event.changedTouches[0].clientX, event.changedTouches[0].clientY] : [0, 0];
-};
-var getDeltaXY = function(event) {
-	return [event.deltaX, event.deltaY];
-};
-var extractRef = function(ref) {
-	return ref && "current" in ref ? ref.current : ref;
-};
-var deltaCompare = function(x, y) {
-	return x[0] === y[0] && x[1] === y[1];
-};
-var generateStyle = function(id) {
-	return "\n  .block-interactivity-".concat(id, " {pointer-events: none;}\n  .allow-interactivity-").concat(id, " {pointer-events: all;}\n");
-};
-var idCounter = 0;
-var lockStack = [];
-function RemoveScrollSideCar(props) {
-	var shouldPreventQueue = import_react.useRef([]);
-	var touchStartRef = import_react.useRef([0, 0]);
-	var activeAxis = import_react.useRef();
-	var id = import_react.useState(idCounter++)[0];
-	var Style = import_react.useState(styleSingleton)[0];
-	var lastProps = import_react.useRef(props);
-	import_react.useEffect(function() {
-		lastProps.current = props;
-	}, [props]);
-	import_react.useEffect(function() {
-		if (props.inert) {
-			document.body.classList.add("block-interactivity-".concat(id));
-			var allow_1 = __spreadArray([props.lockRef.current], (props.shards || []).map(extractRef), true).filter(Boolean);
-			allow_1.forEach(function(el) {
-				return el.classList.add("allow-interactivity-".concat(id));
-			});
-			return function() {
-				document.body.classList.remove("block-interactivity-".concat(id));
-				allow_1.forEach(function(el) {
-					return el.classList.remove("allow-interactivity-".concat(id));
-				});
-			};
-		}
-	}, [
-		props.inert,
-		props.lockRef.current,
-		props.shards
-	]);
-	var shouldCancelEvent = import_react.useCallback(function(event, parent) {
-		if ("touches" in event && event.touches.length === 2 || event.type === "wheel" && event.ctrlKey) return !lastProps.current.allowPinchZoom;
-		var touch = getTouchXY(event);
-		var touchStart = touchStartRef.current;
-		var deltaX = "deltaX" in event ? event.deltaX : touchStart[0] - touch[0];
-		var deltaY = "deltaY" in event ? event.deltaY : touchStart[1] - touch[1];
-		var currentAxis;
-		var target = event.target;
-		var moveDirection = Math.abs(deltaX) > Math.abs(deltaY) ? "h" : "v";
-		if ("touches" in event && moveDirection === "h" && target.type === "range") return false;
-		var selection = window.getSelection();
-		var anchorNode = selection && selection.anchorNode;
-		if (anchorNode ? anchorNode === target || anchorNode.contains(target) : false) return false;
-		var canBeScrolledInMainDirection = locationCouldBeScrolled(moveDirection, target);
-		if (!canBeScrolledInMainDirection) return true;
-		if (canBeScrolledInMainDirection) currentAxis = moveDirection;
-		else {
-			currentAxis = moveDirection === "v" ? "h" : "v";
-			canBeScrolledInMainDirection = locationCouldBeScrolled(moveDirection, target);
-		}
-		if (!canBeScrolledInMainDirection) return false;
-		if (!activeAxis.current && "changedTouches" in event && (deltaX || deltaY)) activeAxis.current = currentAxis;
-		if (!currentAxis) return true;
-		var cancelingAxis = activeAxis.current || currentAxis;
-		return handleScroll(cancelingAxis, parent, event, cancelingAxis === "h" ? deltaX : deltaY, true);
-	}, []);
-	var shouldPrevent = import_react.useCallback(function(_event) {
-		var event = _event;
-		if (!lockStack.length || lockStack[lockStack.length - 1] !== Style) return;
-		var delta = "deltaY" in event ? getDeltaXY(event) : getTouchXY(event);
-		var sourceEvent = shouldPreventQueue.current.filter(function(e) {
-			return e.name === event.type && (e.target === event.target || event.target === e.shadowParent) && deltaCompare(e.delta, delta);
-		})[0];
-		if (sourceEvent && sourceEvent.should) {
-			if (event.cancelable) event.preventDefault();
-			return;
-		}
-		if (!sourceEvent) {
-			var shardNodes = (lastProps.current.shards || []).map(extractRef).filter(Boolean).filter(function(node) {
-				return node.contains(event.target);
-			});
-			if (shardNodes.length > 0 ? shouldCancelEvent(event, shardNodes[0]) : !lastProps.current.noIsolation) {
-				if (event.cancelable) event.preventDefault();
-			}
-		}
-	}, []);
-	var shouldCancel = import_react.useCallback(function(name, delta, target, should) {
-		var event = {
-			name,
-			delta,
-			target,
-			should,
-			shadowParent: getOutermostShadowParent(target)
-		};
-		shouldPreventQueue.current.push(event);
-		setTimeout(function() {
-			shouldPreventQueue.current = shouldPreventQueue.current.filter(function(e) {
-				return e !== event;
-			});
-		}, 1);
-	}, []);
-	var scrollTouchStart = import_react.useCallback(function(event) {
-		touchStartRef.current = getTouchXY(event);
-		activeAxis.current = void 0;
-	}, []);
-	var scrollWheel = import_react.useCallback(function(event) {
-		shouldCancel(event.type, getDeltaXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
-	}, []);
-	var scrollTouchMove = import_react.useCallback(function(event) {
-		shouldCancel(event.type, getTouchXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
-	}, []);
-	import_react.useEffect(function() {
-		lockStack.push(Style);
-		props.setCallbacks({
-			onScrollCapture: scrollWheel,
-			onWheelCapture: scrollWheel,
-			onTouchMoveCapture: scrollTouchMove
-		});
-		document.addEventListener("wheel", shouldPrevent, nonPassive);
-		document.addEventListener("touchmove", shouldPrevent, nonPassive);
-		document.addEventListener("touchstart", scrollTouchStart, nonPassive);
-		return function() {
-			lockStack = lockStack.filter(function(inst) {
-				return inst !== Style;
-			});
-			document.removeEventListener("wheel", shouldPrevent, nonPassive);
-			document.removeEventListener("touchmove", shouldPrevent, nonPassive);
-			document.removeEventListener("touchstart", scrollTouchStart, nonPassive);
-		};
-	}, []);
-	var removeScrollBar = props.removeScrollBar, inert = props.inert;
-	return import_react.createElement(import_react.Fragment, null, inert ? import_react.createElement(Style, { styles: generateStyle(id) }) : null, removeScrollBar ? import_react.createElement(RemoveScrollBar, {
-		noRelative: props.noRelative,
-		gapMode: props.gapMode
-	}) : null);
-}
-function getOutermostShadowParent(node) {
-	var shadowParent = null;
-	while (node !== null) {
-		if (node instanceof ShadowRoot) {
-			shadowParent = node.host;
-			node = node.host;
-		}
-		node = node.parentNode;
-	}
-	return shadowParent;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/sidecar.js
-var sidecar_default = exportSidecar(effectCar, RemoveScrollSideCar);
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/react-remove-scroll@2.7.2_@types+react@19.2.14_react@19.2.4/node_modules/react-remove-scroll/dist/es2015/Combination.js
-var ReactRemoveScroll = import_react.forwardRef(function(props, ref) {
-	return import_react.createElement(RemoveScroll, __assign({}, props, {
-		ref,
-		sideCar: sidecar_default
-	}));
-});
-ReactRemoveScroll.classNames = RemoveScroll.classNames;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/aria-hidden@1.2.6/node_modules/aria-hidden/dist/es2015/index.js
-var getDefaultParent = function(originalTarget) {
-	if (typeof document === "undefined") return null;
-	return (Array.isArray(originalTarget) ? originalTarget[0] : originalTarget).ownerDocument.body;
-};
-var counterMap = /* @__PURE__ */ new WeakMap();
-var uncontrolledNodes = /* @__PURE__ */ new WeakMap();
-var markerMap = {};
-var lockCount = 0;
-var unwrapHost = function(node) {
-	return node && (node.host || unwrapHost(node.parentNode));
-};
-var correctTargets = function(parent, targets) {
-	return targets.map(function(target) {
-		if (parent.contains(target)) return target;
-		var correctedTarget = unwrapHost(target);
-		if (correctedTarget && parent.contains(correctedTarget)) return correctedTarget;
-		console.error("aria-hidden", target, "in not contained inside", parent, ". Doing nothing");
-		return null;
-	}).filter(function(x) {
-		return Boolean(x);
-	});
-};
-/**
-* Marks everything except given node(or nodes) as aria-hidden
-* @param {Element | Element[]} originalTarget - elements to keep on the page
-* @param [parentNode] - top element, defaults to document.body
-* @param {String} [markerName] - a special attribute to mark every node
-* @param {String} [controlAttribute] - html Attribute to control
-* @return {Undo} undo command
-*/
-var applyAttributeToOthers = function(originalTarget, parentNode, markerName, controlAttribute) {
-	var targets = correctTargets(parentNode, Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
-	if (!markerMap[markerName]) markerMap[markerName] = /* @__PURE__ */ new WeakMap();
-	var markerCounter = markerMap[markerName];
-	var hiddenNodes = [];
-	var elementsToKeep = /* @__PURE__ */ new Set();
-	var elementsToStop = new Set(targets);
-	var keep = function(el) {
-		if (!el || elementsToKeep.has(el)) return;
-		elementsToKeep.add(el);
-		keep(el.parentNode);
-	};
-	targets.forEach(keep);
-	var deep = function(parent) {
-		if (!parent || elementsToStop.has(parent)) return;
-		Array.prototype.forEach.call(parent.children, function(node) {
-			if (elementsToKeep.has(node)) deep(node);
-			else try {
-				var attr = node.getAttribute(controlAttribute);
-				var alreadyHidden = attr !== null && attr !== "false";
-				var counterValue = (counterMap.get(node) || 0) + 1;
-				var markerValue = (markerCounter.get(node) || 0) + 1;
-				counterMap.set(node, counterValue);
-				markerCounter.set(node, markerValue);
-				hiddenNodes.push(node);
-				if (counterValue === 1 && alreadyHidden) uncontrolledNodes.set(node, true);
-				if (markerValue === 1) node.setAttribute(markerName, "true");
-				if (!alreadyHidden) node.setAttribute(controlAttribute, "true");
-			} catch (e) {
-				console.error("aria-hidden: cannot operate on ", node, e);
-			}
-		});
-	};
-	deep(parentNode);
-	elementsToKeep.clear();
-	lockCount++;
-	return function() {
-		hiddenNodes.forEach(function(node) {
-			var counterValue = counterMap.get(node) - 1;
-			var markerValue = markerCounter.get(node) - 1;
-			counterMap.set(node, counterValue);
-			markerCounter.set(node, markerValue);
-			if (!counterValue) {
-				if (!uncontrolledNodes.has(node)) node.removeAttribute(controlAttribute);
-				uncontrolledNodes.delete(node);
-			}
-			if (!markerValue) node.removeAttribute(markerName);
-		});
-		lockCount--;
-		if (!lockCount) {
-			counterMap = /* @__PURE__ */ new WeakMap();
-			counterMap = /* @__PURE__ */ new WeakMap();
-			uncontrolledNodes = /* @__PURE__ */ new WeakMap();
-			markerMap = {};
-		}
-	};
-};
-/**
-* Marks everything except given node(or nodes) as aria-hidden
-* @param {Element | Element[]} originalTarget - elements to keep on the page
-* @param [parentNode] - top element, defaults to document.body
-* @param {String} [markerName] - a special attribute to mark every node
-* @return {Undo} undo command
-*/
-var hideOthers = function(originalTarget, parentNode, markerName) {
-	if (markerName === void 0) markerName = "data-aria-hidden";
-	var targets = Array.from(Array.isArray(originalTarget) ? originalTarget : [originalTarget]);
-	var activeParentNode = parentNode || getDefaultParent(originalTarget);
-	if (!activeParentNode) return function() {
-		return null;
-	};
-	targets.push.apply(targets, Array.from(activeParentNode.querySelectorAll("[aria-live], script")));
-	return applyAttributeToOthers(targets, activeParentNode, markerName, "aria-hidden");
-};
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-dialog@1.1.15_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_779045218dc2799d336e7197abef9d38/node_modules/@radix-ui/react-dialog/dist/index.mjs
-var DIALOG_NAME = "Dialog";
-var [createDialogContext, createDialogScope] = createContextScope$1(DIALOG_NAME);
-var [DialogProvider, useDialogContext] = createDialogContext(DIALOG_NAME);
-var Dialog$1 = (props) => {
-	const { __scopeDialog, children, open: openProp, defaultOpen, onOpenChange, modal = true } = props;
-	const triggerRef = import_react.useRef(null);
-	const contentRef = import_react.useRef(null);
-	const [open, setOpen] = useControllableState({
-		prop: openProp,
-		defaultProp: defaultOpen ?? false,
-		onChange: onOpenChange,
-		caller: DIALOG_NAME
-	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogProvider, {
-		scope: __scopeDialog,
-		triggerRef,
-		contentRef,
-		contentId: useId(),
-		titleId: useId(),
-		descriptionId: useId(),
-		open,
-		onOpenChange: setOpen,
-		onOpenToggle: import_react.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
-		modal,
-		children
-	});
-};
-Dialog$1.displayName = DIALOG_NAME;
-var TRIGGER_NAME$5 = "DialogTrigger";
-var DialogTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDialog, ...triggerProps } = props;
-	const context = useDialogContext(TRIGGER_NAME$5, __scopeDialog);
-	const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
-		type: "button",
-		"aria-haspopup": "dialog",
-		"aria-expanded": context.open,
-		"aria-controls": context.contentId,
-		"data-state": getState$5(context.open),
-		...triggerProps,
-		ref: composedTriggerRef,
-		onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
-	});
-});
-DialogTrigger$1.displayName = TRIGGER_NAME$5;
-var PORTAL_NAME$3 = "DialogPortal";
-var [PortalProvider$1, usePortalContext$1] = createDialogContext(PORTAL_NAME$3, { forceMount: void 0 });
-var DialogPortal$1 = (props) => {
-	const { __scopeDialog, forceMount, children, container } = props;
-	const context = useDialogContext(PORTAL_NAME$3, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PortalProvider$1, {
-		scope: __scopeDialog,
-		forceMount,
-		children: import_react.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-			present: forceMount || context.open,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$3, {
-				asChild: true,
-				container,
-				children: child
-			})
-		}))
-	});
-};
-DialogPortal$1.displayName = PORTAL_NAME$3;
-var OVERLAY_NAME = "DialogOverlay";
-var DialogOverlay$1 = import_react.forwardRef((props, forwardedRef) => {
-	const portalContext = usePortalContext$1(OVERLAY_NAME, props.__scopeDialog);
-	const { forceMount = portalContext.forceMount, ...overlayProps } = props;
-	const context = useDialogContext(OVERLAY_NAME, props.__scopeDialog);
-	return context.modal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || context.open,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogOverlayImpl, {
-			...overlayProps,
-			ref: forwardedRef
-		})
-	}) : null;
-});
-DialogOverlay$1.displayName = OVERLAY_NAME;
-var Slot$2 = /* @__PURE__ */ createSlot$1("DialogOverlay.RemoveScroll");
-var DialogOverlayImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDialog, ...overlayProps } = props;
-	const context = useDialogContext(OVERLAY_NAME, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReactRemoveScroll, {
-		as: Slot$2,
-		allowPinchZoom: true,
-		shards: [context.contentRef],
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-			"data-state": getState$5(context.open),
-			...overlayProps,
-			ref: forwardedRef,
-			style: {
-				pointerEvents: "auto",
-				...overlayProps.style
-			}
-		})
-	});
-});
-var CONTENT_NAME$5 = "DialogContent";
-var DialogContent$1 = import_react.forwardRef((props, forwardedRef) => {
-	const portalContext = usePortalContext$1(CONTENT_NAME$5, props.__scopeDialog);
-	const { forceMount = portalContext.forceMount, ...contentProps } = props;
-	const context = useDialogContext(CONTENT_NAME$5, props.__scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || context.open,
-		children: context.modal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentModal, {
-			...contentProps,
-			ref: forwardedRef
-		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentNonModal, {
-			...contentProps,
-			ref: forwardedRef
-		})
-	});
-});
-DialogContent$1.displayName = CONTENT_NAME$5;
-var DialogContentModal = import_react.forwardRef((props, forwardedRef) => {
-	const context = useDialogContext(CONTENT_NAME$5, props.__scopeDialog);
-	const contentRef = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef);
-	import_react.useEffect(() => {
-		const content = contentRef.current;
-		if (content) return hideOthers(content);
-	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentImpl, {
-		...props,
-		ref: composedRefs,
-		trapFocus: context.open,
-		disableOutsidePointerEvents: true,
-		onCloseAutoFocus: composeEventHandlers(props.onCloseAutoFocus, (event) => {
-			event.preventDefault();
-			context.triggerRef.current?.focus();
-		}),
-		onPointerDownOutside: composeEventHandlers(props.onPointerDownOutside, (event) => {
-			const originalEvent = event.detail.originalEvent;
-			const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
-			if (originalEvent.button === 2 || ctrlLeftClick) event.preventDefault();
-		}),
-		onFocusOutside: composeEventHandlers(props.onFocusOutside, (event) => event.preventDefault())
-	});
-});
-var DialogContentNonModal = import_react.forwardRef((props, forwardedRef) => {
-	const context = useDialogContext(CONTENT_NAME$5, props.__scopeDialog);
-	const hasInteractedOutsideRef = import_react.useRef(false);
-	const hasPointerDownOutsideRef = import_react.useRef(false);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContentImpl, {
-		...props,
-		ref: forwardedRef,
-		trapFocus: false,
-		disableOutsidePointerEvents: false,
-		onCloseAutoFocus: (event) => {
-			props.onCloseAutoFocus?.(event);
-			if (!event.defaultPrevented) {
-				if (!hasInteractedOutsideRef.current) context.triggerRef.current?.focus();
-				event.preventDefault();
-			}
-			hasInteractedOutsideRef.current = false;
-			hasPointerDownOutsideRef.current = false;
-		},
-		onInteractOutside: (event) => {
-			props.onInteractOutside?.(event);
-			if (!event.defaultPrevented) {
-				hasInteractedOutsideRef.current = true;
-				if (event.detail.originalEvent.type === "pointerdown") hasPointerDownOutsideRef.current = true;
-			}
-			const target = event.target;
-			if (context.triggerRef.current?.contains(target)) event.preventDefault();
-			if (event.detail.originalEvent.type === "focusin" && hasPointerDownOutsideRef.current) event.preventDefault();
-		}
-	});
-});
-var DialogContentImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDialog, trapFocus, onOpenAutoFocus, onCloseAutoFocus, ...contentProps } = props;
-	const context = useDialogContext(CONTENT_NAME$5, __scopeDialog);
-	const contentRef = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, contentRef);
-	useFocusGuards();
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FocusScope, {
-		asChild: true,
-		loop: true,
-		trapped: trapFocus,
-		onMountAutoFocus: onOpenAutoFocus,
-		onUnmountAutoFocus: onCloseAutoFocus,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DismissableLayer, {
-			role: "dialog",
-			id: context.contentId,
-			"aria-describedby": context.descriptionId,
-			"aria-labelledby": context.titleId,
-			"data-state": getState$5(context.open),
-			...contentProps,
-			ref: composedRefs,
-			onDismiss: () => context.onOpenChange(false)
-		})
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TitleWarning, { titleId: context.titleId }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DescriptionWarning, {
-		contentRef,
-		descriptionId: context.descriptionId
-	})] })] });
-});
-var TITLE_NAME = "DialogTitle";
-var DialogTitle$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDialog, ...titleProps } = props;
-	const context = useDialogContext(TITLE_NAME, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.h2, {
-		id: context.titleId,
-		...titleProps,
-		ref: forwardedRef
-	});
-});
-DialogTitle$1.displayName = TITLE_NAME;
-var DESCRIPTION_NAME = "DialogDescription";
-var DialogDescription$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDialog, ...descriptionProps } = props;
-	const context = useDialogContext(DESCRIPTION_NAME, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.p, {
-		id: context.descriptionId,
-		...descriptionProps,
-		ref: forwardedRef
-	});
-});
-DialogDescription$1.displayName = DESCRIPTION_NAME;
-var CLOSE_NAME = "DialogClose";
-var DialogClose$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDialog, ...closeProps } = props;
-	const context = useDialogContext(CLOSE_NAME, __scopeDialog);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
-		type: "button",
-		...closeProps,
-		ref: forwardedRef,
-		onClick: composeEventHandlers(props.onClick, () => context.onOpenChange(false))
-	});
-});
-DialogClose$1.displayName = CLOSE_NAME;
-function getState$5(open) {
-	return open ? "open" : "closed";
-}
-var TITLE_WARNING_NAME = "DialogTitleWarning";
-var [WarningProvider, useWarningContext] = createContext2(TITLE_WARNING_NAME, {
-	contentName: CONTENT_NAME$5,
-	titleName: TITLE_NAME,
-	docsSlug: "dialog"
-});
-var TitleWarning = ({ titleId }) => {
-	const titleWarningContext = useWarningContext(TITLE_WARNING_NAME);
-	const MESSAGE = `\`${titleWarningContext.contentName}\` requires a \`${titleWarningContext.titleName}\` for the component to be accessible for screen reader users.
-
-If you want to hide the \`${titleWarningContext.titleName}\`, you can wrap it with our VisuallyHidden component.
-
-For more information, see https://radix-ui.com/primitives/docs/components/${titleWarningContext.docsSlug}`;
-	import_react.useEffect(() => {
-		if (titleId) {
-			if (!document.getElementById(titleId)) console.error(MESSAGE);
-		}
-	}, [MESSAGE, titleId]);
-	return null;
-};
-var DESCRIPTION_WARNING_NAME = "DialogDescriptionWarning";
-var DescriptionWarning = ({ contentRef, descriptionId }) => {
-	const MESSAGE = `Warning: Missing \`Description\` or \`aria-describedby={undefined}\` for {${useWarningContext(DESCRIPTION_WARNING_NAME).contentName}}.`;
-	import_react.useEffect(() => {
-		const describedById = contentRef.current?.getAttribute("aria-describedby");
-		if (descriptionId && describedById) {
-			if (!document.getElementById(descriptionId)) console.warn(MESSAGE);
-		}
-	}, [
-		MESSAGE,
-		contentRef,
-		descriptionId
-	]);
-	return null;
-};
-var Root$6 = Dialog$1;
-var Portal$2 = DialogPortal$1;
-var Overlay = DialogOverlay$1;
-var Content$1 = DialogContent$1;
-var Title = DialogTitle$1;
-var Description = DialogDescription$1;
-var Close = DialogClose$1;
-//#endregion
-//#region src/components/ui/sheet.tsx
-var Sheet = Root$6;
-var SheetPortal = Portal$2;
-var SheetOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
-	"data-uid": "src/components/ui/sheet.tsx:21:3",
-	"data-prohibitions": "[editContent]",
-	className: cn$1("fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
-	...props,
-	ref
-}));
-SheetOverlay.displayName = Overlay.displayName;
-var sheetVariants = cva("fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500", {
-	variants: { side: {
-		top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
-		bottom: "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
-		left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
-		right: "inset-y-0 right-0 h-full w-3/4  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm"
-	} },
-	defaultVariants: { side: "right" }
-});
-var SheetContent = import_react.forwardRef(({ side = "right", className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SheetPortal, {
-	"data-uid": "src/components/ui/sheet.tsx:60:3",
-	"data-prohibitions": "[editContent]",
-	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SheetOverlay, {
-		"data-uid": "src/components/ui/sheet.tsx:61:5",
-		"data-prohibitions": "[editContent]"
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content$1, {
-		"data-uid": "src/components/ui/sheet.tsx:62:5",
-		"data-prohibitions": "[editContent]",
-		ref,
-		className: cn$1(sheetVariants({ side }), className),
-		...props,
-		children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Close, {
-			"data-uid": "src/components/ui/sheet.tsx:64:7",
-			"data-prohibitions": "[]",
-			className: "absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-				"data-uid": "src/components/ui/sheet.tsx:65:9",
-				"data-prohibitions": "[editContent]",
-				className: "h-4 w-4"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				"data-uid": "src/components/ui/sheet.tsx:66:9",
-				"data-prohibitions": "[]",
-				className: "sr-only",
-				children: "Close"
-			})]
-		})]
-	})]
-}));
-SheetContent.displayName = Content$1.displayName;
-var SheetHeader = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/sheet.tsx:74:3",
-	"data-prohibitions": "[editContent]",
-	className: cn$1("flex flex-col space-y-2 text-center sm:text-left", className),
-	...props
-});
-SheetHeader.displayName = "SheetHeader";
-var SheetFooter = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/sheet.tsx:79:3",
-	"data-prohibitions": "[editContent]",
-	className: cn$1("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
-	...props
-});
-SheetFooter.displayName = "SheetFooter";
-var SheetTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Title, {
-	"data-uid": "src/components/ui/sheet.tsx:90:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("text-lg font-semibold text-foreground", className),
-	...props
-}));
-SheetTitle.displayName = Title.displayName;
-var SheetDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Description, {
-	"data-uid": "src/components/ui/sheet.tsx:102:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("text-sm text-muted-foreground", className),
-	...props
-}));
-SheetDescription.displayName = Description.displayName;
-//#endregion
-//#region src/components/ui/skeleton.tsx
-function Skeleton({ className, ...props }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/ui/skeleton.tsx:5:10",
-		"data-prohibitions": "[editContent]",
-		className: cn$1("animate-pulse rounded-md bg-muted", className),
-		...props
-	});
-}
+TooltipContent.displayName = Content2$2.displayName;
 //#endregion
 //#region src/components/ui/sidebar.tsx
 var SIDEBAR_COOKIE_NAME = "sidebar_state";
@@ -26325,7 +24637,7 @@ var SidebarProvider = import_react.forwardRef(({ defaultOpen = true, open: openP
 					"--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
 					...style
 				},
-				className: cn$1("group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar", className),
+				className: cn("group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar", className),
 				ref,
 				...props,
 				children
@@ -26339,7 +24651,7 @@ var Sidebar = import_react.forwardRef(({ side = "left", variant = "sidebar", col
 	if (collapsible === "none") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/components/ui/sidebar.tsx:177:9",
 		"data-prohibitions": "[editContent]",
-		className: cn$1("flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground", className),
+		className: cn("flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground", className),
 		ref,
 		...props,
 		children
@@ -26391,11 +24703,11 @@ var Sidebar = import_react.forwardRef(({ side = "left", variant = "sidebar", col
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			"data-uid": "src/components/ui/sidebar.tsx:224:9",
 			"data-prohibitions": "[editContent]",
-			className: cn$1("relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear", "group-data-[collapsible=offcanvas]:w-0", "group-data-[side=right]:rotate-180", variant === "floating" || variant === "inset" ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]" : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]")
+			className: cn("relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear", "group-data-[collapsible=offcanvas]:w-0", "group-data-[side=right]:rotate-180", variant === "floating" || variant === "inset" ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]" : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]")
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			"data-uid": "src/components/ui/sidebar.tsx:234:9",
 			"data-prohibitions": "[editContent]",
-			className: cn$1("fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex", side === "left" ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]" : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]", variant === "floating" || variant === "inset" ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]" : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l", className),
+			className: cn("fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex", side === "left" ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]" : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]", variant === "floating" || variant === "inset" ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]" : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l", className),
 			...props,
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				"data-uid": "src/components/ui/sidebar.tsx:248:11",
@@ -26417,7 +24729,7 @@ var SidebarTrigger = import_react.forwardRef(({ className, onClick, ...props }, 
 		"data-sidebar": "trigger",
 		variant: "ghost",
 		size: "icon",
-		className: cn$1("h-7 w-7", className),
+		className: cn("h-7 w-7", className),
 		onClick: (event) => {
 			onClick?.(event);
 			toggleSidebar();
@@ -26450,7 +24762,7 @@ var SidebarRail = import_react.forwardRef(({ className, ...props }, ref) => {
 		tabIndex: -1,
 		onClick: toggleSidebar,
 		title: "Toggle Sidebar",
-		className: cn$1("absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex", "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize", "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize", "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar", "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2", "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2", className),
+		className: cn("absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex", "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize", "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize", "group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full group-data-[collapsible=offcanvas]:hover:bg-sidebar", "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2", "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2", className),
 		...props
 	});
 });
@@ -26460,7 +24772,7 @@ var SidebarInset = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-uid": "src/components/ui/sidebar.tsx:320:7",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn$1("relative flex w-full flex-1 flex-col bg-background", "md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow", className),
+		className: cn("relative flex w-full flex-1 flex-col bg-background", "md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow", className),
 		...props
 	});
 });
@@ -26471,7 +24783,7 @@ var SidebarInput = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "input",
-		className: cn$1("h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring", className),
+		className: cn("h-8 w-full bg-background shadow-none focus-visible:ring-2 focus-visible:ring-sidebar-ring", className),
 		...props
 	});
 });
@@ -26482,7 +24794,7 @@ var SidebarHeader = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "header",
-		className: cn$1("flex flex-col gap-2 p-2", className),
+		className: cn("flex flex-col gap-2 p-2", className),
 		...props
 	});
 });
@@ -26493,18 +24805,18 @@ var SidebarFooter = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "footer",
-		className: cn$1("flex flex-col gap-2 p-2", className),
+		className: cn("flex flex-col gap-2 p-2", className),
 		...props
 	});
 });
 SidebarFooter.displayName = "SidebarFooter";
 var SidebarSeparator = import_react.forwardRef(({ className, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$2, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$1, {
 		"data-uid": "src/components/ui/sidebar.tsx:385:5",
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "separator",
-		className: cn$1("mx-2 w-auto bg-sidebar-border", className),
+		className: cn("mx-2 w-auto bg-sidebar-border", className),
 		...props
 	});
 });
@@ -26515,7 +24827,7 @@ var SidebarContent = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "content",
-		className: cn$1("flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden", className),
+		className: cn("flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden", className),
 		...props
 	});
 });
@@ -26526,29 +24838,29 @@ var SidebarGroup = import_react.forwardRef(({ className, ...props }, ref) => {
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "group",
-		className: cn$1("relative flex w-full min-w-0 flex-col p-2", className),
+		className: cn("relative flex w-full min-w-0 flex-col p-2", className),
 		...props
 	});
 });
 SidebarGroup.displayName = "SidebarGroup";
 var SidebarGroupLabel = import_react.forwardRef(({ className, asChild = false, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$3 : "div", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$2 : "div", {
 		"data-uid": "src/components/ui/sidebar.tsx:433:5",
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "group-label",
-		className: cn$1("flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0", className),
+		className: cn("flex h-8 shrink-0 items-center rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 outline-none ring-sidebar-ring transition-[margin,opacity] duration-200 ease-linear focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", "group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0", className),
 		...props
 	});
 });
 SidebarGroupLabel.displayName = "SidebarGroupLabel";
 var SidebarGroupAction = import_react.forwardRef(({ className, asChild = false, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$3 : "button", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$2 : "button", {
 		"data-uid": "src/components/ui/sidebar.tsx:454:5",
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "group-action",
-		className: cn$1("absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", "after:absolute after:-inset-2 after:md:hidden", "group-data-[collapsible=icon]:hidden", className),
+		className: cn("absolute right-3 top-3.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0", "after:absolute after:-inset-2 after:md:hidden", "group-data-[collapsible=icon]:hidden", className),
 		...props
 	});
 });
@@ -26558,7 +24870,7 @@ var SidebarGroupContent = import_react.forwardRef(({ className, ...props }, ref)
 	"data-prohibitions": "[editContent]",
 	ref,
 	"data-sidebar": "group-content",
-	className: cn$1("w-full text-sm", className),
+	className: cn("w-full text-sm", className),
 	...props
 }));
 SidebarGroupContent.displayName = "SidebarGroupContent";
@@ -26567,7 +24879,7 @@ var SidebarMenu = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-prohibitions": "[editContent]",
 	ref,
 	"data-sidebar": "menu",
-	className: cn$1("flex w-full min-w-0 flex-col gap-1", className),
+	className: cn("flex w-full min-w-0 flex-col gap-1", className),
 	...props
 }));
 SidebarMenu.displayName = "SidebarMenu";
@@ -26576,7 +24888,7 @@ var SidebarMenuItem = import_react.forwardRef(({ className, ...props }, ref) => 
 	"data-prohibitions": "[editContent]",
 	ref,
 	"data-sidebar": "menu-item",
-	className: cn$1("group/menu-item relative", className),
+	className: cn("group/menu-item relative", className),
 	...props
 }));
 SidebarMenuItem.displayName = "SidebarMenuItem";
@@ -26598,7 +24910,7 @@ var sidebarMenuButtonVariants = cva("peer/menu-button flex w-full items-center g
 	}
 });
 var SidebarMenuButton = import_react.forwardRef(({ asChild = false, isActive = false, variant = "default", size = "default", tooltip, className, ...props }, ref) => {
-	const Comp = asChild ? Slot$3 : "button";
+	const Comp = asChild ? Slot$2 : "button";
 	const { isMobile, state } = useSidebar();
 	const button = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Comp, {
 		"data-uid": "src/components/ui/sidebar.tsx:552:7",
@@ -26607,7 +24919,7 @@ var SidebarMenuButton = import_react.forwardRef(({ asChild = false, isActive = f
 		"data-sidebar": "menu-button",
 		"data-size": size,
 		"data-active": isActive,
-		className: cn$1(sidebarMenuButtonVariants({
+		className: cn(sidebarMenuButtonVariants({
 			variant,
 			size
 		}), className),
@@ -26635,12 +24947,12 @@ var SidebarMenuButton = import_react.forwardRef(({ asChild = false, isActive = f
 });
 SidebarMenuButton.displayName = "SidebarMenuButton";
 var SidebarMenuAction = import_react.forwardRef(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$3 : "button", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$2 : "button", {
 		"data-uid": "src/components/ui/sidebar.tsx:597:5",
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "menu-action",
-		className: cn$1("absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0", "after:absolute after:-inset-2 after:md:hidden", "peer-data-[size=sm]/menu-button:top-1", "peer-data-[size=default]/menu-button:top-1.5", "peer-data-[size=lg]/menu-button:top-2.5", "group-data-[collapsible=icon]:hidden", showOnHover && "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0", className),
+		className: cn("absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0", "after:absolute after:-inset-2 after:md:hidden", "peer-data-[size=sm]/menu-button:top-1", "peer-data-[size=default]/menu-button:top-1.5", "peer-data-[size=lg]/menu-button:top-2.5", "group-data-[collapsible=icon]:hidden", showOnHover && "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0", className),
 		...props
 	});
 });
@@ -26650,7 +24962,7 @@ var SidebarMenuBadge = import_react.forwardRef(({ className, ...props }, ref) =>
 	"data-prohibitions": "[editContent]",
 	ref,
 	"data-sidebar": "menu-badge",
-	className: cn$1("pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground", "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground", "peer-data-[size=sm]/menu-button:top-1", "peer-data-[size=default]/menu-button:top-1.5", "peer-data-[size=lg]/menu-button:top-2.5", "group-data-[collapsible=icon]:hidden", className),
+	className: cn("pointer-events-none absolute right-1 flex h-5 min-w-5 select-none items-center justify-center rounded-md px-1 text-xs font-medium tabular-nums text-sidebar-foreground", "peer-hover/menu-button:text-sidebar-accent-foreground peer-data-[active=true]/menu-button:text-sidebar-accent-foreground", "peer-data-[size=sm]/menu-button:top-1", "peer-data-[size=default]/menu-button:top-1.5", "peer-data-[size=lg]/menu-button:top-2.5", "group-data-[collapsible=icon]:hidden", className),
 	...props
 }));
 SidebarMenuBadge.displayName = "SidebarMenuBadge";
@@ -26663,7 +24975,7 @@ var SidebarMenuSkeleton = import_react.forwardRef(({ className, showIcon = false
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "menu-skeleton",
-		className: cn$1("flex h-8 items-center gap-2 rounded-md px-2", className),
+		className: cn("flex h-8 items-center gap-2 rounded-md px-2", className),
 		...props,
 		children: [showIcon && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
 			"data-uid": "src/components/ui/sidebar.tsx:656:20",
@@ -26685,7 +24997,7 @@ var SidebarMenuSub = import_react.forwardRef(({ className, ...props }, ref) => /
 	"data-prohibitions": "[editContent]",
 	ref,
 	"data-sidebar": "menu-sub",
-	className: cn$1("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", "group-data-[collapsible=icon]:hidden", className),
+	className: cn("mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5", "group-data-[collapsible=icon]:hidden", className),
 	...props
 }));
 SidebarMenuSub.displayName = "SidebarMenuSub";
@@ -26697,14 +25009,14 @@ var SidebarMenuSubItem = import_react.forwardRef(({ ...props }, ref) => /* @__PU
 }));
 SidebarMenuSubItem.displayName = "SidebarMenuSubItem";
 var SidebarMenuSubButton = import_react.forwardRef(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$3 : "a", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(asChild ? Slot$2 : "a", {
 		"data-uid": "src/components/ui/sidebar.tsx:703:5",
 		"data-prohibitions": "[editContent]",
 		ref,
 		"data-sidebar": "menu-sub-button",
 		"data-size": size,
 		"data-active": isActive,
-		className: cn$1("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground", "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground", size === "sm" && "text-xs", size === "md" && "text-sm", "group-data-[collapsible=icon]:hidden", className),
+		className: cn("flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 text-sidebar-foreground outline-none ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-sidebar-accent-foreground", "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground", size === "sm" && "text-xs", size === "md" && "text-sm", "group-data-[collapsible=icon]:hidden", className),
 		...props
 	});
 });
@@ -26922,1808 +25234,296 @@ var useAuthStore = create((set) => ({
 	logout: () => set({ user: null })
 }));
 //#endregion
+//#region src/assets/logo-academy-2-82c76.png
+var logo_academy_2_82c76_default = "/assets/logo-academy-2-82c76-Q8NJYvnh.png";
+//#endregion
 //#region src/components/AppSidebar.tsx
-function AppSidebar() {
-	const user = useAuthStore((s) => s.user);
-	const location = useLocation();
-	const studentNav = [{
-		title: "Área do Aluno",
-		icon: SquarePlay,
-		url: "/student"
-	}, {
-		title: "Programa de Parceiros",
-		icon: Handshake,
-		url: "/student/partner"
-	}];
-	const managerNav = [
-		{
-			title: "Dashboard",
-			icon: LayoutDashboard,
-			url: "/manager"
-		},
-		{
-			title: "Gestão de Cursos",
-			icon: BookOpen,
-			url: "/manager/courses"
-		},
-		{
-			title: "Gestão de Alunos",
-			icon: Users,
-			url: "/manager/enrollments"
-		},
-		{
-			title: "Banco de Questões",
-			icon: Database,
-			url: "/manager/questions"
-		},
-		{
-			title: "Relatórios",
-			icon: ChartNoAxesColumnIncreasing,
-			url: "/manager/reports"
-		},
-		{
-			title: "Taxas & Comissões",
-			icon: Percent,
-			url: "/manager/settings/commissions"
-		},
-		{
-			title: "Relatório Financeiro",
-			icon: Wallet,
-			url: "/manager/settings/financial"
-		},
-		{
-			title: "Programa de Parceiros",
-			icon: Handshake,
-			url: "/manager/partner"
-		},
-		{
-			title: "Integração Pagamentos",
-			icon: CreditCard,
-			url: "/manager/settings/payments"
-		},
-		{
-			title: "Avisos Automáticos",
-			icon: BellRing,
-			url: "/manager/settings/notifications"
-		},
-		{
-			title: "Webhooks (Integrações)",
-			icon: Webhook,
-			url: "/manager/settings/integrations"
-		}
-	];
-	const instructorNav = [
-		{
-			title: "Meu Painel",
-			icon: LayoutDashboard,
-			url: "/instructor"
-		},
-		{
-			title: "Meus Cursos",
-			icon: BookOpen,
-			url: "/instructor/courses"
-		},
-		{
-			title: "Meus Alunos",
-			icon: Users,
-			url: "/instructor/enrollments"
-		},
-		{
-			title: "Corrigir Provas",
-			icon: CircleCheckBig,
-			url: "/instructor/grading"
-		},
-		{
-			title: "Banco de Questões",
-			icon: Database,
-			url: "/instructor/questions"
-		},
-		{
-			title: "Minhas Receitas",
-			icon: Wallet,
-			url: "/instructor/revenue"
-		},
-		{
-			title: "Programa de Parceiros",
-			icon: Handshake,
-			url: "/instructor/partner"
-		}
-	];
-	const navItems = user?.role === "manager" ? managerNav : user?.role === "instructor" ? instructorNav : studentNav;
-	const getBaseRoute = (url) => {
-		if (url === "/manager" || url === "/instructor" || url === "/student") return url;
-		return url.split("/").slice(0, 3).join("/");
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Sidebar, {
-		"data-uid": "src/components/AppSidebar.tsx:70:5",
-		"data-prohibitions": "[editContent]",
-		variant: "inset",
-		className: "border-r bg-muted/10",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarHeader, {
-			"data-uid": "src/components/AppSidebar.tsx:71:7",
-			"data-prohibitions": "[]",
-			className: "p-4 border-b border-border/50",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/AppSidebar.tsx:72:9",
-				"data-prohibitions": "[]",
-				className: "flex items-center gap-3 px-2 py-1",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/AppSidebar.tsx:73:11",
-					"data-prohibitions": "[]",
-					className: "bg-primary p-1.5 rounded-md text-primary-foreground shadow-sm",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BookOpen, {
-						"data-uid": "src/components/AppSidebar.tsx:74:13",
-						"data-prohibitions": "[editContent]",
-						className: "size-5"
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-					"data-uid": "src/components/AppSidebar.tsx:76:11",
-					"data-prohibitions": "[]",
-					className: "font-bold text-sm tracking-tight leading-tight",
-					children: "Observatório Academy (DEMO)"
-				})]
-			})
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarContent, {
-			"data-uid": "src/components/AppSidebar.tsx:81:7",
-			"data-prohibitions": "[editContent]",
-			className: "px-3 mt-6",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenu, {
-				"data-uid": "src/components/AppSidebar.tsx:82:9",
-				"data-prohibitions": "[editContent]",
-				children: navItems.map((item) => {
-					const isActive = location.pathname === item.url || item.url !== "/manager" && item.url !== "/instructor" && item.url !== "/student" && location.pathname.startsWith(getBaseRoute(item.url));
-					return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenuItem, {
-						"data-uid": "src/components/AppSidebar.tsx:91:15",
-						"data-prohibitions": "[editContent]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenuButton, {
-							"data-uid": "src/components/AppSidebar.tsx:92:17",
-							"data-prohibitions": "[editContent]",
-							asChild: true,
-							isActive,
-							tooltip: item.title,
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-								"data-uid": "src/components/AppSidebar.tsx:93:19",
-								"data-prohibitions": "[editContent]",
-								to: item.url,
-								className: cn$1("flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200", isActive ? "text-primary bg-primary/10 font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"),
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
-									"data-uid": "src/components/AppSidebar.tsx:102:21",
-									"data-prohibitions": "[editContent]",
-									className: "size-5"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/AppSidebar.tsx:103:21",
-									"data-prohibitions": "[editContent]",
-									children: item.title
-								})]
-							})
-						})
-					}, item.title);
-				})
-			})
-		})]
-	});
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-context@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
-function createContextScope(scopeName, createContextScopeDeps = []) {
-	let defaultContexts = [];
-	function createContext3(rootComponentName, defaultContext) {
-		const BaseContext = import_react.createContext(defaultContext);
-		BaseContext.displayName = rootComponentName + "Context";
-		const index = defaultContexts.length;
-		defaultContexts = [...defaultContexts, defaultContext];
-		const Provider = (props) => {
-			const { scope, children, ...context } = props;
-			const Context = scope?.[scopeName]?.[index] || BaseContext;
-			const value = import_react.useMemo(() => context, Object.values(context));
-			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
-				value,
-				children
-			});
-		};
-		Provider.displayName = rootComponentName + "Provider";
-		function useContext2(consumerName, scope) {
-			const Context = scope?.[scopeName]?.[index] || BaseContext;
-			const context = import_react.useContext(Context);
-			if (context) return context;
-			if (defaultContext !== void 0) return defaultContext;
-			throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
-		}
-		return [Provider, useContext2];
-	}
-	const createScope = () => {
-		const scopeContexts = defaultContexts.map((defaultContext) => {
-			return import_react.createContext(defaultContext);
-		});
-		return function useScope(scope) {
-			const contexts = scope?.[scopeName] || scopeContexts;
-			return import_react.useMemo(() => ({ [`__scope${scopeName}`]: {
-				...scope,
-				[scopeName]: contexts
-			} }), [scope, contexts]);
-		};
-	};
-	createScope.scopeName = scopeName;
-	return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
-}
-function composeContextScopes(...scopes) {
-	const baseScope = scopes[0];
-	if (scopes.length === 1) return baseScope;
-	const createScope = () => {
-		const scopeHooks = scopes.map((createScope2) => ({
-			useScope: createScope2(),
-			scopeName: createScope2.scopeName
-		}));
-		return function useComposedScopes(overrideScopes) {
-			const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
-				const currentScope = useScope(overrideScopes)[`__scope${scopeName}`];
-				return {
-					...nextScopes2,
-					...currentScope
-				};
-			}, {});
-			return import_react.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
-		};
-	};
-	createScope.scopeName = baseScope.scopeName;
-	return createScope;
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-is-hydrated@0.1.0_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-is-hydrated/dist/index.mjs
-var import_shim = require_shim();
-function useIsHydrated() {
-	return (0, import_shim.useSyncExternalStore)(subscribe, () => true, () => false);
-}
-function subscribe() {
-	return () => {};
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-avatar@1.1.11_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_5e99ccf265cbb36ef8e7150da8f5489e/node_modules/@radix-ui/react-avatar/dist/index.mjs
-var AVATAR_NAME = "Avatar";
-var [createAvatarContext, createAvatarScope] = createContextScope(AVATAR_NAME);
-var [AvatarProvider, useAvatarContext] = createAvatarContext(AVATAR_NAME);
-var Avatar$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeAvatar, ...avatarProps } = props;
-	const [imageLoadingStatus, setImageLoadingStatus] = import_react.useState("idle");
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarProvider, {
-		scope: __scopeAvatar,
-		imageLoadingStatus,
-		onImageLoadingStatusChange: setImageLoadingStatus,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
-			...avatarProps,
-			ref: forwardedRef
-		})
-	});
-});
-Avatar$1.displayName = AVATAR_NAME;
-var IMAGE_NAME = "AvatarImage";
-var AvatarImage$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeAvatar, src, onLoadingStatusChange = () => {}, ...imageProps } = props;
-	const context = useAvatarContext(IMAGE_NAME, __scopeAvatar);
-	const imageLoadingStatus = useImageLoadingStatus(src, imageProps);
-	const handleLoadingStatusChange = useCallbackRef$1((status) => {
-		onLoadingStatusChange(status);
-		context.onImageLoadingStatusChange(status);
-	});
-	useLayoutEffect2(() => {
-		if (imageLoadingStatus !== "idle") handleLoadingStatusChange(imageLoadingStatus);
-	}, [imageLoadingStatus, handleLoadingStatusChange]);
-	return imageLoadingStatus === "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.img, {
-		...imageProps,
-		ref: forwardedRef,
-		src
-	}) : null;
-});
-AvatarImage$1.displayName = IMAGE_NAME;
-var FALLBACK_NAME = "AvatarFallback";
-var AvatarFallback$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeAvatar, delayMs, ...fallbackProps } = props;
-	const context = useAvatarContext(FALLBACK_NAME, __scopeAvatar);
-	const [canRender, setCanRender] = import_react.useState(delayMs === void 0);
-	import_react.useEffect(() => {
-		if (delayMs !== void 0) {
-			const timerId = window.setTimeout(() => setCanRender(true), delayMs);
-			return () => window.clearTimeout(timerId);
-		}
-	}, [delayMs]);
-	return canRender && context.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
-		...fallbackProps,
-		ref: forwardedRef
-	}) : null;
-});
-AvatarFallback$1.displayName = FALLBACK_NAME;
-function resolveLoadingStatus(image, src) {
-	if (!image) return "idle";
-	if (!src) return "error";
-	if (image.src !== src) image.src = src;
-	return image.complete && image.naturalWidth > 0 ? "loaded" : "loading";
-}
-function useImageLoadingStatus(src, { referrerPolicy, crossOrigin }) {
-	const isHydrated = useIsHydrated();
-	const imageRef = import_react.useRef(null);
-	const image = (() => {
-		if (!isHydrated) return null;
-		if (!imageRef.current) imageRef.current = new window.Image();
-		return imageRef.current;
-	})();
-	const [loadingStatus, setLoadingStatus] = import_react.useState(() => resolveLoadingStatus(image, src));
-	useLayoutEffect2(() => {
-		setLoadingStatus(resolveLoadingStatus(image, src));
-	}, [image, src]);
-	useLayoutEffect2(() => {
-		const updateStatus = (status) => () => {
-			setLoadingStatus(status);
-		};
-		if (!image) return;
-		const handleLoad = updateStatus("loaded");
-		const handleError = updateStatus("error");
-		image.addEventListener("load", handleLoad);
-		image.addEventListener("error", handleError);
-		if (referrerPolicy) image.referrerPolicy = referrerPolicy;
-		if (typeof crossOrigin === "string") image.crossOrigin = crossOrigin;
-		return () => {
-			image.removeEventListener("load", handleLoad);
-			image.removeEventListener("error", handleError);
-		};
-	}, [
-		image,
-		crossOrigin,
-		referrerPolicy
-	]);
-	return loadingStatus;
-}
-var Root$5 = Avatar$1;
-var Image = AvatarImage$1;
-var Fallback = AvatarFallback$1;
-//#endregion
-//#region src/components/ui/avatar.tsx
-var Avatar = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$5, {
-	"data-uid": "src/components/ui/avatar.tsx:11:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className),
-	...props
-}));
-Avatar.displayName = Root$5.displayName;
-var AvatarImage = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Image, {
-	"data-uid": "src/components/ui/avatar.tsx:23:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("aspect-square h-full w-full", className),
-	...props
-}));
-AvatarImage.displayName = Image.displayName;
-var AvatarFallback = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Fallback, {
-	"data-uid": "src/components/ui/avatar.tsx:35:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("flex h-full w-full items-center justify-center rounded-full bg-muted", className),
-	...props
-}));
-AvatarFallback.displayName = Fallback.displayName;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-direction@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-direction/dist/index.mjs
-var DirectionContext = import_react.createContext(void 0);
-function useDirection(localDir) {
-	const globalDir = import_react.useContext(DirectionContext);
-	return localDir || globalDir || "ltr";
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-roving-focus@1.1.11_@types+react-dom@19.2.3_@types+react@19.2.14__@type_4eeb29c998b846c35358e2f929e7490e/node_modules/@radix-ui/react-roving-focus/dist/index.mjs
-var ENTRY_FOCUS = "rovingFocusGroup.onEntryFocus";
-var EVENT_OPTIONS = {
-	bubbles: false,
-	cancelable: true
-};
-var GROUP_NAME$3 = "RovingFocusGroup";
-var [Collection$3, useCollection$3, createCollectionScope$3] = createCollection(GROUP_NAME$3);
-var [createRovingFocusGroupContext, createRovingFocusGroupScope] = createContextScope$1(GROUP_NAME$3, [createCollectionScope$3]);
-var [RovingFocusProvider, useRovingFocusContext] = createRovingFocusGroupContext(GROUP_NAME$3);
-var RovingFocusGroup = import_react.forwardRef((props, forwardedRef) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$3.Provider, {
-		scope: props.__scopeRovingFocusGroup,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$3.Slot, {
-			scope: props.__scopeRovingFocusGroup,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RovingFocusGroupImpl, {
-				...props,
-				ref: forwardedRef
-			})
-		})
-	});
-});
-RovingFocusGroup.displayName = GROUP_NAME$3;
-var RovingFocusGroupImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeRovingFocusGroup, orientation, loop = false, dir, currentTabStopId: currentTabStopIdProp, defaultCurrentTabStopId, onCurrentTabStopIdChange, onEntryFocus, preventScrollOnEntryFocus = false, ...groupProps } = props;
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, ref);
-	const direction = useDirection(dir);
-	const [currentTabStopId, setCurrentTabStopId] = useControllableState({
-		prop: currentTabStopIdProp,
-		defaultProp: defaultCurrentTabStopId ?? null,
-		onChange: onCurrentTabStopIdChange,
-		caller: GROUP_NAME$3
-	});
-	const [isTabbingBackOut, setIsTabbingBackOut] = import_react.useState(false);
-	const handleEntryFocus = useCallbackRef$1(onEntryFocus);
-	const getItems = useCollection$3(__scopeRovingFocusGroup);
-	const isClickFocusRef = import_react.useRef(false);
-	const [focusableItemsCount, setFocusableItemsCount] = import_react.useState(0);
-	import_react.useEffect(() => {
-		const node = ref.current;
-		if (node) {
-			node.addEventListener(ENTRY_FOCUS, handleEntryFocus);
-			return () => node.removeEventListener(ENTRY_FOCUS, handleEntryFocus);
-		}
-	}, [handleEntryFocus]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RovingFocusProvider, {
-		scope: __scopeRovingFocusGroup,
-		orientation,
-		dir: direction,
-		loop,
-		currentTabStopId,
-		onItemFocus: import_react.useCallback((tabStopId) => setCurrentTabStopId(tabStopId), [setCurrentTabStopId]),
-		onItemShiftTab: import_react.useCallback(() => setIsTabbingBackOut(true), []),
-		onFocusableItemAdd: import_react.useCallback(() => setFocusableItemsCount((prevCount) => prevCount + 1), []),
-		onFocusableItemRemove: import_react.useCallback(() => setFocusableItemsCount((prevCount) => prevCount - 1), []),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-			tabIndex: isTabbingBackOut || focusableItemsCount === 0 ? -1 : 0,
-			"data-orientation": orientation,
-			...groupProps,
-			ref: composedRefs,
-			style: {
-				outline: "none",
-				...props.style
+var getNavigation = (role) => {
+	switch (role) {
+		case "admin":
+		case "manager": return [
+			{
+				name: "Dashboard",
+				href: "/manager/dashboard",
+				icon: LayoutDashboard
 			},
-			onMouseDown: composeEventHandlers(props.onMouseDown, () => {
-				isClickFocusRef.current = true;
-			}),
-			onFocus: composeEventHandlers(props.onFocus, (event) => {
-				const isKeyboardFocus = !isClickFocusRef.current;
-				if (event.target === event.currentTarget && isKeyboardFocus && !isTabbingBackOut) {
-					const entryFocusEvent = new CustomEvent(ENTRY_FOCUS, EVENT_OPTIONS);
-					event.currentTarget.dispatchEvent(entryFocusEvent);
-					if (!entryFocusEvent.defaultPrevented) {
-						const items = getItems().filter((item) => item.focusable);
-						focusFirst$1([
-							items.find((item) => item.active),
-							items.find((item) => item.id === currentTabStopId),
-							...items
-						].filter(Boolean).map((item) => item.ref.current), preventScrollOnEntryFocus);
-					}
-				}
-				isClickFocusRef.current = false;
-			}),
-			onBlur: composeEventHandlers(props.onBlur, () => setIsTabbingBackOut(false))
-		})
-	});
-});
-var ITEM_NAME$5 = "RovingFocusGroupItem";
-var RovingFocusGroupItem = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeRovingFocusGroup, focusable = true, active = false, tabStopId, children, ...itemProps } = props;
-	const autoId = useId();
-	const id = tabStopId || autoId;
-	const context = useRovingFocusContext(ITEM_NAME$5, __scopeRovingFocusGroup);
-	const isCurrentTabStop = context.currentTabStopId === id;
-	const getItems = useCollection$3(__scopeRovingFocusGroup);
-	const { onFocusableItemAdd, onFocusableItemRemove, currentTabStopId } = context;
-	import_react.useEffect(() => {
-		if (focusable) {
-			onFocusableItemAdd();
-			return () => onFocusableItemRemove();
-		}
-	}, [
-		focusable,
-		onFocusableItemAdd,
-		onFocusableItemRemove
-	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$3.ItemSlot, {
-		scope: __scopeRovingFocusGroup,
-		id,
-		focusable,
-		active,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
-			tabIndex: isCurrentTabStop ? 0 : -1,
-			"data-orientation": context.orientation,
-			...itemProps,
-			ref: forwardedRef,
-			onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
-				if (!focusable) event.preventDefault();
-				else context.onItemFocus(id);
-			}),
-			onFocus: composeEventHandlers(props.onFocus, () => context.onItemFocus(id)),
-			onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-				if (event.key === "Tab" && event.shiftKey) {
-					context.onItemShiftTab();
-					return;
-				}
-				if (event.target !== event.currentTarget) return;
-				const focusIntent = getFocusIntent(event, context.orientation, context.dir);
-				if (focusIntent !== void 0) {
-					if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
-					event.preventDefault();
-					let candidateNodes = getItems().filter((item) => item.focusable).map((item) => item.ref.current);
-					if (focusIntent === "last") candidateNodes.reverse();
-					else if (focusIntent === "prev" || focusIntent === "next") {
-						if (focusIntent === "prev") candidateNodes.reverse();
-						const currentIndex = candidateNodes.indexOf(event.currentTarget);
-						candidateNodes = context.loop ? wrapArray$2(candidateNodes, currentIndex + 1) : candidateNodes.slice(currentIndex + 1);
-					}
-					setTimeout(() => focusFirst$1(candidateNodes));
-				}
-			}),
-			children: typeof children === "function" ? children({
-				isCurrentTabStop,
-				hasTabStop: currentTabStopId != null
-			}) : children
-		})
-	});
-});
-RovingFocusGroupItem.displayName = ITEM_NAME$5;
-var MAP_KEY_TO_FOCUS_INTENT = {
-	ArrowLeft: "prev",
-	ArrowUp: "prev",
-	ArrowRight: "next",
-	ArrowDown: "next",
-	PageUp: "first",
-	Home: "first",
-	PageDown: "last",
-	End: "last"
-};
-function getDirectionAwareKey(key, dir) {
-	if (dir !== "rtl") return key;
-	return key === "ArrowLeft" ? "ArrowRight" : key === "ArrowRight" ? "ArrowLeft" : key;
-}
-function getFocusIntent(event, orientation, dir) {
-	const key = getDirectionAwareKey(event.key, dir);
-	if (orientation === "vertical" && ["ArrowLeft", "ArrowRight"].includes(key)) return void 0;
-	if (orientation === "horizontal" && ["ArrowUp", "ArrowDown"].includes(key)) return void 0;
-	return MAP_KEY_TO_FOCUS_INTENT[key];
-}
-function focusFirst$1(candidates, preventScroll = false) {
-	const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
-	for (const candidate of candidates) {
-		if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
-		candidate.focus({ preventScroll });
-		if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
-	}
-}
-function wrapArray$2(array, startIndex) {
-	return array.map((_, index) => array[(startIndex + index) % array.length]);
-}
-var Root$4 = RovingFocusGroup;
-var Item$2 = RovingFocusGroupItem;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-menu@2.1.16_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_73ff7391b7be14d4dbff03af4dbac090/node_modules/@radix-ui/react-menu/dist/index.mjs
-var SELECTION_KEYS$1 = ["Enter", " "];
-var FIRST_KEYS = [
-	"ArrowDown",
-	"PageUp",
-	"Home"
-];
-var LAST_KEYS = [
-	"ArrowUp",
-	"PageDown",
-	"End"
-];
-var FIRST_LAST_KEYS = [...FIRST_KEYS, ...LAST_KEYS];
-var SUB_OPEN_KEYS = {
-	ltr: [...SELECTION_KEYS$1, "ArrowRight"],
-	rtl: [...SELECTION_KEYS$1, "ArrowLeft"]
-};
-var SUB_CLOSE_KEYS = {
-	ltr: ["ArrowLeft"],
-	rtl: ["ArrowRight"]
-};
-var MENU_NAME = "Menu";
-var [Collection$2, useCollection$2, createCollectionScope$2] = createCollection(MENU_NAME);
-var [createMenuContext, createMenuScope] = createContextScope$1(MENU_NAME, [
-	createCollectionScope$2,
-	createPopperScope,
-	createRovingFocusGroupScope
-]);
-var usePopperScope$1 = createPopperScope();
-var useRovingFocusGroupScope$1 = createRovingFocusGroupScope();
-var [MenuProvider, useMenuContext] = createMenuContext(MENU_NAME);
-var [MenuRootProvider, useMenuRootContext] = createMenuContext(MENU_NAME);
-var Menu = (props) => {
-	const { __scopeMenu, open = false, children, dir, onOpenChange, modal = true } = props;
-	const popperScope = usePopperScope$1(__scopeMenu);
-	const [content, setContent] = import_react.useState(null);
-	const isUsingKeyboardRef = import_react.useRef(false);
-	const handleOpenChange = useCallbackRef$1(onOpenChange);
-	const direction = useDirection(dir);
-	import_react.useEffect(() => {
-		const handleKeyDown = () => {
-			isUsingKeyboardRef.current = true;
-			document.addEventListener("pointerdown", handlePointer, {
-				capture: true,
-				once: true
-			});
-			document.addEventListener("pointermove", handlePointer, {
-				capture: true,
-				once: true
-			});
-		};
-		const handlePointer = () => isUsingKeyboardRef.current = false;
-		document.addEventListener("keydown", handleKeyDown, { capture: true });
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown, { capture: true });
-			document.removeEventListener("pointerdown", handlePointer, { capture: true });
-			document.removeEventListener("pointermove", handlePointer, { capture: true });
-		};
-	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2$4, {
-		...popperScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuProvider, {
-			scope: __scopeMenu,
-			open,
-			onOpenChange: handleOpenChange,
-			content,
-			onContentChange: setContent,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuRootProvider, {
-				scope: __scopeMenu,
-				onClose: import_react.useCallback(() => handleOpenChange(false), [handleOpenChange]),
-				isUsingKeyboardRef,
-				dir: direction,
-				modal,
-				children
-			})
-		})
-	});
-};
-Menu.displayName = MENU_NAME;
-var ANCHOR_NAME = "MenuAnchor";
-var MenuAnchor = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, ...anchorProps } = props;
-	const popperScope = usePopperScope$1(__scopeMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
-		...popperScope,
-		...anchorProps,
-		ref: forwardedRef
-	});
-});
-MenuAnchor.displayName = ANCHOR_NAME;
-var PORTAL_NAME$2 = "MenuPortal";
-var [PortalProvider, usePortalContext] = createMenuContext(PORTAL_NAME$2, { forceMount: void 0 });
-var MenuPortal = (props) => {
-	const { __scopeMenu, forceMount, children, container } = props;
-	const context = useMenuContext(PORTAL_NAME$2, __scopeMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PortalProvider, {
-		scope: __scopeMenu,
-		forceMount,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-			present: forceMount || context.open,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$3, {
-				asChild: true,
-				container,
-				children
-			})
-		})
-	});
-};
-MenuPortal.displayName = PORTAL_NAME$2;
-var CONTENT_NAME$4 = "MenuContent";
-var [MenuContentProvider, useMenuContentContext] = createMenuContext(CONTENT_NAME$4);
-var MenuContent = import_react.forwardRef((props, forwardedRef) => {
-	const portalContext = usePortalContext(CONTENT_NAME$4, props.__scopeMenu);
-	const { forceMount = portalContext.forceMount, ...contentProps } = props;
-	const context = useMenuContext(CONTENT_NAME$4, props.__scopeMenu);
-	const rootContext = useMenuRootContext(CONTENT_NAME$4, props.__scopeMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Provider, {
-		scope: props.__scopeMenu,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-			present: forceMount || context.open,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Slot, {
-				scope: props.__scopeMenu,
-				children: rootContext.modal ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuRootContentModal, {
-					...contentProps,
-					ref: forwardedRef
-				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuRootContentNonModal, {
-					...contentProps,
-					ref: forwardedRef
-				})
-			})
-		})
-	});
-});
-var MenuRootContentModal = import_react.forwardRef((props, forwardedRef) => {
-	const context = useMenuContext(CONTENT_NAME$4, props.__scopeMenu);
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, ref);
-	import_react.useEffect(() => {
-		const content = ref.current;
-		if (content) return hideOthers(content);
-	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuContentImpl, {
-		...props,
-		ref: composedRefs,
-		trapFocus: context.open,
-		disableOutsidePointerEvents: context.open,
-		disableOutsideScroll: true,
-		onFocusOutside: composeEventHandlers(props.onFocusOutside, (event) => event.preventDefault(), { checkForDefaultPrevented: false }),
-		onDismiss: () => context.onOpenChange(false)
-	});
-});
-var MenuRootContentNonModal = import_react.forwardRef((props, forwardedRef) => {
-	const context = useMenuContext(CONTENT_NAME$4, props.__scopeMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuContentImpl, {
-		...props,
-		ref: forwardedRef,
-		trapFocus: false,
-		disableOutsidePointerEvents: false,
-		disableOutsideScroll: false,
-		onDismiss: () => context.onOpenChange(false)
-	});
-});
-var Slot$1 = /* @__PURE__ */ createSlot$1("MenuContent.ScrollLock");
-var MenuContentImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, loop = false, trapFocus, onOpenAutoFocus, onCloseAutoFocus, disableOutsidePointerEvents, onEntryFocus, onEscapeKeyDown, onPointerDownOutside, onFocusOutside, onInteractOutside, onDismiss, disableOutsideScroll, ...contentProps } = props;
-	const context = useMenuContext(CONTENT_NAME$4, __scopeMenu);
-	const rootContext = useMenuRootContext(CONTENT_NAME$4, __scopeMenu);
-	const popperScope = usePopperScope$1(__scopeMenu);
-	const rovingFocusGroupScope = useRovingFocusGroupScope$1(__scopeMenu);
-	const getItems = useCollection$2(__scopeMenu);
-	const [currentItemId, setCurrentItemId] = import_react.useState(null);
-	const contentRef = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, contentRef, context.onContentChange);
-	const timerRef = import_react.useRef(0);
-	const searchRef = import_react.useRef("");
-	const pointerGraceTimerRef = import_react.useRef(0);
-	const pointerGraceIntentRef = import_react.useRef(null);
-	const pointerDirRef = import_react.useRef("right");
-	const lastPointerXRef = import_react.useRef(0);
-	const ScrollLockWrapper = disableOutsideScroll ? ReactRemoveScroll : import_react.Fragment;
-	const scrollLockWrapperProps = disableOutsideScroll ? {
-		as: Slot$1,
-		allowPinchZoom: true
-	} : void 0;
-	const handleTypeaheadSearch = (key) => {
-		const search = searchRef.current + key;
-		const items = getItems().filter((item) => !item.disabled);
-		const currentItem = document.activeElement;
-		const currentMatch = items.find((item) => item.ref.current === currentItem)?.textValue;
-		const nextMatch = getNextMatch(items.map((item) => item.textValue), search, currentMatch);
-		const newItem = items.find((item) => item.textValue === nextMatch)?.ref.current;
-		(function updateSearch(value) {
-			searchRef.current = value;
-			window.clearTimeout(timerRef.current);
-			if (value !== "") timerRef.current = window.setTimeout(() => updateSearch(""), 1e3);
-		})(search);
-		if (newItem) setTimeout(() => newItem.focus());
-	};
-	import_react.useEffect(() => {
-		return () => window.clearTimeout(timerRef.current);
-	}, []);
-	useFocusGuards();
-	const isPointerMovingToSubmenu = import_react.useCallback((event) => {
-		return pointerDirRef.current === pointerGraceIntentRef.current?.side && isPointerInGraceArea(event, pointerGraceIntentRef.current?.area);
-	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuContentProvider, {
-		scope: __scopeMenu,
-		searchRef,
-		onItemEnter: import_react.useCallback((event) => {
-			if (isPointerMovingToSubmenu(event)) event.preventDefault();
-		}, [isPointerMovingToSubmenu]),
-		onItemLeave: import_react.useCallback((event) => {
-			if (isPointerMovingToSubmenu(event)) return;
-			contentRef.current?.focus();
-			setCurrentItemId(null);
-		}, [isPointerMovingToSubmenu]),
-		onTriggerLeave: import_react.useCallback((event) => {
-			if (isPointerMovingToSubmenu(event)) event.preventDefault();
-		}, [isPointerMovingToSubmenu]),
-		pointerGraceTimerRef,
-		onPointerGraceIntentChange: import_react.useCallback((intent) => {
-			pointerGraceIntentRef.current = intent;
-		}, []),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollLockWrapper, {
-			...scrollLockWrapperProps,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FocusScope, {
-				asChild: true,
-				trapped: trapFocus,
-				onMountAutoFocus: composeEventHandlers(onOpenAutoFocus, (event) => {
-					event.preventDefault();
-					contentRef.current?.focus({ preventScroll: true });
-				}),
-				onUnmountAutoFocus: onCloseAutoFocus,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DismissableLayer, {
-					asChild: true,
-					disableOutsidePointerEvents,
-					onEscapeKeyDown,
-					onPointerDownOutside,
-					onFocusOutside,
-					onInteractOutside,
-					onDismiss,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
-						asChild: true,
-						...rovingFocusGroupScope,
-						dir: rootContext.dir,
-						orientation: "vertical",
-						loop,
-						currentTabStopId: currentItemId,
-						onCurrentTabStopIdChange: setCurrentItemId,
-						onEntryFocus: composeEventHandlers(onEntryFocus, (event) => {
-							if (!rootContext.isUsingKeyboardRef.current) event.preventDefault();
-						}),
-						preventScrollOnEntryFocus: true,
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content$2, {
-							role: "menu",
-							"aria-orientation": "vertical",
-							"data-state": getOpenState(context.open),
-							"data-radix-menu-content": "",
-							dir: rootContext.dir,
-							...popperScope,
-							...contentProps,
-							ref: composedRefs,
-							style: {
-								outline: "none",
-								...contentProps.style
-							},
-							onKeyDown: composeEventHandlers(contentProps.onKeyDown, (event) => {
-								const isKeyDownInside = event.target.closest("[data-radix-menu-content]") === event.currentTarget;
-								const isModifierKey = event.ctrlKey || event.altKey || event.metaKey;
-								const isCharacterKey = event.key.length === 1;
-								if (isKeyDownInside) {
-									if (event.key === "Tab") event.preventDefault();
-									if (!isModifierKey && isCharacterKey) handleTypeaheadSearch(event.key);
-								}
-								const content = contentRef.current;
-								if (event.target !== content) return;
-								if (!FIRST_LAST_KEYS.includes(event.key)) return;
-								event.preventDefault();
-								const candidateNodes = getItems().filter((item) => !item.disabled).map((item) => item.ref.current);
-								if (LAST_KEYS.includes(event.key)) candidateNodes.reverse();
-								focusFirst(candidateNodes);
-							}),
-							onBlur: composeEventHandlers(props.onBlur, (event) => {
-								if (!event.currentTarget.contains(event.target)) {
-									window.clearTimeout(timerRef.current);
-									searchRef.current = "";
-								}
-							}),
-							onPointerMove: composeEventHandlers(props.onPointerMove, whenMouse((event) => {
-								const target = event.target;
-								const pointerXHasChanged = lastPointerXRef.current !== event.clientX;
-								if (event.currentTarget.contains(target) && pointerXHasChanged) {
-									pointerDirRef.current = event.clientX > lastPointerXRef.current ? "right" : "left";
-									lastPointerXRef.current = event.clientX;
-								}
-							}))
-						})
-					})
-				})
-			})
-		})
-	});
-});
-MenuContent.displayName = CONTENT_NAME$4;
-var GROUP_NAME$2 = "MenuGroup";
-var MenuGroup = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, ...groupProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		role: "group",
-		...groupProps,
-		ref: forwardedRef
-	});
-});
-MenuGroup.displayName = GROUP_NAME$2;
-var LABEL_NAME$2 = "MenuLabel";
-var MenuLabel = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, ...labelProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		...labelProps,
-		ref: forwardedRef
-	});
-});
-MenuLabel.displayName = LABEL_NAME$2;
-var ITEM_NAME$4 = "MenuItem";
-var ITEM_SELECT = "menu.itemSelect";
-var MenuItem = import_react.forwardRef((props, forwardedRef) => {
-	const { disabled = false, onSelect, ...itemProps } = props;
-	const ref = import_react.useRef(null);
-	const rootContext = useMenuRootContext(ITEM_NAME$4, props.__scopeMenu);
-	const contentContext = useMenuContentContext(ITEM_NAME$4, props.__scopeMenu);
-	const composedRefs = useComposedRefs(forwardedRef, ref);
-	const isPointerDownRef = import_react.useRef(false);
-	const handleSelect = () => {
-		const menuItem = ref.current;
-		if (!disabled && menuItem) {
-			const itemSelectEvent = new CustomEvent(ITEM_SELECT, {
-				bubbles: true,
-				cancelable: true
-			});
-			menuItem.addEventListener(ITEM_SELECT, (event) => onSelect?.(event), { once: true });
-			dispatchDiscreteCustomEvent(menuItem, itemSelectEvent);
-			if (itemSelectEvent.defaultPrevented) isPointerDownRef.current = false;
-			else rootContext.onClose();
-		}
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuItemImpl, {
-		...itemProps,
-		ref: composedRefs,
-		disabled,
-		onClick: composeEventHandlers(props.onClick, handleSelect),
-		onPointerDown: (event) => {
-			props.onPointerDown?.(event);
-			isPointerDownRef.current = true;
-		},
-		onPointerUp: composeEventHandlers(props.onPointerUp, (event) => {
-			if (!isPointerDownRef.current) event.currentTarget?.click();
-		}),
-		onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-			const isTypingAhead = contentContext.searchRef.current !== "";
-			if (disabled || isTypingAhead && event.key === " ") return;
-			if (SELECTION_KEYS$1.includes(event.key)) {
-				event.currentTarget.click();
-				event.preventDefault();
+			{
+				name: "Cursos",
+				href: "/manager/courses",
+				icon: BookOpen
+			},
+			{
+				name: "Matrículas",
+				href: "/manager/enrollments",
+				icon: Users
+			},
+			{
+				name: "Relatórios",
+				href: "/manager/reports",
+				icon: ChartPie
+			},
+			{
+				name: "Financeiro",
+				href: "/manager/finance",
+				icon: CreditCard
+			},
+			{
+				name: "Comunicações",
+				href: "/manager/notifications",
+				icon: Bell
+			},
+			{
+				name: "Configurações",
+				href: "/manager/integrations",
+				icon: Settings
 			}
-		})
-	});
-});
-MenuItem.displayName = ITEM_NAME$4;
-var MenuItemImpl = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, disabled = false, textValue, ...itemProps } = props;
-	const contentContext = useMenuContentContext(ITEM_NAME$4, __scopeMenu);
-	const rovingFocusGroupScope = useRovingFocusGroupScope$1(__scopeMenu);
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, ref);
-	const [isFocused, setIsFocused] = import_react.useState(false);
-	const [textContent, setTextContent] = import_react.useState("");
-	import_react.useEffect(() => {
-		const menuItem = ref.current;
-		if (menuItem) setTextContent((menuItem.textContent ?? "").trim());
-	}, [itemProps.children]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.ItemSlot, {
-		scope: __scopeMenu,
-		disabled,
-		textValue: textValue ?? textContent,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item$2, {
-			asChild: true,
-			...rovingFocusGroupScope,
-			focusable: !disabled,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-				role: "menuitem",
-				"data-highlighted": isFocused ? "" : void 0,
-				"aria-disabled": disabled || void 0,
-				"data-disabled": disabled ? "" : void 0,
-				...itemProps,
-				ref: composedRefs,
-				onPointerMove: composeEventHandlers(props.onPointerMove, whenMouse((event) => {
-					if (disabled) contentContext.onItemLeave(event);
-					else {
-						contentContext.onItemEnter(event);
-						if (!event.defaultPrevented) event.currentTarget.focus({ preventScroll: true });
-					}
-				})),
-				onPointerLeave: composeEventHandlers(props.onPointerLeave, whenMouse((event) => contentContext.onItemLeave(event))),
-				onFocus: composeEventHandlers(props.onFocus, () => setIsFocused(true)),
-				onBlur: composeEventHandlers(props.onBlur, () => setIsFocused(false))
-			})
-		})
-	});
-});
-var CHECKBOX_ITEM_NAME$1 = "MenuCheckboxItem";
-var MenuCheckboxItem = import_react.forwardRef((props, forwardedRef) => {
-	const { checked = false, onCheckedChange, ...checkboxItemProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ItemIndicatorProvider, {
-		scope: props.__scopeMenu,
-		checked,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuItem, {
-			role: "menuitemcheckbox",
-			"aria-checked": isIndeterminate$1(checked) ? "mixed" : checked,
-			...checkboxItemProps,
-			ref: forwardedRef,
-			"data-state": getCheckedState(checked),
-			onSelect: composeEventHandlers(checkboxItemProps.onSelect, () => onCheckedChange?.(isIndeterminate$1(checked) ? true : !checked), { checkForDefaultPrevented: false })
-		})
-	});
-});
-MenuCheckboxItem.displayName = CHECKBOX_ITEM_NAME$1;
-var RADIO_GROUP_NAME$2 = "MenuRadioGroup";
-var [RadioGroupProvider$1, useRadioGroupContext$1] = createMenuContext(RADIO_GROUP_NAME$2, {
-	value: void 0,
-	onValueChange: () => {}
-});
-var MenuRadioGroup = import_react.forwardRef((props, forwardedRef) => {
-	const { value, onValueChange, ...groupProps } = props;
-	const handleValueChange = useCallbackRef$1(onValueChange);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroupProvider$1, {
-		scope: props.__scopeMenu,
-		value,
-		onValueChange: handleValueChange,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuGroup, {
-			...groupProps,
-			ref: forwardedRef
-		})
-	});
-});
-MenuRadioGroup.displayName = RADIO_GROUP_NAME$2;
-var RADIO_ITEM_NAME$1 = "MenuRadioItem";
-var MenuRadioItem = import_react.forwardRef((props, forwardedRef) => {
-	const { value, ...radioItemProps } = props;
-	const context = useRadioGroupContext$1(RADIO_ITEM_NAME$1, props.__scopeMenu);
-	const checked = value === context.value;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ItemIndicatorProvider, {
-		scope: props.__scopeMenu,
-		checked,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuItem, {
-			role: "menuitemradio",
-			"aria-checked": checked,
-			...radioItemProps,
-			ref: forwardedRef,
-			"data-state": getCheckedState(checked),
-			onSelect: composeEventHandlers(radioItemProps.onSelect, () => context.onValueChange?.(value), { checkForDefaultPrevented: false })
-		})
-	});
-});
-MenuRadioItem.displayName = RADIO_ITEM_NAME$1;
-var ITEM_INDICATOR_NAME$1 = "MenuItemIndicator";
-var [ItemIndicatorProvider, useItemIndicatorContext] = createMenuContext(ITEM_INDICATOR_NAME$1, { checked: false });
-var MenuItemIndicator = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, forceMount, ...itemIndicatorProps } = props;
-	const indicatorContext = useItemIndicatorContext(ITEM_INDICATOR_NAME$1, __scopeMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-		present: forceMount || isIndeterminate$1(indicatorContext.checked) || indicatorContext.checked === true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
-			...itemIndicatorProps,
-			ref: forwardedRef,
-			"data-state": getCheckedState(indicatorContext.checked)
-		})
-	});
-});
-MenuItemIndicator.displayName = ITEM_INDICATOR_NAME$1;
-var SEPARATOR_NAME$2 = "MenuSeparator";
-var MenuSeparator = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, ...separatorProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
-		role: "separator",
-		"aria-orientation": "horizontal",
-		...separatorProps,
-		ref: forwardedRef
-	});
-});
-MenuSeparator.displayName = SEPARATOR_NAME$2;
-var ARROW_NAME$2 = "MenuArrow";
-var MenuArrow = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeMenu, ...arrowProps } = props;
-	const popperScope = usePopperScope$1(__scopeMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Arrow, {
-		...popperScope,
-		...arrowProps,
-		ref: forwardedRef
-	});
-});
-MenuArrow.displayName = ARROW_NAME$2;
-var SUB_NAME = "MenuSub";
-var [MenuSubProvider, useMenuSubContext] = createMenuContext(SUB_NAME);
-var MenuSub = (props) => {
-	const { __scopeMenu, children, open = false, onOpenChange } = props;
-	const parentMenuContext = useMenuContext(SUB_NAME, __scopeMenu);
-	const popperScope = usePopperScope$1(__scopeMenu);
-	const [trigger, setTrigger] = import_react.useState(null);
-	const [content, setContent] = import_react.useState(null);
-	const handleOpenChange = useCallbackRef$1(onOpenChange);
-	import_react.useEffect(() => {
-		if (parentMenuContext.open === false) handleOpenChange(false);
-		return () => handleOpenChange(false);
-	}, [parentMenuContext.open, handleOpenChange]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2$4, {
-		...popperScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuProvider, {
-			scope: __scopeMenu,
-			open,
-			onOpenChange: handleOpenChange,
-			content,
-			onContentChange: setContent,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuSubProvider, {
-				scope: __scopeMenu,
-				contentId: useId(),
-				triggerId: useId(),
-				trigger,
-				onTriggerChange: setTrigger,
-				children
-			})
-		})
-	});
-};
-MenuSub.displayName = SUB_NAME;
-var SUB_TRIGGER_NAME$1 = "MenuSubTrigger";
-var MenuSubTrigger = import_react.forwardRef((props, forwardedRef) => {
-	const context = useMenuContext(SUB_TRIGGER_NAME$1, props.__scopeMenu);
-	const rootContext = useMenuRootContext(SUB_TRIGGER_NAME$1, props.__scopeMenu);
-	const subContext = useMenuSubContext(SUB_TRIGGER_NAME$1, props.__scopeMenu);
-	const contentContext = useMenuContentContext(SUB_TRIGGER_NAME$1, props.__scopeMenu);
-	const openTimerRef = import_react.useRef(null);
-	const { pointerGraceTimerRef, onPointerGraceIntentChange } = contentContext;
-	const scope = { __scopeMenu: props.__scopeMenu };
-	const clearOpenTimer = import_react.useCallback(() => {
-		if (openTimerRef.current) window.clearTimeout(openTimerRef.current);
-		openTimerRef.current = null;
-	}, []);
-	import_react.useEffect(() => clearOpenTimer, [clearOpenTimer]);
-	import_react.useEffect(() => {
-		const pointerGraceTimer = pointerGraceTimerRef.current;
-		return () => {
-			window.clearTimeout(pointerGraceTimer);
-			onPointerGraceIntentChange(null);
-		};
-	}, [pointerGraceTimerRef, onPointerGraceIntentChange]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuAnchor, {
-		asChild: true,
-		...scope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuItemImpl, {
-			id: subContext.triggerId,
-			"aria-haspopup": "menu",
-			"aria-expanded": context.open,
-			"aria-controls": subContext.contentId,
-			"data-state": getOpenState(context.open),
-			...props,
-			ref: composeRefs(forwardedRef, subContext.onTriggerChange),
-			onClick: (event) => {
-				props.onClick?.(event);
-				if (props.disabled || event.defaultPrevented) return;
-				event.currentTarget.focus();
-				if (!context.open) context.onOpenChange(true);
+		];
+		case "instructor": return [
+			{
+				name: "Dashboard",
+				href: "/instructor/dashboard",
+				icon: LayoutDashboard
 			},
-			onPointerMove: composeEventHandlers(props.onPointerMove, whenMouse((event) => {
-				contentContext.onItemEnter(event);
-				if (event.defaultPrevented) return;
-				if (!props.disabled && !context.open && !openTimerRef.current) {
-					contentContext.onPointerGraceIntentChange(null);
-					openTimerRef.current = window.setTimeout(() => {
-						context.onOpenChange(true);
-						clearOpenTimer();
-					}, 100);
-				}
-			})),
-			onPointerLeave: composeEventHandlers(props.onPointerLeave, whenMouse((event) => {
-				clearOpenTimer();
-				const contentRect = context.content?.getBoundingClientRect();
-				if (contentRect) {
-					const side = context.content?.dataset.side;
-					const rightSide = side === "right";
-					const bleed = rightSide ? -5 : 5;
-					const contentNearEdge = contentRect[rightSide ? "left" : "right"];
-					const contentFarEdge = contentRect[rightSide ? "right" : "left"];
-					contentContext.onPointerGraceIntentChange({
-						area: [
-							{
-								x: event.clientX + bleed,
-								y: event.clientY
-							},
-							{
-								x: contentNearEdge,
-								y: contentRect.top
-							},
-							{
-								x: contentFarEdge,
-								y: contentRect.top
-							},
-							{
-								x: contentFarEdge,
-								y: contentRect.bottom
-							},
-							{
-								x: contentNearEdge,
-								y: contentRect.bottom
-							}
-						],
-						side
-					});
-					window.clearTimeout(pointerGraceTimerRef.current);
-					pointerGraceTimerRef.current = window.setTimeout(() => contentContext.onPointerGraceIntentChange(null), 300);
-				} else {
-					contentContext.onTriggerLeave(event);
-					if (event.defaultPrevented) return;
-					contentContext.onPointerGraceIntentChange(null);
-				}
-			})),
-			onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-				const isTypingAhead = contentContext.searchRef.current !== "";
-				if (props.disabled || isTypingAhead && event.key === " ") return;
-				if (SUB_OPEN_KEYS[rootContext.dir].includes(event.key)) {
-					context.onOpenChange(true);
-					context.content?.focus();
-					event.preventDefault();
-				}
-			})
-		})
-	});
-});
-MenuSubTrigger.displayName = SUB_TRIGGER_NAME$1;
-var SUB_CONTENT_NAME$1 = "MenuSubContent";
-var MenuSubContent = import_react.forwardRef((props, forwardedRef) => {
-	const portalContext = usePortalContext(CONTENT_NAME$4, props.__scopeMenu);
-	const { forceMount = portalContext.forceMount, ...subContentProps } = props;
-	const context = useMenuContext(CONTENT_NAME$4, props.__scopeMenu);
-	const rootContext = useMenuRootContext(CONTENT_NAME$4, props.__scopeMenu);
-	const subContext = useMenuSubContext(SUB_CONTENT_NAME$1, props.__scopeMenu);
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(forwardedRef, ref);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Provider, {
-		scope: props.__scopeMenu,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
-			present: forceMount || context.open,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Slot, {
-				scope: props.__scopeMenu,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MenuContentImpl, {
-					id: subContext.contentId,
-					"aria-labelledby": subContext.triggerId,
-					...subContentProps,
-					ref: composedRefs,
-					align: "start",
-					side: rootContext.dir === "rtl" ? "left" : "right",
-					disableOutsidePointerEvents: false,
-					disableOutsideScroll: false,
-					trapFocus: false,
-					onOpenAutoFocus: (event) => {
-						if (rootContext.isUsingKeyboardRef.current) ref.current?.focus();
-						event.preventDefault();
-					},
-					onCloseAutoFocus: (event) => event.preventDefault(),
-					onFocusOutside: composeEventHandlers(props.onFocusOutside, (event) => {
-						if (event.target !== subContext.trigger) context.onOpenChange(false);
-					}),
-					onEscapeKeyDown: composeEventHandlers(props.onEscapeKeyDown, (event) => {
-						rootContext.onClose();
-						event.preventDefault();
-					}),
-					onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-						const isKeyDownInside = event.currentTarget.contains(event.target);
-						const isCloseKey = SUB_CLOSE_KEYS[rootContext.dir].includes(event.key);
-						if (isKeyDownInside && isCloseKey) {
-							context.onOpenChange(false);
-							subContext.trigger?.focus();
-							event.preventDefault();
-						}
+			{
+				name: "Avaliar Provas",
+				href: "/instructor/grade-exams",
+				icon: CircleCheckBig
+			},
+			{
+				name: "Minha Receita",
+				href: "/instructor/revenue",
+				icon: Wallet
+			},
+			{
+				name: "Banco de Questões",
+				href: "/instructor/questions",
+				icon: ShieldAlert
+			}
+		];
+		default: return [
+			{
+				name: "Meu Aprendizado",
+				href: "/student/dashboard",
+				icon: BookOpen
+			},
+			{
+				name: "Certificados",
+				href: "/student/certificate/1",
+				icon: GraduationCap
+			},
+			{
+				name: "Dúvidas",
+				href: "/student/questions",
+				icon: CircleQuestionMark
+			}
+		];
+	}
+};
+function AppSidebar() {
+	const { user, logout } = useAuthStore();
+	const location = useLocation();
+	const navigation = getNavigation(user?.role);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/components/AppSidebar.tsx:58:5",
+		"data-prohibitions": "[editContent]",
+		className: "flex h-full w-72 flex-col border-r bg-slate-900 text-slate-300",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/components/AppSidebar.tsx:59:7",
+				"data-prohibitions": "[]",
+				className: "flex h-20 items-center px-6 border-b border-slate-800 bg-slate-950",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+					"data-uid": "src/components/AppSidebar.tsx:60:9",
+					"data-prohibitions": "[]",
+					to: "/",
+					className: "flex items-center gap-3 w-full",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						"data-uid": "src/components/AppSidebar.tsx:61:11",
+						"data-prohibitions": "[editContent]",
+						src: logo_academy_2_82c76_default,
+						alt: "Observatório Academy",
+						className: "h-10 w-auto brightness-0 invert"
 					})
 				})
-			})
-		})
-	});
-});
-MenuSubContent.displayName = SUB_CONTENT_NAME$1;
-function getOpenState(open) {
-	return open ? "open" : "closed";
-}
-function isIndeterminate$1(checked) {
-	return checked === "indeterminate";
-}
-function getCheckedState(checked) {
-	return isIndeterminate$1(checked) ? "indeterminate" : checked ? "checked" : "unchecked";
-}
-function focusFirst(candidates) {
-	const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
-	for (const candidate of candidates) {
-		if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
-		candidate.focus();
-		if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
-	}
-}
-function wrapArray$1(array, startIndex) {
-	return array.map((_, index) => array[(startIndex + index) % array.length]);
-}
-function getNextMatch(values, search, currentMatch) {
-	const normalizedSearch = search.length > 1 && Array.from(search).every((char) => char === search[0]) ? search[0] : search;
-	const currentMatchIndex = currentMatch ? values.indexOf(currentMatch) : -1;
-	let wrappedValues = wrapArray$1(values, Math.max(currentMatchIndex, 0));
-	if (normalizedSearch.length === 1) wrappedValues = wrappedValues.filter((v) => v !== currentMatch);
-	const nextMatch = wrappedValues.find((value) => value.toLowerCase().startsWith(normalizedSearch.toLowerCase()));
-	return nextMatch !== currentMatch ? nextMatch : void 0;
-}
-function isPointInPolygon(point, polygon) {
-	const { x, y } = point;
-	let inside = false;
-	for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-		const ii = polygon[i];
-		const jj = polygon[j];
-		const xi = ii.x;
-		const yi = ii.y;
-		const xj = jj.x;
-		const yj = jj.y;
-		if (yi > y !== yj > y && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
-	}
-	return inside;
-}
-function isPointerInGraceArea(event, area) {
-	if (!area) return false;
-	return isPointInPolygon({
-		x: event.clientX,
-		y: event.clientY
-	}, area);
-}
-function whenMouse(handler) {
-	return (event) => event.pointerType === "mouse" ? handler(event) : void 0;
-}
-var Root3 = Menu;
-var Anchor2 = MenuAnchor;
-var Portal$1 = MenuPortal;
-var Content2$3 = MenuContent;
-var Group$1 = MenuGroup;
-var Label$3 = MenuLabel;
-var Item2$2 = MenuItem;
-var CheckboxItem = MenuCheckboxItem;
-var RadioGroup$2 = MenuRadioGroup;
-var RadioItem = MenuRadioItem;
-var ItemIndicator$1 = MenuItemIndicator;
-var Separator$1 = MenuSeparator;
-var Arrow2 = MenuArrow;
-var SubTrigger = MenuSubTrigger;
-var SubContent = MenuSubContent;
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-dropdown-menu@2.1.16_@types+react-dom@19.2.3_@types+react@19.2.14__@typ_73af8346b6b2e99f5d79f55f5dac0b34/node_modules/@radix-ui/react-dropdown-menu/dist/index.mjs
-var DROPDOWN_MENU_NAME = "DropdownMenu";
-var [createDropdownMenuContext, createDropdownMenuScope] = createContextScope$1(DROPDOWN_MENU_NAME, [createMenuScope]);
-var useMenuScope = createMenuScope();
-var [DropdownMenuProvider, useDropdownMenuContext] = createDropdownMenuContext(DROPDOWN_MENU_NAME);
-var DropdownMenu$1 = (props) => {
-	const { __scopeDropdownMenu, children, dir, open: openProp, defaultOpen, onOpenChange, modal = true } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	const triggerRef = import_react.useRef(null);
-	const [open, setOpen] = useControllableState({
-		prop: openProp,
-		defaultProp: defaultOpen ?? false,
-		onChange: onOpenChange,
-		caller: DROPDOWN_MENU_NAME
-	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuProvider, {
-		scope: __scopeDropdownMenu,
-		triggerId: useId(),
-		triggerRef,
-		contentId: useId(),
-		open,
-		onOpenChange: setOpen,
-		onOpenToggle: import_react.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
-		modal,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root3, {
-			...menuScope,
-			open,
-			onOpenChange: setOpen,
-			dir,
-			modal,
-			children
-		})
-	});
-};
-DropdownMenu$1.displayName = DROPDOWN_MENU_NAME;
-var TRIGGER_NAME$4 = "DropdownMenuTrigger";
-var DropdownMenuTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, disabled = false, ...triggerProps } = props;
-	const context = useDropdownMenuContext(TRIGGER_NAME$4, __scopeDropdownMenu);
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor2, {
-		asChild: true,
-		...menuScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
-			type: "button",
-			id: context.triggerId,
-			"aria-haspopup": "menu",
-			"aria-expanded": context.open,
-			"aria-controls": context.open ? context.contentId : void 0,
-			"data-state": context.open ? "open" : "closed",
-			"data-disabled": disabled ? "" : void 0,
-			disabled,
-			...triggerProps,
-			ref: composeRefs(forwardedRef, context.triggerRef),
-			onPointerDown: composeEventHandlers(props.onPointerDown, (event) => {
-				if (!disabled && event.button === 0 && event.ctrlKey === false) {
-					context.onOpenToggle();
-					if (!context.open) event.preventDefault();
-				}
-			}),
-			onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-				if (disabled) return;
-				if (["Enter", " "].includes(event.key)) context.onOpenToggle();
-				if (event.key === "ArrowDown") context.onOpenChange(true);
-				if ([
-					"Enter",
-					" ",
-					"ArrowDown"
-				].includes(event.key)) event.preventDefault();
-			})
-		})
-	});
-});
-DropdownMenuTrigger$1.displayName = TRIGGER_NAME$4;
-var PORTAL_NAME$1 = "DropdownMenuPortal";
-var DropdownMenuPortal$1 = (props) => {
-	const { __scopeDropdownMenu, ...portalProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$1, {
-		...menuScope,
-		...portalProps
-	});
-};
-DropdownMenuPortal$1.displayName = PORTAL_NAME$1;
-var CONTENT_NAME$3 = "DropdownMenuContent";
-var DropdownMenuContent$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...contentProps } = props;
-	const context = useDropdownMenuContext(CONTENT_NAME$3, __scopeDropdownMenu);
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	const hasInteractedOutsideRef = import_react.useRef(false);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2$3, {
-		id: context.contentId,
-		"aria-labelledby": context.triggerId,
-		...menuScope,
-		...contentProps,
-		ref: forwardedRef,
-		onCloseAutoFocus: composeEventHandlers(props.onCloseAutoFocus, (event) => {
-			if (!hasInteractedOutsideRef.current) context.triggerRef.current?.focus();
-			hasInteractedOutsideRef.current = false;
-			event.preventDefault();
-		}),
-		onInteractOutside: composeEventHandlers(props.onInteractOutside, (event) => {
-			const originalEvent = event.detail.originalEvent;
-			const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
-			const isRightClick = originalEvent.button === 2 || ctrlLeftClick;
-			if (!context.modal || isRightClick) hasInteractedOutsideRef.current = true;
-		}),
-		style: {
-			...props.style,
-			"--radix-dropdown-menu-content-transform-origin": "var(--radix-popper-transform-origin)",
-			"--radix-dropdown-menu-content-available-width": "var(--radix-popper-available-width)",
-			"--radix-dropdown-menu-content-available-height": "var(--radix-popper-available-height)",
-			"--radix-dropdown-menu-trigger-width": "var(--radix-popper-anchor-width)",
-			"--radix-dropdown-menu-trigger-height": "var(--radix-popper-anchor-height)"
-		}
-	});
-});
-DropdownMenuContent$1.displayName = CONTENT_NAME$3;
-var GROUP_NAME$1 = "DropdownMenuGroup";
-var DropdownMenuGroup$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...groupProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Group$1, {
-		...menuScope,
-		...groupProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuGroup$1.displayName = GROUP_NAME$1;
-var LABEL_NAME$1 = "DropdownMenuLabel";
-var DropdownMenuLabel$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...labelProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$3, {
-		...menuScope,
-		...labelProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuLabel$1.displayName = LABEL_NAME$1;
-var ITEM_NAME$3 = "DropdownMenuItem";
-var DropdownMenuItem$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...itemProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item2$2, {
-		...menuScope,
-		...itemProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuItem$1.displayName = ITEM_NAME$3;
-var CHECKBOX_ITEM_NAME = "DropdownMenuCheckboxItem";
-var DropdownMenuCheckboxItem$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...checkboxItemProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CheckboxItem, {
-		...menuScope,
-		...checkboxItemProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuCheckboxItem$1.displayName = CHECKBOX_ITEM_NAME;
-var RADIO_GROUP_NAME$1 = "DropdownMenuRadioGroup";
-var DropdownMenuRadioGroup$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...radioGroupProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroup$2, {
-		...menuScope,
-		...radioGroupProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuRadioGroup$1.displayName = RADIO_GROUP_NAME$1;
-var RADIO_ITEM_NAME = "DropdownMenuRadioItem";
-var DropdownMenuRadioItem$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...radioItemProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioItem, {
-		...menuScope,
-		...radioItemProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuRadioItem$1.displayName = RADIO_ITEM_NAME;
-var INDICATOR_NAME$3 = "DropdownMenuItemIndicator";
-var DropdownMenuItemIndicator = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...itemIndicatorProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ItemIndicator$1, {
-		...menuScope,
-		...itemIndicatorProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuItemIndicator.displayName = INDICATOR_NAME$3;
-var SEPARATOR_NAME$1 = "DropdownMenuSeparator";
-var DropdownMenuSeparator$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...separatorProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator$1, {
-		...menuScope,
-		...separatorProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuSeparator$1.displayName = SEPARATOR_NAME$1;
-var ARROW_NAME$1 = "DropdownMenuArrow";
-var DropdownMenuArrow = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...arrowProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Arrow2, {
-		...menuScope,
-		...arrowProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuArrow.displayName = ARROW_NAME$1;
-var SUB_TRIGGER_NAME = "DropdownMenuSubTrigger";
-var DropdownMenuSubTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...subTriggerProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SubTrigger, {
-		...menuScope,
-		...subTriggerProps,
-		ref: forwardedRef
-	});
-});
-DropdownMenuSubTrigger$1.displayName = SUB_TRIGGER_NAME;
-var SUB_CONTENT_NAME = "DropdownMenuSubContent";
-var DropdownMenuSubContent$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeDropdownMenu, ...subContentProps } = props;
-	const menuScope = useMenuScope(__scopeDropdownMenu);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SubContent, {
-		...menuScope,
-		...subContentProps,
-		ref: forwardedRef,
-		style: {
-			...props.style,
-			"--radix-dropdown-menu-content-transform-origin": "var(--radix-popper-transform-origin)",
-			"--radix-dropdown-menu-content-available-width": "var(--radix-popper-available-width)",
-			"--radix-dropdown-menu-content-available-height": "var(--radix-popper-available-height)",
-			"--radix-dropdown-menu-trigger-width": "var(--radix-popper-anchor-width)",
-			"--radix-dropdown-menu-trigger-height": "var(--radix-popper-anchor-height)"
-		}
-	});
-});
-DropdownMenuSubContent$1.displayName = SUB_CONTENT_NAME;
-var Root2$3 = DropdownMenu$1;
-var Trigger$2 = DropdownMenuTrigger$1;
-var Portal2 = DropdownMenuPortal$1;
-var Content2$2 = DropdownMenuContent$1;
-var Label2 = DropdownMenuLabel$1;
-var Item2$1 = DropdownMenuItem$1;
-var CheckboxItem2 = DropdownMenuCheckboxItem$1;
-var RadioItem2 = DropdownMenuRadioItem$1;
-var ItemIndicator2 = DropdownMenuItemIndicator;
-var Separator2 = DropdownMenuSeparator$1;
-var SubTrigger2 = DropdownMenuSubTrigger$1;
-var SubContent2 = DropdownMenuSubContent$1;
-//#endregion
-//#region src/components/ui/dropdown-menu.tsx
-var DropdownMenu = Root2$3;
-var DropdownMenuTrigger = Trigger$2;
-var DropdownMenuSubTrigger = import_react.forwardRef(({ className, inset, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SubTrigger2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:26:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", inset && "pl-8", className),
-	...props,
-	children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-		"data-uid": "src/components/ui/dropdown-menu.tsx:36:5",
-		"data-prohibitions": "[editContent]",
-		className: "ml-auto"
-	})]
-}));
-DropdownMenuSubTrigger.displayName = SubTrigger2.displayName;
-var DropdownMenuSubContent = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SubContent2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:45:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-dropdown-menu-content-transform-origin]", className),
-	...props
-}));
-DropdownMenuSubContent.displayName = SubContent2.displayName;
-var DropdownMenuContent = import_react.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:60:3",
-	"data-prohibitions": "[editContent]",
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2$2, {
-		"data-uid": "src/components/ui/dropdown-menu.tsx:61:5",
-		"data-prohibitions": "[editContent]",
-		ref,
-		sideOffset,
-		className: cn$1("z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-dropdown-menu-content-transform-origin]", className),
-		...props
-	})
-}));
-DropdownMenuContent.displayName = Content2$2.displayName;
-var DropdownMenuItem = import_react.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item2$1, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:80:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0", inset && "pl-8", className),
-	...props
-}));
-DropdownMenuItem.displayName = Item2$1.displayName;
-var DropdownMenuCheckboxItem = import_react.forwardRef(({ className, children, checked, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CheckboxItem2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:96:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className),
-	checked,
-	...props,
-	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/ui/dropdown-menu.tsx:105:5",
-		"data-prohibitions": "[]",
-		className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ItemIndicator2, {
-			"data-uid": "src/components/ui/dropdown-menu.tsx:106:7",
-			"data-prohibitions": "[]",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
-				"data-uid": "src/components/ui/dropdown-menu.tsx:107:9",
-				"data-prohibitions": "[editContent]",
-				className: "h-4 w-4"
-			})
-		})
-	}), children]
-}));
-DropdownMenuCheckboxItem.displayName = CheckboxItem2.displayName;
-var DropdownMenuRadioItem = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(RadioItem2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:119:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className),
-	...props,
-	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/ui/dropdown-menu.tsx:127:5",
-		"data-prohibitions": "[]",
-		className: "absolute left-2 flex h-3.5 w-3.5 items-center justify-center",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ItemIndicator2, {
-			"data-uid": "src/components/ui/dropdown-menu.tsx:128:7",
-			"data-prohibitions": "[]",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Circle, {
-				"data-uid": "src/components/ui/dropdown-menu.tsx:129:9",
-				"data-prohibitions": "[editContent]",
-				className: "h-2 w-2 fill-current"
-			})
-		})
-	}), children]
-}));
-DropdownMenuRadioItem.displayName = RadioItem2.displayName;
-var DropdownMenuLabel = import_react.forwardRef(({ className, inset, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:143:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("px-2 py-1.5 text-sm font-semibold", inset && "pl-8", className),
-	...props
-}));
-DropdownMenuLabel.displayName = Label2.displayName;
-var DropdownMenuSeparator = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator2, {
-	"data-uid": "src/components/ui/dropdown-menu.tsx:155:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("-mx-1 my-1 h-px bg-muted", className),
-	...props
-}));
-DropdownMenuSeparator.displayName = Separator2.displayName;
-var DropdownMenuShortcut = ({ className, ...props }) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/ui/dropdown-menu.tsx:164:10",
-		"data-prohibitions": "[editContent]",
-		className: cn$1("ml-auto text-xs tracking-widest opacity-60", className),
-		...props
-	});
-};
-DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
-//#endregion
-//#region src/components/TopHeader.tsx
-function TopHeader() {
-	const { toggleSidebar, isMobile } = useSidebar();
-	const user = useAuthStore((s) => s.user);
-	const logout = useAuthStore((s) => s.logout);
-	if (!user) return null;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
-		"data-uid": "src/components/TopHeader.tsx:23:5",
-		"data-prohibitions": "[editContent]",
-		className: "sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm",
-		children: [
-			isMobile && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/components/TopHeader.tsx:25:9",
-				"data-prohibitions": "[]",
-				variant: "ghost",
-				size: "icon",
-				onClick: toggleSidebar,
-				className: "mr-2",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Menu$1, {
-					"data-uid": "src/components/TopHeader.tsx:26:11",
-					"data-prohibitions": "[editContent]",
-					className: "size-5"
-				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/TopHeader.tsx:30:7",
-				"data-prohibitions": "[editContent]",
-				className: "flex-1"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/TopHeader.tsx:32:7",
+				"data-uid": "src/components/AppSidebar.tsx:69:7",
 				"data-prohibitions": "[editContent]",
-				className: "flex items-center gap-4",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/TopHeader.tsx:33:9",
+				className: "flex-1 overflow-y-auto py-6 custom-scrollbar",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/AppSidebar.tsx:70:9",
+					"data-prohibitions": "[]",
+					className: "px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider",
+					children: "Menu Principal"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+					"data-uid": "src/components/AppSidebar.tsx:73:9",
 					"data-prohibitions": "[editContent]",
-					className: "text-right hidden sm:block",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/TopHeader.tsx:34:11",
-						"data-prohibitions": "[editContent]",
-						className: "text-sm font-medium leading-none text-foreground",
-						children: user.name
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/TopHeader.tsx:35:11",
-						"data-prohibitions": "[editContent]",
-						className: "text-xs text-muted-foreground capitalize mt-1",
-						children: user.role === "manager" ? "Gestor Administrativo" : "Aluno Matriculado"
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenu, {
-					"data-uid": "src/components/TopHeader.tsx:40:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuTrigger, {
-						"data-uid": "src/components/TopHeader.tsx:41:11",
-						"data-prohibitions": "[editContent]",
-						asChild: true,
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Avatar, {
-							"data-uid": "src/components/TopHeader.tsx:42:13",
+					className: "space-y-1.5 px-3",
+					children: navigation.map((item) => {
+						const isActive = location.pathname.startsWith(item.href);
+						return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+							"data-uid": "src/components/AppSidebar.tsx:77:15",
 							"data-prohibitions": "[editContent]",
-							className: "cursor-pointer size-10 border hover:opacity-80 transition-opacity",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarImage, {
-								"data-uid": "src/components/TopHeader.tsx:43:15",
+							to: item.href,
+							className: cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200", isActive ? "bg-[#176a7e] text-white shadow-md" : "text-slate-400 hover:bg-slate-800 hover:text-white"),
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
+								"data-uid": "src/components/AppSidebar.tsx:87:17",
 								"data-prohibitions": "[editContent]",
-								src: user.avatar
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AvatarFallback, {
-								"data-uid": "src/components/TopHeader.tsx:44:15",
-								"data-prohibitions": "[editContent]",
-								className: "bg-primary/10 text-primary font-medium",
-								children: user.name.charAt(0)
-							})]
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DropdownMenuContent, {
-						"data-uid": "src/components/TopHeader.tsx:49:11",
-						"data-prohibitions": "[]",
-						align: "end",
-						className: "w-56",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuLabel, {
-								"data-uid": "src/components/TopHeader.tsx:50:13",
-								"data-prohibitions": "[]",
-								children: "Minha Conta"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuSeparator, {
-								"data-uid": "src/components/TopHeader.tsx:51:13",
-								"data-prohibitions": "[editContent]"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DropdownMenuItem, {
-								"data-uid": "src/components/TopHeader.tsx:52:13",
-								"data-prohibitions": "[]",
-								onClick: logout,
-								className: "text-destructive cursor-pointer",
-								children: "Sair da Plataforma"
-							})
-						]
+								className: cn("h-5 w-5", isActive ? "text-cyan-100" : "text-slate-500")
+							}), item.name]
+						}, item.name);
+					})
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/AppSidebar.tsx:97:7",
+				"data-prohibitions": "[editContent]",
+				className: "border-t border-slate-800 p-4 bg-slate-950",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/AppSidebar.tsx:98:9",
+					"data-prohibitions": "[editContent]",
+					className: "flex items-center gap-3 mb-4 px-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/AppSidebar.tsx:99:11",
+						"data-prohibitions": "[editContent]",
+						className: "h-10 w-10 rounded-full bg-[#176a7e] flex items-center justify-center text-white font-bold shadow-inner border border-cyan-800",
+						children: user?.name?.charAt(0) || "U"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/AppSidebar.tsx:102:11",
+						"data-prohibitions": "[editContent]",
+						className: "flex flex-col overflow-hidden",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/AppSidebar.tsx:103:13",
+							"data-prohibitions": "[editContent]",
+							className: "text-sm font-bold text-slate-200 truncate",
+							children: user?.name || "Usuário"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/components/AppSidebar.tsx:106:13",
+							"data-prohibitions": "[editContent]",
+							className: "text-xs text-slate-500 truncate capitalize font-medium",
+							children: user?.role || "student"
+						})]
 					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+					"data-uid": "src/components/AppSidebar.tsx:111:9",
+					"data-prohibitions": "[]",
+					variant: "outline",
+					className: "w-full justify-start text-slate-400 border-slate-700 bg-transparent hover:bg-slate-800 hover:text-white",
+					onClick: () => logout(),
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogOut, {
+						"data-uid": "src/components/AppSidebar.tsx:116:11",
+						"data-prohibitions": "[editContent]",
+						className: "mr-2 h-4 w-4"
+					}), "Sair do Sistema"]
 				})]
 			})
 		]
+	});
+}
+//#endregion
+//#region src/components/TopHeader.tsx
+function TopHeader({ onMenuClick }) {
+	const { user, logout } = useAuthStore();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
+		"data-uid": "src/components/TopHeader.tsx:11:5",
+		"data-prohibitions": "[editContent]",
+		className: "sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/TopHeader.tsx:12:7",
+			"data-prohibitions": "[editContent]",
+			className: "container flex h-16 items-center justify-between px-4",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/TopHeader.tsx:13:9",
+				"data-prohibitions": "[editContent]",
+				className: "flex items-center gap-4",
+				children: [onMenuClick && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/TopHeader.tsx:15:13",
+					"data-prohibitions": "[]",
+					variant: "ghost",
+					size: "icon",
+					className: "md:hidden text-slate-600",
+					onClick: onMenuClick,
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Menu, {
+						"data-uid": "src/components/TopHeader.tsx:21:15",
+						"data-prohibitions": "[editContent]",
+						className: "h-5 w-5"
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+					"data-uid": "src/components/TopHeader.tsx:24:11",
+					"data-prohibitions": "[]",
+					to: "/",
+					className: "flex items-center gap-3",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						"data-uid": "src/components/TopHeader.tsx:25:13",
+						"data-prohibitions": "[editContent]",
+						src: logo_academy_2_82c76_default,
+						alt: "Observatório Academy (DEMO)",
+						className: "h-9 w-auto"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						"data-uid": "src/components/TopHeader.tsx:26:13",
+						"data-prohibitions": "[]",
+						className: "hidden sm:inline-block font-bold text-slate-900 tracking-tight",
+						children: "Observatório Academy (DEMO)"
+					})]
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/components/TopHeader.tsx:32:9",
+				"data-prohibitions": "[editContent]",
+				className: "flex items-center gap-4",
+				children: user ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/TopHeader.tsx:34:13",
+					"data-prohibitions": "[editContent]",
+					className: "flex items-center gap-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+						"data-uid": "src/components/TopHeader.tsx:35:15",
+						"data-prohibitions": "[editContent]",
+						className: "text-sm font-semibold text-slate-700 hidden sm:inline-block",
+						children: ["Olá, ", user.name]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/TopHeader.tsx:38:15",
+						"data-prohibitions": "[]",
+						variant: "ghost",
+						size: "icon",
+						onClick: () => logout(),
+						className: "text-slate-500 hover:text-red-600 hover:bg-red-50",
+						title: "Sair da conta",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogOut, {
+							"data-uid": "src/components/TopHeader.tsx:45:17",
+							"data-prohibitions": "[editContent]",
+							className: "h-5 w-5"
+						})
+					})]
+				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/TopHeader.tsx:49:13",
+					"data-prohibitions": "[]",
+					className: "flex items-center gap-3",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/TopHeader.tsx:50:15",
+						"data-prohibitions": "[]",
+						variant: "ghost",
+						className: "font-semibold text-slate-700",
+						asChild: true,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+							"data-uid": "src/components/TopHeader.tsx:51:17",
+							"data-prohibitions": "[]",
+							to: "/login",
+							children: "Entrar"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/TopHeader.tsx:53:15",
+						"data-prohibitions": "[]",
+						className: "bg-[#176a7e] hover:bg-[#115060] font-semibold",
+						asChild: true,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+							"data-uid": "src/components/TopHeader.tsx:54:17",
+							"data-prohibitions": "[]",
+							to: "/register",
+							children: "Cadastrar"
+						})
+					})]
+				})
+			})]
+		})
 	});
 }
 //#endregion
@@ -28771,12 +25571,559 @@ function Layout() {
 	});
 }
 //#endregion
+//#region src/pages/Index.tsx
+function Index() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/Index.tsx:8:5",
+		"data-prohibitions": "[editContent]",
+		className: "flex min-h-screen flex-col bg-background font-sans",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
+				"data-uid": "src/pages/Index.tsx:9:7",
+				"data-prohibitions": "[]",
+				className: "sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/Index.tsx:10:9",
+					"data-prohibitions": "[]",
+					className: "container mx-auto px-4 h-20 flex items-center justify-between",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/Index.tsx:11:11",
+							"data-prohibitions": "[]",
+							className: "flex items-center gap-3",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								"data-uid": "src/pages/Index.tsx:12:13",
+								"data-prohibitions": "[editContent]",
+								src: logo_academy_2_82c76_default,
+								alt: "Observatório Academy (DEMO)",
+								className: "h-12 w-auto"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
+							"data-uid": "src/pages/Index.tsx:14:11",
+							"data-prohibitions": "[]",
+							className: "hidden md:flex gap-8",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+									"data-uid": "src/pages/Index.tsx:15:13",
+									"data-prohibitions": "[]",
+									to: "/cursos",
+									className: "text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors",
+									children: "Cursos"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+									"data-uid": "src/pages/Index.tsx:21:13",
+									"data-prohibitions": "[]",
+									to: "/sobre",
+									className: "text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors",
+									children: "Sobre a Academia"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+									"data-uid": "src/pages/Index.tsx:27:13",
+									"data-prohibitions": "[]",
+									to: "/planos",
+									className: "text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors",
+									children: "Planos"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+									"data-uid": "src/pages/Index.tsx:33:13",
+									"data-prohibitions": "[]",
+									to: "/contato",
+									className: "text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors",
+									children: "Contato"
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/Index.tsx:40:11",
+							"data-prohibitions": "[]",
+							className: "flex items-center gap-3",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/Index.tsx:41:13",
+								"data-prohibitions": "[]",
+								variant: "ghost",
+								asChild: true,
+								className: "hidden sm:inline-flex text-slate-700 font-semibold",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+									"data-uid": "src/pages/Index.tsx:46:15",
+									"data-prohibitions": "[]",
+									to: "/login",
+									children: "Entrar"
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/Index.tsx:48:13",
+								"data-prohibitions": "[]",
+								className: "bg-[#176a7e] hover:bg-[#115060] font-semibold",
+								asChild: true,
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+									"data-uid": "src/pages/Index.tsx:49:15",
+									"data-prohibitions": "[]",
+									to: "/student/dashboard",
+									children: "Área do Aluno"
+								})
+							})]
+						})
+					]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+				"data-uid": "src/pages/Index.tsx:55:7",
+				"data-prohibitions": "[editContent]",
+				className: "flex-1",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+					"data-uid": "src/pages/Index.tsx:57:9",
+					"data-prohibitions": "[]",
+					className: "py-24 md:py-32 overflow-hidden relative bg-slate-50",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/pages/Index.tsx:58:11",
+						"data-prohibitions": "[editContent]",
+						className: "absolute inset-0 bg-grid-slate-200/[0.4] bg-[size:40px_40px]"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/pages/Index.tsx:59:11",
+						"data-prohibitions": "[]",
+						className: "container mx-auto px-4 relative",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/Index.tsx:60:13",
+							"data-prohibitions": "[]",
+							className: "flex flex-col md:flex-row gap-16 items-center",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/Index.tsx:61:15",
+								"data-prohibitions": "[]",
+								className: "flex-1 text-center md:text-left space-y-8",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+										"data-uid": "src/pages/Index.tsx:62:17",
+										"data-prohibitions": "[]",
+										className: "inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold transition-colors border-slate-200 bg-white text-[#176a7e] shadow-sm",
+										children: "Novo: Certificados com Validação QR Code"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h1", {
+										"data-uid": "src/pages/Index.tsx:65:17",
+										"data-prohibitions": "[]",
+										className: "text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]",
+										children: [
+											"Transforme seu futuro com o",
+											" ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												"data-uid": "src/pages/Index.tsx:67:19",
+												"data-prohibitions": "[]",
+												className: "text-[#176a7e]",
+												children: "Observatório Academy"
+											})
+										]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/Index.tsx:69:17",
+										"data-prohibitions": "[]",
+										className: "text-xl text-slate-600 md:max-w-[85%] leading-relaxed",
+										children: "A plataforma EAD definitiva para alavancar sua carreira. Cursos de alta qualidade, metodologia inovadora e certificados amplamente reconhecidos pelo mercado."
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/Index.tsx:73:17",
+										"data-prohibitions": "[]",
+										className: "flex flex-col sm:flex-row gap-4 justify-center md:justify-start",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+											"data-uid": "src/pages/Index.tsx:74:19",
+											"data-prohibitions": "[]",
+											size: "lg",
+											className: "h-14 px-8 bg-[#176a7e] hover:bg-[#115060] text-base",
+											asChild: true,
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:79:21",
+												"data-prohibitions": "[]",
+												to: "/cursos",
+												children: ["Explorar Cursos ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowRight, {
+													"data-uid": "src/pages/Index.tsx:80:39",
+													"data-prohibitions": "[editContent]",
+													className: "ml-2 h-5 w-5"
+												})]
+											})
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+											"data-uid": "src/pages/Index.tsx:83:19",
+											"data-prohibitions": "[]",
+											size: "lg",
+											variant: "outline",
+											className: "h-14 px-8 text-base border-slate-300 hover:bg-slate-100",
+											asChild: true,
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:89:21",
+												"data-prohibitions": "[]",
+												to: "/sobre",
+												children: "Conheça a Academia"
+											})
+										})]
+									})
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/Index.tsx:93:15",
+								"data-prohibitions": "[]",
+								className: "flex-1 relative w-full max-w-lg mx-auto md:max-w-none",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/Index.tsx:94:17",
+									"data-prohibitions": "[editContent]",
+									className: "absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#176a7e] to-cyan-300 opacity-20 blur-3xl"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/Index.tsx:95:17",
+									"data-prohibitions": "[]",
+									className: "relative rounded-2xl border bg-white p-2 shadow-2xl",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+										"data-uid": "src/pages/Index.tsx:96:19",
+										"data-prohibitions": "[editContent]",
+										src: "https://img.usecurling.com/p/800/600?q=online%20education&color=blue&dpr=2",
+										alt: "Plataforma de ensino Observatório Academy",
+										className: "rounded-xl object-cover w-full h-auto border border-slate-100"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/Index.tsx:101:19",
+										"data-prohibitions": "[]",
+										className: "absolute -bottom-8 -left-8 bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex items-center gap-4 animate-fade-in-up",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/pages/Index.tsx:102:21",
+											"data-prohibitions": "[]",
+											className: "h-14 w-14 bg-teal-50 rounded-full flex items-center justify-center",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GraduationCap, {
+												"data-uid": "src/pages/Index.tsx:103:23",
+												"data-prohibitions": "[editContent]",
+												className: "h-7 w-7 text-[#176a7e]"
+											})
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											"data-uid": "src/pages/Index.tsx:105:21",
+											"data-prohibitions": "[]",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+												"data-uid": "src/pages/Index.tsx:106:23",
+												"data-prohibitions": "[]",
+												className: "font-extrabold text-2xl text-slate-900",
+												children: "+10k"
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+												"data-uid": "src/pages/Index.tsx:107:23",
+												"data-prohibitions": "[]",
+												className: "text-sm font-medium text-slate-500",
+												children: "Alunos formados"
+											})]
+										})]
+									})]
+								})]
+							})]
+						})
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+					"data-uid": "src/pages/Index.tsx:117:9",
+					"data-prohibitions": "[]",
+					className: "py-24 bg-white",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/Index.tsx:118:11",
+						"data-prohibitions": "[]",
+						className: "container mx-auto px-4",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/Index.tsx:119:13",
+							"data-prohibitions": "[]",
+							className: "text-center max-w-3xl mx-auto mb-20",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+								"data-uid": "src/pages/Index.tsx:120:15",
+								"data-prohibitions": "[]",
+								className: "text-3xl md:text-4xl font-extrabold mb-6 text-slate-900",
+								children: "Por que escolher o Observatório Academy (DEMO)?"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/Index.tsx:123:15",
+								"data-prohibitions": "[]",
+								className: "text-lg text-slate-600",
+								children: "Oferecemos a melhor experiência de aprendizado com recursos exclusivos que aceleram seu desenvolvimento profissional."
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/Index.tsx:129:13",
+							"data-prohibitions": "[]",
+							className: "grid md:grid-cols-3 gap-8",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/Index.tsx:130:15",
+									"data-prohibitions": "[]",
+									className: "bg-slate-50 p-10 rounded-3xl border border-slate-100 transition-all hover:shadow-lg hover:-translate-y-1",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/pages/Index.tsx:131:17",
+											"data-prohibitions": "[]",
+											className: "h-14 w-14 bg-white shadow-sm rounded-xl border border-slate-100 flex items-center justify-center mb-8",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PanelsTopLeft, {
+												"data-uid": "src/pages/Index.tsx:132:19",
+												"data-prohibitions": "[editContent]",
+												className: "h-7 w-7 text-[#176a7e]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+											"data-uid": "src/pages/Index.tsx:134:17",
+											"data-prohibitions": "[]",
+											className: "text-xl font-bold mb-4 text-slate-900",
+											children: "Plataforma Intuitiva"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/Index.tsx:135:17",
+											"data-prohibitions": "[]",
+											className: "text-slate-600 leading-relaxed",
+											children: "Interface moderna e extremamente fácil de usar, permitindo que você foque 100% no seu aprendizado, sem distrações desnecessárias."
+										})
+									]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/Index.tsx:140:15",
+									"data-prohibitions": "[]",
+									className: "bg-slate-50 p-10 rounded-3xl border border-slate-100 transition-all hover:shadow-lg hover:-translate-y-1",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/pages/Index.tsx:141:17",
+											"data-prohibitions": "[]",
+											className: "h-14 w-14 bg-white shadow-sm rounded-xl border border-slate-100 flex items-center justify-center mb-8",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Play, {
+												"data-uid": "src/pages/Index.tsx:142:19",
+												"data-prohibitions": "[editContent]",
+												className: "h-7 w-7 text-[#176a7e]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+											"data-uid": "src/pages/Index.tsx:144:17",
+											"data-prohibitions": "[]",
+											className: "text-xl font-bold mb-4 text-slate-900",
+											children: "Aulas em Alta Qualidade"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/Index.tsx:145:17",
+											"data-prohibitions": "[]",
+											className: "text-slate-600 leading-relaxed",
+											children: "Conteúdo em vídeo de altíssima definição, materiais complementares em PDF e exercícios práticos dinâmicos para fixação."
+										})
+									]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/Index.tsx:150:15",
+									"data-prohibitions": "[]",
+									className: "bg-slate-50 p-10 rounded-3xl border border-slate-100 transition-all hover:shadow-lg hover:-translate-y-1",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/pages/Index.tsx:151:17",
+											"data-prohibitions": "[]",
+											className: "h-14 w-14 bg-white shadow-sm rounded-xl border border-slate-100 flex items-center justify-center mb-8",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
+												"data-uid": "src/pages/Index.tsx:152:19",
+												"data-prohibitions": "[editContent]",
+												className: "h-7 w-7 text-[#176a7e]"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+											"data-uid": "src/pages/Index.tsx:154:17",
+											"data-prohibitions": "[]",
+											className: "text-xl font-bold mb-4 text-slate-900",
+											children: "Certificado Reconhecido"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/Index.tsx:155:17",
+											"data-prohibitions": "[]",
+											className: "text-slate-600 leading-relaxed",
+											children: "Ao concluir, garanta seus certificados com autenticação por QR Code, amplamente aceitos em todo o território nacional."
+										})
+									]
+								})
+							]
+						})]
+					})
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
+				"data-uid": "src/pages/Index.tsx:165:7",
+				"data-prohibitions": "[editContent]",
+				className: "bg-slate-900 text-slate-300 py-16 border-t border-slate-800",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/Index.tsx:166:9",
+					"data-prohibitions": "[editContent]",
+					className: "container mx-auto px-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/Index.tsx:167:11",
+						"data-prohibitions": "[]",
+						className: "grid grid-cols-1 md:grid-cols-4 gap-12 mb-12",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/Index.tsx:168:13",
+								"data-prohibitions": "[]",
+								className: "col-span-1 md:col-span-2 space-y-6",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/Index.tsx:169:15",
+									"data-prohibitions": "[]",
+									className: "flex items-center gap-3",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+										"data-uid": "src/pages/Index.tsx:170:17",
+										"data-prohibitions": "[editContent]",
+										src: logo_academy_2_82c76_default,
+										alt: "Observatório Academy",
+										className: "h-12 brightness-0 invert"
+									})
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/Index.tsx:176:15",
+									"data-prohibitions": "[]",
+									className: "text-base text-slate-400 max-w-sm leading-relaxed",
+									children: "Transformando o futuro da educação através de tecnologia, inovação e excelência pedagógica."
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/Index.tsx:181:13",
+								"data-prohibitions": "[]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+									"data-uid": "src/pages/Index.tsx:182:15",
+									"data-prohibitions": "[]",
+									className: "text-white font-bold mb-6 tracking-wide",
+									children: "Plataforma"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
+									"data-uid": "src/pages/Index.tsx:183:15",
+									"data-prohibitions": "[]",
+									className: "space-y-4 text-sm font-medium",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+											"data-uid": "src/pages/Index.tsx:184:17",
+											"data-prohibitions": "[]",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:185:19",
+												"data-prohibitions": "[]",
+												to: "/cursos",
+												className: "text-slate-400 hover:text-white transition-colors",
+												children: "Catálogo de Cursos"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+											"data-uid": "src/pages/Index.tsx:189:17",
+											"data-prohibitions": "[]",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:190:19",
+												"data-prohibitions": "[]",
+												to: "/sobre",
+												className: "text-slate-400 hover:text-white transition-colors",
+												children: "Sobre a Academia"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+											"data-uid": "src/pages/Index.tsx:194:17",
+											"data-prohibitions": "[]",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:195:19",
+												"data-prohibitions": "[]",
+												to: "/instrutores",
+												className: "text-slate-400 hover:text-white transition-colors",
+												children: "Seja um Instrutor"
+											})
+										})
+									]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/Index.tsx:204:13",
+								"data-prohibitions": "[]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+									"data-uid": "src/pages/Index.tsx:205:15",
+									"data-prohibitions": "[]",
+									className: "text-white font-bold mb-6 tracking-wide",
+									children: "Suporte"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
+									"data-uid": "src/pages/Index.tsx:206:15",
+									"data-prohibitions": "[]",
+									className: "space-y-4 text-sm font-medium",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+											"data-uid": "src/pages/Index.tsx:207:17",
+											"data-prohibitions": "[]",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:208:19",
+												"data-prohibitions": "[]",
+												to: "/ajuda",
+												className: "text-slate-400 hover:text-white transition-colors",
+												children: "Central de Ajuda"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+											"data-uid": "src/pages/Index.tsx:212:17",
+											"data-prohibitions": "[]",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:213:19",
+												"data-prohibitions": "[]",
+												to: "/termos",
+												className: "text-slate-400 hover:text-white transition-colors",
+												children: "Termos de Uso"
+											})
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+											"data-uid": "src/pages/Index.tsx:217:17",
+											"data-prohibitions": "[]",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+												"data-uid": "src/pages/Index.tsx:218:19",
+												"data-prohibitions": "[]",
+												to: "/privacidade",
+												className: "text-slate-400 hover:text-white transition-colors",
+												children: "Privacidade"
+											})
+										})
+									]
+								})]
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/pages/Index.tsx:228:11",
+						"data-prohibitions": "[editContent]",
+						className: "pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500 font-medium",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+							"data-uid": "src/pages/Index.tsx:229:13",
+							"data-prohibitions": "[editContent]",
+							children: [
+								"© ",
+								(/* @__PURE__ */ new Date()).getFullYear(),
+								" Observatório Academy (DEMO). Todos os direitos reservados."
+							]
+						})
+					})]
+				})
+			})
+		]
+	});
+}
+//#endregion
+//#region src/pages/NotFound.tsx
+var NotFound = () => {
+	const location = useLocation();
+	(0, import_react.useEffect)(() => {
+		console.error("404 Error: User attempted to access non-existent route:", location.pathname);
+	}, [location.pathname]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		"data-uid": "src/pages/NotFound.tsx:13:5",
+		"data-prohibitions": "[]",
+		className: "min-h-screen flex items-center justify-center bg-gray-100",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/NotFound.tsx:14:7",
+			"data-prohibitions": "[]",
+			className: "text-center",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					"data-uid": "src/pages/NotFound.tsx:15:9",
+					"data-prohibitions": "[]",
+					className: "text-4xl font-bold mb-4",
+					children: "404"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/NotFound.tsx:16:9",
+					"data-prohibitions": "[]",
+					className: "text-xl text-gray-600 mb-4",
+					children: "Oops! Page not found"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+					"data-uid": "src/pages/NotFound.tsx:17:9",
+					"data-prohibitions": "[]",
+					href: "/",
+					className: "text-blue-500 hover:text-blue-700 underline",
+					children: "Return to Home"
+				})
+			]
+		})
+	});
+};
+//#endregion
 //#region src/components/ui/card.tsx
 var Card = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 	"data-uid": "src/components/ui/card.tsx:8:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("rounded-lg border bg-card text-card-foreground shadow-sm", className),
+	className: cn("rounded-lg border bg-card text-card-foreground shadow-sm", className),
 	...props
 }));
 Card.displayName = "Card";
@@ -28784,7 +26131,7 @@ var CardHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/card.tsx:19:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("flex flex-col space-y-1.5 p-6", className),
+	className: cn("flex flex-col space-y-1.5 p-6", className),
 	...props
 }));
 CardHeader.displayName = "CardHeader";
@@ -28792,7 +26139,7 @@ var CardTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__
 	"data-uid": "src/components/ui/card.tsx:26:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("text-2xl font-semibold leading-none tracking-tight", className),
+	className: cn("text-2xl font-semibold leading-none tracking-tight", className),
 	...props
 }));
 CardTitle.displayName = "CardTitle";
@@ -28800,7 +26147,7 @@ var CardDescription = import_react.forwardRef(({ className, ...props }, ref) => 
 	"data-uid": "src/components/ui/card.tsx:37:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("text-sm text-muted-foreground", className),
+	className: cn("text-sm text-muted-foreground", className),
 	...props
 }));
 CardDescription.displayName = "CardDescription";
@@ -28808,7 +26155,7 @@ var CardContent = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/card.tsx:44:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("p-6 pt-0", className),
+	className: cn("p-6 pt-0", className),
 	...props
 }));
 CardContent.displayName = "CardContent";
@@ -28816,7 +26163,7 @@ var CardFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @_
 	"data-uid": "src/components/ui/card.tsx:51:5",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("flex items-center p-6 pt-0", className),
+	className: cn("flex items-center p-6 pt-0", className),
 	...props
 }));
 CardFooter.displayName = "CardFooter";
@@ -28935,44 +26282,298 @@ function Login() {
 	});
 }
 //#endregion
-//#region src/pages/NotFound.tsx
-var NotFound = () => {
-	const location = useLocation();
-	(0, import_react.useEffect)(() => {
-		console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-	}, [location.pathname]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/NotFound.tsx:13:5",
-		"data-prohibitions": "[]",
-		className: "min-h-screen flex items-center justify-center bg-gray-100",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/NotFound.tsx:14:7",
-			"data-prohibitions": "[]",
-			className: "text-center",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/NotFound.tsx:15:9",
+//#region src/pages/public/About.tsx
+function About() {
+	const pillars = [
+		{
+			title: "Conhecimento Prático",
+			description: "Conteúdos elaborados e focados no que realmente importa para a sua evolução no mercado de trabalho.",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BookOpen, {
+				"data-uid": "src/pages/public/About.tsx:12:13",
+				"data-prohibitions": "[editContent]",
+				className: "h-6 w-6 text-[#176a7e]"
+			})
+		},
+		{
+			title: "Inovação Constante",
+			description: "As metodologias mais recentes aplicadas ao seu aprendizado através de nossa tecnologia.",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lightbulb, {
+				"data-uid": "src/pages/public/About.tsx:18:13",
+				"data-prohibitions": "[editContent]",
+				className: "h-6 w-6 text-[#176a7e]"
+			})
+		},
+		{
+			title: "Comunidade Ativa",
+			description: "Plataforma de networking e troca de experiências valiosas com profissionais da área.",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Users, {
+				"data-uid": "src/pages/public/About.tsx:24:13",
+				"data-prohibitions": "[editContent]",
+				className: "h-6 w-6 text-[#176a7e]"
+			})
+		},
+		{
+			title: "Foco no Aluno",
+			description: "Suporte dedicado e acompanhamento do progresso para garantir a melhor taxa de conclusão.",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Target, {
+				"data-uid": "src/pages/public/About.tsx:30:13",
+				"data-prohibitions": "[editContent]",
+				className: "h-6 w-6 text-[#176a7e]"
+			})
+		},
+		{
+			title: "Certificação Segura",
+			description: "Certificados com validação digital via QR Code, garantindo autenticidade contra fraudes.",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Shield, {
+				"data-uid": "src/pages/public/About.tsx:36:13",
+				"data-prohibitions": "[editContent]",
+				className: "h-6 w-6 text-[#176a7e]"
+			})
+		},
+		{
+			title: "Excelência",
+			description: "Instrutores criteriosamente selecionados para entregar a mais alta qualidade educacional.",
+			icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Award, {
+				"data-uid": "src/pages/public/About.tsx:42:13",
+				"data-prohibitions": "[editContent]",
+				className: "h-6 w-6 text-[#176a7e]"
+			})
+		}
+	];
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/public/About.tsx:47:5",
+		"data-prohibitions": "[editContent]",
+		className: "min-h-screen bg-background flex flex-col",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
+				"data-uid": "src/pages/public/About.tsx:48:7",
+				"data-prohibitions": "[]",
+				className: "border-b bg-card sticky top-0 z-50",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/public/About.tsx:49:9",
 					"data-prohibitions": "[]",
-					className: "text-4xl font-bold mb-4",
-					children: "404"
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/NotFound.tsx:16:9",
-					"data-prohibitions": "[]",
-					className: "text-xl text-gray-600 mb-4",
-					children: "Oops! Page not found"
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-					"data-uid": "src/pages/NotFound.tsx:17:9",
-					"data-prohibitions": "[]",
-					href: "/",
-					className: "text-blue-500 hover:text-blue-700 underline",
-					children: "Return to Home"
+					className: "container mx-auto px-4 h-16 flex items-center justify-between",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+						"data-uid": "src/pages/public/About.tsx:50:11",
+						"data-prohibitions": "[]",
+						to: "/",
+						className: "flex items-center gap-3",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+							"data-uid": "src/pages/public/About.tsx:51:13",
+							"data-prohibitions": "[editContent]",
+							src: logo_academy_2_82c76_default,
+							alt: "Observatório Academy (DEMO)",
+							className: "h-10"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/pages/public/About.tsx:53:11",
+						"data-prohibitions": "[]",
+						variant: "ghost",
+						asChild: true,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+							"data-uid": "src/pages/public/About.tsx:54:13",
+							"data-prohibitions": "[]",
+							to: "/",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
+								"data-uid": "src/pages/public/About.tsx:55:15",
+								"data-prohibitions": "[editContent]",
+								className: "mr-2 h-4 w-4"
+							}), " Voltar ao Início"]
+						})
+					})]
 				})
-			]
-		})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
+				"data-uid": "src/pages/public/About.tsx:61:7",
+				"data-prohibitions": "[editContent]",
+				className: "flex-1",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+						"data-uid": "src/pages/public/About.tsx:63:9",
+						"data-prohibitions": "[]",
+						className: "py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/public/About.tsx:64:11",
+							"data-prohibitions": "[editContent]",
+							className: "absolute inset-0 bg-[url('https://img.usecurling.com/p/1200/800?q=education&color=gray&dpr=1')] opacity-5 bg-cover bg-center"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/public/About.tsx:65:11",
+							"data-prohibitions": "[]",
+							className: "container mx-auto px-4 text-center max-w-4xl relative z-10",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									"data-uid": "src/pages/public/About.tsx:66:13",
+									"data-prohibitions": "[editContent]",
+									src: logo_academy_2_82c76_default,
+									alt: "Logo Observatório Academy",
+									className: "h-28 mx-auto mb-10 drop-shadow-sm"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+									"data-uid": "src/pages/public/About.tsx:71:13",
+									"data-prohibitions": "[]",
+									className: "text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-slate-900",
+									children: "Sobre o Observatório Academy"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/public/About.tsx:74:13",
+									"data-prohibitions": "[]",
+									className: "text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto",
+									children: [
+										"O",
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+											"data-uid": "src/pages/public/About.tsx:76:15",
+											"data-prohibitions": "[]",
+											className: "font-semibold text-slate-900",
+											children: "Observatório Academy (DEMO)"
+										}),
+										" ",
+										"é muito mais do que uma plataforma de ensino. Somos um ecossistema dedicado a transformar o futuro do aprendizado online, conectando instrutores apaixonados a alunos em busca de excelência contínua."
+									]
+								})
+							]
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+						"data-uid": "src/pages/public/About.tsx:85:9",
+						"data-prohibitions": "[editContent]",
+						className: "py-24 bg-white border-t",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/public/About.tsx:86:11",
+							"data-prohibitions": "[editContent]",
+							className: "container mx-auto px-4",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/public/About.tsx:87:13",
+								"data-prohibitions": "[]",
+								className: "text-center mb-16",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/public/About.tsx:88:15",
+									"data-prohibitions": "[]",
+									className: "text-3xl font-bold text-slate-900 mb-4",
+									children: "Pilares da Academia"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/public/About.tsx:89:15",
+									"data-prohibitions": "[]",
+									className: "text-slate-500 max-w-2xl mx-auto",
+									children: "Nossos valores fundamentais que guiam cada recurso construído e cada curso oferecido em nossa plataforma."
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/public/About.tsx:95:13",
+								"data-prohibitions": "[editContent]",
+								className: "grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto",
+								children: pillars.map((pillar, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/public/About.tsx:97:17",
+									"data-prohibitions": "[editContent]",
+									className: "bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											"data-uid": "src/pages/public/About.tsx:101:19",
+											"data-prohibitions": "[editContent]",
+											className: "h-14 w-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 border border-slate-100 group-hover:bg-[#176a7e]/10 transition-colors",
+											children: pillar.icon
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+											"data-uid": "src/pages/public/About.tsx:104:19",
+											"data-prohibitions": "[editContent]",
+											className: "text-xl font-bold text-slate-900 mb-3",
+											children: pillar.title
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/public/About.tsx:105:19",
+											"data-prohibitions": "[editContent]",
+											className: "text-slate-600 leading-relaxed",
+											children: pillar.description
+										})
+									]
+								}, i))
+							})]
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+						"data-uid": "src/pages/public/About.tsx:113:9",
+						"data-prohibitions": "[]",
+						className: "py-20 bg-[#176a7e] text-white",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/public/About.tsx:114:11",
+							"data-prohibitions": "[]",
+							className: "container mx-auto px-4 text-center max-w-3xl",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/public/About.tsx:115:13",
+									"data-prohibitions": "[]",
+									className: "text-3xl font-bold mb-6",
+									children: "Pronto para iniciar sua jornada?"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/public/About.tsx:116:13",
+									"data-prohibitions": "[]",
+									className: "text-cyan-100 mb-8 text-lg",
+									children: "Junte-se a milhares de alunos que já estão transformando suas carreiras com o Observatório Academy (DEMO)."
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/public/About.tsx:120:13",
+									"data-prohibitions": "[]",
+									className: "flex flex-col sm:flex-row gap-4 justify-center",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/public/About.tsx:121:15",
+										"data-prohibitions": "[]",
+										size: "lg",
+										className: "bg-white text-[#176a7e] hover:bg-slate-100",
+										asChild: true,
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+											"data-uid": "src/pages/public/About.tsx:122:17",
+											"data-prohibitions": "[]",
+											to: "/cursos",
+											children: "Explorar Cursos"
+										})
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/public/About.tsx:124:15",
+										"data-prohibitions": "[]",
+										size: "lg",
+										variant: "outline",
+										className: "border-white text-white hover:bg-[#115060]",
+										asChild: true,
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+											"data-uid": "src/pages/public/About.tsx:130:17",
+											"data-prohibitions": "[]",
+											to: "/register",
+											children: "Criar Conta Grátis"
+										})
+									})]
+								})
+							]
+						})
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
+				"data-uid": "src/pages/public/About.tsx:137:7",
+				"data-prohibitions": "[editContent]",
+				className: "py-10 bg-slate-900",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/public/About.tsx:138:9",
+					"data-prohibitions": "[editContent]",
+					className: "container mx-auto px-4 text-center text-slate-400",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+						"data-uid": "src/pages/public/About.tsx:139:11",
+						"data-prohibitions": "[editContent]",
+						src: logo_academy_2_82c76_default,
+						alt: "Logo",
+						className: "h-8 mx-auto mb-6 brightness-0 invert opacity-50"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						"data-uid": "src/pages/public/About.tsx:144:11",
+						"data-prohibitions": "[editContent]",
+						children: [
+							"© ",
+							(/* @__PURE__ */ new Date()).getFullYear(),
+							" Observatório Academy (DEMO). Todos os direitos reservados."
+						]
+					})]
+				})
+			})
+		]
 	});
-};
+}
 //#endregion
 //#region src/stores/lmsStore.ts
 var MOCK_QUESTIONS = [{
@@ -29285,6 +26886,288 @@ var useLmsStore = create((set, get) => ({
 	deleteWebhook: (id) => set((s) => ({ webhooks: s.webhooks.filter((w) => w.id !== id) }))
 }));
 //#endregion
+//#region src/pages/public/ValidateCertificate.tsx
+function ValidateCertificate() {
+	const { code } = useParams();
+	const { enrollments, students, courses } = useLmsStore();
+	let isValid = false;
+	let studentName = "";
+	let courseTitle = "";
+	let completionDate = "";
+	let errorMsg = "";
+	try {
+		if (!code) throw new Error("Código ausente.");
+		const [studentId, courseId] = atob(code).split("-");
+		if (!studentId || !courseId) throw new Error("Formato inválido.");
+		const enrollment = enrollments.find((e) => e.studentId === studentId && e.courseId === courseId);
+		if (!enrollment || !enrollment.isCompleted) throw new Error("Certificado não encontrado ou curso não concluído.");
+		const student = students.find((s) => s.id === studentId);
+		const course = courses.find((c) => c.id === courseId);
+		if (!student || !course) throw new Error("Dados do aluno ou curso não encontrados.");
+		isValid = true;
+		studentName = student.name;
+		courseTitle = course.title;
+		completionDate = enrollment.completionDate || (/* @__PURE__ */ new Date()).toISOString();
+	} catch (e) {
+		errorMsg = e.message || "Código de validação inválido.";
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		"data-uid": "src/pages/public/ValidateCertificate.tsx:42:5",
+		"data-prohibitions": "[editContent]",
+		className: "min-h-screen flex items-center justify-center bg-muted/20 p-4",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/public/ValidateCertificate.tsx:43:7",
+			"data-prohibitions": "[editContent]",
+			className: "w-full max-w-lg space-y-6",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/public/ValidateCertificate.tsx:44:9",
+					"data-prohibitions": "[]",
+					className: "text-center space-y-2 mb-8",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ShieldCheck, {
+							"data-uid": "src/pages/public/ValidateCertificate.tsx:45:11",
+							"data-prohibitions": "[editContent]",
+							className: "mx-auto size-12 text-primary"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+							"data-uid": "src/pages/public/ValidateCertificate.tsx:46:11",
+							"data-prohibitions": "[]",
+							className: "text-3xl font-bold tracking-tight",
+							children: "Portal de Autenticidade"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/public/ValidateCertificate.tsx:47:11",
+							"data-prohibitions": "[]",
+							className: "text-muted-foreground",
+							children: "Verificação de certificados e diplomas emitidos."
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/public/ValidateCertificate.tsx:50:9",
+					"data-prohibitions": "[editContent]",
+					className: "border-t-4 border-t-primary shadow-xl overflow-hidden",
+					children: [isValid ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/public/ValidateCertificate.tsx:52:13",
+						"data-prohibitions": "[]",
+						className: "bg-success/5 border-b border-success/20 p-6 flex flex-col items-center justify-center text-center space-y-3",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:53:15",
+								"data-prohibitions": "[]",
+								className: "bg-success text-success-foreground p-3 rounded-full mb-2 shadow-sm",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheckBig, {
+									"data-uid": "src/pages/public/ValidateCertificate.tsx:54:17",
+									"data-prohibitions": "[editContent]",
+									className: "size-8"
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:56:15",
+								"data-prohibitions": "[]",
+								className: "text-2xl font-bold text-success-foreground uppercase tracking-wide",
+								children: "Certificado Válido"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:59:15",
+								"data-prohibitions": "[]",
+								className: "text-success-foreground/80 font-medium",
+								children: "Este documento é autêntico e foi emitido pela nossa instituição."
+							})
+						]
+					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/public/ValidateCertificate.tsx:64:13",
+						"data-prohibitions": "[editContent]",
+						className: "bg-destructive/5 border-b border-destructive/20 p-6 flex flex-col items-center justify-center text-center space-y-3",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:65:15",
+								"data-prohibitions": "[]",
+								className: "bg-destructive text-destructive-foreground p-3 rounded-full mb-2 shadow-sm",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleX, {
+									"data-uid": "src/pages/public/ValidateCertificate.tsx:66:17",
+									"data-prohibitions": "[editContent]",
+									className: "size-8"
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:68:15",
+								"data-prohibitions": "[]",
+								className: "text-2xl font-bold text-destructive-foreground uppercase tracking-wide",
+								children: "Documento Inválido"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:71:15",
+								"data-prohibitions": "[editContent]",
+								className: "text-destructive-foreground/80 font-medium",
+								children: errorMsg
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/public/ValidateCertificate.tsx:75:11",
+						"data-prohibitions": "[editContent]",
+						className: "p-8 space-y-6",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/public/ValidateCertificate.tsx:76:13",
+							"data-prohibitions": "[editContent]",
+							className: "space-y-1",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:77:15",
+								"data-prohibitions": "[]",
+								className: "text-sm font-semibold text-muted-foreground uppercase tracking-wider",
+								children: "Código de Verificação"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:80:15",
+								"data-prohibitions": "[editContent]",
+								className: "font-mono text-sm bg-muted p-2 rounded break-all",
+								children: code
+							})]
+						}), isValid && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/public/ValidateCertificate.tsx:84:15",
+							"data-prohibitions": "[editContent]",
+							className: "space-y-5 pt-4 border-t",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/public/ValidateCertificate.tsx:85:17",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/public/ValidateCertificate.tsx:86:19",
+										"data-prohibitions": "[]",
+										className: "text-sm text-muted-foreground mb-1",
+										children: "Nome do Aluno(a)"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/public/ValidateCertificate.tsx:87:19",
+										"data-prohibitions": "[editContent]",
+										className: "text-xl font-bold",
+										children: studentName
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/public/ValidateCertificate.tsx:89:17",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/public/ValidateCertificate.tsx:90:19",
+										"data-prohibitions": "[]",
+										className: "text-sm text-muted-foreground mb-1",
+										children: "Curso Concluído"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/public/ValidateCertificate.tsx:91:19",
+										"data-prohibitions": "[editContent]",
+										className: "text-lg font-medium",
+										children: courseTitle
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/public/ValidateCertificate.tsx:93:17",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/public/ValidateCertificate.tsx:94:19",
+										"data-prohibitions": "[]",
+										className: "text-sm text-muted-foreground mb-1",
+										children: "Data de Conclusão"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+										"data-uid": "src/pages/public/ValidateCertificate.tsx:95:19",
+										"data-prohibitions": "[editContent]",
+										className: "text-base font-medium",
+										children: new Date(completionDate).toLocaleDateString("pt-BR")
+									})]
+								})
+							]
+						})]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/pages/public/ValidateCertificate.tsx:104:9",
+					"data-prohibitions": "[]",
+					className: "text-center pt-8",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/pages/public/ValidateCertificate.tsx:105:11",
+						"data-prohibitions": "[]",
+						variant: "ghost",
+						asChild: true,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+							"data-uid": "src/pages/public/ValidateCertificate.tsx:106:13",
+							"data-prohibitions": "[]",
+							to: "/",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(House, {
+								"data-uid": "src/pages/public/ValidateCertificate.tsx:107:15",
+								"data-prohibitions": "[editContent]",
+								className: "mr-2 size-4"
+							}), " Voltar ao Início"]
+						})
+					})
+				})
+			]
+		})
+	});
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-context@1.1.3_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-context/dist/index.mjs
+function createContextScope(scopeName, createContextScopeDeps = []) {
+	let defaultContexts = [];
+	function createContext3(rootComponentName, defaultContext) {
+		const BaseContext = import_react.createContext(defaultContext);
+		BaseContext.displayName = rootComponentName + "Context";
+		const index = defaultContexts.length;
+		defaultContexts = [...defaultContexts, defaultContext];
+		const Provider = (props) => {
+			const { scope, children, ...context } = props;
+			const Context = scope?.[scopeName]?.[index] || BaseContext;
+			const value = import_react.useMemo(() => context, Object.values(context));
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Context.Provider, {
+				value,
+				children
+			});
+		};
+		Provider.displayName = rootComponentName + "Provider";
+		function useContext2(consumerName, scope) {
+			const Context = scope?.[scopeName]?.[index] || BaseContext;
+			const context = import_react.useContext(Context);
+			if (context) return context;
+			if (defaultContext !== void 0) return defaultContext;
+			throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
+		}
+		return [Provider, useContext2];
+	}
+	const createScope = () => {
+		const scopeContexts = defaultContexts.map((defaultContext) => {
+			return import_react.createContext(defaultContext);
+		});
+		return function useScope(scope) {
+			const contexts = scope?.[scopeName] || scopeContexts;
+			return import_react.useMemo(() => ({ [`__scope${scopeName}`]: {
+				...scope,
+				[scopeName]: contexts
+			} }), [scope, contexts]);
+		};
+	};
+	createScope.scopeName = scopeName;
+	return [createContext3, composeContextScopes(createScope, ...createContextScopeDeps)];
+}
+function composeContextScopes(...scopes) {
+	const baseScope = scopes[0];
+	if (scopes.length === 1) return baseScope;
+	const createScope = () => {
+		const scopeHooks = scopes.map((createScope2) => ({
+			useScope: createScope2(),
+			scopeName: createScope2.scopeName
+		}));
+		return function useComposedScopes(overrideScopes) {
+			const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
+				const currentScope = useScope(overrideScopes)[`__scope${scopeName}`];
+				return {
+					...nextScopes2,
+					...currentScope
+				};
+			}, {});
+			return import_react.useMemo(() => ({ [`__scope${baseScope.scopeName}`]: nextScopes }), [nextScopes]);
+		};
+	};
+	createScope.scopeName = baseScope.scopeName;
+	return createScope;
+}
+//#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-progress@1.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+rea_7258c0b550570cef5cd6f2d2227aa6b9/node_modules/@radix-ui/react-progress/dist/index.mjs
 var PROGRESS_NAME = "Progress";
 var DEFAULT_MAX = 100;
@@ -29301,7 +27184,7 @@ var Progress$1 = import_react.forwardRef((props, forwardedRef) => {
 		scope: __scopeProgress,
 		value,
 		max,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 			"aria-valuemax": max,
 			"aria-valuemin": 0,
 			"aria-valuenow": isNumber(value) ? value : void 0,
@@ -29320,7 +27203,7 @@ var INDICATOR_NAME$2 = "ProgressIndicator";
 var ProgressIndicator = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeProgress, ...indicatorProps } = props;
 	const context = useProgressContext(INDICATOR_NAME$2, __scopeProgress);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
 		"data-state": getProgressState(context.value, context.max),
 		"data-value": context.value ?? void 0,
 		"data-max": context.max,
@@ -29355,15 +27238,15 @@ function getInvalidValueError(propValue, componentName) {
 
 Defaulting to \`null\`.`;
 }
-var Root$3 = Progress$1;
+var Root$4 = Progress$1;
 var Indicator$1 = ProgressIndicator;
 //#endregion
 //#region src/components/ui/progress.tsx
-var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
+var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
 	"data-uid": "src/components/ui/progress.tsx:11:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className),
+	className: cn("relative h-4 w-full overflow-hidden rounded-full bg-secondary", className),
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Indicator$1, {
 		"data-uid": "src/components/ui/progress.tsx:16:5",
@@ -29372,16 +27255,16 @@ var Progress = import_react.forwardRef(({ className, value, ...props }, ref) => 
 		style: { transform: `translateX(-${100 - (value || 0)}%)` }
 	})
 }));
-Progress.displayName = Root$3.displayName;
+Progress.displayName = Root$4.displayName;
 //#endregion
 //#region src/components/ui/dialog.tsx
-var Dialog = Root$6;
-var DialogPortal = Portal$2;
+var Dialog = Root$7;
+var DialogPortal = Portal$1;
 var DialogOverlay = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Overlay, {
 	"data-uid": "src/components/ui/dialog.tsx:20:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
+	className: cn("fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0", className),
 	...props
 }));
 DialogOverlay.displayName = Overlay.displayName;
@@ -29391,11 +27274,11 @@ var DialogContent = import_react.forwardRef(({ className, children, ...props }, 
 	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogOverlay, {
 		"data-uid": "src/components/ui/dialog.tsx:36:5",
 		"data-prohibitions": "[editContent]"
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content$1, {
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content$3, {
 		"data-uid": "src/components/ui/dialog.tsx:37:5",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn$1("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg overflow-y-auto max-h-screen", className),
+		className: cn("fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg overflow-y-auto max-h-screen", className),
 		...props,
 		children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Close, {
 			"data-uid": "src/components/ui/dialog.tsx:46:7",
@@ -29414,18 +27297,18 @@ var DialogContent = import_react.forwardRef(({ className, children, ...props }, 
 		})]
 	})]
 }));
-DialogContent.displayName = Content$1.displayName;
+DialogContent.displayName = Content$3.displayName;
 var DialogHeader = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 	"data-uid": "src/components/ui/dialog.tsx:56:3",
 	"data-prohibitions": "[editContent]",
-	className: cn$1("flex flex-col space-y-1.5 text-center sm:text-left", className),
+	className: cn("flex flex-col space-y-1.5 text-center sm:text-left", className),
 	...props
 });
 DialogHeader.displayName = "DialogHeader";
 var DialogFooter = ({ className, ...props }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 	"data-uid": "src/components/ui/dialog.tsx:61:3",
 	"data-prohibitions": "[editContent]",
-	className: cn$1("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
+	className: cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className),
 	...props
 });
 DialogFooter.displayName = "DialogFooter";
@@ -29433,7 +27316,7 @@ var DialogTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/dialog.tsx:72:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("text-lg font-semibold leading-none tracking-tight", className),
+	className: cn("text-lg font-semibold leading-none tracking-tight", className),
 	...props
 }));
 DialogTitle.displayName = Title.displayName;
@@ -29441,7 +27324,7 @@ var DialogDescription = import_react.forwardRef(({ className, ...props }, ref) =
 	"data-uid": "src/components/ui/dialog.tsx:84:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("text-sm text-muted-foreground", className),
+	className: cn("text-sm text-muted-foreground", className),
 	...props
 }));
 DialogDescription.displayName = Description.displayName;
@@ -29449,6 +27332,85 @@ DialogDescription.displayName = Description.displayName;
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+number@1.1.1/node_modules/@radix-ui/number/dist/index.mjs
 function clamp(value, [min, max]) {
 	return Math.min(max, Math.max(min, value));
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-collection@1.1.7_@types+react-dom@19.2.3_@types+react@19.2.14__@types+r_161926fa2509d0b7370b60b8bb4eb8b0/node_modules/@radix-ui/react-collection/dist/index.mjs
+function createCollection(name) {
+	const PROVIDER_NAME = name + "CollectionProvider";
+	const [createCollectionContext, createCollectionScope] = createContextScope$1(PROVIDER_NAME);
+	const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(PROVIDER_NAME, {
+		collectionRef: { current: null },
+		itemMap: /* @__PURE__ */ new Map()
+	});
+	const CollectionProvider = (props) => {
+		const { scope, children } = props;
+		const ref = import_react.useRef(null);
+		const itemMap = import_react.useRef(/* @__PURE__ */ new Map()).current;
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionProviderImpl, {
+			scope,
+			itemMap,
+			collectionRef: ref,
+			children
+		});
+	};
+	CollectionProvider.displayName = PROVIDER_NAME;
+	const COLLECTION_SLOT_NAME = name + "CollectionSlot";
+	const CollectionSlotImpl = /* @__PURE__ */ createSlot(COLLECTION_SLOT_NAME);
+	const CollectionSlot = import_react.forwardRef((props, forwardedRef) => {
+		const { scope, children } = props;
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionSlotImpl, {
+			ref: useComposedRefs(forwardedRef, useCollectionContext(COLLECTION_SLOT_NAME, scope).collectionRef),
+			children
+		});
+	});
+	CollectionSlot.displayName = COLLECTION_SLOT_NAME;
+	const ITEM_SLOT_NAME = name + "CollectionItemSlot";
+	const ITEM_DATA_ATTR = "data-radix-collection-item";
+	const CollectionItemSlotImpl = /* @__PURE__ */ createSlot(ITEM_SLOT_NAME);
+	const CollectionItemSlot = import_react.forwardRef((props, forwardedRef) => {
+		const { scope, children, ...itemData } = props;
+		const ref = import_react.useRef(null);
+		const composedRefs = useComposedRefs(forwardedRef, ref);
+		const context = useCollectionContext(ITEM_SLOT_NAME, scope);
+		import_react.useEffect(() => {
+			context.itemMap.set(ref, {
+				ref,
+				...itemData
+			});
+			return () => void context.itemMap.delete(ref);
+		});
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollectionItemSlotImpl, {
+			[ITEM_DATA_ATTR]: "",
+			ref: composedRefs,
+			children
+		});
+	});
+	CollectionItemSlot.displayName = ITEM_SLOT_NAME;
+	function useCollection(scope) {
+		const context = useCollectionContext(name + "CollectionConsumer", scope);
+		return import_react.useCallback(() => {
+			const collectionNode = context.collectionRef.current;
+			if (!collectionNode) return [];
+			const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
+			return Array.from(context.itemMap.values()).sort((a, b) => orderedNodes.indexOf(a.ref.current) - orderedNodes.indexOf(b.ref.current));
+		}, [context.collectionRef, context.itemMap]);
+	}
+	return [
+		{
+			Provider: CollectionProvider,
+			Slot: CollectionSlot,
+			ItemSlot: CollectionItemSlot
+		},
+		useCollection,
+		createCollectionScope
+	];
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-direction@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-direction/dist/index.mjs
+var DirectionContext = import_react.createContext(void 0);
+function useDirection(localDir) {
+	const globalDir = import_react.useContext(DirectionContext);
+	return localDir || globalDir || "ltr";
 }
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-use-previous@1.1.1_@types+react@19.2.14_react@19.2.4/node_modules/@radix-ui/react-use-previous/dist/index.mjs
@@ -29475,8 +27437,8 @@ var OPEN_KEYS = [
 ];
 var SELECTION_KEYS = [" ", "Enter"];
 var SELECT_NAME = "Select";
-var [Collection$1, useCollection$1, createCollectionScope$1] = createCollection(SELECT_NAME);
-var [createSelectContext, createSelectScope] = createContextScope$1(SELECT_NAME, [createCollectionScope$1, createPopperScope]);
+var [Collection$2, useCollection$2, createCollectionScope$2] = createCollection(SELECT_NAME);
+var [createSelectContext, createSelectScope] = createContextScope$1(SELECT_NAME, [createCollectionScope$2, createPopperScope]);
 var usePopperScope = createPopperScope();
 var [SelectProvider, useSelectContext] = createSelectContext(SELECT_NAME);
 var [SelectNativeOptionsProvider, useSelectNativeOptionsContext] = createSelectContext(SELECT_NAME);
@@ -29522,7 +27484,7 @@ var Select$1 = (props) => {
 			dir: direction,
 			triggerPointerDownPosRef,
 			disabled,
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.Provider, {
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Provider, {
 				scope: __scopeSelect,
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectNativeOptionsProvider, {
 					scope: props.__scopeSelect,
@@ -29554,14 +27516,14 @@ var Select$1 = (props) => {
 	});
 };
 Select$1.displayName = SELECT_NAME;
-var TRIGGER_NAME$3 = "SelectTrigger";
+var TRIGGER_NAME$4 = "SelectTrigger";
 var SelectTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, disabled = false, ...triggerProps } = props;
 	const popperScope = usePopperScope(__scopeSelect);
-	const context = useSelectContext(TRIGGER_NAME$3, __scopeSelect);
+	const context = useSelectContext(TRIGGER_NAME$4, __scopeSelect);
 	const isDisabled = context.disabled || disabled;
 	const composedRefs = useComposedRefs(forwardedRef, context.onTriggerChange);
-	const getItems = useCollection$1(__scopeSelect);
+	const getItems = useCollection$2(__scopeSelect);
 	const pointerTypeRef = import_react.useRef("touch");
 	const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
 		const enabledItems = getItems().filter((item) => !item.disabled);
@@ -29581,7 +27543,7 @@ var SelectTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
 		asChild: true,
 		...popperScope,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
 			type: "button",
 			role: "combobox",
 			"aria-controls": context.contentId,
@@ -29620,7 +27582,7 @@ var SelectTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-SelectTrigger$1.displayName = TRIGGER_NAME$3;
+SelectTrigger$1.displayName = TRIGGER_NAME$4;
 var VALUE_NAME = "SelectValue";
 var SelectValue$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, className, style, children, placeholder = "", ...valueProps } = props;
@@ -29631,7 +27593,7 @@ var SelectValue$1 = import_react.forwardRef((props, forwardedRef) => {
 	useLayoutEffect2(() => {
 		onValueNodeHasChildrenChange(hasChildren);
 	}, [onValueNodeHasChildrenChange, hasChildren]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 		...valueProps,
 		ref: composedRefs,
 		style: { pointerEvents: "none" },
@@ -29642,7 +27604,7 @@ SelectValue$1.displayName = VALUE_NAME;
 var ICON_NAME = "SelectIcon";
 var SelectIcon = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, children, ...iconProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 		"aria-hidden": true,
 		...iconProps,
 		ref: forwardedRef,
@@ -29652,15 +27614,15 @@ var SelectIcon = import_react.forwardRef((props, forwardedRef) => {
 SelectIcon.displayName = ICON_NAME;
 var PORTAL_NAME = "SelectPortal";
 var SelectPortal = (props) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$3, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal$2, {
 		asChild: true,
 		...props
 	});
 };
 SelectPortal.displayName = PORTAL_NAME;
-var CONTENT_NAME$2 = "SelectContent";
+var CONTENT_NAME$3 = "SelectContent";
 var SelectContent$1 = import_react.forwardRef((props, forwardedRef) => {
-	const context = useSelectContext(CONTENT_NAME$2, props.__scopeSelect);
+	const context = useSelectContext(CONTENT_NAME$3, props.__scopeSelect);
 	const [fragment, setFragment] = import_react.useState();
 	useLayoutEffect2(() => {
 		setFragment(new DocumentFragment());
@@ -29669,7 +27631,7 @@ var SelectContent$1 = import_react.forwardRef((props, forwardedRef) => {
 		const frag = fragment;
 		return frag ? import_react_dom.createPortal(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContentProvider, {
 			scope: props.__scopeSelect,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.Slot, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Slot, {
 				scope: props.__scopeSelect,
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { children: props.children })
 			})
@@ -29680,20 +27642,20 @@ var SelectContent$1 = import_react.forwardRef((props, forwardedRef) => {
 		ref: forwardedRef
 	});
 });
-SelectContent$1.displayName = CONTENT_NAME$2;
+SelectContent$1.displayName = CONTENT_NAME$3;
 var CONTENT_MARGIN = 10;
-var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME$2);
+var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME$3);
 var CONTENT_IMPL_NAME = "SelectContentImpl";
-var Slot = /* @__PURE__ */ createSlot$1("SelectContent.RemoveScroll");
+var Slot = /* @__PURE__ */ createSlot("SelectContent.RemoveScroll");
 var SelectContentImpl = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, position = "item-aligned", onCloseAutoFocus, onEscapeKeyDown, onPointerDownOutside, side, sideOffset, align, alignOffset, arrowPadding, collisionBoundary, collisionPadding, sticky, hideWhenDetached, avoidCollisions, ...contentProps } = props;
-	const context = useSelectContext(CONTENT_NAME$2, __scopeSelect);
+	const context = useSelectContext(CONTENT_NAME$3, __scopeSelect);
 	const [content, setContent] = import_react.useState(null);
 	const [viewport, setViewport] = import_react.useState(null);
 	const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
 	const [selectedItem, setSelectedItem] = import_react.useState(null);
 	const [selectedItemText, setSelectedItemText] = import_react.useState(null);
-	const getItems = useCollection$1(__scopeSelect);
+	const getItems = useCollection$2(__scopeSelect);
 	const [isPositioned, setIsPositioned] = import_react.useState(false);
 	const firstValidItemFoundRef = import_react.useRef(false);
 	import_react.useEffect(() => {
@@ -29877,12 +27839,12 @@ SelectContentImpl.displayName = CONTENT_IMPL_NAME;
 var ITEM_ALIGNED_POSITION_NAME = "SelectItemAlignedPosition";
 var SelectItemAlignedPosition = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, onPlaced, ...popperProps } = props;
-	const context = useSelectContext(CONTENT_NAME$2, __scopeSelect);
-	const contentContext = useSelectContentContext(CONTENT_NAME$2, __scopeSelect);
+	const context = useSelectContext(CONTENT_NAME$3, __scopeSelect);
+	const contentContext = useSelectContentContext(CONTENT_NAME$3, __scopeSelect);
 	const [contentWrapper, setContentWrapper] = import_react.useState(null);
 	const [content, setContent] = import_react.useState(null);
 	const composedRefs = useComposedRefs(forwardedRef, (node) => setContent(node));
-	const getItems = useCollection$1(__scopeSelect);
+	const getItems = useCollection$2(__scopeSelect);
 	const shouldExpandOnScrollRef = import_react.useRef(false);
 	const shouldRepositionRef = import_react.useRef(true);
 	const { viewport, selectedItem, selectedItemText, focusSelectedItem } = contentContext;
@@ -29987,7 +27949,7 @@ var SelectItemAlignedPosition = import_react.forwardRef((props, forwardedRef) =>
 				position: "fixed",
 				zIndex: contentZIndex
 			},
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 				...popperProps,
 				ref: composedRefs,
 				style: {
@@ -30022,7 +27984,7 @@ var SelectPopperPosition = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 SelectPopperPosition.displayName = POPPER_POSITION_NAME;
-var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME$2, {});
+var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME$3, {});
 var VIEWPORT_NAME = "SelectViewport";
 var SelectViewport = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, nonce, ...viewportProps } = props;
@@ -30033,9 +27995,9 @@ var SelectViewport = import_react.forwardRef((props, forwardedRef) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("style", {
 		dangerouslySetInnerHTML: { __html: `[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}` },
 		nonce
-	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.Slot, {
+	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.Slot, {
 		scope: __scopeSelect,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 			"data-radix-select-viewport": "",
 			role: "presentation",
 			...viewportProps,
@@ -30074,15 +28036,15 @@ var SelectViewport = import_react.forwardRef((props, forwardedRef) => {
 	})] });
 });
 SelectViewport.displayName = VIEWPORT_NAME;
-var GROUP_NAME = "SelectGroup";
-var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME);
+var GROUP_NAME$1 = "SelectGroup";
+var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME$1);
 var SelectGroup$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...groupProps } = props;
 	const groupId = useId();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectGroupContextProvider, {
 		scope: __scopeSelect,
 		id: groupId,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 			role: "group",
 			"aria-labelledby": groupId,
 			...groupProps,
@@ -30090,24 +28052,24 @@ var SelectGroup$1 = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-SelectGroup$1.displayName = GROUP_NAME;
+SelectGroup$1.displayName = GROUP_NAME$1;
 var LABEL_NAME = "SelectLabel";
 var SelectLabel$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...labelProps } = props;
 	const groupContext = useSelectGroupContext(LABEL_NAME, __scopeSelect);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 		id: groupContext.id,
 		...labelProps,
 		ref: forwardedRef
 	});
 });
 SelectLabel$1.displayName = LABEL_NAME;
-var ITEM_NAME$2 = "SelectItem";
-var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME$2);
+var ITEM_NAME$3 = "SelectItem";
+var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME$3);
 var SelectItem$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, value, disabled = false, textValue: textValueProp, ...itemProps } = props;
-	const context = useSelectContext(ITEM_NAME$2, __scopeSelect);
-	const contentContext = useSelectContentContext(ITEM_NAME$2, __scopeSelect);
+	const context = useSelectContext(ITEM_NAME$3, __scopeSelect);
+	const contentContext = useSelectContentContext(ITEM_NAME$3, __scopeSelect);
 	const isSelected = context.value === value;
 	const [textValue, setTextValue] = import_react.useState(textValueProp ?? "");
 	const [isFocused, setIsFocused] = import_react.useState(false);
@@ -30130,12 +28092,12 @@ var SelectItem$1 = import_react.forwardRef((props, forwardedRef) => {
 		onItemTextChange: import_react.useCallback((node) => {
 			setTextValue((prevTextValue) => prevTextValue || (node?.textContent ?? "").trim());
 		}, []),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.ItemSlot, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$2.ItemSlot, {
 			scope: __scopeSelect,
 			value,
 			disabled,
 			textValue,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 				role: "option",
 				"aria-labelledby": textId,
 				"data-highlighted": isFocused ? "" : void 0,
@@ -30174,7 +28136,7 @@ var SelectItem$1 = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-SelectItem$1.displayName = ITEM_NAME$2;
+SelectItem$1.displayName = ITEM_NAME$3;
 var ITEM_TEXT_NAME = "SelectItemText";
 var SelectItemText = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, className, style, ...itemTextProps } = props;
@@ -30203,7 +28165,7 @@ var SelectItemText = import_react.forwardRef((props, forwardedRef) => {
 		onNativeOptionRemove,
 		nativeOption
 	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 		id: itemContext.textId,
 		...itemTextProps,
 		ref: composedRefs
@@ -30213,7 +28175,7 @@ SelectItemText.displayName = ITEM_TEXT_NAME;
 var ITEM_INDICATOR_NAME = "SelectItemIndicator";
 var SelectItemIndicator = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...itemIndicatorProps } = props;
-	return useSelectItemContext(ITEM_INDICATOR_NAME, __scopeSelect).isSelected ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+	return useSelectItemContext(ITEM_INDICATOR_NAME, __scopeSelect).isSelected ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 		"aria-hidden": true,
 		...itemIndicatorProps,
 		ref: forwardedRef
@@ -30279,7 +28241,7 @@ var SelectScrollButtonImpl = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, onAutoScroll, ...scrollIndicatorProps } = props;
 	const contentContext = useSelectContentContext("SelectScrollButton", __scopeSelect);
 	const autoScrollTimerRef = import_react.useRef(null);
-	const getItems = useCollection$1(__scopeSelect);
+	const getItems = useCollection$2(__scopeSelect);
 	const clearAutoScrollTimer = import_react.useCallback(() => {
 		if (autoScrollTimerRef.current !== null) {
 			window.clearInterval(autoScrollTimerRef.current);
@@ -30292,7 +28254,7 @@ var SelectScrollButtonImpl = import_react.forwardRef((props, forwardedRef) => {
 	useLayoutEffect2(() => {
 		getItems().find((item) => item.ref.current === document.activeElement)?.ref.current?.scrollIntoView({ block: "nearest" });
 	}, [getItems]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 		"aria-hidden": true,
 		...scrollIndicatorProps,
 		ref: forwardedRef,
@@ -30315,7 +28277,7 @@ var SelectScrollButtonImpl = import_react.forwardRef((props, forwardedRef) => {
 var SEPARATOR_NAME = "SelectSeparator";
 var SelectSeparator$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeSelect, ...separatorProps } = props;
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 		"aria-hidden": true,
 		...separatorProps,
 		ref: forwardedRef
@@ -30351,7 +28313,7 @@ var SelectBubbleInput = import_react.forwardRef(({ __scopeSelect, value, ...prop
 			select.dispatchEvent(event);
 		}
 	}, [prevValue, value]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.select, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.select, {
 		...props,
 		style: {
 			...VISUALLY_HIDDEN_STYLES,
@@ -30394,23 +28356,23 @@ function useTypeaheadSearch(onSearchChange) {
 function findNextItem(items, search, currentItem) {
 	const normalizedSearch = search.length > 1 && Array.from(search).every((char) => char === search[0]) ? search[0] : search;
 	const currentItemIndex = currentItem ? items.indexOf(currentItem) : -1;
-	let wrappedItems = wrapArray(items, Math.max(currentItemIndex, 0));
+	let wrappedItems = wrapArray$1(items, Math.max(currentItemIndex, 0));
 	if (normalizedSearch.length === 1) wrappedItems = wrappedItems.filter((v) => v !== currentItem);
 	const nextItem = wrappedItems.find((item) => item.textValue.toLowerCase().startsWith(normalizedSearch.toLowerCase()));
 	return nextItem !== currentItem ? nextItem : void 0;
 }
-function wrapArray(array, startIndex) {
+function wrapArray$1(array, startIndex) {
 	return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
-var Root2$2 = Select$1;
-var Trigger$1 = SelectTrigger$1;
+var Root2$3 = Select$1;
+var Trigger$2 = SelectTrigger$1;
 var Value = SelectValue$1;
 var Icon = SelectIcon;
 var Portal = SelectPortal;
 var Content2$1 = SelectContent$1;
 var Viewport = SelectViewport;
 var Label$2 = SelectLabel$1;
-var Item$1 = SelectItem$1;
+var Item$2 = SelectItem$1;
 var ItemText = SelectItemText;
 var ItemIndicator = SelectItemIndicator;
 var ScrollUpButton = SelectScrollUpButton$1;
@@ -30418,13 +28380,13 @@ var ScrollDownButton = SelectScrollDownButton$1;
 var Separator = SelectSeparator$1;
 //#endregion
 //#region src/components/ui/select.tsx
-var Select = Root2$2;
+var Select = Root2$3;
 var SelectValue = Value;
-var SelectTrigger = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Trigger$1, {
+var SelectTrigger = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Trigger$2, {
 	"data-uid": "src/components/ui/select.tsx:18:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1", className),
+	className: cn("flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1", className),
 	...props,
 	children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, {
 		"data-uid": "src/components/ui/select.tsx:27:5",
@@ -30437,12 +28399,12 @@ var SelectTrigger = import_react.forwardRef(({ className, children, ...props }, 
 		})
 	})]
 }));
-SelectTrigger.displayName = Trigger$1.displayName;
+SelectTrigger.displayName = Trigger$2.displayName;
 var SelectScrollUpButton = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollUpButton, {
 	"data-uid": "src/components/ui/select.tsx:38:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("flex cursor-default items-center justify-center py-1", className),
+	className: cn("flex cursor-default items-center justify-center py-1", className),
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronUp, {
 		"data-uid": "src/components/ui/select.tsx:43:5",
@@ -30455,7 +28417,7 @@ var SelectScrollDownButton = import_react.forwardRef(({ className, ...props }, r
 	"data-uid": "src/components/ui/select.tsx:52:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("flex cursor-default items-center justify-center py-1", className),
+	className: cn("flex cursor-default items-center justify-center py-1", className),
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, {
 		"data-uid": "src/components/ui/select.tsx:57:5",
@@ -30471,7 +28433,7 @@ var SelectContent = import_react.forwardRef(({ className, children, position = "
 		"data-uid": "src/components/ui/select.tsx:67:5",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn$1("relative z-50 max-h-[--radix-select-content-available-height] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-select-content-transform-origin]", position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className),
+		className: cn("relative z-50 max-h-[--radix-select-content-available-height] min-w-[8rem] overflow-y-auto overflow-x-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-select-content-transform-origin]", position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className),
 		position,
 		...props,
 		children: [
@@ -30482,7 +28444,7 @@ var SelectContent = import_react.forwardRef(({ className, children, position = "
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Viewport, {
 				"data-uid": "src/components/ui/select.tsx:79:7",
 				"data-prohibitions": "[editContent]",
-				className: cn$1("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"),
+				className: cn("p-1", position === "popper" && "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"),
 				children
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectScrollDownButton, {
@@ -30497,15 +28459,15 @@ var SelectLabel = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/select.tsx:98:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("py-1.5 pl-8 pr-2 text-sm font-semibold", className),
+	className: cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className),
 	...props
 }));
 SelectLabel.displayName = Label$2.displayName;
-var SelectItem = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Item$1, {
+var SelectItem = import_react.forwardRef(({ className, children, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Item$2, {
 	"data-uid": "src/components/ui/select.tsx:110:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className),
+	className: cn("relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className),
 	...props,
 	children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 		"data-uid": "src/components/ui/select.tsx:118:5",
@@ -30526,15 +28488,263 @@ var SelectItem = import_react.forwardRef(({ className, children, ...props }, ref
 		children
 	})]
 }));
-SelectItem.displayName = Item$1.displayName;
+SelectItem.displayName = Item$2.displayName;
 var SelectSeparator = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Separator, {
 	"data-uid": "src/components/ui/select.tsx:133:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("-mx-1 my-1 h-px bg-muted", className),
+	className: cn("-mx-1 my-1 h-px bg-muted", className),
 	...props
 }));
 SelectSeparator.displayName = Separator.displayName;
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/sonner@2.0.7_react-dom@19.2.4_react@19.2.4__react@19.2.4/node_modules/sonner/dist/index.mjs
+function __insertCSS(code) {
+	if (!code || typeof document == "undefined") return;
+	let head = document.head || document.getElementsByTagName("head")[0];
+	let style = document.createElement("style");
+	style.type = "text/css";
+	head.appendChild(style);
+	style.styleSheet ? style.styleSheet.cssText = code : style.appendChild(document.createTextNode(code));
+}
+Array(12).fill(0);
+var toastsCounter = 1;
+var Observer = class {
+	constructor() {
+		this.subscribe = (subscriber) => {
+			this.subscribers.push(subscriber);
+			return () => {
+				const index = this.subscribers.indexOf(subscriber);
+				this.subscribers.splice(index, 1);
+			};
+		};
+		this.publish = (data) => {
+			this.subscribers.forEach((subscriber) => subscriber(data));
+		};
+		this.addToast = (data) => {
+			this.publish(data);
+			this.toasts = [...this.toasts, data];
+		};
+		this.create = (data) => {
+			var _data_id;
+			const { message, ...rest } = data;
+			const id = typeof (data == null ? void 0 : data.id) === "number" || ((_data_id = data.id) == null ? void 0 : _data_id.length) > 0 ? data.id : toastsCounter++;
+			const alreadyExists = this.toasts.find((toast) => {
+				return toast.id === id;
+			});
+			const dismissible = data.dismissible === void 0 ? true : data.dismissible;
+			if (this.dismissedToasts.has(id)) this.dismissedToasts.delete(id);
+			if (alreadyExists) this.toasts = this.toasts.map((toast) => {
+				if (toast.id === id) {
+					this.publish({
+						...toast,
+						...data,
+						id,
+						title: message
+					});
+					return {
+						...toast,
+						...data,
+						id,
+						dismissible,
+						title: message
+					};
+				}
+				return toast;
+			});
+			else this.addToast({
+				title: message,
+				...rest,
+				dismissible,
+				id
+			});
+			return id;
+		};
+		this.dismiss = (id) => {
+			if (id) {
+				this.dismissedToasts.add(id);
+				requestAnimationFrame(() => this.subscribers.forEach((subscriber) => subscriber({
+					id,
+					dismiss: true
+				})));
+			} else this.toasts.forEach((toast) => {
+				this.subscribers.forEach((subscriber) => subscriber({
+					id: toast.id,
+					dismiss: true
+				}));
+			});
+			return id;
+		};
+		this.message = (message, data) => {
+			return this.create({
+				...data,
+				message
+			});
+		};
+		this.error = (message, data) => {
+			return this.create({
+				...data,
+				message,
+				type: "error"
+			});
+		};
+		this.success = (message, data) => {
+			return this.create({
+				...data,
+				type: "success",
+				message
+			});
+		};
+		this.info = (message, data) => {
+			return this.create({
+				...data,
+				type: "info",
+				message
+			});
+		};
+		this.warning = (message, data) => {
+			return this.create({
+				...data,
+				type: "warning",
+				message
+			});
+		};
+		this.loading = (message, data) => {
+			return this.create({
+				...data,
+				type: "loading",
+				message
+			});
+		};
+		this.promise = (promise, data) => {
+			if (!data) return;
+			let id = void 0;
+			if (data.loading !== void 0) id = this.create({
+				...data,
+				promise,
+				type: "loading",
+				message: data.loading,
+				description: typeof data.description !== "function" ? data.description : void 0
+			});
+			const p = Promise.resolve(promise instanceof Function ? promise() : promise);
+			let shouldDismiss = id !== void 0;
+			let result;
+			const originalPromise = p.then(async (response) => {
+				result = ["resolve", response];
+				if (import_react.isValidElement(response)) {
+					shouldDismiss = false;
+					this.create({
+						id,
+						type: "default",
+						message: response
+					});
+				} else if (isHttpResponse(response) && !response.ok) {
+					shouldDismiss = false;
+					const promiseData = typeof data.error === "function" ? await data.error(`HTTP error! status: ${response.status}`) : data.error;
+					const description = typeof data.description === "function" ? await data.description(`HTTP error! status: ${response.status}`) : data.description;
+					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
+					this.create({
+						id,
+						type: "error",
+						description,
+						...toastSettings
+					});
+				} else if (response instanceof Error) {
+					shouldDismiss = false;
+					const promiseData = typeof data.error === "function" ? await data.error(response) : data.error;
+					const description = typeof data.description === "function" ? await data.description(response) : data.description;
+					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
+					this.create({
+						id,
+						type: "error",
+						description,
+						...toastSettings
+					});
+				} else if (data.success !== void 0) {
+					shouldDismiss = false;
+					const promiseData = typeof data.success === "function" ? await data.success(response) : data.success;
+					const description = typeof data.description === "function" ? await data.description(response) : data.description;
+					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
+					this.create({
+						id,
+						type: "success",
+						description,
+						...toastSettings
+					});
+				}
+			}).catch(async (error) => {
+				result = ["reject", error];
+				if (data.error !== void 0) {
+					shouldDismiss = false;
+					const promiseData = typeof data.error === "function" ? await data.error(error) : data.error;
+					const description = typeof data.description === "function" ? await data.description(error) : data.description;
+					const toastSettings = typeof promiseData === "object" && !import_react.isValidElement(promiseData) ? promiseData : { message: promiseData };
+					this.create({
+						id,
+						type: "error",
+						description,
+						...toastSettings
+					});
+				}
+			}).finally(() => {
+				if (shouldDismiss) {
+					this.dismiss(id);
+					id = void 0;
+				}
+				data.finally == null || data.finally.call(data);
+			});
+			const unwrap = () => new Promise((resolve, reject) => originalPromise.then(() => result[0] === "reject" ? reject(result[1]) : resolve(result[1])).catch(reject));
+			if (typeof id !== "string" && typeof id !== "number") return { unwrap };
+			else return Object.assign(id, { unwrap });
+		};
+		this.custom = (jsx, data) => {
+			const id = (data == null ? void 0 : data.id) || toastsCounter++;
+			this.create({
+				jsx: jsx(id),
+				id,
+				...data
+			});
+			return id;
+		};
+		this.getActiveToasts = () => {
+			return this.toasts.filter((toast) => !this.dismissedToasts.has(toast.id));
+		};
+		this.subscribers = [];
+		this.toasts = [];
+		this.dismissedToasts = /* @__PURE__ */ new Set();
+	}
+};
+var ToastState = new Observer();
+var toastFunction = (message, data) => {
+	const id = (data == null ? void 0 : data.id) || toastsCounter++;
+	ToastState.addToast({
+		title: message,
+		...data,
+		id
+	});
+	return id;
+};
+var isHttpResponse = (data) => {
+	return data && typeof data === "object" && "ok" in data && typeof data.ok === "boolean" && "status" in data && typeof data.status === "number";
+};
+var basicToast = toastFunction;
+var getHistory = () => ToastState.toasts;
+var getToasts = () => ToastState.getActiveToasts();
+var toast$1 = Object.assign(basicToast, {
+	success: ToastState.success,
+	info: ToastState.info,
+	warning: ToastState.warning,
+	error: ToastState.error,
+	custom: ToastState.custom,
+	message: ToastState.message,
+	promise: ToastState.promise,
+	dismiss: ToastState.dismiss,
+	loading: ToastState.loading
+}, {
+	getHistory,
+	getToasts
+});
+__insertCSS("[data-sonner-toaster][dir=ltr],html[dir=ltr]{--toast-icon-margin-start:-3px;--toast-icon-margin-end:4px;--toast-svg-margin-start:-1px;--toast-svg-margin-end:0px;--toast-button-margin-start:auto;--toast-button-margin-end:0;--toast-close-button-start:0;--toast-close-button-end:unset;--toast-close-button-transform:translate(-35%, -35%)}[data-sonner-toaster][dir=rtl],html[dir=rtl]{--toast-icon-margin-start:4px;--toast-icon-margin-end:-3px;--toast-svg-margin-start:0px;--toast-svg-margin-end:-1px;--toast-button-margin-start:0;--toast-button-margin-end:auto;--toast-close-button-start:unset;--toast-close-button-end:0;--toast-close-button-transform:translate(35%, -35%)}[data-sonner-toaster]{position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1:hsl(0, 0%, 99%);--gray2:hsl(0, 0%, 97.3%);--gray3:hsl(0, 0%, 95.1%);--gray4:hsl(0, 0%, 93%);--gray5:hsl(0, 0%, 90.9%);--gray6:hsl(0, 0%, 88.7%);--gray7:hsl(0, 0%, 85.8%);--gray8:hsl(0, 0%, 78%);--gray9:hsl(0, 0%, 56.1%);--gray10:hsl(0, 0%, 52.3%);--gray11:hsl(0, 0%, 43.5%);--gray12:hsl(0, 0%, 9%);--border-radius:8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:0;z-index:999999999;transition:transform .4s ease}@media (hover:none) and (pointer:coarse){[data-sonner-toaster][data-lifted=true]{transform:none}}[data-sonner-toaster][data-x-position=right]{right:var(--offset-right)}[data-sonner-toaster][data-x-position=left]{left:var(--offset-left)}[data-sonner-toaster][data-x-position=center]{left:50%;transform:translateX(-50%)}[data-sonner-toaster][data-y-position=top]{top:var(--offset-top)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--offset-bottom)}[data-sonner-toast]{--y:translateY(100%);--lift-amount:calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:0;overflow-wrap:anywhere}[data-sonner-toast][data-styled=true]{padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px rgba(0,0,0,.1);width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}[data-sonner-toast]:focus-visible{box-shadow:0 4px 12px rgba(0,0,0,.1),0 0 0 2px rgba(0,0,0,.2)}[data-sonner-toast][data-y-position=top]{top:0;--y:translateY(-100%);--lift:1;--lift-amount:calc(1 * var(--gap))}[data-sonner-toast][data-y-position=bottom]{bottom:0;--y:translateY(100%);--lift:-1;--lift-amount:calc(var(--lift) * var(--gap))}[data-sonner-toast][data-styled=true] [data-description]{font-weight:400;line-height:1.4;color:#3f3f3f}[data-rich-colors=true][data-sonner-toast][data-styled=true] [data-description]{color:inherit}[data-sonner-toaster][data-sonner-theme=dark] [data-description]{color:#e8e8e8}[data-sonner-toast][data-styled=true] [data-title]{font-weight:500;line-height:1.5;color:inherit}[data-sonner-toast][data-styled=true] [data-icon]{display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}[data-sonner-toast][data-promise=true] [data-icon]>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}[data-sonner-toast][data-styled=true] [data-icon]>*{flex-shrink:0}[data-sonner-toast][data-styled=true] [data-icon] svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}[data-sonner-toast][data-styled=true] [data-content]{display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;font-weight:500;cursor:pointer;outline:0;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}[data-sonner-toast][data-styled=true] [data-button]:focus-visible{box-shadow:0 0 0 2px rgba(0,0,0,.4)}[data-sonner-toast][data-styled=true] [data-button]:first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}[data-sonner-toast][data-styled=true] [data-cancel]{color:var(--normal-text);background:rgba(0,0,0,.08)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast][data-styled=true] [data-cancel]{background:rgba(255,255,255,.3)}[data-sonner-toast][data-styled=true] [data-close-button]{position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);background:var(--normal-bg);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast][data-styled=true] [data-close-button]:focus-visible{box-shadow:0 4px 12px rgba(0,0,0,.1),0 0 0 2px rgba(0,0,0,.2)}[data-sonner-toast][data-styled=true] [data-disabled=true]{cursor:not-allowed}[data-sonner-toast][data-styled=true]:hover [data-close-button]:hover{background:var(--gray2);border-color:var(--gray5)}[data-sonner-toast][data-swiping=true]::before{content:'';position:absolute;left:-100%;right:-100%;height:100%;z-index:-1}[data-sonner-toast][data-y-position=top][data-swiping=true]::before{bottom:50%;transform:scaleY(3) translateY(50%)}[data-sonner-toast][data-y-position=bottom][data-swiping=true]::before{top:50%;transform:scaleY(3) translateY(-50%)}[data-sonner-toast][data-swiping=false][data-removed=true]::before{content:'';position:absolute;inset:0;transform:scaleY(2)}[data-sonner-toast][data-expanded=true]::after{content:'';position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}[data-sonner-toast][data-mounted=true]{--y:translateY(0);opacity:1}[data-sonner-toast][data-expanded=false][data-front=false]{--scale:var(--toasts-before) * 0.05 + 1;--y:translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}[data-sonner-toast]>*{transition:opacity .4s}[data-sonner-toast][data-x-position=right]{right:0}[data-sonner-toast][data-x-position=left]{left:0}[data-sonner-toast][data-expanded=false][data-front=false][data-styled=true]>*{opacity:0}[data-sonner-toast][data-visible=false]{opacity:0;pointer-events:none}[data-sonner-toast][data-mounted=true][data-expanded=true]{--y:translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}[data-sonner-toast][data-removed=true][data-front=true][data-swipe-out=false]{--y:translateY(calc(var(--lift) * -100%));opacity:0}[data-sonner-toast][data-removed=true][data-front=false][data-swipe-out=false][data-expanded=true]{--y:translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}[data-sonner-toast][data-removed=true][data-front=false][data-swipe-out=false][data-expanded=false]{--y:translateY(40%);opacity:0;transition:transform .5s,opacity .2s}[data-sonner-toast][data-removed=true][data-front=false]::before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y,0)) translateX(var(--swipe-amount-x,0));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{from{transform:var(--y) translateX(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translateX(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{from{transform:var(--y) translateX(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translateX(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{from{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{from{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width:600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-sonner-theme=light]{--normal-bg:#fff;--normal-border:var(--gray4);--normal-text:var(--gray12);--success-bg:hsl(143, 85%, 96%);--success-border:hsl(145, 92%, 87%);--success-text:hsl(140, 100%, 27%);--info-bg:hsl(208, 100%, 97%);--info-border:hsl(221, 91%, 93%);--info-text:hsl(210, 92%, 45%);--warning-bg:hsl(49, 100%, 97%);--warning-border:hsl(49, 91%, 84%);--warning-text:hsl(31, 92%, 45%);--error-bg:hsl(359, 100%, 97%);--error-border:hsl(359, 100%, 94%);--error-text:hsl(360, 100%, 45%)}[data-sonner-toaster][data-sonner-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg:#000;--normal-border:hsl(0, 0%, 20%);--normal-text:var(--gray1)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg:#fff;--normal-border:var(--gray3);--normal-text:var(--gray12)}[data-sonner-toaster][data-sonner-theme=dark]{--normal-bg:#000;--normal-bg-hover:hsl(0, 0%, 12%);--normal-border:hsl(0, 0%, 20%);--normal-border-hover:hsl(0, 0%, 25%);--normal-text:var(--gray1);--success-bg:hsl(150, 100%, 6%);--success-border:hsl(147, 100%, 12%);--success-text:hsl(150, 86%, 65%);--info-bg:hsl(215, 100%, 6%);--info-border:hsl(223, 43%, 17%);--info-text:hsl(216, 87%, 65%);--warning-bg:hsl(64, 100%, 6%);--warning-border:hsl(60, 100%, 9%);--warning-text:hsl(46, 87%, 65%);--error-bg:hsl(358, 76%, 10%);--error-border:hsl(357, 89%, 16%);--error-text:hsl(358, 100%, 81%)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size:16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:first-child{animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}100%{opacity:.15}}@media (prefers-reduced-motion){.sonner-loading-bar,[data-sonner-toast],[data-sonner-toast]>*{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}");
 //#endregion
 //#region src/pages/student/Dashboard.tsx
 function StudentDashboard() {
@@ -30557,14 +28767,14 @@ function StudentDashboard() {
 		else {
 			const affiliateRef = localStorage.getItem("lms_affiliate_ref") || void 0;
 			enrollStudent(user.id, c.id, void 0, affiliateRef);
-			toast.success("Matrícula realizada com sucesso.");
+			toast$1.success("Matrícula realizada com sucesso.");
 		}
 	};
 	const handleFinalizeEnrollment = () => {
-		if (enrollCourse?.batches?.length && !selectedBatch) return toast.error("Selecione uma turma.");
+		if (enrollCourse?.batches?.length && !selectedBatch) return toast$1.error("Selecione uma turma.");
 		const affiliateRef = localStorage.getItem("lms_affiliate_ref") || void 0;
 		enrollStudent(user.id, enrollCourse.id, selectedBatch || void 0, affiliateRef);
-		toast.success("Pagamento Aprovado! Matrícula confirmada.");
+		toast$1.success("Pagamento Aprovado! Matrícula confirmada.");
 		setEnrollCourse(null);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -30904,12 +29114,196 @@ var Textarea = import_react.forwardRef(({ className, ...props }, ref) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
 		"data-uid": "src/components/ui/textarea.tsx:9:7",
 		"data-prohibitions": "[editContent]",
-		className: cn$1("flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
+		className: cn("flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
 		ref,
 		...props
 	});
 });
 Textarea.displayName = "Textarea";
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-roving-focus@1.1.11_@types+react-dom@19.2.3_@types+react@19.2.14__@type_4eeb29c998b846c35358e2f929e7490e/node_modules/@radix-ui/react-roving-focus/dist/index.mjs
+var ENTRY_FOCUS = "rovingFocusGroup.onEntryFocus";
+var EVENT_OPTIONS = {
+	bubbles: false,
+	cancelable: true
+};
+var GROUP_NAME = "RovingFocusGroup";
+var [Collection$1, useCollection$1, createCollectionScope$1] = createCollection(GROUP_NAME);
+var [createRovingFocusGroupContext, createRovingFocusGroupScope] = createContextScope$1(GROUP_NAME, [createCollectionScope$1]);
+var [RovingFocusProvider, useRovingFocusContext] = createRovingFocusGroupContext(GROUP_NAME);
+var RovingFocusGroup = import_react.forwardRef((props, forwardedRef) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.Provider, {
+		scope: props.__scopeRovingFocusGroup,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.Slot, {
+			scope: props.__scopeRovingFocusGroup,
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RovingFocusGroupImpl, {
+				...props,
+				ref: forwardedRef
+			})
+		})
+	});
+});
+RovingFocusGroup.displayName = GROUP_NAME;
+var RovingFocusGroupImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeRovingFocusGroup, orientation, loop = false, dir, currentTabStopId: currentTabStopIdProp, defaultCurrentTabStopId, onCurrentTabStopIdChange, onEntryFocus, preventScrollOnEntryFocus = false, ...groupProps } = props;
+	const ref = import_react.useRef(null);
+	const composedRefs = useComposedRefs(forwardedRef, ref);
+	const direction = useDirection(dir);
+	const [currentTabStopId, setCurrentTabStopId] = useControllableState({
+		prop: currentTabStopIdProp,
+		defaultProp: defaultCurrentTabStopId ?? null,
+		onChange: onCurrentTabStopIdChange,
+		caller: GROUP_NAME
+	});
+	const [isTabbingBackOut, setIsTabbingBackOut] = import_react.useState(false);
+	const handleEntryFocus = useCallbackRef$1(onEntryFocus);
+	const getItems = useCollection$1(__scopeRovingFocusGroup);
+	const isClickFocusRef = import_react.useRef(false);
+	const [focusableItemsCount, setFocusableItemsCount] = import_react.useState(0);
+	import_react.useEffect(() => {
+		const node = ref.current;
+		if (node) {
+			node.addEventListener(ENTRY_FOCUS, handleEntryFocus);
+			return () => node.removeEventListener(ENTRY_FOCUS, handleEntryFocus);
+		}
+	}, [handleEntryFocus]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RovingFocusProvider, {
+		scope: __scopeRovingFocusGroup,
+		orientation,
+		dir: direction,
+		loop,
+		currentTabStopId,
+		onItemFocus: import_react.useCallback((tabStopId) => setCurrentTabStopId(tabStopId), [setCurrentTabStopId]),
+		onItemShiftTab: import_react.useCallback(() => setIsTabbingBackOut(true), []),
+		onFocusableItemAdd: import_react.useCallback(() => setFocusableItemsCount((prevCount) => prevCount + 1), []),
+		onFocusableItemRemove: import_react.useCallback(() => setFocusableItemsCount((prevCount) => prevCount - 1), []),
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			tabIndex: isTabbingBackOut || focusableItemsCount === 0 ? -1 : 0,
+			"data-orientation": orientation,
+			...groupProps,
+			ref: composedRefs,
+			style: {
+				outline: "none",
+				...props.style
+			},
+			onMouseDown: composeEventHandlers(props.onMouseDown, () => {
+				isClickFocusRef.current = true;
+			}),
+			onFocus: composeEventHandlers(props.onFocus, (event) => {
+				const isKeyboardFocus = !isClickFocusRef.current;
+				if (event.target === event.currentTarget && isKeyboardFocus && !isTabbingBackOut) {
+					const entryFocusEvent = new CustomEvent(ENTRY_FOCUS, EVENT_OPTIONS);
+					event.currentTarget.dispatchEvent(entryFocusEvent);
+					if (!entryFocusEvent.defaultPrevented) {
+						const items = getItems().filter((item) => item.focusable);
+						focusFirst([
+							items.find((item) => item.active),
+							items.find((item) => item.id === currentTabStopId),
+							...items
+						].filter(Boolean).map((item) => item.ref.current), preventScrollOnEntryFocus);
+					}
+				}
+				isClickFocusRef.current = false;
+			}),
+			onBlur: composeEventHandlers(props.onBlur, () => setIsTabbingBackOut(false))
+		})
+	});
+});
+var ITEM_NAME$2 = "RovingFocusGroupItem";
+var RovingFocusGroupItem = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeRovingFocusGroup, focusable = true, active = false, tabStopId, children, ...itemProps } = props;
+	const autoId = useId();
+	const id = tabStopId || autoId;
+	const context = useRovingFocusContext(ITEM_NAME$2, __scopeRovingFocusGroup);
+	const isCurrentTabStop = context.currentTabStopId === id;
+	const getItems = useCollection$1(__scopeRovingFocusGroup);
+	const { onFocusableItemAdd, onFocusableItemRemove, currentTabStopId } = context;
+	import_react.useEffect(() => {
+		if (focusable) {
+			onFocusableItemAdd();
+			return () => onFocusableItemRemove();
+		}
+	}, [
+		focusable,
+		onFocusableItemAdd,
+		onFocusableItemRemove
+	]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection$1.ItemSlot, {
+		scope: __scopeRovingFocusGroup,
+		id,
+		focusable,
+		active,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+			tabIndex: isCurrentTabStop ? 0 : -1,
+			"data-orientation": context.orientation,
+			...itemProps,
+			ref: forwardedRef,
+			onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
+				if (!focusable) event.preventDefault();
+				else context.onItemFocus(id);
+			}),
+			onFocus: composeEventHandlers(props.onFocus, () => context.onItemFocus(id)),
+			onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
+				if (event.key === "Tab" && event.shiftKey) {
+					context.onItemShiftTab();
+					return;
+				}
+				if (event.target !== event.currentTarget) return;
+				const focusIntent = getFocusIntent(event, context.orientation, context.dir);
+				if (focusIntent !== void 0) {
+					if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+					event.preventDefault();
+					let candidateNodes = getItems().filter((item) => item.focusable).map((item) => item.ref.current);
+					if (focusIntent === "last") candidateNodes.reverse();
+					else if (focusIntent === "prev" || focusIntent === "next") {
+						if (focusIntent === "prev") candidateNodes.reverse();
+						const currentIndex = candidateNodes.indexOf(event.currentTarget);
+						candidateNodes = context.loop ? wrapArray(candidateNodes, currentIndex + 1) : candidateNodes.slice(currentIndex + 1);
+					}
+					setTimeout(() => focusFirst(candidateNodes));
+				}
+			}),
+			children: typeof children === "function" ? children({
+				isCurrentTabStop,
+				hasTabStop: currentTabStopId != null
+			}) : children
+		})
+	});
+});
+RovingFocusGroupItem.displayName = ITEM_NAME$2;
+var MAP_KEY_TO_FOCUS_INTENT = {
+	ArrowLeft: "prev",
+	ArrowUp: "prev",
+	ArrowRight: "next",
+	ArrowDown: "next",
+	PageUp: "first",
+	Home: "first",
+	PageDown: "last",
+	End: "last"
+};
+function getDirectionAwareKey(key, dir) {
+	if (dir !== "rtl") return key;
+	return key === "ArrowLeft" ? "ArrowRight" : key === "ArrowRight" ? "ArrowLeft" : key;
+}
+function getFocusIntent(event, orientation, dir) {
+	const key = getDirectionAwareKey(event.key, dir);
+	if (orientation === "vertical" && ["ArrowLeft", "ArrowRight"].includes(key)) return void 0;
+	if (orientation === "horizontal" && ["ArrowUp", "ArrowDown"].includes(key)) return void 0;
+	return MAP_KEY_TO_FOCUS_INTENT[key];
+}
+function focusFirst(candidates, preventScroll = false) {
+	const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
+	for (const candidate of candidates) {
+		if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
+		candidate.focus({ preventScroll });
+		if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
+	}
+}
+function wrapArray(array, startIndex) {
+	return array.map((_, index) => array[(startIndex + index) % array.length]);
+}
+var Root$3 = RovingFocusGroup;
+var Item$1 = RovingFocusGroupItem;
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-radio-group@1.3.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+_cc2a70da647cefa06e7f90fd9b481f08/node_modules/@radix-ui/react-radio-group/dist/index.mjs
 var RADIO_NAME = "Radio";
@@ -30925,7 +29319,7 @@ var Radio = import_react.forwardRef((props, forwardedRef) => {
 		scope: __scopeRadio,
 		checked,
 		disabled,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
 			type: "button",
 			role: "radio",
 			"aria-checked": checked,
@@ -30962,7 +29356,7 @@ var RadioIndicator = import_react.forwardRef((props, forwardedRef) => {
 	const context = useRadioContext(INDICATOR_NAME$1, __scopeRadio);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
 		present: forceMount || context.checked,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 			"data-state": getState$4(context.checked),
 			"data-disabled": context.disabled ? "" : void 0,
 			...indicatorProps,
@@ -30992,7 +29386,7 @@ var RadioBubbleInput = import_react.forwardRef(({ __scopeRadio, control, checked
 		checked,
 		bubbles
 	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.input, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.input, {
 		type: "radio",
 		"aria-hidden": true,
 		defaultChecked: checked,
@@ -31021,12 +29415,12 @@ var ARROW_KEYS = [
 ];
 var RADIO_GROUP_NAME = "RadioGroup";
 var [createRadioGroupContext, createRadioGroupScope] = createContextScope$1(RADIO_GROUP_NAME, [createRovingFocusGroupScope, createRadioScope]);
-var useRovingFocusGroupScope = createRovingFocusGroupScope();
+var useRovingFocusGroupScope$1 = createRovingFocusGroupScope();
 var useRadioScope = createRadioScope();
 var [RadioGroupProvider, useRadioGroupContext] = createRadioGroupContext(RADIO_GROUP_NAME);
 var RadioGroup$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeRadioGroup, name, defaultValue, value: valueProp, required = false, disabled = false, orientation, dir, loop = true, onValueChange, ...groupProps } = props;
-	const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeRadioGroup);
+	const rovingFocusGroupScope = useRovingFocusGroupScope$1(__scopeRadioGroup);
 	const direction = useDirection(dir);
 	const [value, setValue] = useControllableState({
 		prop: valueProp,
@@ -31041,13 +29435,13 @@ var RadioGroup$1 = import_react.forwardRef((props, forwardedRef) => {
 		disabled,
 		value,
 		onValueChange: setValue,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$4, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
 			asChild: true,
 			...rovingFocusGroupScope,
 			orientation,
 			dir: direction,
 			loop,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 				role: "radiogroup",
 				"aria-required": required,
 				"aria-orientation": orientation,
@@ -31065,7 +29459,7 @@ var RadioGroupItem$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeRadioGroup, disabled, ...itemProps } = props;
 	const context = useRadioGroupContext(ITEM_NAME$1, __scopeRadioGroup);
 	const isDisabled = context.disabled || disabled;
-	const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeRadioGroup);
+	const rovingFocusGroupScope = useRovingFocusGroupScope$1(__scopeRadioGroup);
 	const radioScope = useRadioScope(__scopeRadioGroup);
 	const ref = import_react.useRef(null);
 	const composedRefs = useComposedRefs(forwardedRef, ref);
@@ -31083,7 +29477,7 @@ var RadioGroupItem$1 = import_react.forwardRef((props, forwardedRef) => {
 			document.removeEventListener("keyup", handleKeyUp);
 		};
 	}, []);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item$2, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item$1, {
 		asChild: true,
 		...rovingFocusGroupScope,
 		focusable: !isDisabled,
@@ -31117,27 +29511,27 @@ var RadioGroupIndicator = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 RadioGroupIndicator.displayName = INDICATOR_NAME2;
-var Root2$1 = RadioGroup$1;
+var Root2$2 = RadioGroup$1;
 var Item2 = RadioGroupItem$1;
 var Indicator = RadioGroupIndicator;
 //#endregion
 //#region src/components/ui/radio-group.tsx
 var RadioGroup = import_react.forwardRef(({ className, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2$1, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2$2, {
 		"data-uid": "src/components/ui/radio-group.tsx:12:10",
 		"data-prohibitions": "[editContent]",
-		className: cn$1("grid gap-2", className),
+		className: cn("grid gap-2", className),
 		...props,
 		ref
 	});
 });
-RadioGroup.displayName = Root2$1.displayName;
+RadioGroup.displayName = Root2$2.displayName;
 var RadioGroupItem = import_react.forwardRef(({ className, ...props }, ref) => {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item2, {
 		"data-uid": "src/components/ui/radio-group.tsx:21:5",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn$1("aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50", className),
+		className: cn("aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50", className),
 		...props,
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Indicator, {
 			"data-uid": "src/components/ui/radio-group.tsx:29:7",
@@ -31191,9 +29585,9 @@ function CheckboxProvider(props) {
 		children: isFunction(internal_do_not_use_render) ? internal_do_not_use_render(context) : children
 	});
 }
-var TRIGGER_NAME$2 = "CheckboxTrigger";
+var TRIGGER_NAME$3 = "CheckboxTrigger";
 var CheckboxTrigger = import_react.forwardRef(({ __scopeCheckbox, onKeyDown, onClick, ...checkboxProps }, forwardedRef) => {
-	const { control, value, disabled, checked, required, setControl, setChecked, hasConsumerStoppedPropagationRef, isFormControl, bubbleInput } = useCheckboxContext(TRIGGER_NAME$2, __scopeCheckbox);
+	const { control, value, disabled, checked, required, setControl, setChecked, hasConsumerStoppedPropagationRef, isFormControl, bubbleInput } = useCheckboxContext(TRIGGER_NAME$3, __scopeCheckbox);
 	const composedRefs = useComposedRefs(forwardedRef, setControl);
 	const initialCheckedStateRef = import_react.useRef(checked);
 	import_react.useEffect(() => {
@@ -31204,7 +29598,7 @@ var CheckboxTrigger = import_react.forwardRef(({ __scopeCheckbox, onKeyDown, onC
 			return () => form.removeEventListener("reset", reset);
 		}
 	}, [control, setChecked]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
 		type: "button",
 		role: "checkbox",
 		"aria-checked": isIndeterminate(checked) ? "mixed" : checked,
@@ -31227,7 +29621,7 @@ var CheckboxTrigger = import_react.forwardRef(({ __scopeCheckbox, onKeyDown, onC
 		})
 	});
 });
-CheckboxTrigger.displayName = TRIGGER_NAME$2;
+CheckboxTrigger.displayName = TRIGGER_NAME$3;
 var Checkbox$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeCheckbox, name, checked, defaultChecked, required, disabled, value, onCheckedChange, form, ...checkboxProps } = props;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CheckboxProvider, {
@@ -31254,7 +29648,7 @@ var CheckboxIndicator = import_react.forwardRef((props, forwardedRef) => {
 	const context = useCheckboxContext(INDICATOR_NAME, __scopeCheckbox);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
 		present: forceMount || isIndeterminate(context.checked) || context.checked === true,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
 			"data-state": getState$3(context.checked),
 			"data-disabled": context.disabled ? "" : void 0,
 			...indicatorProps,
@@ -31292,7 +29686,7 @@ var CheckboxBubbleInput = import_react.forwardRef(({ __scopeCheckbox, ...props }
 		hasConsumerStoppedPropagationRef
 	]);
 	const defaultCheckedRef = import_react.useRef(isIndeterminate(checked) ? false : checked);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.input, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.input, {
 		type: "checkbox",
 		"aria-hidden": true,
 		defaultChecked: defaultChecked ?? defaultCheckedRef.current,
@@ -31331,12 +29725,12 @@ var Checkbox = import_react.forwardRef(({ className, ...props }, ref) => /* @__P
 	"data-uid": "src/components/ui/checkbox.tsx:12:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground", className),
+	className: cn("peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground", className),
 	...props,
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CheckboxIndicator, {
 		"data-uid": "src/components/ui/checkbox.tsx:20:5",
 		"data-prohibitions": "[editContent]",
-		className: cn$1("flex items-center justify-center text-current"),
+		className: cn("flex items-center justify-center text-current"),
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
 			"data-uid": "src/components/ui/checkbox.tsx:21:7",
 			"data-prohibitions": "[editContent]",
@@ -31349,7 +29743,7 @@ Checkbox.displayName = Checkbox$1.displayName;
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-label@2.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_55fa612a976b7bdfbf4dcdd93d861aab/node_modules/@radix-ui/react-label/dist/index.mjs
 var NAME = "Label";
 var Label$1 = import_react.forwardRef((props, forwardedRef) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.label, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.label, {
 		...props,
 		ref: forwardedRef,
 		onMouseDown: (event) => {
@@ -31368,7 +29762,7 @@ var Label = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE
 	"data-uid": "src/components/ui/label.tsx:16:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1(labelVariants(), className),
+	className: cn(labelVariants(), className),
 	...props
 }));
 Label.displayName = Root$2.displayName;
@@ -32217,6 +30611,611 @@ function Certificate() {
 	});
 }
 //#endregion
+//#region src/components/ui/table.tsx
+var Table = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	"data-uid": "src/components/ui/table.tsx:8:5",
+	"data-prohibitions": "[editContent]",
+	className: "relative w-full overflow-auto",
+	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", {
+		"data-uid": "src/components/ui/table.tsx:9:7",
+		"data-prohibitions": "[editContent]",
+		ref,
+		className: cn("w-full caption-bottom text-sm", className),
+		...props
+	})
+}));
+Table.displayName = "Table";
+var TableHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", {
+	"data-uid": "src/components/ui/table.tsx:19:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("[&_tr]:border-b", className),
+	...props
+}));
+TableHeader.displayName = "TableHeader";
+var TableBody = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", {
+	"data-uid": "src/components/ui/table.tsx:27:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("[&_tr:last-child]:border-0", className),
+	...props
+}));
+TableBody.displayName = "TableBody";
+var TableFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tfoot", {
+	"data-uid": "src/components/ui/table.tsx:35:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className),
+	...props
+}));
+TableFooter.displayName = "TableFooter";
+var TableRow = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", {
+	"data-uid": "src/components/ui/table.tsx:45:5",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className),
+	...props
+}));
+TableRow.displayName = "TableRow";
+var TableHead = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+	"data-uid": "src/components/ui/table.tsx:61:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0", className),
+	...props
+}));
+TableHead.displayName = "TableHead";
+var TableCell = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+	"data-uid": "src/components/ui/table.tsx:76:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className),
+	...props
+}));
+TableCell.displayName = "TableCell";
+var TableCaption = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
+	"data-uid": "src/components/ui/table.tsx:88:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("mt-4 text-sm text-muted-foreground", className),
+	...props
+}));
+TableCaption.displayName = "TableCaption";
+//#endregion
+//#region src/components/ui/badge.tsx
+var badgeVariants = cva("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", {
+	variants: { variant: {
+		default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+		secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+		destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+		outline: "text-foreground"
+	} },
+	defaultVariants: { variant: "default" }
+});
+function Badge({ className, variant, ...props }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		"data-uid": "src/components/ui/badge.tsx:30:10",
+		"data-prohibitions": "[editContent]",
+		className: cn(badgeVariants({ variant }), className),
+		...props
+	});
+}
+//#endregion
+//#region src/pages/instructor/GradeExams.tsx
+function GradeExams() {
+	const user = useAuthStore((s) => s.user);
+	const { enrollments, courses, students, gradeExam } = useLmsStore();
+	const [selected, setSelected] = (0, import_react.useState)(null);
+	const [score, setScore] = (0, import_react.useState)(0);
+	const [feedback, setFeedback] = (0, import_react.useState)("");
+	const myCourses = courses.filter((c) => c.instructorId === user?.id);
+	const myCourseIds = myCourses.map((c) => c.id);
+	const pendings = [];
+	enrollments.forEach((e) => {
+		if (!myCourseIds.includes(e.courseId)) return;
+		Object.values(e.examSubmissions).forEach((sub) => {
+			if (sub.isPending) pendings.push({
+				enrollmentId: e.id,
+				sub,
+				cTitle: myCourses.find((c) => c.id === e.courseId)?.title,
+				sName: students.find((s) => s.id === e.studentId)?.name
+			});
+		});
+	});
+	const openGrade = (item) => {
+		setSelected(item);
+		setScore(0);
+		setFeedback("");
+	};
+	const handleSave = () => {
+		if (!selected) return;
+		gradeExam(selected.enrollmentId, selected.sub.lessonId, score, feedback);
+		toast$1.success("Nota atribuída com sucesso!");
+		setSelected(null);
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/instructor/GradeExams.tsx:64:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-8 pb-10",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/instructor/GradeExams.tsx:65:7",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					"data-uid": "src/pages/instructor/GradeExams.tsx:66:9",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-bold tracking-tight",
+					children: "Correção de Provas"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/instructor/GradeExams.tsx:67:9",
+					"data-prohibitions": "[]",
+					className: "text-muted-foreground mt-1",
+					children: "Avalie as respostas dissertativas dos alunos."
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+				"data-uid": "src/pages/instructor/GradeExams.tsx:70:7",
+				"data-prohibitions": "[editContent]",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
+					"data-uid": "src/pages/instructor/GradeExams.tsx:71:9",
+					"data-prohibitions": "[editContent]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
+						"data-uid": "src/pages/instructor/GradeExams.tsx:72:11",
+						"data-prohibitions": "[]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+							"data-uid": "src/pages/instructor/GradeExams.tsx:73:13",
+							"data-prohibitions": "[]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:74:15",
+									"data-prohibitions": "[]",
+									children: "Aluno"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:75:15",
+									"data-prohibitions": "[]",
+									children: "Curso"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:76:15",
+									"data-prohibitions": "[]",
+									children: "Questões Abertas"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:77:15",
+									"data-prohibitions": "[]",
+									className: "text-right",
+									children: "Ação"
+								})
+							]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
+						"data-uid": "src/pages/instructor/GradeExams.tsx:80:11",
+						"data-prohibitions": "[editContent]",
+						children: [pendings.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+							"data-uid": "src/pages/instructor/GradeExams.tsx:82:15",
+							"data-prohibitions": "[editContent]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:83:17",
+									"data-prohibitions": "[editContent]",
+									className: "font-medium",
+									children: p.sName
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:84:17",
+									"data-prohibitions": "[editContent]",
+									children: p.cTitle
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:85:17",
+									"data-prohibitions": "[editContent]",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
+										"data-uid": "src/pages/instructor/GradeExams.tsx:86:19",
+										"data-prohibitions": "[editContent]",
+										variant: "secondary",
+										children: [p.sub.questions.filter((q) => q.type === "essay").length, " pendentes"]
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:90:17",
+									"data-prohibitions": "[]",
+									className: "text-right",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/instructor/GradeExams.tsx:91:19",
+										"data-prohibitions": "[]",
+										size: "sm",
+										onClick: () => openGrade(p),
+										children: "Avaliar"
+									})
+								})
+							]
+						}, i)), pendings.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
+							"data-uid": "src/pages/instructor/GradeExams.tsx:98:15",
+							"data-prohibitions": "[]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+								"data-uid": "src/pages/instructor/GradeExams.tsx:99:17",
+								"data-prohibitions": "[]",
+								colSpan: 4,
+								className: "text-center py-8 text-muted-foreground",
+								children: "Nenhuma prova pendente de correção."
+							})
+						})]
+					})]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
+				"data-uid": "src/pages/instructor/GradeExams.tsx:108:7",
+				"data-prohibitions": "[editContent]",
+				open: !!selected,
+				onOpenChange: (o) => !o && setSelected(null),
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
+					"data-uid": "src/pages/instructor/GradeExams.tsx:109:9",
+					"data-prohibitions": "[editContent]",
+					className: "max-w-3xl max-h-[80vh] overflow-y-auto",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
+						"data-uid": "src/pages/instructor/GradeExams.tsx:110:11",
+						"data-prohibitions": "[editContent]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogTitle, {
+							"data-uid": "src/pages/instructor/GradeExams.tsx:111:13",
+							"data-prohibitions": "[editContent]",
+							children: ["Avaliar Aluno: ", selected?.sName]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/instructor/GradeExams.tsx:113:11",
+						"data-prohibitions": "[editContent]",
+						className: "space-y-6 py-4",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/instructor/GradeExams.tsx:114:13",
+								"data-prohibitions": "[editContent]",
+								className: "bg-muted/30 p-4 rounded-lg",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:115:15",
+									"data-prohibitions": "[editContent]",
+									className: "text-sm font-semibold",
+									children: [
+										"Nota Automática (Múltipla Escolha): ",
+										selected?.sub.autoScore.toFixed(1),
+										" pts"
+									]
+								})
+							}),
+							selected?.sub.questions.map((q, i) => {
+								if (q.type !== "essay") return null;
+								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/instructor/GradeExams.tsx:123:17",
+									"data-prohibitions": "[editContent]",
+									className: "border p-4 rounded-lg space-y-3 bg-card",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:124:19",
+											"data-prohibitions": "[]",
+											className: "font-semibold text-sm",
+											children: "Pergunta:"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:125:19",
+											"data-prohibitions": "[editContent]",
+											className: "bg-muted/50 p-3 rounded",
+											children: q.text
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:126:19",
+											"data-prohibitions": "[]",
+											className: "font-semibold text-sm mt-4",
+											children: "Resposta do Aluno:"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:127:19",
+											"data-prohibitions": "[editContent]",
+											className: "bg-primary/5 p-4 rounded text-foreground whitespace-pre-wrap",
+											children: selected.sub.answers[q.id] || /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												"data-uid": "src/pages/instructor/GradeExams.tsx:129:23",
+												"data-prohibitions": "[]",
+												className: "italic opacity-50",
+												children: "Em branco"
+											})
+										})
+									]
+								}, q.id);
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/instructor/GradeExams.tsx:136:13",
+								"data-prohibitions": "[]",
+								className: "space-y-4 border-t pt-6",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/instructor/GradeExams.tsx:137:15",
+										"data-prohibitions": "[]",
+										className: "space-y-2",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:138:17",
+											"data-prohibitions": "[]",
+											className: "font-semibold",
+											children: "Nota atribuída às questões abertas (0 a 100)"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:141:17",
+											"data-prohibitions": "[editContent]",
+											type: "number",
+											value: score,
+											onChange: (e) => setScore(Number(e.target.value)),
+											className: "w-32 text-lg font-bold"
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/instructor/GradeExams.tsx:148:15",
+										"data-prohibitions": "[]",
+										className: "space-y-2",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:149:17",
+											"data-prohibitions": "[]",
+											className: "font-semibold",
+											children: "Feedback para o Aluno"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
+											"data-uid": "src/pages/instructor/GradeExams.tsx:150:17",
+											"data-prohibitions": "[editContent]",
+											value: feedback,
+											onChange: (e) => setFeedback(e.target.value),
+											placeholder: "Muito bem construído o argumento..."
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/instructor/GradeExams.tsx:156:15",
+										"data-prohibitions": "[]",
+										size: "lg",
+										className: "w-full",
+										onClick: handleSave,
+										children: "Salvar e Concluir Avaliação"
+									})
+								]
+							})
+						]
+					})]
+				})
+			})
+		]
+	});
+}
+//#endregion
+//#region src/pages/instructor/Revenue.tsx
+function Revenue() {
+	const user = useAuthStore((s) => s.user);
+	const { transactions, courses } = useLmsStore();
+	if (!user) return null;
+	const myTransactions = transactions.filter((t) => t.splits.some((s) => s.userId === user.id));
+	const instructorRevenue = myTransactions.reduce((acc, t) => {
+		return acc + (t.splits.find((s) => s.userId === user.id && s.role === "instructor")?.amount || 0);
+	}, 0);
+	const affiliateRevenue = myTransactions.reduce((acc, t) => {
+		return acc + (t.splits.find((s) => s.userId === user.id && s.role === "partner")?.amount || 0);
+	}, 0);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/instructor/Revenue.tsx:33:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-8 pb-10",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/instructor/Revenue.tsx:34:7",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					"data-uid": "src/pages/instructor/Revenue.tsx:35:9",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-bold tracking-tight",
+					children: "Minhas Receitas"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/instructor/Revenue.tsx:36:9",
+					"data-prohibitions": "[]",
+					className: "text-muted-foreground mt-1",
+					children: "Acompanhe seus ganhos como professor e como afiliado."
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/instructor/Revenue.tsx:41:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid sm:grid-cols-3 gap-6",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/instructor/Revenue.tsx:42:9",
+						"data-prohibitions": "[editContent]",
+						className: "border-primary/50 bg-primary/5",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:43:11",
+							"data-prohibitions": "[]",
+							className: "pb-2",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/instructor/Revenue.tsx:44:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-medium text-primary flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wallet, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:45:15",
+									"data-prohibitions": "[editContent]",
+									className: "size-4"
+								}), " Receita Total"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:48:11",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/instructor/Revenue.tsx:49:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-3xl font-bold text-primary",
+								children: ["R$ ", (instructorRevenue + affiliateRevenue).toFixed(2)]
+							})
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/instructor/Revenue.tsx:54:9",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:55:11",
+							"data-prohibitions": "[]",
+							className: "pb-2",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/instructor/Revenue.tsx:56:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presentation, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:57:15",
+									"data-prohibitions": "[editContent]",
+									className: "size-4"
+								}), " Comissões como Professor"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:60:11",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/instructor/Revenue.tsx:61:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-2xl font-bold",
+								children: ["R$ ", instructorRevenue.toFixed(2)]
+							})
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/instructor/Revenue.tsx:64:9",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:65:11",
+							"data-prohibitions": "[]",
+							className: "pb-2",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/instructor/Revenue.tsx:66:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:67:15",
+									"data-prohibitions": "[editContent]",
+									className: "size-4"
+								}), " Comissões como Afiliado"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:70:11",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/instructor/Revenue.tsx:71:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-2xl font-bold text-success",
+								children: ["R$ ", affiliateRevenue.toFixed(2)]
+							})
+						})]
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/instructor/Revenue.tsx:76:7",
+				"data-prohibitions": "[editContent]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+					"data-uid": "src/pages/instructor/Revenue.tsx:77:9",
+					"data-prohibitions": "[]",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+						"data-uid": "src/pages/instructor/Revenue.tsx:78:11",
+						"data-prohibitions": "[]",
+						children: "Extrato Detalhado"
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
+					"data-uid": "src/pages/instructor/Revenue.tsx:80:9",
+					"data-prohibitions": "[editContent]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
+						"data-uid": "src/pages/instructor/Revenue.tsx:81:11",
+						"data-prohibitions": "[]",
+						className: "bg-muted/50",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:82:13",
+							"data-prohibitions": "[]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:83:15",
+									"data-prohibitions": "[]",
+									children: "Data"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:84:15",
+									"data-prohibitions": "[]",
+									children: "Curso Vendido"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:85:15",
+									"data-prohibitions": "[]",
+									children: "Tipo de Comissão"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/instructor/Revenue.tsx:86:15",
+									"data-prohibitions": "[]",
+									className: "text-right",
+									children: "Valor Recebido"
+								})
+							]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
+						"data-uid": "src/pages/instructor/Revenue.tsx:89:11",
+						"data-prohibitions": "[editContent]",
+						children: [myTransactions.map((t) => {
+							const course = courses.find((c) => c.id === t.courseId);
+							return t.splits.filter((s) => s.userId === user.id).map((split, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+								"data-uid": "src/pages/instructor/Revenue.tsx:95:17",
+								"data-prohibitions": "[editContent]",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+										"data-uid": "src/pages/instructor/Revenue.tsx:96:19",
+										"data-prohibitions": "[editContent]",
+										className: "font-medium text-sm",
+										children: new Date(t.date).toLocaleDateString()
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+										"data-uid": "src/pages/instructor/Revenue.tsx:99:19",
+										"data-prohibitions": "[editContent]",
+										children: course?.title
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+										"data-uid": "src/pages/instructor/Revenue.tsx:100:19",
+										"data-prohibitions": "[editContent]",
+										children: split.role === "instructor" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											"data-uid": "src/pages/instructor/Revenue.tsx:102:23",
+											"data-prohibitions": "[editContent]",
+											className: "text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-semibold",
+											children: [
+												"Professor (",
+												split.percentage,
+												"%)"
+											]
+										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											"data-uid": "src/pages/instructor/Revenue.tsx:106:23",
+											"data-prohibitions": "[editContent]",
+											className: "text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-xs font-semibold",
+											children: [
+												"Afiliado (",
+												split.percentage,
+												"%)"
+											]
+										})
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
+										"data-uid": "src/pages/instructor/Revenue.tsx:111:19",
+										"data-prohibitions": "[editContent]",
+										className: "text-right font-bold",
+										children: ["+ R$ ", split.amount.toFixed(2)]
+									})
+								]
+							}, `${t.id}-${i}`));
+						}), myTransactions.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
+							"data-uid": "src/pages/instructor/Revenue.tsx:118:15",
+							"data-prohibitions": "[]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+								"data-uid": "src/pages/instructor/Revenue.tsx:119:17",
+								"data-prohibitions": "[]",
+								colSpan: 4,
+								className: "text-center py-8 text-muted-foreground",
+								children: "Você ainda não possui receitas registradas."
+							})
+						})]
+					})]
+				})]
+			})
+		]
+	});
+}
+//#endregion
 //#region src/pages/manager/Dashboard.tsx
 function ManagerDashboard() {
 	const user = useAuthStore((s) => s.user);
@@ -32610,7 +31609,7 @@ var Collapsible = import_react.forwardRef((props, forwardedRef) => {
 		contentId: useId(),
 		open,
 		onOpenToggle: import_react.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 			"data-state": getState$2(open),
 			"data-disabled": disabled ? "" : void 0,
 			...collapsibleProps,
@@ -32619,11 +31618,11 @@ var Collapsible = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 Collapsible.displayName = COLLAPSIBLE_NAME;
-var TRIGGER_NAME$1 = "CollapsibleTrigger";
+var TRIGGER_NAME$2 = "CollapsibleTrigger";
 var CollapsibleTrigger = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeCollapsible, ...triggerProps } = props;
-	const context = useCollapsibleContext(TRIGGER_NAME$1, __scopeCollapsible);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
+	const context = useCollapsibleContext(TRIGGER_NAME$2, __scopeCollapsible);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
 		type: "button",
 		"aria-controls": context.contentId,
 		"aria-expanded": context.open || false,
@@ -32635,11 +31634,11 @@ var CollapsibleTrigger = import_react.forwardRef((props, forwardedRef) => {
 		onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
 	});
 });
-CollapsibleTrigger.displayName = TRIGGER_NAME$1;
-var CONTENT_NAME$1 = "CollapsibleContent";
+CollapsibleTrigger.displayName = TRIGGER_NAME$2;
+var CONTENT_NAME$2 = "CollapsibleContent";
 var CollapsibleContent = import_react.forwardRef((props, forwardedRef) => {
 	const { forceMount, ...contentProps } = props;
-	const context = useCollapsibleContext(CONTENT_NAME$1, props.__scopeCollapsible);
+	const context = useCollapsibleContext(CONTENT_NAME$2, props.__scopeCollapsible);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
 		present: forceMount || context.open,
 		children: ({ present }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CollapsibleContentImpl, {
@@ -32649,10 +31648,10 @@ var CollapsibleContent = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-CollapsibleContent.displayName = CONTENT_NAME$1;
+CollapsibleContent.displayName = CONTENT_NAME$2;
 var CollapsibleContentImpl = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeCollapsible, present, children, ...contentProps } = props;
-	const context = useCollapsibleContext(CONTENT_NAME$1, __scopeCollapsible);
+	const context = useCollapsibleContext(CONTENT_NAME$2, __scopeCollapsible);
 	const [isPresent, setIsPresent] = import_react.useState(present);
 	const ref = import_react.useRef(null);
 	const composedRefs = useComposedRefs(forwardedRef, ref);
@@ -32686,7 +31685,7 @@ var CollapsibleContentImpl = import_react.forwardRef((props, forwardedRef) => {
 			setIsPresent(present);
 		}
 	}, [context.open, present]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 		"data-state": getState$2(context.open),
 		"data-disabled": context.disabled ? "" : void 0,
 		id: context.contentId,
@@ -32705,8 +31704,8 @@ function getState$2(open) {
 	return open ? "open" : "closed";
 }
 var Root$1 = Collapsible;
-var Trigger = CollapsibleTrigger;
-var Content = CollapsibleContent;
+var Trigger$1 = CollapsibleTrigger;
+var Content$1 = CollapsibleContent;
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-accordion@1.2.12_@types+react-dom@19.2.3_@types+react@19.2.14__@types+r_8b3df72274e0fa0cff1629993ef7cc33/node_modules/@radix-ui/react-accordion/dist/index.mjs
 var ACCORDION_NAME = "Accordion";
@@ -32843,7 +31842,7 @@ var AccordionImpl = import_react.forwardRef((props, forwardedRef) => {
 		orientation,
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection.Slot, {
 			scope: __scopeAccordion,
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.div, {
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
 				...accordionProps,
 				"data-orientation": orientation,
 				ref: composedRefs,
@@ -32888,7 +31887,7 @@ var AccordionHeader = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeAccordion, ...headerProps } = props;
 	const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
 	const itemContext = useAccordionItemContext(HEADER_NAME, __scopeAccordion);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.h3, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.h3, {
 		"data-orientation": accordionContext.orientation,
 		"data-state": getState$1(itemContext.open),
 		"data-disabled": itemContext.disabled ? "" : void 0,
@@ -32897,16 +31896,16 @@ var AccordionHeader = import_react.forwardRef((props, forwardedRef) => {
 	});
 });
 AccordionHeader.displayName = HEADER_NAME;
-var TRIGGER_NAME = "AccordionTrigger";
+var TRIGGER_NAME$1 = "AccordionTrigger";
 var AccordionTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeAccordion, ...triggerProps } = props;
 	const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
-	const itemContext = useAccordionItemContext(TRIGGER_NAME, __scopeAccordion);
-	const collapsibleContext = useAccordionCollapsibleContext(TRIGGER_NAME, __scopeAccordion);
+	const itemContext = useAccordionItemContext(TRIGGER_NAME$1, __scopeAccordion);
+	const collapsibleContext = useAccordionCollapsibleContext(TRIGGER_NAME$1, __scopeAccordion);
 	const collapsibleScope = useCollapsibleScope(__scopeAccordion);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection.ItemSlot, {
 		scope: __scopeAccordion,
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trigger, {
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trigger$1, {
 			"aria-disabled": itemContext.open && !collapsibleContext.collapsible || void 0,
 			"data-orientation": accordionContext.orientation,
 			id: itemContext.triggerId,
@@ -32916,14 +31915,14 @@ var AccordionTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
 		})
 	});
 });
-AccordionTrigger$1.displayName = TRIGGER_NAME;
-var CONTENT_NAME = "AccordionContent";
+AccordionTrigger$1.displayName = TRIGGER_NAME$1;
+var CONTENT_NAME$1 = "AccordionContent";
 var AccordionContent$1 = import_react.forwardRef((props, forwardedRef) => {
 	const { __scopeAccordion, ...contentProps } = props;
 	const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
-	const itemContext = useAccordionItemContext(CONTENT_NAME, __scopeAccordion);
+	const itemContext = useAccordionItemContext(CONTENT_NAME$1, __scopeAccordion);
 	const collapsibleScope = useCollapsibleScope(__scopeAccordion);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content$1, {
 		role: "region",
 		"aria-labelledby": itemContext.triggerId,
 		"data-orientation": accordionContext.orientation,
@@ -32937,23 +31936,23 @@ var AccordionContent$1 = import_react.forwardRef((props, forwardedRef) => {
 		}
 	});
 });
-AccordionContent$1.displayName = CONTENT_NAME;
+AccordionContent$1.displayName = CONTENT_NAME$1;
 function getState$1(open) {
 	return open ? "open" : "closed";
 }
-var Root2 = Accordion$1;
+var Root2$1 = Accordion$1;
 var Item = AccordionItem$1;
 var Header = AccordionHeader;
 var Trigger2 = AccordionTrigger$1;
 var Content2 = AccordionContent$1;
 //#endregion
 //#region src/components/ui/accordion.tsx
-var Accordion = Root2;
+var Accordion = Root2$1;
 var AccordionItem = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item, {
 	"data-uid": "src/components/ui/accordion.tsx:14:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn$1("border-b", className),
+	className: cn("border-b", className),
 	...props
 }));
 AccordionItem.displayName = "AccordionItem";
@@ -32965,7 +31964,7 @@ var AccordionTrigger = import_react.forwardRef(({ className, children, ...props 
 		"data-uid": "src/components/ui/accordion.tsx:23:5",
 		"data-prohibitions": "[editContent]",
 		ref,
-		className: cn$1("flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180", className),
+		className: cn("flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180", className),
 		...props,
 		children: [children, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronDown, {
 			"data-uid": "src/components/ui/accordion.tsx:32:7",
@@ -32984,7 +31983,7 @@ var AccordionContent = import_react.forwardRef(({ className, children, ...props 
 	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/components/ui/accordion.tsx:47:5",
 		"data-prohibitions": "[editContent]",
-		className: cn$1("pb-4 pt-0", className),
+		className: cn("pb-4 pt-0", className),
 		children
 	})
 }));
@@ -33020,10 +32019,10 @@ function CourseEditor() {
 		children: "Curso não encontrado."
 	});
 	const handleSave = () => {
-		if (!course.title || !course.area) return toast.error("Preencha título e área.");
+		if (!course.title || !course.area) return toast$1.error("Preencha título e área.");
 		if (isNew) store.addCourse(course);
 		else store.updateCourse(course);
-		toast.success("Curso salvo com sucesso!");
+		toast$1.success("Curso salvo com sucesso!");
 		navigate(`${basePath}/courses`);
 	};
 	const addLesson = (moduleId) => {
@@ -33672,77 +32671,6 @@ function CourseEditor() {
 	});
 }
 //#endregion
-//#region src/components/ui/table.tsx
-var Table = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/table.tsx:8:5",
-	"data-prohibitions": "[editContent]",
-	className: "relative w-full overflow-auto",
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", {
-		"data-uid": "src/components/ui/table.tsx:9:7",
-		"data-prohibitions": "[editContent]",
-		ref,
-		className: cn$1("w-full caption-bottom text-sm", className),
-		...props
-	})
-}));
-Table.displayName = "Table";
-var TableHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", {
-	"data-uid": "src/components/ui/table.tsx:19:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("[&_tr]:border-b", className),
-	...props
-}));
-TableHeader.displayName = "TableHeader";
-var TableBody = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", {
-	"data-uid": "src/components/ui/table.tsx:27:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("[&_tr:last-child]:border-0", className),
-	...props
-}));
-TableBody.displayName = "TableBody";
-var TableFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tfoot", {
-	"data-uid": "src/components/ui/table.tsx:35:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className),
-	...props
-}));
-TableFooter.displayName = "TableFooter";
-var TableRow = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", {
-	"data-uid": "src/components/ui/table.tsx:45:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className),
-	...props
-}));
-TableRow.displayName = "TableRow";
-var TableHead = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
-	"data-uid": "src/components/ui/table.tsx:61:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0", className),
-	...props
-}));
-TableHead.displayName = "TableHead";
-var TableCell = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
-	"data-uid": "src/components/ui/table.tsx:76:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("p-4 align-middle [&:has([role=checkbox])]:pr-0", className),
-	...props
-}));
-TableCell.displayName = "TableCell";
-var TableCaption = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
-	"data-uid": "src/components/ui/table.tsx:88:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn$1("mt-4 text-sm text-muted-foreground", className),
-	...props
-}));
-TableCaption.displayName = "TableCaption";
-//#endregion
 //#region src/pages/manager/Enrollments.tsx
 function ManagerEnrollments() {
 	const user = useAuthStore((s) => s.user);
@@ -33865,7 +32793,7 @@ function ManagerEnrollments() {
 //#region src/pages/manager/Reports.tsx
 function Reports() {
 	const { enrollments, students, courses } = useLmsStore();
-	const handleExport = (type) => toast.success(`Relatório exportado para ${type} com sucesso!`);
+	const handleExport = (type) => toast$1.success(`Relatório exportado para ${type} com sucesso!`);
 	const data = enrollments.map((e) => {
 		const student = students.find((s) => s.id === e.studentId);
 		const course = courses.find((c) => c.id === e.courseId);
@@ -34065,1141 +32993,6 @@ function Reports() {
 				})
 			})
 		})]
-	});
-}
-//#endregion
-//#region src/pages/manager/PaymentSettings.tsx
-function PaymentSettings() {
-	const { paymentSettings, updatePaymentSettings } = useLmsStore();
-	const [settings, setSettings] = (0, import_react.useState)(paymentSettings);
-	const handleSave = () => {
-		updatePaymentSettings(settings);
-		toast.success("Configurações de pagamento atualizadas e integradas com sucesso.");
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/manager/PaymentSettings.tsx:19:5",
-		"data-prohibitions": "[]",
-		className: "space-y-8 max-w-2xl",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/manager/PaymentSettings.tsx:20:7",
-			"data-prohibitions": "[]",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-				"data-uid": "src/pages/manager/PaymentSettings.tsx:21:9",
-				"data-prohibitions": "[]",
-				className: "text-3xl font-bold tracking-tight",
-				children: "Integração de Pagamentos"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/manager/PaymentSettings.tsx:22:9",
-				"data-prohibitions": "[]",
-				className: "text-muted-foreground mt-1",
-				children: "Conecte seu gateway para automatizar matrículas após o checkout."
-			})]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-			"data-uid": "src/pages/manager/PaymentSettings.tsx:26:7",
-			"data-prohibitions": "[]",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-				"data-uid": "src/pages/manager/PaymentSettings.tsx:27:9",
-				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-					"data-uid": "src/pages/manager/PaymentSettings.tsx:28:11",
-					"data-prohibitions": "[]",
-					className: "flex items-center gap-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link2, {
-						"data-uid": "src/pages/manager/PaymentSettings.tsx:29:13",
-						"data-prohibitions": "[editContent]",
-						className: "size-5 text-primary"
-					}), " Credenciais da API"]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-					"data-uid": "src/pages/manager/PaymentSettings.tsx:31:11",
-					"data-prohibitions": "[]",
-					children: "Insira os dados do seu provedor (Stripe, Pagar.me, Mercado Pago, etc.)"
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-				"data-uid": "src/pages/manager/PaymentSettings.tsx:35:9",
-				"data-prohibitions": "[]",
-				className: "space-y-5",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/PaymentSettings.tsx:36:11",
-						"data-prohibitions": "[]",
-						className: "space-y-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:37:13",
-							"data-prohibitions": "[]",
-							className: "text-sm font-semibold",
-							children: "Provedor de Pagamento"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:38:13",
-							"data-prohibitions": "[editContent]",
-							value: settings.provider,
-							onChange: (e) => setSettings({
-								...settings,
-								provider: e.target.value
-							}),
-							placeholder: "Ex: Stripe",
-							className: "bg-muted/50"
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/PaymentSettings.tsx:45:11",
-						"data-prohibitions": "[]",
-						className: "space-y-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:46:13",
-							"data-prohibitions": "[]",
-							className: "text-sm font-semibold",
-							children: "Chave de API Pública"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:47:13",
-							"data-prohibitions": "[editContent]",
-							placeholder: "pk_live_...",
-							className: "bg-muted/50"
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/PaymentSettings.tsx:49:11",
-						"data-prohibitions": "[]",
-						className: "space-y-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:50:13",
-							"data-prohibitions": "[]",
-							className: "text-sm font-semibold",
-							children: "Chave de API Secreta (Secret Key)"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:51:13",
-							"data-prohibitions": "[editContent]",
-							type: "password",
-							value: settings.apiKey,
-							onChange: (e) => setSettings({
-								...settings,
-								apiKey: e.target.value
-							}),
-							placeholder: "sk_live_...",
-							className: "bg-muted/50"
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/PaymentSettings.tsx:59:11",
-						"data-prohibitions": "[]",
-						className: "space-y-2 pt-2",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-								"data-uid": "src/pages/manager/PaymentSettings.tsx:60:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-semibold",
-								children: "Webhook Endpoint (Recebimento de Eventos)"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-								"data-uid": "src/pages/manager/PaymentSettings.tsx:63:13",
-								"data-prohibitions": "[editContent]",
-								value: "https://api.plataforma.com/webhooks/payments",
-								readOnly: true,
-								className: "bg-muted/20 text-muted-foreground"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/manager/PaymentSettings.tsx:68:13",
-								"data-prohibitions": "[]",
-								className: "text-xs text-muted-foreground",
-								children: "Configure esta URL no seu provedor para receber notificações de pagamentos aprovados."
-							})
-						]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/pages/manager/PaymentSettings.tsx:72:11",
-						"data-prohibitions": "[]",
-						onClick: handleSave,
-						className: "mt-4 w-full sm:w-auto",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
-							"data-uid": "src/pages/manager/PaymentSettings.tsx:73:13",
-							"data-prohibitions": "[editContent]",
-							className: "mr-2 size-4"
-						}), " Salvar Integração"]
-					})
-				]
-			})]
-		})]
-	});
-}
-//#endregion
-//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-switch@1.2.6_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react_e3738c514c10df2ef7e24af5ee461853/node_modules/@radix-ui/react-switch/dist/index.mjs
-var SWITCH_NAME = "Switch";
-var [createSwitchContext, createSwitchScope] = createContextScope$1(SWITCH_NAME);
-var [SwitchProvider, useSwitchContext] = createSwitchContext(SWITCH_NAME);
-var Switch$1 = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeSwitch, name, checked: checkedProp, defaultChecked, required, disabled, value = "on", onCheckedChange, form, ...switchProps } = props;
-	const [button, setButton] = import_react.useState(null);
-	const composedRefs = useComposedRefs(forwardedRef, (node) => setButton(node));
-	const hasConsumerStoppedPropagationRef = import_react.useRef(false);
-	const isFormControl = button ? form || !!button.closest("form") : true;
-	const [checked, setChecked] = useControllableState({
-		prop: checkedProp,
-		defaultProp: defaultChecked ?? false,
-		onChange: onCheckedChange,
-		caller: SWITCH_NAME
-	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SwitchProvider, {
-		scope: __scopeSwitch,
-		checked,
-		disabled,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.button, {
-			type: "button",
-			role: "switch",
-			"aria-checked": checked,
-			"aria-required": required,
-			"data-state": getState(checked),
-			"data-disabled": disabled ? "" : void 0,
-			disabled,
-			value,
-			...switchProps,
-			ref: composedRefs,
-			onClick: composeEventHandlers(props.onClick, (event) => {
-				setChecked((prevChecked) => !prevChecked);
-				if (isFormControl) {
-					hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
-					if (!hasConsumerStoppedPropagationRef.current) event.stopPropagation();
-				}
-			})
-		}), isFormControl && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SwitchBubbleInput, {
-			control: button,
-			bubbles: !hasConsumerStoppedPropagationRef.current,
-			name,
-			value,
-			checked,
-			required,
-			disabled,
-			form,
-			style: { transform: "translateX(-100%)" }
-		})]
-	});
-});
-Switch$1.displayName = SWITCH_NAME;
-var THUMB_NAME = "SwitchThumb";
-var SwitchThumb = import_react.forwardRef((props, forwardedRef) => {
-	const { __scopeSwitch, ...thumbProps } = props;
-	const context = useSwitchContext(THUMB_NAME, __scopeSwitch);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive$1.span, {
-		"data-state": getState(context.checked),
-		"data-disabled": context.disabled ? "" : void 0,
-		...thumbProps,
-		ref: forwardedRef
-	});
-});
-SwitchThumb.displayName = THUMB_NAME;
-var BUBBLE_INPUT_NAME = "SwitchBubbleInput";
-var SwitchBubbleInput = import_react.forwardRef(({ __scopeSwitch, control, checked, bubbles = true, ...props }, forwardedRef) => {
-	const ref = import_react.useRef(null);
-	const composedRefs = useComposedRefs(ref, forwardedRef);
-	const prevChecked = usePrevious(checked);
-	const controlSize = useSize(control);
-	import_react.useEffect(() => {
-		const input = ref.current;
-		if (!input) return;
-		const inputProto = window.HTMLInputElement.prototype;
-		const setChecked = Object.getOwnPropertyDescriptor(inputProto, "checked").set;
-		if (prevChecked !== checked && setChecked) {
-			const event = new Event("click", { bubbles });
-			setChecked.call(input, checked);
-			input.dispatchEvent(event);
-		}
-	}, [
-		prevChecked,
-		checked,
-		bubbles
-	]);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-		type: "checkbox",
-		"aria-hidden": true,
-		defaultChecked: checked,
-		...props,
-		tabIndex: -1,
-		ref: composedRefs,
-		style: {
-			...props.style,
-			...controlSize,
-			position: "absolute",
-			pointerEvents: "none",
-			opacity: 0,
-			margin: 0
-		}
-	});
-});
-SwitchBubbleInput.displayName = BUBBLE_INPUT_NAME;
-function getState(checked) {
-	return checked ? "checked" : "unchecked";
-}
-var Root = Switch$1;
-var Thumb = SwitchThumb;
-//#endregion
-//#region src/components/ui/switch.tsx
-var Switch = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, {
-	"data-uid": "src/components/ui/switch.tsx:11:3",
-	"data-prohibitions": "[editContent]",
-	className: cn$1("peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input", className),
-	...props,
-	ref,
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Thumb, {
-		"data-uid": "src/components/ui/switch.tsx:19:5",
-		"data-prohibitions": "[editContent]",
-		className: cn$1("pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0")
-	})
-}));
-Switch.displayName = Root.displayName;
-//#endregion
-//#region src/pages/manager/NotificationSettings.tsx
-function NotificationSettings() {
-	const { notificationSettings, updateNotificationSettings } = useLmsStore();
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/manager/NotificationSettings.tsx:11:5",
-		"data-prohibitions": "[]",
-		className: "space-y-8 max-w-2xl pb-10",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/manager/NotificationSettings.tsx:12:7",
-			"data-prohibitions": "[]",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-				"data-uid": "src/pages/manager/NotificationSettings.tsx:13:9",
-				"data-prohibitions": "[]",
-				className: "text-3xl font-bold tracking-tight",
-				children: "Notificações Automáticas"
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/manager/NotificationSettings.tsx:14:9",
-				"data-prohibitions": "[]",
-				className: "text-muted-foreground mt-1",
-				children: "Configure o envio de emails automáticos para os alunos."
-			})]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-			"data-uid": "src/pages/manager/NotificationSettings.tsx:19:7",
-			"data-prohibitions": "[]",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-				"data-uid": "src/pages/manager/NotificationSettings.tsx:20:9",
-				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-					"data-uid": "src/pages/manager/NotificationSettings.tsx:21:11",
-					"data-prohibitions": "[]",
-					className: "flex items-center gap-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
-						"data-uid": "src/pages/manager/NotificationSettings.tsx:22:13",
-						"data-prohibitions": "[editContent]",
-						className: "size-5 text-primary"
-					}), " Disparos por Email"]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-					"data-uid": "src/pages/manager/NotificationSettings.tsx:24:11",
-					"data-prohibitions": "[]",
-					children: "Estes emails são enviados pelo sistema automaticamente baseados nos gatilhos abaixo."
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-				"data-uid": "src/pages/manager/NotificationSettings.tsx:28:9",
-				"data-prohibitions": "[]",
-				className: "space-y-6",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/manager/NotificationSettings.tsx:29:11",
-					"data-prohibitions": "[]",
-					className: "flex items-center justify-between space-x-4 border-b pb-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/NotificationSettings.tsx:30:13",
-						"data-prohibitions": "[]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-							"data-uid": "src/pages/manager/NotificationSettings.tsx:31:15",
-							"data-prohibitions": "[]",
-							className: "text-base font-semibold",
-							children: "Nova Aula Publicada"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/manager/NotificationSettings.tsx:32:15",
-							"data-prohibitions": "[]",
-							className: "text-sm text-muted-foreground",
-							children: "Notifica alunos matriculados quando um professor adicionar uma nova aula a um curso."
-						})]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Switch, {
-						"data-uid": "src/pages/manager/NotificationSettings.tsx:36:13",
-						"data-prohibitions": "[editContent]",
-						checked: notificationSettings.emailNewLesson,
-						onCheckedChange: (c) => updateNotificationSettings({
-							...notificationSettings,
-							emailNewLesson: c
-						})
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/manager/NotificationSettings.tsx:43:11",
-					"data-prohibitions": "[]",
-					className: "flex items-center justify-between space-x-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/NotificationSettings.tsx:44:13",
-						"data-prohibitions": "[]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-							"data-uid": "src/pages/manager/NotificationSettings.tsx:45:15",
-							"data-prohibitions": "[]",
-							className: "text-base font-semibold",
-							children: "Lembrete de Prazo de Prova"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/manager/NotificationSettings.tsx:46:15",
-							"data-prohibitions": "[]",
-							className: "text-sm text-muted-foreground",
-							children: "Envia avisos automáticos 48h e 24h antes do fechamento de uma turma ou exame."
-						})]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Switch, {
-						"data-uid": "src/pages/manager/NotificationSettings.tsx:50:13",
-						"data-prohibitions": "[editContent]",
-						checked: notificationSettings.emailExamReminder,
-						onCheckedChange: (c) => updateNotificationSettings({
-							...notificationSettings,
-							emailExamReminder: c
-						})
-					})]
-				})]
-			})]
-		})]
-	});
-}
-//#endregion
-//#region src/pages/manager/Integrations.tsx
-function Integrations() {
-	const { webhooks, addWebhook, deleteWebhook } = useLmsStore();
-	const [open, setOpen] = (0, import_react.useState)(false);
-	const [newHook, setNewHook] = (0, import_react.useState)({
-		url: "",
-		events: ["course_completed"]
-	});
-	const handleSave = () => {
-		if (!newHook.url?.startsWith("http")) return toast.error("Insira uma URL válida (http/https).");
-		if (!newHook.events?.length) return toast.error("Selecione ao menos um evento.");
-		addWebhook({
-			id: `wh_${Date.now()}`,
-			url: newHook.url,
-			events: newHook.events
-		});
-		toast.success("Webhook criado com sucesso. Integração ativa.");
-		setOpen(false);
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/manager/Integrations.tsx:34:5",
-		"data-prohibitions": "[editContent]",
-		className: "space-y-8 max-w-4xl pb-10",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/manager/Integrations.tsx:35:7",
-				"data-prohibitions": "[]",
-				className: "flex justify-between items-start",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/manager/Integrations.tsx:36:9",
-					"data-prohibitions": "[]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/pages/manager/Integrations.tsx:37:11",
-						"data-prohibitions": "[]",
-						className: "text-3xl font-bold tracking-tight",
-						children: "Integrações (Webhooks)"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/manager/Integrations.tsx:38:11",
-						"data-prohibitions": "[]",
-						className: "text-muted-foreground mt-1",
-						children: "Envie dados automaticamente para ferramentas externas (CRM, Marketing, ERP)."
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-					"data-uid": "src/pages/manager/Integrations.tsx:42:9",
-					"data-prohibitions": "[]",
-					onClick: () => {
-						setNewHook({
-							url: "",
-							events: ["course_completed"]
-						});
-						setOpen(true);
-					},
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, {
-						"data-uid": "src/pages/manager/Integrations.tsx:48:11",
-						"data-prohibitions": "[editContent]",
-						className: "mr-2 size-4"
-					}), " Novo Webhook"]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/manager/Integrations.tsx:52:7",
-				"data-prohibitions": "[editContent]",
-				className: "grid gap-4",
-				children: [webhooks.map((w) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/manager/Integrations.tsx:54:11",
-					"data-prohibitions": "[editContent]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/manager/Integrations.tsx:55:13",
-						"data-prohibitions": "[editContent]",
-						className: "p-6 flex items-center justify-between",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/manager/Integrations.tsx:56:15",
-							"data-prohibitions": "[editContent]",
-							className: "flex items-start gap-4",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/manager/Integrations.tsx:57:17",
-								"data-prohibitions": "[]",
-								className: "bg-primary/10 p-3 rounded-full text-primary shrink-0",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Globe, {
-									"data-uid": "src/pages/manager/Integrations.tsx:58:19",
-									"data-prohibitions": "[editContent]",
-									className: "size-6"
-								})
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/Integrations.tsx:60:17",
-								"data-prohibitions": "[editContent]",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/manager/Integrations.tsx:61:19",
-									"data-prohibitions": "[editContent]",
-									className: "font-semibold text-lg text-foreground",
-									children: w.url
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/manager/Integrations.tsx:62:19",
-									"data-prohibitions": "[editContent]",
-									className: "flex gap-2 mt-2",
-									children: w.events.map((ev) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/manager/Integrations.tsx:64:23",
-										"data-prohibitions": "[editContent]",
-										className: "text-xs bg-muted text-muted-foreground px-2 py-1 rounded uppercase font-medium tracking-wide",
-										children: ev
-									}, ev))
-								})]
-							})]
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/manager/Integrations.tsx:74:15",
-							"data-prohibitions": "[]",
-							variant: "ghost",
-							size: "icon",
-							className: "text-destructive hover:bg-destructive/10",
-							onClick: () => deleteWebhook(w.id),
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, {
-								"data-uid": "src/pages/manager/Integrations.tsx:80:17",
-								"data-prohibitions": "[editContent]",
-								className: "size-5"
-							})
-						})]
-					})
-				}, w.id)), webhooks.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/manager/Integrations.tsx:86:11",
-					"data-prohibitions": "[]",
-					className: "border-2 border-dashed rounded-xl p-12 text-center text-muted-foreground",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Webhook, {
-							"data-uid": "src/pages/manager/Integrations.tsx:87:13",
-							"data-prohibitions": "[editContent]",
-							className: "size-12 mx-auto mb-4 opacity-20"
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/manager/Integrations.tsx:88:13",
-							"data-prohibitions": "[]",
-							children: "Nenhuma integração ativa no momento."
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/manager/Integrations.tsx:89:13",
-							"data-prohibitions": "[]",
-							variant: "link",
-							onClick: () => setOpen(true),
-							className: "mt-2",
-							children: "Criar a primeira"
-						})
-					]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
-				"data-uid": "src/pages/manager/Integrations.tsx:96:7",
-				"data-prohibitions": "[]",
-				open,
-				onOpenChange: setOpen,
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
-					"data-uid": "src/pages/manager/Integrations.tsx:97:9",
-					"data-prohibitions": "[]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
-						"data-uid": "src/pages/manager/Integrations.tsx:98:11",
-						"data-prohibitions": "[]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
-							"data-uid": "src/pages/manager/Integrations.tsx:99:13",
-							"data-prohibitions": "[]",
-							children: "Configurar Novo Webhook"
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/Integrations.tsx:101:11",
-						"data-prohibitions": "[]",
-						className: "space-y-6 py-4",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/Integrations.tsx:102:13",
-								"data-prohibitions": "[]",
-								className: "space-y-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-									"data-uid": "src/pages/manager/Integrations.tsx:103:15",
-									"data-prohibitions": "[]",
-									children: "Endpoint URL (POST)"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-									"data-uid": "src/pages/manager/Integrations.tsx:104:15",
-									"data-prohibitions": "[editContent]",
-									placeholder: "https://api.seusistema.com/webhook",
-									value: newHook.url,
-									onChange: (e) => setNewHook({
-										...newHook,
-										url: e.target.value
-									})
-								})]
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/Integrations.tsx:110:13",
-								"data-prohibitions": "[]",
-								className: "space-y-3",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-									"data-uid": "src/pages/manager/Integrations.tsx:111:15",
-									"data-prohibitions": "[]",
-									children: "Eventos Gatilho"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/manager/Integrations.tsx:112:15",
-									"data-prohibitions": "[]",
-									className: "space-y-2 border p-4 rounded-lg bg-muted/20",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/manager/Integrations.tsx:113:17",
-										"data-prohibitions": "[]",
-										className: "flex items-center space-x-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-											"data-uid": "src/pages/manager/Integrations.tsx:114:19",
-											"data-prohibitions": "[editContent]",
-											id: "ev-course",
-											checked: newHook.events?.includes("course_completed"),
-											onCheckedChange: (c) => {
-												let evts = newHook.events || [];
-												evts = c ? [...evts, "course_completed"] : evts.filter((x) => x !== "course_completed");
-												setNewHook({
-													...newHook,
-													events: evts
-												});
-											}
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-											"data-uid": "src/pages/manager/Integrations.tsx:125:19",
-											"data-prohibitions": "[]",
-											htmlFor: "ev-course",
-											className: "font-normal",
-											children: "Course Completed (Aluno finalizou o curso)"
-										})]
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/manager/Integrations.tsx:129:17",
-										"data-prohibitions": "[]",
-										className: "flex items-center space-x-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-											"data-uid": "src/pages/manager/Integrations.tsx:130:19",
-											"data-prohibitions": "[editContent]",
-											id: "ev-enroll",
-											checked: newHook.events?.includes("enrollment"),
-											onCheckedChange: (c) => {
-												let evts = newHook.events || [];
-												evts = c ? [...evts, "enrollment"] : evts.filter((x) => x !== "enrollment");
-												setNewHook({
-													...newHook,
-													events: evts
-												});
-											}
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-											"data-uid": "src/pages/manager/Integrations.tsx:139:19",
-											"data-prohibitions": "[]",
-											htmlFor: "ev-enroll",
-											className: "font-normal",
-											children: "Enrollment Created (Nova matrícula realizada)"
-										})]
-									})]
-								})]
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/manager/Integrations.tsx:145:13",
-								"data-prohibitions": "[]",
-								className: "w-full",
-								size: "lg",
-								onClick: handleSave,
-								children: "Salvar e Ativar"
-							})
-						]
-					})]
-				})
-			})
-		]
-	});
-}
-//#endregion
-//#region src/pages/manager/StudentDetails.tsx
-function StudentDetails() {
-	const { id } = useParams();
-	const user = useAuthStore((s) => s.user);
-	const { students, enrollments, courses } = useLmsStore();
-	const student = students.find((s) => s.id === id);
-	if (!student) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/manager/StudentDetails.tsx:14:24",
-		"data-prohibitions": "[]",
-		className: "p-8 text-center",
-		children: "Aluno não encontrado"
-	});
-	const basePath = user?.role === "instructor" ? "/instructor" : "/manager";
-	let studentEnrollments = enrollments.filter((e) => e.studentId === id);
-	if (user?.role === "instructor") {
-		const myCourseIds = courses.filter((c) => c.instructorId === user.id).map((c) => c.id);
-		studentEnrollments = studentEnrollments.filter((e) => myCourseIds.includes(e.courseId));
-	}
-	const allActivities = studentEnrollments.flatMap((e) => e.activityLog.map((act) => ({
-		...act,
-		courseTitle: courses.find((c) => c.id === e.courseId)?.title || "Curso Removido"
-	}))).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-	const totalTimeSpent = allActivities.reduce((acc, act) => acc + (act.timeSpentMinutes || 0), 0);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/manager/StudentDetails.tsx:37:5",
-		"data-prohibitions": "[editContent]",
-		className: "space-y-8 pb-10",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/manager/StudentDetails.tsx:38:7",
-				"data-prohibitions": "[editContent]",
-				className: "flex items-center gap-4 border-b pb-4",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/pages/manager/StudentDetails.tsx:39:9",
-					"data-prohibitions": "[]",
-					variant: "ghost",
-					size: "icon",
-					asChild: true,
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:40:11",
-						"data-prohibitions": "[]",
-						to: `${basePath}/enrollments`,
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:41:13",
-							"data-prohibitions": "[editContent]",
-							className: "size-5"
-						})
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/manager/StudentDetails.tsx:44:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:45:11",
-						"data-prohibitions": "[editContent]",
-						className: "text-3xl font-bold tracking-tight",
-						children: student.name
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:46:11",
-						"data-prohibitions": "[editContent]",
-						className: "text-muted-foreground",
-						children: student.email
-					})]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/manager/StudentDetails.tsx:50:7",
-				"data-prohibitions": "[editContent]",
-				className: "grid sm:grid-cols-2 gap-6",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/manager/StudentDetails.tsx:51:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:52:11",
-						"data-prohibitions": "[]",
-						className: "pb-2",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:53:13",
-							"data-prohibitions": "[]",
-							className: "text-sm font-medium text-muted-foreground",
-							children: "Cursos Matriculados"
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:57:11",
-						"data-prohibitions": "[editContent]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:58:13",
-							"data-prohibitions": "[editContent]",
-							className: "text-4xl font-bold",
-							children: studentEnrollments.length
-						})
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/manager/StudentDetails.tsx:61:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:62:11",
-						"data-prohibitions": "[]",
-						className: "pb-2",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:63:13",
-							"data-prohibitions": "[]",
-							className: "text-sm font-medium text-muted-foreground",
-							children: "Tempo Estimado de Estudo"
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:67:11",
-						"data-prohibitions": "[editContent]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:68:13",
-							"data-prohibitions": "[editContent]",
-							className: "text-4xl font-bold text-primary",
-							children: [
-								Math.floor(totalTimeSpent / 60),
-								"h ",
-								totalTimeSpent % 60,
-								"m"
-							]
-						})
-					})]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/manager/StudentDetails.tsx:75:7",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/manager/StudentDetails.tsx:76:9",
-					"data-prohibitions": "[]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:77:11",
-						"data-prohibitions": "[]",
-						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:78:13",
-							"data-prohibitions": "[editContent]",
-							className: "size-5 text-primary"
-						}), " Log de Atividades"]
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-					"data-uid": "src/pages/manager/StudentDetails.tsx:81:9",
-					"data-prohibitions": "[editContent]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/manager/StudentDetails.tsx:82:11",
-						"data-prohibitions": "[editContent]",
-						className: "space-y-4",
-						children: [allActivities.map((act) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:84:15",
-							"data-prohibitions": "[editContent]",
-							className: "flex items-start justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/StudentDetails.tsx:88:17",
-								"data-prohibitions": "[editContent]",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/manager/StudentDetails.tsx:89:19",
-									"data-prohibitions": "[editContent]",
-									className: "font-medium text-foreground",
-									children: act.type === "enrollment" ? "Matrícula Realizada" : act.type === "lesson_complete" ? "Aula Concluída" : act.type === "exam_graded" ? "Prova Corrigida" : "Tentativa de Prova"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/manager/StudentDetails.tsx:98:19",
-									"data-prohibitions": "[editContent]",
-									className: "text-sm text-muted-foreground mt-0.5",
-									children: [
-										act.details,
-										" ",
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/manager/StudentDetails.tsx:99:35",
-											"data-prohibitions": "[editContent]",
-											className: "font-medium ml-1",
-											children: [
-												"(",
-												act.courseTitle,
-												")"
-											]
-										})
-									]
-								})]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/StudentDetails.tsx:102:17",
-								"data-prohibitions": "[editContent]",
-								className: "text-right text-sm",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/manager/StudentDetails.tsx:103:19",
-									"data-prohibitions": "[editContent]",
-									className: "text-muted-foreground font-mono",
-									children: new Date(act.date).toLocaleString("pt-BR")
-								}), act.timeSpentMinutes ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/manager/StudentDetails.tsx:107:21",
-									"data-prohibitions": "[editContent]",
-									className: "text-primary font-medium mt-1 flex items-center justify-end gap-1",
-									children: [
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Clock, {
-											"data-uid": "src/pages/manager/StudentDetails.tsx:108:23",
-											"data-prohibitions": "[editContent]",
-											className: "size-3"
-										}),
-										" +",
-										act.timeSpentMinutes,
-										" min"
-									]
-								}) : null]
-							})]
-						}, act.id)), allActivities.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/manager/StudentDetails.tsx:115:15",
-							"data-prohibitions": "[]",
-							className: "text-muted-foreground py-4 text-center",
-							children: "Nenhuma atividade registrada."
-						})]
-					})
-				})]
-			})
-		]
-	});
-}
-//#endregion
-//#region src/pages/manager/CommissionSettings.tsx
-function CommissionSettings() {
-	const { commissionSettings, updateCommissionSettings, courses } = useLmsStore();
-	const [settings, setSettings] = (0, import_react.useState)(commissionSettings);
-	const handleSave = () => {
-		updateCommissionSettings(settings);
-		toast.success("Regras de comissionamento atualizadas com sucesso.");
-	};
-	const coursesWithOverrides = courses.filter((c) => c.instructorRateOverride !== void 0 || c.partnerRateOverride !== void 0);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/manager/CommissionSettings.tsx:32:5",
-		"data-prohibitions": "[editContent]",
-		className: "space-y-8 max-w-4xl pb-10",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/manager/CommissionSettings.tsx:33:7",
-				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/manager/CommissionSettings.tsx:34:9",
-					"data-prohibitions": "[]",
-					className: "text-3xl font-bold tracking-tight",
-					children: "Taxas & Comissões"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/manager/CommissionSettings.tsx:35:9",
-					"data-prohibitions": "[]",
-					className: "text-muted-foreground mt-1",
-					children: "Configure a distribuição de receita (Split) padrão da plataforma."
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/manager/CommissionSettings.tsx:40:7",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/manager/CommissionSettings.tsx:41:9",
-					"data-prohibitions": "[]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-						"data-uid": "src/pages/manager/CommissionSettings.tsx:42:11",
-						"data-prohibitions": "[]",
-						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent, {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:43:13",
-							"data-prohibitions": "[editContent]",
-							className: "size-5 text-primary"
-						}), " Divisão Padrão (Global)"]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/manager/CommissionSettings.tsx:45:11",
-						"data-prohibitions": "[]",
-						children: "Estas taxas serão aplicadas automaticamente em todas as vendas, exceto se o curso possuir uma taxa específica. O valor restante fica para a plataforma."
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/manager/CommissionSettings.tsx:50:9",
-					"data-prohibitions": "[editContent]",
-					className: "space-y-6",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:51:11",
-							"data-prohibitions": "[]",
-							className: "grid sm:grid-cols-2 gap-6",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/CommissionSettings.tsx:52:13",
-								"data-prohibitions": "[]",
-								className: "space-y-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:53:15",
-									"data-prohibitions": "[]",
-									className: "text-sm font-semibold",
-									children: "Comissão Padrão do Professor (%)"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:54:15",
-									"data-prohibitions": "[editContent]",
-									type: "number",
-									value: settings.defaultInstructorRate,
-									onChange: (e) => setSettings({
-										...settings,
-										defaultInstructorRate: Number(e.target.value)
-									})
-								})]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/CommissionSettings.tsx:62:13",
-								"data-prohibitions": "[]",
-								className: "space-y-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:63:15",
-									"data-prohibitions": "[]",
-									className: "text-sm font-semibold",
-									children: "Comissão Padrão de Afiliados (%)"
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:64:15",
-									"data-prohibitions": "[editContent]",
-									type: "number",
-									value: settings.defaultPartnerRate,
-									onChange: (e) => setSettings({
-										...settings,
-										defaultPartnerRate: Number(e.target.value)
-									})
-								})]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:74:11",
-							"data-prohibitions": "[editContent]",
-							className: "p-4 bg-muted/30 rounded-lg flex items-center justify-between border",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/pages/manager/CommissionSettings.tsx:75:13",
-								"data-prohibitions": "[]",
-								className: "font-medium",
-								children: "Taxa Retida pela Plataforma:"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-								"data-uid": "src/pages/manager/CommissionSettings.tsx:76:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-xl font-bold text-primary",
-								children: [100 - settings.defaultInstructorRate - settings.defaultPartnerRate, "%"]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:81:11",
-							"data-prohibitions": "[]",
-							onClick: handleSave,
-							className: "w-full sm:w-auto",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
-								"data-uid": "src/pages/manager/CommissionSettings.tsx:82:13",
-								"data-prohibitions": "[editContent]",
-								className: "mr-2 size-4"
-							}), " Salvar Configurações"]
-						})
-					]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/manager/CommissionSettings.tsx:87:7",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/manager/CommissionSettings.tsx:88:9",
-					"data-prohibitions": "[]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/manager/CommissionSettings.tsx:89:11",
-						"data-prohibitions": "[]",
-						children: "Cursos com Taxas Específicas"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/manager/CommissionSettings.tsx:90:11",
-						"data-prohibitions": "[]",
-						children: "Estes cursos possuem comissionamento diferente do padrão."
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-					"data-uid": "src/pages/manager/CommissionSettings.tsx:94:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-						"data-uid": "src/pages/manager/CommissionSettings.tsx:95:11",
-						"data-prohibitions": "[]",
-						className: "bg-muted/50",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:96:13",
-							"data-prohibitions": "[]",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:97:15",
-									"data-prohibitions": "[]",
-									children: "Curso"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:98:15",
-									"data-prohibitions": "[]",
-									className: "text-center",
-									children: "Professor"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:99:15",
-									"data-prohibitions": "[]",
-									className: "text-center",
-									children: "Parceiro"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:100:15",
-									"data-prohibitions": "[]",
-									className: "text-right",
-									children: "Ação"
-								})
-							]
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
-						"data-uid": "src/pages/manager/CommissionSettings.tsx:103:11",
-						"data-prohibitions": "[editContent]",
-						children: [coursesWithOverrides.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:105:15",
-							"data-prohibitions": "[editContent]",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:106:17",
-									"data-prohibitions": "[editContent]",
-									className: "font-medium",
-									children: c.title
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:107:17",
-									"data-prohibitions": "[editContent]",
-									className: "text-center",
-									children: c.instructorRateOverride !== void 0 ? `${c.instructorRateOverride}%` : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-										"data-uid": "src/pages/manager/CommissionSettings.tsx:111:21",
-										"data-prohibitions": "[editContent]",
-										className: "text-muted-foreground text-xs",
-										children: [
-											"Padrão (",
-											settings.defaultInstructorRate,
-											"%)"
-										]
-									})
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:116:17",
-									"data-prohibitions": "[editContent]",
-									className: "text-center",
-									children: c.partnerRateOverride !== void 0 ? `${c.partnerRateOverride}%` : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-										"data-uid": "src/pages/manager/CommissionSettings.tsx:120:21",
-										"data-prohibitions": "[editContent]",
-										className: "text-muted-foreground text-xs",
-										children: [
-											"Padrão (",
-											settings.defaultPartnerRate,
-											"%)"
-										]
-									})
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/manager/CommissionSettings.tsx:125:17",
-									"data-prohibitions": "[]",
-									className: "text-right",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/manager/CommissionSettings.tsx:126:19",
-										"data-prohibitions": "[]",
-										variant: "link",
-										asChild: true,
-										size: "sm",
-										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/manager/CommissionSettings.tsx:127:21",
-											"data-prohibitions": "[]",
-											to: `/manager/courses/${c.id}/edit`,
-											children: "Editar"
-										})
-									})
-								})
-							]
-						}, c.id)), coursesWithOverrides.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
-							"data-uid": "src/pages/manager/CommissionSettings.tsx:133:15",
-							"data-prohibitions": "[]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-								"data-uid": "src/pages/manager/CommissionSettings.tsx:134:17",
-								"data-prohibitions": "[]",
-								colSpan: 4,
-								className: "text-center py-6 text-muted-foreground",
-								children: "Nenhum curso possui taxa específica configurada."
-							})
-						})]
-					})]
-				})]
-			})
-		]
-	});
-}
-//#endregion
-//#region src/components/ui/badge.tsx
-var badgeVariants = cva("inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2", {
-	variants: { variant: {
-		default: "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
-		secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-		destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-		outline: "text-foreground"
-	} },
-	defaultVariants: { variant: "default" }
-});
-function Badge({ className, variant, ...props }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/ui/badge.tsx:30:10",
-		"data-prohibitions": "[editContent]",
-		className: cn$1(badgeVariants({ variant }), className),
-		...props
 	});
 }
 //#endregion
@@ -35504,6 +33297,2096 @@ function FinancialReports() {
 									colSpan: 6,
 									className: "text-center py-8 text-muted-foreground",
 									children: "Nenhuma transação registrada."
+								})
+							})]
+						})]
+					})
+				})]
+			})
+		]
+	});
+}
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-tabs@1.1.13_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_2ad0945e3cb98dc5bbfaaf29c105e977/node_modules/@radix-ui/react-tabs/dist/index.mjs
+var TABS_NAME = "Tabs";
+var [createTabsContext, createTabsScope] = createContextScope$1(TABS_NAME, [createRovingFocusGroupScope]);
+var useRovingFocusGroupScope = createRovingFocusGroupScope();
+var [TabsProvider, useTabsContext] = createTabsContext(TABS_NAME);
+var Tabs$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTabs, value: valueProp, onValueChange, defaultValue, orientation = "horizontal", dir, activationMode = "automatic", ...tabsProps } = props;
+	const direction = useDirection(dir);
+	const [value, setValue] = useControllableState({
+		prop: valueProp,
+		onChange: onValueChange,
+		defaultProp: defaultValue ?? "",
+		caller: TABS_NAME
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsProvider, {
+		scope: __scopeTabs,
+		baseId: useId(),
+		value,
+		onValueChange: setValue,
+		orientation,
+		dir: direction,
+		activationMode,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			dir: direction,
+			"data-orientation": orientation,
+			...tabsProps,
+			ref: forwardedRef
+		})
+	});
+});
+Tabs$1.displayName = TABS_NAME;
+var TAB_LIST_NAME = "TabsList";
+var TabsList$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTabs, loop = true, ...listProps } = props;
+	const context = useTabsContext(TAB_LIST_NAME, __scopeTabs);
+	const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root$3, {
+		asChild: true,
+		...rovingFocusGroupScope,
+		orientation: context.orientation,
+		dir: context.dir,
+		loop,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			role: "tablist",
+			"aria-orientation": context.orientation,
+			...listProps,
+			ref: forwardedRef
+		})
+	});
+});
+TabsList$1.displayName = TAB_LIST_NAME;
+var TRIGGER_NAME = "TabsTrigger";
+var TabsTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTabs, value, disabled = false, ...triggerProps } = props;
+	const context = useTabsContext(TRIGGER_NAME, __scopeTabs);
+	const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeTabs);
+	const triggerId = makeTriggerId(context.baseId, value);
+	const contentId = makeContentId(context.baseId, value);
+	const isSelected = value === context.value;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Item$1, {
+		asChild: true,
+		...rovingFocusGroupScope,
+		focusable: !disabled,
+		active: isSelected,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+			type: "button",
+			role: "tab",
+			"aria-selected": isSelected,
+			"aria-controls": contentId,
+			"data-state": isSelected ? "active" : "inactive",
+			"data-disabled": disabled ? "" : void 0,
+			disabled,
+			id: triggerId,
+			...triggerProps,
+			ref: forwardedRef,
+			onMouseDown: composeEventHandlers(props.onMouseDown, (event) => {
+				if (!disabled && event.button === 0 && event.ctrlKey === false) context.onValueChange(value);
+				else event.preventDefault();
+			}),
+			onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
+				if ([" ", "Enter"].includes(event.key)) context.onValueChange(value);
+			}),
+			onFocus: composeEventHandlers(props.onFocus, () => {
+				const isAutomaticActivation = context.activationMode !== "manual";
+				if (!isSelected && !disabled && isAutomaticActivation) context.onValueChange(value);
+			})
+		})
+	});
+});
+TabsTrigger$1.displayName = TRIGGER_NAME;
+var CONTENT_NAME = "TabsContent";
+var TabsContent$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTabs, value, forceMount, children, ...contentProps } = props;
+	const context = useTabsContext(CONTENT_NAME, __scopeTabs);
+	const triggerId = makeTriggerId(context.baseId, value);
+	const contentId = makeContentId(context.baseId, value);
+	const isSelected = value === context.value;
+	const isMountAnimationPreventedRef = import_react.useRef(isSelected);
+	import_react.useEffect(() => {
+		const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
+		return () => cancelAnimationFrame(rAF);
+	}, []);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || isSelected,
+		children: ({ present }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.div, {
+			"data-state": isSelected ? "active" : "inactive",
+			"data-orientation": context.orientation,
+			role: "tabpanel",
+			"aria-labelledby": triggerId,
+			hidden: !present,
+			id: contentId,
+			tabIndex: 0,
+			...contentProps,
+			ref: forwardedRef,
+			style: {
+				...props.style,
+				animationDuration: isMountAnimationPreventedRef.current ? "0s" : void 0
+			},
+			children: present && children
+		})
+	});
+});
+TabsContent$1.displayName = CONTENT_NAME;
+function makeTriggerId(baseId, value) {
+	return `${baseId}-trigger-${value}`;
+}
+function makeContentId(baseId, value) {
+	return `${baseId}-content-${value}`;
+}
+var Root2 = Tabs$1;
+var List = TabsList$1;
+var Trigger = TabsTrigger$1;
+var Content = TabsContent$1;
+//#endregion
+//#region src/components/ui/tabs.tsx
+var Tabs = Root2;
+var TabsList = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(List, {
+	"data-uid": "src/components/ui/tabs.tsx:13:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground", className),
+	...props
+}));
+TabsList.displayName = List.displayName;
+var TabsTrigger = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trigger, {
+	"data-uid": "src/components/ui/tabs.tsx:28:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm", className),
+	...props
+}));
+TabsTrigger.displayName = Trigger.displayName;
+var TabsContent = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content, {
+	"data-uid": "src/components/ui/tabs.tsx:43:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	className: cn("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className),
+	...props
+}));
+TabsContent.displayName = Content.displayName;
+//#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/@radix-ui+react-switch@1.2.6_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react_e3738c514c10df2ef7e24af5ee461853/node_modules/@radix-ui/react-switch/dist/index.mjs
+var SWITCH_NAME = "Switch";
+var [createSwitchContext, createSwitchScope] = createContextScope$1(SWITCH_NAME);
+var [SwitchProvider, useSwitchContext] = createSwitchContext(SWITCH_NAME);
+var Switch$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeSwitch, name, checked: checkedProp, defaultChecked, required, disabled, value = "on", onCheckedChange, form, ...switchProps } = props;
+	const [button, setButton] = import_react.useState(null);
+	const composedRefs = useComposedRefs(forwardedRef, (node) => setButton(node));
+	const hasConsumerStoppedPropagationRef = import_react.useRef(false);
+	const isFormControl = button ? form || !!button.closest("form") : true;
+	const [checked, setChecked] = useControllableState({
+		prop: checkedProp,
+		defaultProp: defaultChecked ?? false,
+		onChange: onCheckedChange,
+		caller: SWITCH_NAME
+	});
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SwitchProvider, {
+		scope: __scopeSwitch,
+		checked,
+		disabled,
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+			type: "button",
+			role: "switch",
+			"aria-checked": checked,
+			"aria-required": required,
+			"data-state": getState(checked),
+			"data-disabled": disabled ? "" : void 0,
+			disabled,
+			value,
+			...switchProps,
+			ref: composedRefs,
+			onClick: composeEventHandlers(props.onClick, (event) => {
+				setChecked((prevChecked) => !prevChecked);
+				if (isFormControl) {
+					hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
+					if (!hasConsumerStoppedPropagationRef.current) event.stopPropagation();
+				}
+			})
+		}), isFormControl && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SwitchBubbleInput, {
+			control: button,
+			bubbles: !hasConsumerStoppedPropagationRef.current,
+			name,
+			value,
+			checked,
+			required,
+			disabled,
+			form,
+			style: { transform: "translateX(-100%)" }
+		})]
+	});
+});
+Switch$1.displayName = SWITCH_NAME;
+var THUMB_NAME = "SwitchThumb";
+var SwitchThumb = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeSwitch, ...thumbProps } = props;
+	const context = useSwitchContext(THUMB_NAME, __scopeSwitch);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.span, {
+		"data-state": getState(context.checked),
+		"data-disabled": context.disabled ? "" : void 0,
+		...thumbProps,
+		ref: forwardedRef
+	});
+});
+SwitchThumb.displayName = THUMB_NAME;
+var BUBBLE_INPUT_NAME = "SwitchBubbleInput";
+var SwitchBubbleInput = import_react.forwardRef(({ __scopeSwitch, control, checked, bubbles = true, ...props }, forwardedRef) => {
+	const ref = import_react.useRef(null);
+	const composedRefs = useComposedRefs(ref, forwardedRef);
+	const prevChecked = usePrevious(checked);
+	const controlSize = useSize(control);
+	import_react.useEffect(() => {
+		const input = ref.current;
+		if (!input) return;
+		const inputProto = window.HTMLInputElement.prototype;
+		const setChecked = Object.getOwnPropertyDescriptor(inputProto, "checked").set;
+		if (prevChecked !== checked && setChecked) {
+			const event = new Event("click", { bubbles });
+			setChecked.call(input, checked);
+			input.dispatchEvent(event);
+		}
+	}, [
+		prevChecked,
+		checked,
+		bubbles
+	]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
+		type: "checkbox",
+		"aria-hidden": true,
+		defaultChecked: checked,
+		...props,
+		tabIndex: -1,
+		ref: composedRefs,
+		style: {
+			...props.style,
+			...controlSize,
+			position: "absolute",
+			pointerEvents: "none",
+			opacity: 0,
+			margin: 0
+		}
+	});
+});
+SwitchBubbleInput.displayName = BUBBLE_INPUT_NAME;
+function getState(checked) {
+	return checked ? "checked" : "unchecked";
+}
+var Root = Switch$1;
+var Thumb = SwitchThumb;
+//#endregion
+//#region src/components/ui/switch.tsx
+var Switch = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, {
+	"data-uid": "src/components/ui/switch.tsx:11:3",
+	"data-prohibitions": "[editContent]",
+	className: cn("peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input", className),
+	...props,
+	ref,
+	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Thumb, {
+		"data-uid": "src/components/ui/switch.tsx:19:5",
+		"data-prohibitions": "[editContent]",
+		className: cn("pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0")
+	})
+}));
+Switch.displayName = Root.displayName;
+//#endregion
+//#region src/hooks/use-toast.ts
+var TOAST_LIMIT = 1;
+var TOAST_REMOVE_DELAY = 1e6;
+var count = 0;
+function genId() {
+	count = (count + 1) % Number.MAX_SAFE_INTEGER;
+	return count.toString();
+}
+var toastTimeouts = /* @__PURE__ */ new Map();
+var addToRemoveQueue = (toastId) => {
+	if (toastTimeouts.has(toastId)) return;
+	const timeout = setTimeout(() => {
+		toastTimeouts.delete(toastId);
+		dispatch({
+			type: "REMOVE_TOAST",
+			toastId
+		});
+	}, TOAST_REMOVE_DELAY);
+	toastTimeouts.set(toastId, timeout);
+};
+var reducer = (state, action) => {
+	switch (action.type) {
+		case "ADD_TOAST": return {
+			...state,
+			toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT)
+		};
+		case "UPDATE_TOAST": return {
+			...state,
+			toasts: state.toasts.map((t) => t.id === action.toast.id ? {
+				...t,
+				...action.toast
+			} : t)
+		};
+		case "DISMISS_TOAST": {
+			const { toastId } = action;
+			if (toastId) addToRemoveQueue(toastId);
+			else state.toasts.forEach((toast) => {
+				addToRemoveQueue(toast.id);
+			});
+			return {
+				...state,
+				toasts: state.toasts.map((t) => t.id === toastId || toastId === void 0 ? {
+					...t,
+					open: false
+				} : t)
+			};
+		}
+		case "REMOVE_TOAST":
+			if (action.toastId === void 0) return {
+				...state,
+				toasts: []
+			};
+			return {
+				...state,
+				toasts: state.toasts.filter((t) => t.id !== action.toastId)
+			};
+	}
+};
+var listeners = [];
+var memoryState = { toasts: [] };
+function dispatch(action) {
+	memoryState = reducer(memoryState, action);
+	listeners.forEach((listener) => {
+		listener(memoryState);
+	});
+}
+function toast({ ...props }) {
+	const id = genId();
+	const update = (props) => dispatch({
+		type: "UPDATE_TOAST",
+		toast: {
+			...props,
+			id
+		}
+	});
+	const dismiss = () => dispatch({
+		type: "DISMISS_TOAST",
+		toastId: id
+	});
+	dispatch({
+		type: "ADD_TOAST",
+		toast: {
+			...props,
+			id,
+			open: true,
+			onOpenChange: (open) => {
+				if (!open) dismiss();
+			}
+		}
+	});
+	return {
+		id,
+		dismiss,
+		update
+	};
+}
+function useToast() {
+	const [state, setState] = import_react.useState(memoryState);
+	import_react.useEffect(() => {
+		listeners.push(setState);
+		return () => {
+			const index = listeners.indexOf(setState);
+			if (index > -1) listeners.splice(index, 1);
+		};
+	}, [state]);
+	return {
+		...state,
+		toast,
+		dismiss: (toastId) => dispatch({
+			type: "DISMISS_TOAST",
+			toastId
+		})
+	};
+}
+//#endregion
+//#region src/pages/manager/NotificationSettings.tsx
+function NotificationSettings() {
+	const { toast } = useToast();
+	const [saving, setSaving] = (0, import_react.useState)(false);
+	const [templates, setTemplates] = (0, import_react.useState)({
+		welcome: {
+			subject: "Bem-vindo ao Observatório Academy (DEMO)!",
+			body: "Olá {{nome}},\n\nÉ com grande satisfação que damos as boas-vindas ao Observatório Academy (DEMO). Estamos felizes em tê-lo conosco.\n\nAcesse sua conta para começar sua jornada de aprendizado e explorar nosso catálogo exclusivo.\n\nAtenciosamente,\nEquipe Observatório Academy (DEMO)",
+			active: true
+		},
+		recovery: {
+			subject: "Recuperação de Senha - Observatório Academy (DEMO)",
+			body: "Olá {{nome}},\n\nRecebemos uma solicitação para redefinir sua senha de acesso no Observatório Academy (DEMO).\n\nClique no botão abaixo para criar uma nova senha. Se você não fez essa solicitação, pode ignorar este email de segurança.\n\nAtenciosamente,\nEquipe de Segurança - Observatório Academy (DEMO)",
+			active: true
+		},
+		commission: {
+			subject: "Nova Comissão Recebida! - Observatório Academy (DEMO)",
+			body: "Olá {{nome}},\n\nParabéns! Você acaba de receber uma nova comissão de afiliado/parceiro no Observatório Academy (DEMO).\n\nValor: {{valor}}\nProduto: {{produto}}\n\nContinue o ótimo trabalho e alavanque seus ganhos!\n\nAtenciosamente,\nEquipe Financeira - Observatório Academy (DEMO)",
+			active: true
+		}
+	});
+	const handleSave = () => {
+		setSaving(true);
+		setTimeout(() => {
+			setSaving(false);
+			toast({
+				title: "Templates atualizados com sucesso",
+				description: "As configurações de comunicação do Observatório Academy (DEMO) foram salvas."
+			});
+		}, 800);
+	};
+	const updateTemplate = (key, field, value) => {
+		setTemplates((prev) => ({
+			...prev,
+			[key]: {
+				...prev[key],
+				[field]: value
+			}
+		}));
+	};
+	const EmailPreview = ({ templateKey }) => {
+		const template = templates[templateKey];
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/manager/NotificationSettings.tsx:57:7",
+			"data-prohibitions": "[editContent]",
+			className: "border border-slate-200 rounded-xl overflow-hidden flex flex-col bg-slate-100 mt-8 shadow-inner",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/NotificationSettings.tsx:58:9",
+				"data-prohibitions": "[]",
+				className: "bg-slate-200 px-4 py-3 border-b border-slate-300 flex items-center justify-between text-sm text-slate-700 font-medium",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:59:11",
+					"data-prohibitions": "[]",
+					className: "flex items-center gap-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:60:13",
+						"data-prohibitions": "[editContent]",
+						className: "h-4 w-4"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:61:13",
+						"data-prohibitions": "[]",
+						children: "Pré-visualização do Email para o Usuário"
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:63:11",
+					"data-prohibitions": "[]",
+					className: "text-xs bg-white px-2 py-1 rounded shadow-sm",
+					children: "Desktop"
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/manager/NotificationSettings.tsx:65:9",
+				"data-prohibitions": "[editContent]",
+				className: "p-8 md:p-12 bg-slate-50 flex-1",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:66:11",
+					"data-prohibitions": "[editContent]",
+					className: "bg-white max-w-2xl mx-auto w-full rounded-xl shadow-sm border border-slate-100 overflow-hidden",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/manager/NotificationSettings.tsx:67:13",
+							"data-prohibitions": "[]",
+							className: "text-center p-8 bg-slate-900 border-b border-slate-100",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:68:15",
+								"data-prohibitions": "[editContent]",
+								src: logo_academy_2_82c76_default,
+								alt: "Observatório Academy (DEMO)",
+								className: "h-14 mx-auto brightness-0 invert"
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/NotificationSettings.tsx:74:13",
+							"data-prohibitions": "[editContent]",
+							className: "p-8 space-y-6 text-slate-800",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+									"data-uid": "src/pages/manager/NotificationSettings.tsx:75:15",
+									"data-prohibitions": "[editContent]",
+									className: "text-2xl font-bold border-b border-slate-100 pb-4 text-slate-900",
+									children: template.subject
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/manager/NotificationSettings.tsx:78:15",
+									"data-prohibitions": "[editContent]",
+									className: "whitespace-pre-wrap font-sans text-base leading-relaxed text-slate-700",
+									children: template.body.replace("{{nome}}", "João Silva").replace("{{valor}}", "R$ 150,00").replace("{{produto}}", "Curso Especialização em Frontend")
+								}),
+								templateKey === "recovery" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/manager/NotificationSettings.tsx:86:17",
+									"data-prohibitions": "[]",
+									className: "mt-8 text-center pt-4",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/manager/NotificationSettings.tsx:87:19",
+										"data-prohibitions": "[]",
+										className: "bg-[#176a7e] hover:bg-[#115060] text-white h-12 px-8 text-base shadow-md",
+										children: "Redefinir Minha Senha"
+									})
+								}),
+								templateKey === "welcome" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/manager/NotificationSettings.tsx:93:17",
+									"data-prohibitions": "[]",
+									className: "mt-8 text-center pt-4",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/manager/NotificationSettings.tsx:94:19",
+										"data-prohibitions": "[]",
+										className: "bg-[#176a7e] hover:bg-[#115060] text-white h-12 px-8 text-base shadow-md",
+										children: "Acessar Plataforma"
+									})
+								})
+							]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/NotificationSettings.tsx:100:13",
+							"data-prohibitions": "[editContent]",
+							className: "px-8 py-6 bg-slate-50 border-t border-slate-100 text-center text-xs text-slate-500 space-y-2",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:101:15",
+								"data-prohibitions": "[editContent]",
+								className: "font-medium",
+								children: [
+									"© ",
+									(/* @__PURE__ */ new Date()).getFullYear(),
+									" Observatório Academy (DEMO). Todos os direitos reservados."
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:105:15",
+								"data-prohibitions": "[]",
+								children: "Você está recebendo este email pois está cadastrado em nossa plataforma educacional."
+							})]
+						})
+					]
+				})
+			})]
+		});
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/manager/NotificationSettings.tsx:116:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-6 max-w-6xl mx-auto pb-10",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/manager/NotificationSettings.tsx:117:7",
+			"data-prohibitions": "[editContent]",
+			className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/NotificationSettings.tsx:118:9",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:119:11",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-bold tracking-tight text-slate-900",
+					children: "Comunicações e Emails"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:122:11",
+					"data-prohibitions": "[]",
+					className: "text-muted-foreground mt-1",
+					children: "Gerencie os templates de email enviados pelo Observatório Academy (DEMO)."
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+				"data-uid": "src/pages/manager/NotificationSettings.tsx:126:9",
+				"data-prohibitions": "[editContent]",
+				onClick: handleSave,
+				disabled: saving,
+				className: "bg-[#176a7e] hover:bg-[#115060]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:127:11",
+					"data-prohibitions": "[editContent]",
+					className: "mr-2 h-4 w-4"
+				}), saving ? "Salvando Alterações..." : "Salvar Alterações"]
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
+			"data-uid": "src/pages/manager/NotificationSettings.tsx:132:7",
+			"data-prohibitions": "[editContent]",
+			defaultValue: "welcome",
+			className: "w-full",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsList, {
+				"data-uid": "src/pages/manager/NotificationSettings.tsx:133:9",
+				"data-prohibitions": "[]",
+				className: "grid w-full grid-cols-1 md:grid-cols-3 h-auto gap-2 bg-transparent",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:134:11",
+						"data-prohibitions": "[]",
+						value: "welcome",
+						className: "data-[state=active]:bg-[#176a7e] data-[state=active]:text-white border shadow-sm py-3",
+						children: "Boas-vindas"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:140:11",
+						"data-prohibitions": "[]",
+						value: "recovery",
+						className: "data-[state=active]:bg-[#176a7e] data-[state=active]:text-white border shadow-sm py-3",
+						children: "Recuperação de Senha"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:146:11",
+						"data-prohibitions": "[]",
+						value: "commission",
+						className: "data-[state=active]:bg-[#176a7e] data-[state=active]:text-white border shadow-sm py-3",
+						children: "Notificação de Comissão"
+					})
+				]
+			}), Object.keys(templates).map((key) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
+				"data-uid": "src/pages/manager/NotificationSettings.tsx:155:11",
+				"data-prohibitions": "[editContent]",
+				value: key,
+				className: "mt-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/manager/NotificationSettings.tsx:156:13",
+					"data-prohibitions": "[editContent]",
+					className: "border-slate-200 shadow-sm",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:157:15",
+						"data-prohibitions": "[editContent]",
+						className: "flex flex-row items-center justify-between border-b bg-slate-50 rounded-t-xl pb-6",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/NotificationSettings.tsx:158:17",
+							"data-prohibitions": "[editContent]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:159:19",
+								"data-prohibitions": "[editContent]",
+								className: "text-xl text-[#176a7e]",
+								children: [
+									key === "welcome" && "Email de Boas-vindas a Novos Usuários",
+									key === "recovery" && "Email de Recuperação de Senha Segura",
+									key === "commission" && "Email de Aviso de Nova Comissão"
+								]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:164:19",
+								"data-prohibitions": "[]",
+								className: "mt-1.5 text-base",
+								children: "Configure como este email será enviado com a identidade do Observatório Academy (DEMO)."
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/NotificationSettings.tsx:169:17",
+							"data-prohibitions": "[]",
+							className: "flex items-center space-x-3 bg-white px-4 py-2 rounded-lg border shadow-sm",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Switch, {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:170:19",
+								"data-prohibitions": "[editContent]",
+								id: `${key}-active`,
+								checked: templates[key].active,
+								onCheckedChange: (c) => updateTemplate(key, "active", c)
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:175:19",
+								"data-prohibitions": "[]",
+								htmlFor: `${key}-active`,
+								className: "font-semibold cursor-pointer",
+								children: "Template Ativo"
+							})]
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/manager/NotificationSettings.tsx:180:15",
+						"data-prohibitions": "[editContent]",
+						className: "space-y-6 pt-8",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:181:17",
+								"data-prohibitions": "[]",
+								className: "space-y-3",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+									"data-uid": "src/pages/manager/NotificationSettings.tsx:182:19",
+									"data-prohibitions": "[]",
+									className: "text-base font-semibold",
+									children: "Assunto do Email"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+									"data-uid": "src/pages/manager/NotificationSettings.tsx:183:19",
+									"data-prohibitions": "[editContent]",
+									value: templates[key].subject,
+									onChange: (e) => updateTemplate(key, "subject", e.target.value),
+									className: "text-base py-6"
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:189:17",
+								"data-prohibitions": "[editContent]",
+								className: "space-y-3",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/manager/NotificationSettings.tsx:190:19",
+										"data-prohibitions": "[]",
+										className: "flex justify-between items-end",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+											"data-uid": "src/pages/manager/NotificationSettings.tsx:191:21",
+											"data-prohibitions": "[]",
+											className: "text-base font-semibold",
+											children: "Corpo do Email"
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											"data-uid": "src/pages/manager/NotificationSettings.tsx:192:21",
+											"data-prohibitions": "[]",
+											className: "flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded border border-amber-200",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleAlert, {
+												"data-uid": "src/pages/manager/NotificationSettings.tsx:193:23",
+												"data-prohibitions": "[editContent]",
+												className: "h-3.5 w-3.5"
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+												"data-uid": "src/pages/manager/NotificationSettings.tsx:194:23",
+												"data-prohibitions": "[]",
+												children: ["Não remova as variáveis em ", "{{ chaves }}"]
+											})]
+										})]
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
+										"data-uid": "src/pages/manager/NotificationSettings.tsx:197:19",
+										"data-prohibitions": "[editContent]",
+										className: "min-h-[250px] font-mono text-sm leading-relaxed",
+										value: templates[key].body,
+										onChange: (e) => updateTemplate(key, "body", e.target.value)
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+										"data-uid": "src/pages/manager/NotificationSettings.tsx:202:19",
+										"data-prohibitions": "[editContent]",
+										className: "text-sm text-slate-500 font-medium",
+										children: [
+											"Variáveis disponíveis para uso no texto:",
+											" ",
+											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
+												"data-uid": "src/pages/manager/NotificationSettings.tsx:204:21",
+												"data-prohibitions": "[]",
+												className: "bg-slate-100 px-1.5 py-0.5 rounded text-slate-800",
+												children: "{{nome}}"
+											}),
+											key === "commission" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
+													"data-uid": "src/pages/manager/NotificationSettings.tsx:209:25",
+													"data-prohibitions": "[]",
+													className: "bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 ml-1",
+													children: "{{valor}}"
+												}),
+												" ",
+												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("code", {
+													"data-uid": "src/pages/manager/NotificationSettings.tsx:212:25",
+													"data-prohibitions": "[]",
+													className: "bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 ml-1",
+													children: "{{produto}}"
+												})
+											] })
+										]
+									})
+								]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmailPreview, {
+								"data-uid": "src/pages/manager/NotificationSettings.tsx:220:17",
+								"data-prohibitions": "[editContent]",
+								templateKey: key
+							})
+						]
+					})]
+				})
+			}, key))]
+		})]
+	});
+}
+//#endregion
+//#region src/pages/manager/Integrations.tsx
+function Integrations() {
+	const { webhooks, addWebhook, deleteWebhook } = useLmsStore();
+	const [open, setOpen] = (0, import_react.useState)(false);
+	const [newHook, setNewHook] = (0, import_react.useState)({
+		url: "",
+		events: ["course_completed"]
+	});
+	const handleSave = () => {
+		if (!newHook.url?.startsWith("http")) return toast$1.error("Insira uma URL válida (http/https).");
+		if (!newHook.events?.length) return toast$1.error("Selecione ao menos um evento.");
+		addWebhook({
+			id: `wh_${Date.now()}`,
+			url: newHook.url,
+			events: newHook.events
+		});
+		toast$1.success("Webhook criado com sucesso. Integração ativa.");
+		setOpen(false);
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/manager/Integrations.tsx:34:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-8 max-w-4xl pb-10",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/Integrations.tsx:35:7",
+				"data-prohibitions": "[]",
+				className: "flex justify-between items-start",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/manager/Integrations.tsx:36:9",
+					"data-prohibitions": "[]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						"data-uid": "src/pages/manager/Integrations.tsx:37:11",
+						"data-prohibitions": "[]",
+						className: "text-3xl font-bold tracking-tight",
+						children: "Integrações (Webhooks)"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/pages/manager/Integrations.tsx:38:11",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground mt-1",
+						children: "Envie dados automaticamente para ferramentas externas (CRM, Marketing, ERP)."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+					"data-uid": "src/pages/manager/Integrations.tsx:42:9",
+					"data-prohibitions": "[]",
+					onClick: () => {
+						setNewHook({
+							url: "",
+							events: ["course_completed"]
+						});
+						setOpen(true);
+					},
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, {
+						"data-uid": "src/pages/manager/Integrations.tsx:48:11",
+						"data-prohibitions": "[editContent]",
+						className: "mr-2 size-4"
+					}), " Novo Webhook"]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/Integrations.tsx:52:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid gap-4",
+				children: [webhooks.map((w) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+					"data-uid": "src/pages/manager/Integrations.tsx:54:11",
+					"data-prohibitions": "[editContent]",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/manager/Integrations.tsx:55:13",
+						"data-prohibitions": "[editContent]",
+						className: "p-6 flex items-center justify-between",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/Integrations.tsx:56:15",
+							"data-prohibitions": "[editContent]",
+							className: "flex items-start gap-4",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/manager/Integrations.tsx:57:17",
+								"data-prohibitions": "[]",
+								className: "bg-primary/10 p-3 rounded-full text-primary shrink-0",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Globe, {
+									"data-uid": "src/pages/manager/Integrations.tsx:58:19",
+									"data-prohibitions": "[editContent]",
+									className: "size-6"
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/Integrations.tsx:60:17",
+								"data-prohibitions": "[editContent]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/pages/manager/Integrations.tsx:61:19",
+									"data-prohibitions": "[editContent]",
+									className: "font-semibold text-lg text-foreground",
+									children: w.url
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/manager/Integrations.tsx:62:19",
+									"data-prohibitions": "[editContent]",
+									className: "flex gap-2 mt-2",
+									children: w.events.map((ev) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/pages/manager/Integrations.tsx:64:23",
+										"data-prohibitions": "[editContent]",
+										className: "text-xs bg-muted text-muted-foreground px-2 py-1 rounded uppercase font-medium tracking-wide",
+										children: ev
+									}, ev))
+								})]
+							})]
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/manager/Integrations.tsx:74:15",
+							"data-prohibitions": "[]",
+							variant: "ghost",
+							size: "icon",
+							className: "text-destructive hover:bg-destructive/10",
+							onClick: () => deleteWebhook(w.id),
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, {
+								"data-uid": "src/pages/manager/Integrations.tsx:80:17",
+								"data-prohibitions": "[editContent]",
+								className: "size-5"
+							})
+						})]
+					})
+				}, w.id)), webhooks.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/manager/Integrations.tsx:86:11",
+					"data-prohibitions": "[]",
+					className: "border-2 border-dashed rounded-xl p-12 text-center text-muted-foreground",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Webhook, {
+							"data-uid": "src/pages/manager/Integrations.tsx:87:13",
+							"data-prohibitions": "[editContent]",
+							className: "size-12 mx-auto mb-4 opacity-20"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/manager/Integrations.tsx:88:13",
+							"data-prohibitions": "[]",
+							children: "Nenhuma integração ativa no momento."
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/manager/Integrations.tsx:89:13",
+							"data-prohibitions": "[]",
+							variant: "link",
+							onClick: () => setOpen(true),
+							className: "mt-2",
+							children: "Criar a primeira"
+						})
+					]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
+				"data-uid": "src/pages/manager/Integrations.tsx:96:7",
+				"data-prohibitions": "[]",
+				open,
+				onOpenChange: setOpen,
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
+					"data-uid": "src/pages/manager/Integrations.tsx:97:9",
+					"data-prohibitions": "[]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
+						"data-uid": "src/pages/manager/Integrations.tsx:98:11",
+						"data-prohibitions": "[]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
+							"data-uid": "src/pages/manager/Integrations.tsx:99:13",
+							"data-prohibitions": "[]",
+							children: "Configurar Novo Webhook"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/manager/Integrations.tsx:101:11",
+						"data-prohibitions": "[]",
+						className: "space-y-6 py-4",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/Integrations.tsx:102:13",
+								"data-prohibitions": "[]",
+								className: "space-y-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+									"data-uid": "src/pages/manager/Integrations.tsx:103:15",
+									"data-prohibitions": "[]",
+									children: "Endpoint URL (POST)"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+									"data-uid": "src/pages/manager/Integrations.tsx:104:15",
+									"data-prohibitions": "[editContent]",
+									placeholder: "https://api.seusistema.com/webhook",
+									value: newHook.url,
+									onChange: (e) => setNewHook({
+										...newHook,
+										url: e.target.value
+									})
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/Integrations.tsx:110:13",
+								"data-prohibitions": "[]",
+								className: "space-y-3",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+									"data-uid": "src/pages/manager/Integrations.tsx:111:15",
+									"data-prohibitions": "[]",
+									children: "Eventos Gatilho"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/manager/Integrations.tsx:112:15",
+									"data-prohibitions": "[]",
+									className: "space-y-2 border p-4 rounded-lg bg-muted/20",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/manager/Integrations.tsx:113:17",
+										"data-prohibitions": "[]",
+										className: "flex items-center space-x-2",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
+											"data-uid": "src/pages/manager/Integrations.tsx:114:19",
+											"data-prohibitions": "[editContent]",
+											id: "ev-course",
+											checked: newHook.events?.includes("course_completed"),
+											onCheckedChange: (c) => {
+												let evts = newHook.events || [];
+												evts = c ? [...evts, "course_completed"] : evts.filter((x) => x !== "course_completed");
+												setNewHook({
+													...newHook,
+													events: evts
+												});
+											}
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+											"data-uid": "src/pages/manager/Integrations.tsx:125:19",
+											"data-prohibitions": "[]",
+											htmlFor: "ev-course",
+											className: "font-normal",
+											children: "Course Completed (Aluno finalizou o curso)"
+										})]
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/pages/manager/Integrations.tsx:129:17",
+										"data-prohibitions": "[]",
+										className: "flex items-center space-x-2",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
+											"data-uid": "src/pages/manager/Integrations.tsx:130:19",
+											"data-prohibitions": "[editContent]",
+											id: "ev-enroll",
+											checked: newHook.events?.includes("enrollment"),
+											onCheckedChange: (c) => {
+												let evts = newHook.events || [];
+												evts = c ? [...evts, "enrollment"] : evts.filter((x) => x !== "enrollment");
+												setNewHook({
+													...newHook,
+													events: evts
+												});
+											}
+										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+											"data-uid": "src/pages/manager/Integrations.tsx:139:19",
+											"data-prohibitions": "[]",
+											htmlFor: "ev-enroll",
+											className: "font-normal",
+											children: "Enrollment Created (Nova matrícula realizada)"
+										})]
+									})]
+								})]
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/manager/Integrations.tsx:145:13",
+								"data-prohibitions": "[]",
+								className: "w-full",
+								size: "lg",
+								onClick: handleSave,
+								children: "Salvar e Ativar"
+							})
+						]
+					})]
+				})
+			})
+		]
+	});
+}
+//#endregion
+//#region src/pages/manager/CommissionSettings.tsx
+function CommissionSettings() {
+	const { commissionSettings, updateCommissionSettings, courses } = useLmsStore();
+	const [settings, setSettings] = (0, import_react.useState)(commissionSettings);
+	const handleSave = () => {
+		updateCommissionSettings(settings);
+		toast$1.success("Regras de comissionamento atualizadas com sucesso.");
+	};
+	const coursesWithOverrides = courses.filter((c) => c.instructorRateOverride !== void 0 || c.partnerRateOverride !== void 0);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/manager/CommissionSettings.tsx:32:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-8 max-w-4xl pb-10",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/CommissionSettings.tsx:33:7",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					"data-uid": "src/pages/manager/CommissionSettings.tsx:34:9",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-bold tracking-tight",
+					children: "Taxas & Comissões"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/manager/CommissionSettings.tsx:35:9",
+					"data-prohibitions": "[]",
+					className: "text-muted-foreground mt-1",
+					children: "Configure a distribuição de receita (Split) padrão da plataforma."
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/manager/CommissionSettings.tsx:40:7",
+				"data-prohibitions": "[editContent]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+					"data-uid": "src/pages/manager/CommissionSettings.tsx:41:9",
+					"data-prohibitions": "[]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+						"data-uid": "src/pages/manager/CommissionSettings.tsx:42:11",
+						"data-prohibitions": "[]",
+						className: "flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent, {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:43:13",
+							"data-prohibitions": "[editContent]",
+							className: "size-5 text-primary"
+						}), " Divisão Padrão (Global)"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+						"data-uid": "src/pages/manager/CommissionSettings.tsx:45:11",
+						"data-prohibitions": "[]",
+						children: "Estas taxas serão aplicadas automaticamente em todas as vendas, exceto se o curso possuir uma taxa específica. O valor restante fica para a plataforma."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+					"data-uid": "src/pages/manager/CommissionSettings.tsx:50:9",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-6",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:51:11",
+							"data-prohibitions": "[]",
+							className: "grid sm:grid-cols-2 gap-6",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/CommissionSettings.tsx:52:13",
+								"data-prohibitions": "[]",
+								className: "space-y-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:53:15",
+									"data-prohibitions": "[]",
+									className: "text-sm font-semibold",
+									children: "Comissão Padrão do Professor (%)"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:54:15",
+									"data-prohibitions": "[editContent]",
+									type: "number",
+									value: settings.defaultInstructorRate,
+									onChange: (e) => setSettings({
+										...settings,
+										defaultInstructorRate: Number(e.target.value)
+									})
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/CommissionSettings.tsx:62:13",
+								"data-prohibitions": "[]",
+								className: "space-y-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:63:15",
+									"data-prohibitions": "[]",
+									className: "text-sm font-semibold",
+									children: "Comissão Padrão de Afiliados (%)"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:64:15",
+									"data-prohibitions": "[editContent]",
+									type: "number",
+									value: settings.defaultPartnerRate,
+									onChange: (e) => setSettings({
+										...settings,
+										defaultPartnerRate: Number(e.target.value)
+									})
+								})]
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:74:11",
+							"data-prohibitions": "[editContent]",
+							className: "p-4 bg-muted/30 rounded-lg flex items-center justify-between border",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/pages/manager/CommissionSettings.tsx:75:13",
+								"data-prohibitions": "[]",
+								className: "font-medium",
+								children: "Taxa Retida pela Plataforma:"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+								"data-uid": "src/pages/manager/CommissionSettings.tsx:76:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-xl font-bold text-primary",
+								children: [100 - settings.defaultInstructorRate - settings.defaultPartnerRate, "%"]
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:81:11",
+							"data-prohibitions": "[]",
+							onClick: handleSave,
+							className: "w-full sm:w-auto",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
+								"data-uid": "src/pages/manager/CommissionSettings.tsx:82:13",
+								"data-prohibitions": "[editContent]",
+								className: "mr-2 size-4"
+							}), " Salvar Configurações"]
+						})
+					]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/manager/CommissionSettings.tsx:87:7",
+				"data-prohibitions": "[editContent]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+					"data-uid": "src/pages/manager/CommissionSettings.tsx:88:9",
+					"data-prohibitions": "[]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+						"data-uid": "src/pages/manager/CommissionSettings.tsx:89:11",
+						"data-prohibitions": "[]",
+						children: "Cursos com Taxas Específicas"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+						"data-uid": "src/pages/manager/CommissionSettings.tsx:90:11",
+						"data-prohibitions": "[]",
+						children: "Estes cursos possuem comissionamento diferente do padrão."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
+					"data-uid": "src/pages/manager/CommissionSettings.tsx:94:9",
+					"data-prohibitions": "[editContent]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
+						"data-uid": "src/pages/manager/CommissionSettings.tsx:95:11",
+						"data-prohibitions": "[]",
+						className: "bg-muted/50",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:96:13",
+							"data-prohibitions": "[]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:97:15",
+									"data-prohibitions": "[]",
+									children: "Curso"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:98:15",
+									"data-prohibitions": "[]",
+									className: "text-center",
+									children: "Professor"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:99:15",
+									"data-prohibitions": "[]",
+									className: "text-center",
+									children: "Parceiro"
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:100:15",
+									"data-prohibitions": "[]",
+									className: "text-right",
+									children: "Ação"
+								})
+							]
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
+						"data-uid": "src/pages/manager/CommissionSettings.tsx:103:11",
+						"data-prohibitions": "[editContent]",
+						children: [coursesWithOverrides.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:105:15",
+							"data-prohibitions": "[editContent]",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:106:17",
+									"data-prohibitions": "[editContent]",
+									className: "font-medium",
+									children: c.title
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:107:17",
+									"data-prohibitions": "[editContent]",
+									className: "text-center",
+									children: c.instructorRateOverride !== void 0 ? `${c.instructorRateOverride}%` : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+										"data-uid": "src/pages/manager/CommissionSettings.tsx:111:21",
+										"data-prohibitions": "[editContent]",
+										className: "text-muted-foreground text-xs",
+										children: [
+											"Padrão (",
+											settings.defaultInstructorRate,
+											"%)"
+										]
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:116:17",
+									"data-prohibitions": "[editContent]",
+									className: "text-center",
+									children: c.partnerRateOverride !== void 0 ? `${c.partnerRateOverride}%` : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+										"data-uid": "src/pages/manager/CommissionSettings.tsx:120:21",
+										"data-prohibitions": "[editContent]",
+										className: "text-muted-foreground text-xs",
+										children: [
+											"Padrão (",
+											settings.defaultPartnerRate,
+											"%)"
+										]
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/manager/CommissionSettings.tsx:125:17",
+									"data-prohibitions": "[]",
+									className: "text-right",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/pages/manager/CommissionSettings.tsx:126:19",
+										"data-prohibitions": "[]",
+										variant: "link",
+										asChild: true,
+										size: "sm",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+											"data-uid": "src/pages/manager/CommissionSettings.tsx:127:21",
+											"data-prohibitions": "[]",
+											to: `/manager/courses/${c.id}/edit`,
+											children: "Editar"
+										})
+									})
+								})
+							]
+						}, c.id)), coursesWithOverrides.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
+							"data-uid": "src/pages/manager/CommissionSettings.tsx:133:15",
+							"data-prohibitions": "[]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+								"data-uid": "src/pages/manager/CommissionSettings.tsx:134:17",
+								"data-prohibitions": "[]",
+								colSpan: 4,
+								className: "text-center py-6 text-muted-foreground",
+								children: "Nenhum curso possui taxa específica configurada."
+							})
+						})]
+					})]
+				})]
+			})
+		]
+	});
+}
+//#endregion
+//#region src/pages/manager/PaymentSettings.tsx
+function PaymentSettings() {
+	const { paymentSettings, updatePaymentSettings } = useLmsStore();
+	const [settings, setSettings] = (0, import_react.useState)(paymentSettings);
+	const handleSave = () => {
+		updatePaymentSettings(settings);
+		toast$1.success("Configurações de pagamento atualizadas e integradas com sucesso.");
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/manager/PaymentSettings.tsx:19:5",
+		"data-prohibitions": "[]",
+		className: "space-y-8 max-w-2xl",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/manager/PaymentSettings.tsx:20:7",
+			"data-prohibitions": "[]",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+				"data-uid": "src/pages/manager/PaymentSettings.tsx:21:9",
+				"data-prohibitions": "[]",
+				className: "text-3xl font-bold tracking-tight",
+				children: "Integração de Pagamentos"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/pages/manager/PaymentSettings.tsx:22:9",
+				"data-prohibitions": "[]",
+				className: "text-muted-foreground mt-1",
+				children: "Conecte seu gateway para automatizar matrículas após o checkout."
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+			"data-uid": "src/pages/manager/PaymentSettings.tsx:26:7",
+			"data-prohibitions": "[]",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+				"data-uid": "src/pages/manager/PaymentSettings.tsx:27:9",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+					"data-uid": "src/pages/manager/PaymentSettings.tsx:28:11",
+					"data-prohibitions": "[]",
+					className: "flex items-center gap-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link2, {
+						"data-uid": "src/pages/manager/PaymentSettings.tsx:29:13",
+						"data-prohibitions": "[editContent]",
+						className: "size-5 text-primary"
+					}), " Credenciais da API"]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+					"data-uid": "src/pages/manager/PaymentSettings.tsx:31:11",
+					"data-prohibitions": "[]",
+					children: "Insira os dados do seu provedor (Stripe, Pagar.me, Mercado Pago, etc.)"
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+				"data-uid": "src/pages/manager/PaymentSettings.tsx:35:9",
+				"data-prohibitions": "[]",
+				className: "space-y-5",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/manager/PaymentSettings.tsx:36:11",
+						"data-prohibitions": "[]",
+						className: "space-y-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:37:13",
+							"data-prohibitions": "[]",
+							className: "text-sm font-semibold",
+							children: "Provedor de Pagamento"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:38:13",
+							"data-prohibitions": "[editContent]",
+							value: settings.provider,
+							onChange: (e) => setSettings({
+								...settings,
+								provider: e.target.value
+							}),
+							placeholder: "Ex: Stripe",
+							className: "bg-muted/50"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/manager/PaymentSettings.tsx:45:11",
+						"data-prohibitions": "[]",
+						className: "space-y-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:46:13",
+							"data-prohibitions": "[]",
+							className: "text-sm font-semibold",
+							children: "Chave de API Pública"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:47:13",
+							"data-prohibitions": "[editContent]",
+							placeholder: "pk_live_...",
+							className: "bg-muted/50"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/manager/PaymentSettings.tsx:49:11",
+						"data-prohibitions": "[]",
+						className: "space-y-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:50:13",
+							"data-prohibitions": "[]",
+							className: "text-sm font-semibold",
+							children: "Chave de API Secreta (Secret Key)"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:51:13",
+							"data-prohibitions": "[editContent]",
+							type: "password",
+							value: settings.apiKey,
+							onChange: (e) => setSettings({
+								...settings,
+								apiKey: e.target.value
+							}),
+							placeholder: "sk_live_...",
+							className: "bg-muted/50"
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/manager/PaymentSettings.tsx:59:11",
+						"data-prohibitions": "[]",
+						className: "space-y-2 pt-2",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+								"data-uid": "src/pages/manager/PaymentSettings.tsx:60:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-semibold",
+								children: "Webhook Endpoint (Recebimento de Eventos)"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+								"data-uid": "src/pages/manager/PaymentSettings.tsx:63:13",
+								"data-prohibitions": "[editContent]",
+								value: "https://api.plataforma.com/webhooks/payments",
+								readOnly: true,
+								className: "bg-muted/20 text-muted-foreground"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/manager/PaymentSettings.tsx:68:13",
+								"data-prohibitions": "[]",
+								className: "text-xs text-muted-foreground",
+								children: "Configure esta URL no seu provedor para receber notificações de pagamentos aprovados."
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+						"data-uid": "src/pages/manager/PaymentSettings.tsx:72:11",
+						"data-prohibitions": "[]",
+						onClick: handleSave,
+						className: "mt-4 w-full sm:w-auto",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
+							"data-uid": "src/pages/manager/PaymentSettings.tsx:73:13",
+							"data-prohibitions": "[editContent]",
+							className: "mr-2 size-4"
+						}), " Salvar Integração"]
+					})
+				]
+			})]
+		})]
+	});
+}
+//#endregion
+//#region src/pages/manager/StudentDetails.tsx
+function StudentDetails() {
+	const { id } = useParams();
+	const user = useAuthStore((s) => s.user);
+	const { students, enrollments, courses } = useLmsStore();
+	const student = students.find((s) => s.id === id);
+	if (!student) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+		"data-uid": "src/pages/manager/StudentDetails.tsx:14:24",
+		"data-prohibitions": "[]",
+		className: "p-8 text-center",
+		children: "Aluno não encontrado"
+	});
+	const basePath = user?.role === "instructor" ? "/instructor" : "/manager";
+	let studentEnrollments = enrollments.filter((e) => e.studentId === id);
+	if (user?.role === "instructor") {
+		const myCourseIds = courses.filter((c) => c.instructorId === user.id).map((c) => c.id);
+		studentEnrollments = studentEnrollments.filter((e) => myCourseIds.includes(e.courseId));
+	}
+	const allActivities = studentEnrollments.flatMap((e) => e.activityLog.map((act) => ({
+		...act,
+		courseTitle: courses.find((c) => c.id === e.courseId)?.title || "Curso Removido"
+	}))).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+	const totalTimeSpent = allActivities.reduce((acc, act) => acc + (act.timeSpentMinutes || 0), 0);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/manager/StudentDetails.tsx:37:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-8 pb-10",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/StudentDetails.tsx:38:7",
+				"data-prohibitions": "[editContent]",
+				className: "flex items-center gap-4 border-b pb-4",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/pages/manager/StudentDetails.tsx:39:9",
+					"data-prohibitions": "[]",
+					variant: "ghost",
+					size: "icon",
+					asChild: true,
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:40:11",
+						"data-prohibitions": "[]",
+						to: `${basePath}/enrollments`,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:41:13",
+							"data-prohibitions": "[editContent]",
+							className: "size-5"
+						})
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/manager/StudentDetails.tsx:44:9",
+					"data-prohibitions": "[editContent]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:45:11",
+						"data-prohibitions": "[editContent]",
+						className: "text-3xl font-bold tracking-tight",
+						children: student.name
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:46:11",
+						"data-prohibitions": "[editContent]",
+						className: "text-muted-foreground",
+						children: student.email
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/manager/StudentDetails.tsx:50:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid sm:grid-cols-2 gap-6",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/manager/StudentDetails.tsx:51:9",
+					"data-prohibitions": "[editContent]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:52:11",
+						"data-prohibitions": "[]",
+						className: "pb-2",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:53:13",
+							"data-prohibitions": "[]",
+							className: "text-sm font-medium text-muted-foreground",
+							children: "Cursos Matriculados"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:57:11",
+						"data-prohibitions": "[editContent]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:58:13",
+							"data-prohibitions": "[editContent]",
+							className: "text-4xl font-bold",
+							children: studentEnrollments.length
+						})
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/manager/StudentDetails.tsx:61:9",
+					"data-prohibitions": "[editContent]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:62:11",
+						"data-prohibitions": "[]",
+						className: "pb-2",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:63:13",
+							"data-prohibitions": "[]",
+							className: "text-sm font-medium text-muted-foreground",
+							children: "Tempo Estimado de Estudo"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:67:11",
+						"data-prohibitions": "[editContent]",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:68:13",
+							"data-prohibitions": "[editContent]",
+							className: "text-4xl font-bold text-primary",
+							children: [
+								Math.floor(totalTimeSpent / 60),
+								"h ",
+								totalTimeSpent % 60,
+								"m"
+							]
+						})
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/manager/StudentDetails.tsx:75:7",
+				"data-prohibitions": "[editContent]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+					"data-uid": "src/pages/manager/StudentDetails.tsx:76:9",
+					"data-prohibitions": "[]",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:77:11",
+						"data-prohibitions": "[]",
+						className: "flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:78:13",
+							"data-prohibitions": "[editContent]",
+							className: "size-5 text-primary"
+						}), " Log de Atividades"]
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+					"data-uid": "src/pages/manager/StudentDetails.tsx:81:9",
+					"data-prohibitions": "[editContent]",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/manager/StudentDetails.tsx:82:11",
+						"data-prohibitions": "[editContent]",
+						className: "space-y-4",
+						children: [allActivities.map((act) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:84:15",
+							"data-prohibitions": "[editContent]",
+							className: "flex items-start justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/StudentDetails.tsx:88:17",
+								"data-prohibitions": "[editContent]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/manager/StudentDetails.tsx:89:19",
+									"data-prohibitions": "[editContent]",
+									className: "font-medium text-foreground",
+									children: act.type === "enrollment" ? "Matrícula Realizada" : act.type === "lesson_complete" ? "Aula Concluída" : act.type === "exam_graded" ? "Prova Corrigida" : "Tentativa de Prova"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/manager/StudentDetails.tsx:98:19",
+									"data-prohibitions": "[editContent]",
+									className: "text-sm text-muted-foreground mt-0.5",
+									children: [
+										act.details,
+										" ",
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+											"data-uid": "src/pages/manager/StudentDetails.tsx:99:35",
+											"data-prohibitions": "[editContent]",
+											className: "font-medium ml-1",
+											children: [
+												"(",
+												act.courseTitle,
+												")"
+											]
+										})
+									]
+								})]
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/manager/StudentDetails.tsx:102:17",
+								"data-prohibitions": "[editContent]",
+								className: "text-right text-sm",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/pages/manager/StudentDetails.tsx:103:19",
+									"data-prohibitions": "[editContent]",
+									className: "text-muted-foreground font-mono",
+									children: new Date(act.date).toLocaleString("pt-BR")
+								}), act.timeSpentMinutes ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/pages/manager/StudentDetails.tsx:107:21",
+									"data-prohibitions": "[editContent]",
+									className: "text-primary font-medium mt-1 flex items-center justify-end gap-1",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Clock, {
+											"data-uid": "src/pages/manager/StudentDetails.tsx:108:23",
+											"data-prohibitions": "[editContent]",
+											className: "size-3"
+										}),
+										" +",
+										act.timeSpentMinutes,
+										" min"
+									]
+								}) : null]
+							})]
+						}, act.id)), allActivities.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/manager/StudentDetails.tsx:115:15",
+							"data-prohibitions": "[]",
+							className: "text-muted-foreground py-4 text-center",
+							children: "Nenhuma atividade registrada."
+						})]
+					})
+				})]
+			})
+		]
+	});
+}
+//#endregion
+//#region src/pages/shared/PartnerDashboard.tsx
+function PartnerDashboard() {
+	const authUser = useAuthStore((s) => s.user);
+	const { students, instructors, courses, transactions, becomePartner, commissionSettings } = useLmsStore();
+	const [selectedCourse, setSelectedCourse] = (0, import_react.useState)("");
+	if (!authUser) return null;
+	if (authUser.role === "manager") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/shared/PartnerDashboard.tsx:35:7",
+		"data-prohibitions": "[]",
+		className: "max-w-2xl mx-auto mt-12 text-center space-y-6",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:36:9",
+				"data-prohibitions": "[]",
+				className: "bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:37:11",
+					"data-prohibitions": "[editContent]",
+					className: "size-12"
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:39:9",
+				"data-prohibitions": "[]",
+				className: "text-3xl font-bold",
+				children: "Programa de Parceiros"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:40:9",
+				"data-prohibitions": "[]",
+				className: "text-lg text-muted-foreground",
+				children: "Visão de Gestor: Acesse com um perfil de Aluno ou Professor para simular o painel de Afiliado/Parceiro e gerar links de rastreamento."
+			})
+		]
+	});
+	if (!(students.find((s) => s.id === authUser.id) || instructors.find((i) => i.id === authUser.id))?.isPartner) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/shared/PartnerDashboard.tsx:53:7",
+		"data-prohibitions": "[editContent]",
+		className: "max-w-2xl mx-auto mt-12 text-center space-y-6",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:54:9",
+				"data-prohibitions": "[]",
+				className: "bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:55:11",
+					"data-prohibitions": "[editContent]",
+					className: "size-12"
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:57:9",
+				"data-prohibitions": "[]",
+				className: "text-3xl font-bold",
+				children: "Programa de Parceiros"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:58:9",
+				"data-prohibitions": "[]",
+				className: "text-lg text-muted-foreground",
+				children: "Torne-se um afiliado e ganhe comissões por cada venda realizada através do seu link exclusivo."
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:62:9",
+				"data-prohibitions": "[editContent]",
+				className: "p-6 bg-muted/30 rounded-xl text-left space-y-4 my-8 border",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:63:11",
+					"data-prohibitions": "[]",
+					className: "font-semibold text-lg",
+					children: "Como funciona?"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:64:11",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-2 text-muted-foreground",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:65:13",
+							"data-prohibitions": "[]",
+							children: "1. Você ativa sua parceria gratuitamente."
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:66:13",
+							"data-prohibitions": "[]",
+							children: "2. Gera links exclusivos para os cursos da plataforma."
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:67:13",
+							"data-prohibitions": "[]",
+							children: "3. Compartilha com sua rede, alunos ou amigos."
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:68:13",
+							"data-prohibitions": "[editContent]",
+							children: [
+								"4. Recebe a comissão (",
+								commissionSettings.defaultPartnerRate,
+								"% padrão) a cada venda!"
+							]
+						})
+					]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:73:9",
+				"data-prohibitions": "[]",
+				size: "lg",
+				className: "w-full text-lg h-14",
+				onClick: () => {
+					becomePartner(authUser.id);
+					toast$1.success("Parceria ativada com sucesso!");
+				},
+				children: "Ativar Minha Parceria Agora"
+			})
+		]
+	});
+	const partnerSales = transactions.filter((t) => t.affiliateId === authUser.id);
+	const totalEarned = partnerSales.reduce((acc, t) => {
+		return acc + (t.splits.find((s) => s.userId === authUser.id && s.role === "partner")?.amount || 0);
+	}, 0);
+	const affiliateLink = selectedCourse ? `${window.location.origin}/login?ref=${authUser.id}` : "";
+	const copyLink = () => {
+		if (!affiliateLink) return toast$1.error("Selecione um curso primeiro.");
+		navigator.clipboard.writeText(affiliateLink);
+		toast$1.success("Link de afiliado copiado para a área de transferência.");
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/shared/PartnerDashboard.tsx:102:5",
+		"data-prohibitions": "[editContent]",
+		className: "space-y-8 pb-10",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:103:7",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:104:9",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-bold tracking-tight",
+					children: "Painel do Parceiro"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:105:9",
+					"data-prohibitions": "[]",
+					className: "text-muted-foreground mt-1",
+					children: "Acompanhe suas indicações e comissões."
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:108:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid sm:grid-cols-3 gap-6",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:109:9",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:110:11",
+							"data-prohibitions": "[]",
+							className: "pb-2",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:111:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:112:15",
+									"data-prohibitions": "[editContent]",
+									className: "size-4"
+								}), " Vendas Geradas"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:115:11",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:116:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-3xl font-bold",
+								children: partnerSales.length
+							})
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:119:9",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:120:11",
+							"data-prohibitions": "[]",
+							className: "pb-2",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:121:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DollarSign, {
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:122:15",
+									"data-prohibitions": "[editContent]",
+									className: "size-4"
+								}), " Ganhos Totais"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:125:11",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:126:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-3xl font-bold text-success",
+								children: ["R$ ", totalEarned.toFixed(2)]
+							})
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:129:9",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:130:11",
+							"data-prohibitions": "[]",
+							className: "pb-2",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:131:13",
+								"data-prohibitions": "[]",
+								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent, {
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:132:15",
+									"data-prohibitions": "[editContent]",
+									className: "size-4"
+								}), " Comissão Padrão"]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:135:11",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:136:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-3xl font-bold",
+								children: [commissionSettings.defaultPartnerRate, "%"]
+							})
+						})]
+					})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:141:7",
+				"data-prohibitions": "[editContent]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:142:9",
+					"data-prohibitions": "[]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:143:11",
+						"data-prohibitions": "[]",
+						className: "flex items-center gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:144:13",
+							"data-prohibitions": "[editContent]",
+							className: "size-5 text-primary"
+						}), " Gerador de Links de Afiliado"]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:146:11",
+						"data-prohibitions": "[]",
+						children: "Selecione um curso para gerar sua URL de rastreamento."
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:148:9",
+					"data-prohibitions": "[editContent]",
+					className: "space-y-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:149:11",
+						"data-prohibitions": "[editContent]",
+						value: selectedCourse,
+						onValueChange: setSelectedCourse,
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:150:13",
+							"data-prohibitions": "[]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:151:15",
+								"data-prohibitions": "[editContent]",
+								placeholder: "Selecione o curso que deseja promover"
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:153:13",
+							"data-prohibitions": "[editContent]",
+							children: courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectItem, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:155:17",
+								"data-prohibitions": "[editContent]",
+								value: c.id,
+								children: [
+									c.title,
+									" - (R$ ",
+									c.price.toFixed(2),
+									")"
+								]
+							}, c.id))
+						})]
+					}), selectedCourse && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:163:13",
+						"data-prohibitions": "[]",
+						className: "flex gap-2",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:164:15",
+							"data-prohibitions": "[editContent]",
+							readOnly: true,
+							value: affiliateLink,
+							className: "bg-muted/50 font-mono text-sm"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:165:15",
+							"data-prohibitions": "[]",
+							onClick: copyLink,
+							variant: "secondary",
+							className: "shrink-0",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:166:17",
+								"data-prohibitions": "[editContent]",
+								className: "mr-2 size-4"
+							}), " Copiar URL"]
+						})]
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:173:7",
+				"data-prohibitions": "[editContent]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:174:9",
+					"data-prohibitions": "[]",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:175:11",
+						"data-prohibitions": "[]",
+						children: "Histórico de Vendas Indicadas"
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:177:9",
+					"data-prohibitions": "[editContent]",
+					className: "overflow-x-auto",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:178:11",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:179:13",
+							"data-prohibitions": "[]",
+							className: "bg-muted/50",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:180:15",
+								"data-prohibitions": "[]",
+								children: [
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:181:17",
+										"data-prohibitions": "[]",
+										children: "Data"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:182:17",
+										"data-prohibitions": "[]",
+										children: "Curso"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:183:17",
+										"data-prohibitions": "[]",
+										children: "Valor da Venda"
+									}),
+									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:184:17",
+										"data-prohibitions": "[]",
+										className: "text-right",
+										children: "Sua Comissão"
+									})
+								]
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:187:13",
+							"data-prohibitions": "[editContent]",
+							children: [partnerSales.map((t) => {
+								const course = courses.find((c) => c.id === t.courseId);
+								const split = t.splits.find((s) => s.userId === authUser.id && s.role === "partner");
+								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:192:19",
+									"data-prohibitions": "[editContent]",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:193:21",
+											"data-prohibitions": "[editContent]",
+											className: "font-medium",
+											children: new Date(t.date).toLocaleDateString()
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:196:21",
+											"data-prohibitions": "[editContent]",
+											children: course?.title || "Curso Removido"
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:197:21",
+											"data-prohibitions": "[editContent]",
+											children: ["R$ ", t.amount.toFixed(2)]
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:198:21",
+											"data-prohibitions": "[editContent]",
+											className: "text-right font-bold text-success",
+											children: [
+												"+ R$ ",
+												split?.amount.toFixed(2),
+												" ",
+												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+													"data-uid": "src/pages/shared/PartnerDashboard.tsx:200:23",
+													"data-prohibitions": "[editContent]",
+													className: "text-xs font-normal text-muted-foreground ml-1",
+													children: [
+														"(",
+														split?.percentage,
+														"%)"
+													]
+												})
+											]
+										})
+									]
+								}, t.id);
+							}), partnerSales.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:208:17",
+								"data-prohibitions": "[]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:209:19",
+									"data-prohibitions": "[]",
+									colSpan: 4,
+									className: "text-center py-8 text-muted-foreground",
+									children: "Você ainda não gerou nenhuma venda."
 								})
 							})]
 						})]
@@ -35890,1564 +35773,391 @@ function QuestionBank() {
 	});
 }
 //#endregion
-//#region src/pages/shared/PartnerDashboard.tsx
-function PartnerDashboard() {
-	const authUser = useAuthStore((s) => s.user);
-	const { students, instructors, courses, transactions, becomePartner, commissionSettings } = useLmsStore();
-	const [selectedCourse, setSelectedCourse] = (0, import_react.useState)("");
-	if (!authUser) return null;
-	if (authUser.role === "manager") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/shared/PartnerDashboard.tsx:35:7",
-		"data-prohibitions": "[]",
-		className: "max-w-2xl mx-auto mt-12 text-center space-y-6",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:36:9",
-				"data-prohibitions": "[]",
-				className: "bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:37:11",
-					"data-prohibitions": "[editContent]",
-					className: "size-12"
-				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:39:9",
-				"data-prohibitions": "[]",
-				className: "text-3xl font-bold",
-				children: "Programa de Parceiros"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:40:9",
-				"data-prohibitions": "[]",
-				className: "text-lg text-muted-foreground",
-				children: "Visão de Gestor: Acesse com um perfil de Aluno ou Professor para simular o painel de Afiliado/Parceiro e gerar links de rastreamento."
-			})
-		]
-	});
-	if (!(students.find((s) => s.id === authUser.id) || instructors.find((i) => i.id === authUser.id))?.isPartner) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/shared/PartnerDashboard.tsx:53:7",
+//#region src/App.tsx
+function ProtectedRoute({ children, allowedRoles }) {
+	const { user, isAuthenticated } = useAuthStore();
+	if (!isAuthenticated || !user) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
+		"data-uid": "src/App.tsx:49:12",
 		"data-prohibitions": "[editContent]",
-		className: "max-w-2xl mx-auto mt-12 text-center space-y-6",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:54:9",
-				"data-prohibitions": "[]",
-				className: "bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:55:11",
-					"data-prohibitions": "[editContent]",
-					className: "size-12"
-				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:57:9",
-				"data-prohibitions": "[]",
-				className: "text-3xl font-bold",
-				children: "Programa de Parceiros"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:58:9",
-				"data-prohibitions": "[]",
-				className: "text-lg text-muted-foreground",
-				children: "Torne-se um afiliado e ganhe comissões por cada venda realizada através do seu link exclusivo."
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:62:9",
-				"data-prohibitions": "[editContent]",
-				className: "p-6 bg-muted/30 rounded-xl text-left space-y-4 my-8 border",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:63:11",
-					"data-prohibitions": "[]",
-					className: "font-semibold text-lg",
-					children: "Como funciona?"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:64:11",
-					"data-prohibitions": "[editContent]",
-					className: "space-y-2 text-muted-foreground",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:65:13",
-							"data-prohibitions": "[]",
-							children: "1. Você ativa sua parceria gratuitamente."
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:66:13",
-							"data-prohibitions": "[]",
-							children: "2. Gera links exclusivos para os cursos da plataforma."
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:67:13",
-							"data-prohibitions": "[]",
-							children: "3. Compartilha com sua rede, alunos ou amigos."
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:68:13",
-							"data-prohibitions": "[editContent]",
-							children: [
-								"4. Recebe a comissão (",
-								commissionSettings.defaultPartnerRate,
-								"% padrão) a cada venda!"
-							]
-						})
-					]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:73:9",
-				"data-prohibitions": "[]",
-				size: "lg",
-				className: "w-full text-lg h-14",
-				onClick: () => {
-					becomePartner(authUser.id);
-					toast.success("Parceria ativada com sucesso!");
-				},
-				children: "Ativar Minha Parceria Agora"
-			})
-		]
+		to: "/login",
+		replace: true
 	});
-	const partnerSales = transactions.filter((t) => t.affiliateId === authUser.id);
-	const totalEarned = partnerSales.reduce((acc, t) => {
-		return acc + (t.splits.find((s) => s.userId === authUser.id && s.role === "partner")?.amount || 0);
-	}, 0);
-	const affiliateLink = selectedCourse ? `${window.location.origin}/login?ref=${authUser.id}` : "";
-	const copyLink = () => {
-		if (!affiliateLink) return toast.error("Selecione um curso primeiro.");
-		navigator.clipboard.writeText(affiliateLink);
-		toast.success("Link de afiliado copiado para a área de transferência.");
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/shared/PartnerDashboard.tsx:102:5",
-		"data-prohibitions": "[editContent]",
-		className: "space-y-8 pb-10",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:103:7",
-				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:104:9",
-					"data-prohibitions": "[]",
-					className: "text-3xl font-bold tracking-tight",
-					children: "Painel do Parceiro"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:105:9",
-					"data-prohibitions": "[]",
-					className: "text-muted-foreground mt-1",
-					children: "Acompanhe suas indicações e comissões."
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:108:7",
-				"data-prohibitions": "[editContent]",
-				className: "grid sm:grid-cols-3 gap-6",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:109:9",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:110:11",
-							"data-prohibitions": "[]",
-							className: "pb-2",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:111:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:112:15",
-									"data-prohibitions": "[editContent]",
-									className: "size-4"
-								}), " Vendas Geradas"]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:115:11",
-							"data-prohibitions": "[editContent]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:116:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-3xl font-bold",
-								children: partnerSales.length
-							})
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:119:9",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:120:11",
-							"data-prohibitions": "[]",
-							className: "pb-2",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:121:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DollarSign, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:122:15",
-									"data-prohibitions": "[editContent]",
-									className: "size-4"
-								}), " Ganhos Totais"]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:125:11",
-							"data-prohibitions": "[editContent]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:126:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-3xl font-bold text-success",
-								children: ["R$ ", totalEarned.toFixed(2)]
-							})
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:129:9",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:130:11",
-							"data-prohibitions": "[]",
-							className: "pb-2",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:131:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:132:15",
-									"data-prohibitions": "[editContent]",
-									className: "size-4"
-								}), " Comissão Padrão"]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:135:11",
-							"data-prohibitions": "[editContent]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:136:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-3xl font-bold",
-								children: [commissionSettings.defaultPartnerRate, "%"]
-							})
-						})]
-					})
-				]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:141:7",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:142:9",
-					"data-prohibitions": "[]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:143:11",
-						"data-prohibitions": "[]",
-						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:144:13",
-							"data-prohibitions": "[editContent]",
-							className: "size-5 text-primary"
-						}), " Gerador de Links de Afiliado"]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:146:11",
-						"data-prohibitions": "[]",
-						children: "Selecione um curso para gerar sua URL de rastreamento."
-					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:148:9",
-					"data-prohibitions": "[editContent]",
-					className: "space-y-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:149:11",
-						"data-prohibitions": "[editContent]",
-						value: selectedCourse,
-						onValueChange: setSelectedCourse,
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:150:13",
-							"data-prohibitions": "[]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:151:15",
-								"data-prohibitions": "[editContent]",
-								placeholder: "Selecione o curso que deseja promover"
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:153:13",
-							"data-prohibitions": "[editContent]",
-							children: courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectItem, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:155:17",
-								"data-prohibitions": "[editContent]",
-								value: c.id,
-								children: [
-									c.title,
-									" - (R$ ",
-									c.price.toFixed(2),
-									")"
-								]
-							}, c.id))
-						})]
-					}), selectedCourse && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:163:13",
-						"data-prohibitions": "[]",
-						className: "flex gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:164:15",
-							"data-prohibitions": "[editContent]",
-							readOnly: true,
-							value: affiliateLink,
-							className: "bg-muted/50 font-mono text-sm"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:165:15",
-							"data-prohibitions": "[]",
-							onClick: copyLink,
-							variant: "secondary",
-							className: "shrink-0",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:166:17",
-								"data-prohibitions": "[editContent]",
-								className: "mr-2 size-4"
-							}), " Copiar URL"]
-						})]
-					})]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:173:7",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:174:9",
-					"data-prohibitions": "[]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:175:11",
-						"data-prohibitions": "[]",
-						children: "Histórico de Vendas Indicadas"
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:177:9",
-					"data-prohibitions": "[editContent]",
-					className: "overflow-x-auto",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:178:11",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:179:13",
-							"data-prohibitions": "[]",
-							className: "bg-muted/50",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:180:15",
-								"data-prohibitions": "[]",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:181:17",
-										"data-prohibitions": "[]",
-										children: "Data"
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:182:17",
-										"data-prohibitions": "[]",
-										children: "Curso"
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:183:17",
-										"data-prohibitions": "[]",
-										children: "Valor da Venda"
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:184:17",
-										"data-prohibitions": "[]",
-										className: "text-right",
-										children: "Sua Comissão"
-									})
-								]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:187:13",
-							"data-prohibitions": "[editContent]",
-							children: [partnerSales.map((t) => {
-								const course = courses.find((c) => c.id === t.courseId);
-								const split = t.splits.find((s) => s.userId === authUser.id && s.role === "partner");
-								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:192:19",
-									"data-prohibitions": "[editContent]",
-									children: [
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:193:21",
-											"data-prohibitions": "[editContent]",
-											className: "font-medium",
-											children: new Date(t.date).toLocaleDateString()
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:196:21",
-											"data-prohibitions": "[editContent]",
-											children: course?.title || "Curso Removido"
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:197:21",
-											"data-prohibitions": "[editContent]",
-											children: ["R$ ", t.amount.toFixed(2)]
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:198:21",
-											"data-prohibitions": "[editContent]",
-											className: "text-right font-bold text-success",
-											children: [
-												"+ R$ ",
-												split?.amount.toFixed(2),
-												" ",
-												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-													"data-uid": "src/pages/shared/PartnerDashboard.tsx:200:23",
-													"data-prohibitions": "[editContent]",
-													className: "text-xs font-normal text-muted-foreground ml-1",
-													children: [
-														"(",
-														split?.percentage,
-														"%)"
-													]
-												})
-											]
-										})
-									]
-								}, t.id);
-							}), partnerSales.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:208:17",
-								"data-prohibitions": "[]",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:209:19",
-									"data-prohibitions": "[]",
-									colSpan: 4,
-									className: "text-center py-8 text-muted-foreground",
-									children: "Você ainda não gerou nenhuma venda."
-								})
-							})]
-						})]
-					})
-				})]
-			})
-		]
-	});
-}
-//#endregion
-//#region src/pages/instructor/GradeExams.tsx
-function GradeExams() {
-	const user = useAuthStore((s) => s.user);
-	const { enrollments, courses, students, gradeExam } = useLmsStore();
-	const [selected, setSelected] = (0, import_react.useState)(null);
-	const [score, setScore] = (0, import_react.useState)(0);
-	const [feedback, setFeedback] = (0, import_react.useState)("");
-	const myCourses = courses.filter((c) => c.instructorId === user?.id);
-	const myCourseIds = myCourses.map((c) => c.id);
-	const pendings = [];
-	enrollments.forEach((e) => {
-		if (!myCourseIds.includes(e.courseId)) return;
-		Object.values(e.examSubmissions).forEach((sub) => {
-			if (sub.isPending) pendings.push({
-				enrollmentId: e.id,
-				sub,
-				cTitle: myCourses.find((c) => c.id === e.courseId)?.title,
-				sName: students.find((s) => s.id === e.studentId)?.name
-			});
-		});
-	});
-	const openGrade = (item) => {
-		setSelected(item);
-		setScore(0);
-		setFeedback("");
-	};
-	const handleSave = () => {
-		if (!selected) return;
-		gradeExam(selected.enrollmentId, selected.sub.lessonId, score, feedback);
-		toast.success("Nota atribuída com sucesso!");
-		setSelected(null);
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/instructor/GradeExams.tsx:64:5",
-		"data-prohibitions": "[editContent]",
-		className: "space-y-8 pb-10",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/instructor/GradeExams.tsx:65:7",
-				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/instructor/GradeExams.tsx:66:9",
-					"data-prohibitions": "[]",
-					className: "text-3xl font-bold tracking-tight",
-					children: "Correção de Provas"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/instructor/GradeExams.tsx:67:9",
-					"data-prohibitions": "[]",
-					className: "text-muted-foreground mt-1",
-					children: "Avalie as respostas dissertativas dos alunos."
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-				"data-uid": "src/pages/instructor/GradeExams.tsx:70:7",
-				"data-prohibitions": "[editContent]",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-					"data-uid": "src/pages/instructor/GradeExams.tsx:71:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-						"data-uid": "src/pages/instructor/GradeExams.tsx:72:11",
-						"data-prohibitions": "[]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/pages/instructor/GradeExams.tsx:73:13",
-							"data-prohibitions": "[]",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:74:15",
-									"data-prohibitions": "[]",
-									children: "Aluno"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:75:15",
-									"data-prohibitions": "[]",
-									children: "Curso"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:76:15",
-									"data-prohibitions": "[]",
-									children: "Questões Abertas"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:77:15",
-									"data-prohibitions": "[]",
-									className: "text-right",
-									children: "Ação"
-								})
-							]
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
-						"data-uid": "src/pages/instructor/GradeExams.tsx:80:11",
-						"data-prohibitions": "[editContent]",
-						children: [pendings.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/pages/instructor/GradeExams.tsx:82:15",
-							"data-prohibitions": "[editContent]",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:83:17",
-									"data-prohibitions": "[editContent]",
-									className: "font-medium",
-									children: p.sName
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:84:17",
-									"data-prohibitions": "[editContent]",
-									children: p.cTitle
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:85:17",
-									"data-prohibitions": "[editContent]",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Badge, {
-										"data-uid": "src/pages/instructor/GradeExams.tsx:86:19",
-										"data-prohibitions": "[editContent]",
-										variant: "secondary",
-										children: [p.sub.questions.filter((q) => q.type === "essay").length, " pendentes"]
-									})
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:90:17",
-									"data-prohibitions": "[]",
-									className: "text-right",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/instructor/GradeExams.tsx:91:19",
-										"data-prohibitions": "[]",
-										size: "sm",
-										onClick: () => openGrade(p),
-										children: "Avaliar"
-									})
-								})
-							]
-						}, i)), pendings.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
-							"data-uid": "src/pages/instructor/GradeExams.tsx:98:15",
-							"data-prohibitions": "[]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-								"data-uid": "src/pages/instructor/GradeExams.tsx:99:17",
-								"data-prohibitions": "[]",
-								colSpan: 4,
-								className: "text-center py-8 text-muted-foreground",
-								children: "Nenhuma prova pendente de correção."
-							})
-						})]
-					})]
-				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
-				"data-uid": "src/pages/instructor/GradeExams.tsx:108:7",
-				"data-prohibitions": "[editContent]",
-				open: !!selected,
-				onOpenChange: (o) => !o && setSelected(null),
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
-					"data-uid": "src/pages/instructor/GradeExams.tsx:109:9",
-					"data-prohibitions": "[editContent]",
-					className: "max-w-3xl max-h-[80vh] overflow-y-auto",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
-						"data-uid": "src/pages/instructor/GradeExams.tsx:110:11",
-						"data-prohibitions": "[editContent]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogTitle, {
-							"data-uid": "src/pages/instructor/GradeExams.tsx:111:13",
-							"data-prohibitions": "[editContent]",
-							children: ["Avaliar Aluno: ", selected?.sName]
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/instructor/GradeExams.tsx:113:11",
-						"data-prohibitions": "[editContent]",
-						className: "space-y-6 py-4",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/instructor/GradeExams.tsx:114:13",
-								"data-prohibitions": "[editContent]",
-								className: "bg-muted/30 p-4 rounded-lg",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:115:15",
-									"data-prohibitions": "[editContent]",
-									className: "text-sm font-semibold",
-									children: [
-										"Nota Automática (Múltipla Escolha): ",
-										selected?.sub.autoScore.toFixed(1),
-										" pts"
-									]
-								})
-							}),
-							selected?.sub.questions.map((q, i) => {
-								if (q.type !== "essay") return null;
-								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/instructor/GradeExams.tsx:123:17",
-									"data-prohibitions": "[editContent]",
-									className: "border p-4 rounded-lg space-y-3 bg-card",
-									children: [
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:124:19",
-											"data-prohibitions": "[]",
-											className: "font-semibold text-sm",
-											children: "Pergunta:"
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:125:19",
-											"data-prohibitions": "[editContent]",
-											className: "bg-muted/50 p-3 rounded",
-											children: q.text
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:126:19",
-											"data-prohibitions": "[]",
-											className: "font-semibold text-sm mt-4",
-											children: "Resposta do Aluno:"
-										}),
-										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:127:19",
-											"data-prohibitions": "[editContent]",
-											className: "bg-primary/5 p-4 rounded text-foreground whitespace-pre-wrap",
-											children: selected.sub.answers[q.id] || /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/instructor/GradeExams.tsx:129:23",
-												"data-prohibitions": "[]",
-												className: "italic opacity-50",
-												children: "Em branco"
-											})
-										})
-									]
-								}, q.id);
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/instructor/GradeExams.tsx:136:13",
-								"data-prohibitions": "[]",
-								className: "space-y-4 border-t pt-6",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/instructor/GradeExams.tsx:137:15",
-										"data-prohibitions": "[]",
-										className: "space-y-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:138:17",
-											"data-prohibitions": "[]",
-											className: "font-semibold",
-											children: "Nota atribuída às questões abertas (0 a 100)"
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:141:17",
-											"data-prohibitions": "[editContent]",
-											type: "number",
-											value: score,
-											onChange: (e) => setScore(Number(e.target.value)),
-											className: "w-32 text-lg font-bold"
-										})]
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/instructor/GradeExams.tsx:148:15",
-										"data-prohibitions": "[]",
-										className: "space-y-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:149:17",
-											"data-prohibitions": "[]",
-											className: "font-semibold",
-											children: "Feedback para o Aluno"
-										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-											"data-uid": "src/pages/instructor/GradeExams.tsx:150:17",
-											"data-prohibitions": "[editContent]",
-											value: feedback,
-											onChange: (e) => setFeedback(e.target.value),
-											placeholder: "Muito bem construído o argumento..."
-										})]
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/instructor/GradeExams.tsx:156:15",
-										"data-prohibitions": "[]",
-										size: "lg",
-										className: "w-full",
-										onClick: handleSave,
-										children: "Salvar e Concluir Avaliação"
-									})
-								]
-							})
-						]
-					})]
-				})
-			})
-		]
-	});
-}
-//#endregion
-//#region src/pages/instructor/Revenue.tsx
-function Revenue() {
-	const user = useAuthStore((s) => s.user);
-	const { transactions, courses } = useLmsStore();
-	if (!user) return null;
-	const myTransactions = transactions.filter((t) => t.splits.some((s) => s.userId === user.id));
-	const instructorRevenue = myTransactions.reduce((acc, t) => {
-		return acc + (t.splits.find((s) => s.userId === user.id && s.role === "instructor")?.amount || 0);
-	}, 0);
-	const affiliateRevenue = myTransactions.reduce((acc, t) => {
-		return acc + (t.splits.find((s) => s.userId === user.id && s.role === "partner")?.amount || 0);
-	}, 0);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/instructor/Revenue.tsx:33:5",
-		"data-prohibitions": "[editContent]",
-		className: "space-y-8 pb-10",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/instructor/Revenue.tsx:34:7",
-				"data-prohibitions": "[]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/instructor/Revenue.tsx:35:9",
-					"data-prohibitions": "[]",
-					className: "text-3xl font-bold tracking-tight",
-					children: "Minhas Receitas"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/instructor/Revenue.tsx:36:9",
-					"data-prohibitions": "[]",
-					className: "text-muted-foreground mt-1",
-					children: "Acompanhe seus ganhos como professor e como afiliado."
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/instructor/Revenue.tsx:41:7",
-				"data-prohibitions": "[editContent]",
-				className: "grid sm:grid-cols-3 gap-6",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/instructor/Revenue.tsx:42:9",
-						"data-prohibitions": "[editContent]",
-						className: "border-primary/50 bg-primary/5",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:43:11",
-							"data-prohibitions": "[]",
-							className: "pb-2",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/instructor/Revenue.tsx:44:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-primary flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wallet, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:45:15",
-									"data-prohibitions": "[editContent]",
-									className: "size-4"
-								}), " Receita Total"]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:48:11",
-							"data-prohibitions": "[editContent]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/instructor/Revenue.tsx:49:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-3xl font-bold text-primary",
-								children: ["R$ ", (instructorRevenue + affiliateRevenue).toFixed(2)]
-							})
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/instructor/Revenue.tsx:54:9",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:55:11",
-							"data-prohibitions": "[]",
-							className: "pb-2",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/instructor/Revenue.tsx:56:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presentation, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:57:15",
-									"data-prohibitions": "[editContent]",
-									className: "size-4"
-								}), " Comissões como Professor"]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:60:11",
-							"data-prohibitions": "[editContent]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/instructor/Revenue.tsx:61:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-2xl font-bold",
-								children: ["R$ ", instructorRevenue.toFixed(2)]
-							})
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/instructor/Revenue.tsx:64:9",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:65:11",
-							"data-prohibitions": "[]",
-							className: "pb-2",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/instructor/Revenue.tsx:66:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:67:15",
-									"data-prohibitions": "[editContent]",
-									className: "size-4"
-								}), " Comissões como Afiliado"]
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:70:11",
-							"data-prohibitions": "[editContent]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/instructor/Revenue.tsx:71:13",
-								"data-prohibitions": "[editContent]",
-								className: "text-2xl font-bold text-success",
-								children: ["R$ ", affiliateRevenue.toFixed(2)]
-							})
-						})]
-					})
-				]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/instructor/Revenue.tsx:76:7",
-				"data-prohibitions": "[editContent]",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/instructor/Revenue.tsx:77:9",
-					"data-prohibitions": "[]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/instructor/Revenue.tsx:78:11",
-						"data-prohibitions": "[]",
-						children: "Extrato Detalhado"
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-					"data-uid": "src/pages/instructor/Revenue.tsx:80:9",
-					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-						"data-uid": "src/pages/instructor/Revenue.tsx:81:11",
-						"data-prohibitions": "[]",
-						className: "bg-muted/50",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:82:13",
-							"data-prohibitions": "[]",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:83:15",
-									"data-prohibitions": "[]",
-									children: "Data"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:84:15",
-									"data-prohibitions": "[]",
-									children: "Curso Vendido"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:85:15",
-									"data-prohibitions": "[]",
-									children: "Tipo de Comissão"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/pages/instructor/Revenue.tsx:86:15",
-									"data-prohibitions": "[]",
-									className: "text-right",
-									children: "Valor Recebido"
-								})
-							]
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
-						"data-uid": "src/pages/instructor/Revenue.tsx:89:11",
-						"data-prohibitions": "[editContent]",
-						children: [myTransactions.map((t) => {
-							const course = courses.find((c) => c.id === t.courseId);
-							return t.splits.filter((s) => s.userId === user.id).map((split, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-								"data-uid": "src/pages/instructor/Revenue.tsx:95:17",
-								"data-prohibitions": "[editContent]",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-										"data-uid": "src/pages/instructor/Revenue.tsx:96:19",
-										"data-prohibitions": "[editContent]",
-										className: "font-medium text-sm",
-										children: new Date(t.date).toLocaleDateString()
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-										"data-uid": "src/pages/instructor/Revenue.tsx:99:19",
-										"data-prohibitions": "[editContent]",
-										children: course?.title
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-										"data-uid": "src/pages/instructor/Revenue.tsx:100:19",
-										"data-prohibitions": "[editContent]",
-										children: split.role === "instructor" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/instructor/Revenue.tsx:102:23",
-											"data-prohibitions": "[editContent]",
-											className: "text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-semibold",
-											children: [
-												"Professor (",
-												split.percentage,
-												"%)"
-											]
-										}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/instructor/Revenue.tsx:106:23",
-											"data-prohibitions": "[editContent]",
-											className: "text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-xs font-semibold",
-											children: [
-												"Afiliado (",
-												split.percentage,
-												"%)"
-											]
-										})
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
-										"data-uid": "src/pages/instructor/Revenue.tsx:111:19",
-										"data-prohibitions": "[editContent]",
-										className: "text-right font-bold",
-										children: ["+ R$ ", split.amount.toFixed(2)]
-									})
-								]
-							}, `${t.id}-${i}`));
-						}), myTransactions.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
-							"data-uid": "src/pages/instructor/Revenue.tsx:118:15",
-							"data-prohibitions": "[]",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-								"data-uid": "src/pages/instructor/Revenue.tsx:119:17",
-								"data-prohibitions": "[]",
-								colSpan: 4,
-								className: "text-center py-8 text-muted-foreground",
-								children: "Você ainda não possui receitas registradas."
-							})
-						})]
-					})]
-				})]
-			})
-		]
-	});
-}
-//#endregion
-//#region src/pages/public/ValidateCertificate.tsx
-function ValidateCertificate() {
-	const { code } = useParams();
-	const { enrollments, students, courses } = useLmsStore();
-	let isValid = false;
-	let studentName = "";
-	let courseTitle = "";
-	let completionDate = "";
-	let errorMsg = "";
-	try {
-		if (!code) throw new Error("Código ausente.");
-		const [studentId, courseId] = atob(code).split("-");
-		if (!studentId || !courseId) throw new Error("Formato inválido.");
-		const enrollment = enrollments.find((e) => e.studentId === studentId && e.courseId === courseId);
-		if (!enrollment || !enrollment.isCompleted) throw new Error("Certificado não encontrado ou curso não concluído.");
-		const student = students.find((s) => s.id === studentId);
-		const course = courses.find((c) => c.id === courseId);
-		if (!student || !course) throw new Error("Dados do aluno ou curso não encontrados.");
-		isValid = true;
-		studentName = student.name;
-		courseTitle = course.title;
-		completionDate = enrollment.completionDate || (/* @__PURE__ */ new Date()).toISOString();
-	} catch (e) {
-		errorMsg = e.message || "Código de validação inválido.";
-	}
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/public/ValidateCertificate.tsx:42:5",
-		"data-prohibitions": "[editContent]",
-		className: "min-h-screen flex items-center justify-center bg-muted/20 p-4",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/public/ValidateCertificate.tsx:43:7",
+	if (allowedRoles && !allowedRoles.includes(user.role)) {
+		if (user.role === "manager" || user.role === "admin") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
+			"data-uid": "src/App.tsx:55:14",
 			"data-prohibitions": "[editContent]",
-			className: "w-full max-w-lg space-y-6",
+			to: "/manager/dashboard",
+			replace: true
+		});
+		if (user.role === "instructor") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
+			"data-uid": "src/App.tsx:56:44",
+			"data-prohibitions": "[editContent]",
+			to: "/instructor/dashboard",
+			replace: true
+		});
+		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
+			"data-uid": "src/App.tsx:57:12",
+			"data-prohibitions": "[editContent]",
+			to: "/student/dashboard",
+			replace: true
+		});
+	}
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children });
+}
+function App() {
+	(0, import_react.useEffect)(() => {
+		const ref = new URLSearchParams(window.location.search).get("ref");
+		if (ref) localStorage.setItem("affiliate_ref", ref);
+	}, []);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
+		"data-uid": "src/App.tsx:74:5",
+		"data-prohibitions": "[editContent]",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
+			"data-uid": "src/App.tsx:75:7",
+			"data-prohibitions": "[editContent]",
 			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/public/ValidateCertificate.tsx:44:9",
-					"data-prohibitions": "[]",
-					className: "text-center space-y-2 mb-8",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					"data-uid": "src/App.tsx:76:9",
+					"data-prohibitions": "[editContent]",
+					path: "/",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
+						"data-uid": "src/App.tsx:76:34",
+						"data-prohibitions": "[editContent]"
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					"data-uid": "src/App.tsx:77:9",
+					"data-prohibitions": "[editContent]",
+					path: "/sobre",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(About, {
+						"data-uid": "src/App.tsx:77:39",
+						"data-prohibitions": "[editContent]"
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					"data-uid": "src/App.tsx:78:9",
+					"data-prohibitions": "[editContent]",
+					path: "/login",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
+						"data-uid": "src/App.tsx:78:39",
+						"data-prohibitions": "[editContent]"
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					"data-uid": "src/App.tsx:79:9",
+					"data-prohibitions": "[editContent]",
+					path: "/validate-certificate/:id",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ValidateCertificate, {
+						"data-uid": "src/App.tsx:79:58",
+						"data-prohibitions": "[editContent]"
+					})
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
+					"data-uid": "src/App.tsx:82:9",
+					"data-prohibitions": "[editContent]",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
+						"data-uid": "src/App.tsx:82:25",
+						"data-prohibitions": "[editContent]"
+					}),
 					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ShieldCheck, {
-							"data-uid": "src/pages/public/ValidateCertificate.tsx:45:11",
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:84:11",
 							"data-prohibitions": "[editContent]",
-							className: "mx-auto size-12 text-primary"
+							path: "/student/dashboard",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:87:15",
+								"data-prohibitions": "[]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
+									"data-uid": "src/App.tsx:88:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-							"data-uid": "src/pages/public/ValidateCertificate.tsx:46:11",
-							"data-prohibitions": "[]",
-							className: "text-3xl font-bold tracking-tight",
-							children: "Portal de Autenticidade"
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:92:11",
+							"data-prohibitions": "[editContent]",
+							path: "/student/course/:id",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:95:15",
+								"data-prohibitions": "[]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CoursePlayer, {
+									"data-uid": "src/App.tsx:96:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
 						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/public/ValidateCertificate.tsx:47:11",
-							"data-prohibitions": "[]",
-							className: "text-muted-foreground",
-							children: "Verificação de certificados e diplomas emitidos."
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:100:11",
+							"data-prohibitions": "[editContent]",
+							path: "/student/certificate/:id",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:103:15",
+								"data-prohibitions": "[]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Certificate, {
+									"data-uid": "src/App.tsx:104:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:110:11",
+							"data-prohibitions": "[editContent]",
+							path: "/instructor/dashboard",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:113:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"instructor",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
+									"data-uid": "src/App.tsx:114:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:118:11",
+							"data-prohibitions": "[editContent]",
+							path: "/instructor/grade-exams",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:121:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"instructor",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GradeExams, {
+									"data-uid": "src/App.tsx:122:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:126:11",
+							"data-prohibitions": "[editContent]",
+							path: "/instructor/revenue",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:129:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"instructor",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Revenue, {
+									"data-uid": "src/App.tsx:130:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:134:11",
+							"data-prohibitions": "[editContent]",
+							path: "/instructor/questions",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:137:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"instructor",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(QuestionBank, {
+									"data-uid": "src/App.tsx:138:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:144:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/dashboard",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:147:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerDashboard, {
+									"data-uid": "src/App.tsx:148:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:152:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/courses",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:155:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerCourses, {
+									"data-uid": "src/App.tsx:156:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:160:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/course/:id",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:163:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
+									"data-uid": "src/App.tsx:164:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:168:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/enrollments",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:171:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerEnrollments, {
+									"data-uid": "src/App.tsx:172:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:176:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/student/:id",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:179:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDetails, {
+									"data-uid": "src/App.tsx:180:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:184:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/reports",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:187:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reports, {
+									"data-uid": "src/App.tsx:188:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:192:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/finance",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:195:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FinancialReports, {
+									"data-uid": "src/App.tsx:196:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:200:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/notifications",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:203:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotificationSettings, {
+									"data-uid": "src/App.tsx:204:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:208:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/integrations",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:211:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Integrations, {
+									"data-uid": "src/App.tsx:212:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:216:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/commissions",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:219:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommissionSettings, {
+									"data-uid": "src/App.tsx:220:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:224:11",
+							"data-prohibitions": "[editContent]",
+							path: "/manager/payments",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:227:15",
+								"data-prohibitions": "[]",
+								allowedRoles: ["manager", "admin"],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PaymentSettings, {
+									"data-uid": "src/App.tsx:228:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:234:11",
+							"data-prohibitions": "[editContent]",
+							path: "/partner/dashboard",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:237:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"partner",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
+									"data-uid": "src/App.tsx:238:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
 						})
 					]
 				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/public/ValidateCertificate.tsx:50:9",
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+					"data-uid": "src/App.tsx:244:9",
 					"data-prohibitions": "[editContent]",
-					className: "border-t-4 border-t-primary shadow-xl overflow-hidden",
-					children: [isValid ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/public/ValidateCertificate.tsx:52:13",
-						"data-prohibitions": "[]",
-						className: "bg-success/5 border-b border-success/20 p-6 flex flex-col items-center justify-center text-center space-y-3",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:53:15",
-								"data-prohibitions": "[]",
-								className: "bg-success text-success-foreground p-3 rounded-full mb-2 shadow-sm",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheckBig, {
-									"data-uid": "src/pages/public/ValidateCertificate.tsx:54:17",
-									"data-prohibitions": "[editContent]",
-									className: "size-8"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:56:15",
-								"data-prohibitions": "[]",
-								className: "text-2xl font-bold text-success-foreground uppercase tracking-wide",
-								children: "Certificado Válido"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:59:15",
-								"data-prohibitions": "[]",
-								className: "text-success-foreground/80 font-medium",
-								children: "Este documento é autêntico e foi emitido pela nossa instituição."
-							})
-						]
-					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/public/ValidateCertificate.tsx:64:13",
-						"data-prohibitions": "[editContent]",
-						className: "bg-destructive/5 border-b border-destructive/20 p-6 flex flex-col items-center justify-center text-center space-y-3",
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:65:15",
-								"data-prohibitions": "[]",
-								className: "bg-destructive text-destructive-foreground p-3 rounded-full mb-2 shadow-sm",
-								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleX, {
-									"data-uid": "src/pages/public/ValidateCertificate.tsx:66:17",
-									"data-prohibitions": "[editContent]",
-									className: "size-8"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:68:15",
-								"data-prohibitions": "[]",
-								className: "text-2xl font-bold text-destructive-foreground uppercase tracking-wide",
-								children: "Documento Inválido"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:71:15",
-								"data-prohibitions": "[editContent]",
-								className: "text-destructive-foreground/80 font-medium",
-								children: errorMsg
-							})
-						]
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/public/ValidateCertificate.tsx:75:11",
-						"data-prohibitions": "[editContent]",
-						className: "p-8 space-y-6",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/public/ValidateCertificate.tsx:76:13",
-							"data-prohibitions": "[editContent]",
-							className: "space-y-1",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:77:15",
-								"data-prohibitions": "[]",
-								className: "text-sm font-semibold text-muted-foreground uppercase tracking-wider",
-								children: "Código de Verificação"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:80:15",
-								"data-prohibitions": "[editContent]",
-								className: "font-mono text-sm bg-muted p-2 rounded break-all",
-								children: code
-							})]
-						}), isValid && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/public/ValidateCertificate.tsx:84:15",
-							"data-prohibitions": "[editContent]",
-							className: "space-y-5 pt-4 border-t",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/public/ValidateCertificate.tsx:85:17",
-									"data-prohibitions": "[editContent]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/public/ValidateCertificate.tsx:86:19",
-										"data-prohibitions": "[]",
-										className: "text-sm text-muted-foreground mb-1",
-										children: "Nome do Aluno(a)"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/public/ValidateCertificate.tsx:87:19",
-										"data-prohibitions": "[editContent]",
-										className: "text-xl font-bold",
-										children: studentName
-									})]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/public/ValidateCertificate.tsx:89:17",
-									"data-prohibitions": "[editContent]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/public/ValidateCertificate.tsx:90:19",
-										"data-prohibitions": "[]",
-										className: "text-sm text-muted-foreground mb-1",
-										children: "Curso Concluído"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/public/ValidateCertificate.tsx:91:19",
-										"data-prohibitions": "[editContent]",
-										className: "text-lg font-medium",
-										children: courseTitle
-									})]
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/public/ValidateCertificate.tsx:93:17",
-									"data-prohibitions": "[editContent]",
-									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/public/ValidateCertificate.tsx:94:19",
-										"data-prohibitions": "[]",
-										className: "text-sm text-muted-foreground mb-1",
-										children: "Data de Conclusão"
-									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/public/ValidateCertificate.tsx:95:19",
-										"data-prohibitions": "[editContent]",
-										className: "text-base font-medium",
-										children: new Date(completionDate).toLocaleDateString("pt-BR")
-									})]
-								})
-							]
-						})]
-					})]
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/public/ValidateCertificate.tsx:104:9",
-					"data-prohibitions": "[]",
-					className: "text-center pt-8",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/pages/public/ValidateCertificate.tsx:105:11",
-						"data-prohibitions": "[]",
-						variant: "ghost",
-						asChild: true,
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-							"data-uid": "src/pages/public/ValidateCertificate.tsx:106:13",
-							"data-prohibitions": "[]",
-							to: "/",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(House, {
-								"data-uid": "src/pages/public/ValidateCertificate.tsx:107:15",
-								"data-prohibitions": "[editContent]",
-								className: "mr-2 size-4"
-							}), " Voltar ao Início"]
-						})
+					path: "*",
+					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
+						"data-uid": "src/App.tsx:244:34",
+						"data-prohibitions": "[editContent]"
 					})
 				})
 			]
 		})
 	});
 }
-//#endregion
-//#region src/App.tsx
-var ref = new URLSearchParams(window.location.search).get("ref");
-if (ref) localStorage.setItem("lms_affiliate_ref", ref);
-var RootRedirect = () => {
-	const user = useAuthStore((s) => s.user);
-	if (!user) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:43:21",
-		"data-prohibitions": "[editContent]",
-		to: "/login",
-		replace: true
-	});
-	if (user.role === "student") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:44:39",
-		"data-prohibitions": "[editContent]",
-		to: "/student",
-		replace: true
-	});
-	if (user.role === "instructor") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:45:42",
-		"data-prohibitions": "[editContent]",
-		to: "/instructor",
-		replace: true
-	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:46:10",
-		"data-prohibitions": "[editContent]",
-		to: "/manager",
-		replace: true
-	});
-};
-var RoleRoute = ({ roles, children }) => {
-	const user = useAuthStore((s) => s.user);
-	if (!user) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:51:21",
-		"data-prohibitions": "[editContent]",
-		to: "/login",
-		replace: true
-	});
-	if (!roles.includes(user.role)) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RootRedirect, {
-		"data-uid": "src/App.tsx:52:42",
-		"data-prohibitions": "[editContent]"
-	});
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, { children });
-};
-var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
-	"data-uid": "src/App.tsx:57:3",
-	"data-prohibitions": "[editContent]",
-	future: {
-		v7_startTransition: false,
-		v7_relativeSplatPath: false
-	},
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TooltipProvider, {
-		"data-uid": "src/App.tsx:58:5",
-		"data-prohibitions": "[editContent]",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster$2, {
-				"data-uid": "src/App.tsx:59:7",
-				"data-prohibitions": "[editContent]"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
-				"data-uid": "src/App.tsx:60:7",
-				"data-prohibitions": "[editContent]"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
-				"data-uid": "src/App.tsx:61:7",
-				"data-prohibitions": "[editContent]",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:62:9",
-						"data-prohibitions": "[editContent]",
-						path: "/",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RootRedirect, {
-							"data-uid": "src/App.tsx:62:34",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:63:9",
-						"data-prohibitions": "[editContent]",
-						path: "/login",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
-							"data-uid": "src/App.tsx:63:39",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:64:9",
-						"data-prohibitions": "[editContent]",
-						path: "/validate/:code",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ValidateCertificate, {
-							"data-uid": "src/App.tsx:64:48",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-						"data-uid": "src/App.tsx:67:9",
-						"data-prohibitions": "[]",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RoleRoute, {
-							"data-uid": "src/App.tsx:69:13",
-							"data-prohibitions": "[]",
-							roles: ["student"],
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
-								"data-uid": "src/App.tsx:70:15",
-								"data-prohibitions": "[editContent]"
-							})
-						}),
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:74:11",
-								"data-prohibitions": "[editContent]",
-								path: "/student",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
-									"data-uid": "src/App.tsx:74:43",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:75:11",
-								"data-prohibitions": "[editContent]",
-								path: "/student/course/:id",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CoursePlayer, {
-									"data-uid": "src/App.tsx:75:54",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:76:11",
-								"data-prohibitions": "[editContent]",
-								path: "/student/certificate/:id",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Certificate, {
-									"data-uid": "src/App.tsx:76:59",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:77:11",
-								"data-prohibitions": "[editContent]",
-								path: "/student/partner",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-									"data-uid": "src/App.tsx:77:51",
-									"data-prohibitions": "[editContent]"
-								})
-							})
-						]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-						"data-uid": "src/App.tsx:81:9",
-						"data-prohibitions": "[]",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RoleRoute, {
-							"data-uid": "src/App.tsx:83:13",
-							"data-prohibitions": "[]",
-							roles: ["manager"],
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
-								"data-uid": "src/App.tsx:84:15",
-								"data-prohibitions": "[editContent]"
-							})
-						}),
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:88:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerDashboard, {
-									"data-uid": "src/App.tsx:88:43",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:89:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/courses",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerCourses, {
-									"data-uid": "src/App.tsx:89:51",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:90:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/courses/new",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
-									"data-uid": "src/App.tsx:90:55",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:91:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/courses/:id/edit",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
-									"data-uid": "src/App.tsx:91:60",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:92:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/enrollments",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerEnrollments, {
-									"data-uid": "src/App.tsx:92:55",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:93:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/students/:id",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDetails, {
-									"data-uid": "src/App.tsx:93:56",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:94:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/reports",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reports, {
-									"data-uid": "src/App.tsx:94:51",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:95:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/questions",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(QuestionBank, {
-									"data-uid": "src/App.tsx:95:53",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:96:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/partner",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-									"data-uid": "src/App.tsx:96:51",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:97:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/settings/payments",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PaymentSettings, {
-									"data-uid": "src/App.tsx:97:61",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:98:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/settings/notifications",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotificationSettings, {
-									"data-uid": "src/App.tsx:98:66",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:99:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/settings/integrations",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Integrations, {
-									"data-uid": "src/App.tsx:99:65",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:100:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/settings/commissions",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommissionSettings, {
-									"data-uid": "src/App.tsx:100:64",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:101:11",
-								"data-prohibitions": "[editContent]",
-								path: "/manager/settings/financial",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FinancialReports, {
-									"data-uid": "src/App.tsx:101:62",
-									"data-prohibitions": "[editContent]"
-								})
-							})
-						]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-						"data-uid": "src/App.tsx:105:9",
-						"data-prohibitions": "[]",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RoleRoute, {
-							"data-uid": "src/App.tsx:107:13",
-							"data-prohibitions": "[]",
-							roles: ["instructor"],
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
-								"data-uid": "src/App.tsx:108:15",
-								"data-prohibitions": "[editContent]"
-							})
-						}),
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:112:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerDashboard, {
-									"data-uid": "src/App.tsx:112:46",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:113:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/courses",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerCourses, {
-									"data-uid": "src/App.tsx:113:54",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:114:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/courses/:id/edit",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
-									"data-uid": "src/App.tsx:114:63",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:115:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/enrollments",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerEnrollments, {
-									"data-uid": "src/App.tsx:115:58",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:116:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/students/:id",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDetails, {
-									"data-uid": "src/App.tsx:116:59",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:117:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/questions",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(QuestionBank, {
-									"data-uid": "src/App.tsx:117:56",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:118:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/grading",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GradeExams, {
-									"data-uid": "src/App.tsx:118:54",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:119:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/partner",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-									"data-uid": "src/App.tsx:119:54",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:120:11",
-								"data-prohibitions": "[editContent]",
-								path: "/instructor/revenue",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Revenue, {
-									"data-uid": "src/App.tsx:120:54",
-									"data-prohibitions": "[editContent]"
-								})
-							})
-						]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:123:9",
-						"data-prohibitions": "[editContent]",
-						path: "*",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
-							"data-uid": "src/App.tsx:123:34",
-							"data-prohibitions": "[editContent]"
-						})
-					})
-				]
-			})
-		]
-	})
-});
 //#endregion
 //#region src/main.tsx
 (0, import_client.createRoot)(document.getElementById("root")).render(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(App, {
@@ -37456,4 +36166,4 @@ var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
 }));
 //#endregion
 
-//# sourceMappingURL=index-ByKwRQ0I.js.map
+//# sourceMappingURL=index-D_tjjqjA.js.map

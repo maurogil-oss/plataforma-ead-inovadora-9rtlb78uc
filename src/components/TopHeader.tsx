@@ -1,59 +1,61 @@
-import { Menu } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useSidebar } from '@/components/ui/sidebar'
+import { Link } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { LogOut, Menu } from 'lucide-react'
+import logoUrl from '@/assets/logo-academy-2-82c76.png'
 
-export function TopHeader() {
-  const { toggleSidebar, isMobile } = useSidebar()
-  const user = useAuthStore((s) => s.user)
-  const logout = useAuthStore((s) => s.logout)
-
-  if (!user) return null
+export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
+  const { user, logout } = useAuthStore()
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
-      {isMobile && (
-        <Button variant="ghost" size="icon" onClick={toggleSidebar} className="mr-2">
-          <Menu className="size-5" />
-        </Button>
-      )}
-
-      <div className="flex-1" />
-
-      <div className="flex items-center gap-4">
-        <div className="text-right hidden sm:block">
-          <p className="text-sm font-medium leading-none text-foreground">{user.name}</p>
-          <p className="text-xs text-muted-foreground capitalize mt-1">
-            {user.role === 'manager' ? 'Gestor Administrativo' : 'Aluno Matriculado'}
-          </p>
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-4">
+          {onMenuClick && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-slate-600"
+              onClick={onMenuClick}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
+          <Link to="/" className="flex items-center gap-3">
+            <img src={logoUrl} alt="Observatório Academy (DEMO)" className="h-9 w-auto" />
+            <span className="hidden sm:inline-block font-bold text-slate-900 tracking-tight">
+              Observatório Academy (DEMO)
+            </span>
+          </Link>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Avatar className="cursor-pointer size-10 border hover:opacity-80 transition-opacity">
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                {user.name.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout} className="text-destructive cursor-pointer">
-              Sair da Plataforma
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-4">
+          {user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-semibold text-slate-700 hidden sm:inline-block">
+                Olá, {user.name}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => logout()}
+                className="text-slate-500 hover:text-red-600 hover:bg-red-50"
+                title="Sair da conta"
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" className="font-semibold text-slate-700" asChild>
+                <Link to="/login">Entrar</Link>
+              </Button>
+              <Button className="bg-[#176a7e] hover:bg-[#115060] font-semibold" asChild>
+                <Link to="/register">Cadastrar</Link>
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )

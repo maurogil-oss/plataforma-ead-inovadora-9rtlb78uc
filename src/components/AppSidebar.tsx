@@ -1,113 +1,122 @@
 import { Link, useLocation } from 'react-router-dom'
-import {
-  LayoutDashboard,
-  PlaySquare,
-  BookOpen,
-  Users,
-  BarChart,
-  CreditCard,
-  Database,
-  BellRing,
-  CheckCircle,
-  Webhook,
-  Handshake,
-  Percent,
-  Wallet,
-} from 'lucide-react'
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from '@/components/ui/sidebar'
 import { useAuthStore } from '@/stores/authStore'
 import { cn } from '@/lib/utils'
+import {
+  BookOpen,
+  LayoutDashboard,
+  Settings,
+  Users,
+  GraduationCap,
+  CreditCard,
+  PieChart,
+  Bell,
+  CheckCircle,
+  HelpCircle,
+  LogOut,
+  Wallet,
+  ShieldAlert,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import logoUrl from '@/assets/logo-academy-2-82c76.png'
+
+const getNavigation = (role?: string) => {
+  switch (role) {
+    case 'admin':
+    case 'manager':
+      return [
+        { name: 'Dashboard', href: '/manager/dashboard', icon: LayoutDashboard },
+        { name: 'Cursos', href: '/manager/courses', icon: BookOpen },
+        { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
+        { name: 'Relatórios', href: '/manager/reports', icon: PieChart },
+        { name: 'Financeiro', href: '/manager/finance', icon: CreditCard },
+        { name: 'Comunicações', href: '/manager/notifications', icon: Bell },
+        { name: 'Configurações', href: '/manager/integrations', icon: Settings },
+      ]
+    case 'instructor':
+      return [
+        { name: 'Dashboard', href: '/instructor/dashboard', icon: LayoutDashboard },
+        { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
+        { name: 'Minha Receita', href: '/instructor/revenue', icon: Wallet },
+        { name: 'Banco de Questões', href: '/instructor/questions', icon: ShieldAlert },
+      ]
+    case 'student':
+    default:
+      return [
+        { name: 'Meu Aprendizado', href: '/student/dashboard', icon: BookOpen },
+        { name: 'Certificados', href: '/student/certificate/1', icon: GraduationCap },
+        { name: 'Dúvidas', href: '/student/questions', icon: HelpCircle },
+      ]
+  }
+}
 
 export function AppSidebar() {
-  const user = useAuthStore((s) => s.user)
+  const { user, logout } = useAuthStore()
   const location = useLocation()
-
-  const studentNav = [
-    { title: 'Área do Aluno', icon: PlaySquare, url: '/student' },
-    { title: 'Programa de Parceiros', icon: Handshake, url: '/student/partner' },
-  ]
-
-  const managerNav = [
-    { title: 'Dashboard', icon: LayoutDashboard, url: '/manager' },
-    { title: 'Gestão de Cursos', icon: BookOpen, url: '/manager/courses' },
-    { title: 'Gestão de Alunos', icon: Users, url: '/manager/enrollments' },
-    { title: 'Banco de Questões', icon: Database, url: '/manager/questions' },
-    { title: 'Relatórios', icon: BarChart, url: '/manager/reports' },
-    { title: 'Taxas & Comissões', icon: Percent, url: '/manager/settings/commissions' },
-    { title: 'Relatório Financeiro', icon: Wallet, url: '/manager/settings/financial' },
-    { title: 'Programa de Parceiros', icon: Handshake, url: '/manager/partner' },
-    { title: 'Integração Pagamentos', icon: CreditCard, url: '/manager/settings/payments' },
-    { title: 'Avisos Automáticos', icon: BellRing, url: '/manager/settings/notifications' },
-    { title: 'Webhooks (Integrações)', icon: Webhook, url: '/manager/settings/integrations' },
-  ]
-
-  const instructorNav = [
-    { title: 'Meu Painel', icon: LayoutDashboard, url: '/instructor' },
-    { title: 'Meus Cursos', icon: BookOpen, url: '/instructor/courses' },
-    { title: 'Meus Alunos', icon: Users, url: '/instructor/enrollments' },
-    { title: 'Corrigir Provas', icon: CheckCircle, url: '/instructor/grading' },
-    { title: 'Banco de Questões', icon: Database, url: '/instructor/questions' },
-    { title: 'Minhas Receitas', icon: Wallet, url: '/instructor/revenue' },
-    { title: 'Programa de Parceiros', icon: Handshake, url: '/instructor/partner' },
-  ]
-
-  const navItems =
-    user?.role === 'manager' ? managerNav : user?.role === 'instructor' ? instructorNav : studentNav
-
-  const getBaseRoute = (url: string) => {
-    if (url === '/manager' || url === '/instructor' || url === '/student') return url
-    return url.split('/').slice(0, 3).join('/')
-  }
+  const navigation = getNavigation(user?.role)
 
   return (
-    <Sidebar variant="inset" className="border-r bg-muted/10">
-      <SidebarHeader className="p-4 border-b border-border/50">
-        <div className="flex items-center gap-3 px-2 py-1">
-          <div className="bg-primary p-1.5 rounded-md text-primary-foreground shadow-sm">
-            <BookOpen className="size-5" />
-          </div>
-          <span className="font-bold text-sm tracking-tight leading-tight">
-            Observatório Academy (DEMO)
-          </span>
+    <div className="flex h-full w-72 flex-col border-r bg-slate-900 text-slate-300">
+      <div className="flex h-20 items-center px-6 border-b border-slate-800 bg-slate-950">
+        <Link to="/" className="flex items-center gap-3 w-full">
+          <img
+            src={logoUrl}
+            alt="Observatório Academy"
+            className="h-10 w-auto brightness-0 invert"
+          />
+        </Link>
+      </div>
+
+      <div className="flex-1 overflow-y-auto py-6 custom-scrollbar">
+        <div className="px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          Menu Principal
         </div>
-      </SidebarHeader>
-      <SidebarContent className="px-3 mt-6">
-        <SidebarMenu>
-          {navItems.map((item) => {
-            const isActive =
-              location.pathname === item.url ||
-              (item.url !== '/manager' &&
-                item.url !== '/instructor' &&
-                item.url !== '/student' &&
-                location.pathname.startsWith(getBaseRoute(item.url)))
+        <nav className="space-y-1.5 px-3">
+          {navigation.map((item) => {
+            const isActive = location.pathname.startsWith(item.href)
             return (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
-                  <Link
-                    to={item.url}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200',
-                      isActive
-                        ? 'text-primary bg-primary/10 font-medium'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
-                    )}
-                  >
-                    <item.icon className="size-5" />
-                    <span>{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <Link
+                key={item.name}
+                to={item.href}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                  isActive
+                    ? 'bg-[#176a7e] text-white shadow-md'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white',
+                )}
+              >
+                <item.icon
+                  className={cn('h-5 w-5', isActive ? 'text-cyan-100' : 'text-slate-500')}
+                />
+                {item.name}
+              </Link>
             )
           })}
-        </SidebarMenu>
-      </SidebarContent>
-    </Sidebar>
+        </nav>
+      </div>
+
+      <div className="border-t border-slate-800 p-4 bg-slate-950">
+        <div className="flex items-center gap-3 mb-4 px-2">
+          <div className="h-10 w-10 rounded-full bg-[#176a7e] flex items-center justify-center text-white font-bold shadow-inner border border-cyan-800">
+            {user?.name?.charAt(0) || 'U'}
+          </div>
+          <div className="flex flex-col overflow-hidden">
+            <span className="text-sm font-bold text-slate-200 truncate">
+              {user?.name || 'Usuário'}
+            </span>
+            <span className="text-xs text-slate-500 truncate capitalize font-medium">
+              {user?.role || 'student'}
+            </span>
+          </div>
+        </div>
+        <Button
+          variant="outline"
+          className="w-full justify-start text-slate-400 border-slate-700 bg-transparent hover:bg-slate-800 hover:text-white"
+          onClick={() => logout()}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Sair do Sistema
+        </Button>
+      </div>
+    </div>
   )
 }
