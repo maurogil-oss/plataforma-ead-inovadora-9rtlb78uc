@@ -6,6 +6,9 @@ import NotFound from '@/pages/NotFound'
 import Login from '@/pages/auth/Login'
 import About from '@/pages/public/About'
 import ValidateCertificate from '@/pages/public/ValidateCertificate'
+import CoursesPage from '@/pages/public/Courses'
+import PlansPage from '@/pages/public/Plans'
+import ContactPage from '@/pages/public/Contact'
 
 // Student
 import StudentDashboard from '@/pages/student/Dashboard'
@@ -79,6 +82,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/sobre" element={<About />} />
+        <Route path="/cursos" element={<CoursesPage />} />
+        <Route path="/planos" element={<PlansPage />} />
+        <Route path="/contato" element={<ContactPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/validate-certificate/:id" element={<ValidateCertificate />} />
 

@@ -22,11 +22,36 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
             </Button>
           )}
           <Link to="/" className="flex items-center gap-3">
-            <img src={logoUrl} alt="Observatório Academy (DEMO)" className="h-9 w-auto" />
+            <img
+              src={logoUrl}
+              alt="Observatório Academy"
+              className="h-9 w-auto bg-transparent object-contain"
+            />
             <span className="hidden sm:inline-block font-bold text-slate-900 tracking-tight">
-              Observatório Academy (DEMO)
+              Observatório Academy
             </span>
           </Link>
+
+          <nav className="hidden lg:flex items-center gap-6 ml-6 border-l pl-6 border-slate-200">
+            <Link
+              to="/cursos"
+              className="text-sm font-semibold text-slate-600 hover:text-[#176a7e] transition-colors"
+            >
+              Cursos
+            </Link>
+            <Link
+              to="/planos"
+              className="text-sm font-semibold text-slate-600 hover:text-[#176a7e] transition-colors"
+            >
+              Planos
+            </Link>
+            <Link
+              to="/contato"
+              className="text-sm font-semibold text-slate-600 hover:text-[#176a7e] transition-colors"
+            >
+              Contato
+            </Link>
+          </nav>
         </div>
 
         <div className="flex items-center gap-4">
@@ -39,7 +64,7 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
                 variant="ghost"
                 size="icon"
                 onClick={() => logout()}
-                className="text-slate-500 hover:text-red-600 hover:bg-red-50"
+                className="text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                 title="Sair da conta"
               >
                 <LogOut className="h-5 w-5" />

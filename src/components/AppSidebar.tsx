@@ -14,6 +14,7 @@ import {
   Wallet,
   ShieldAlert,
   Handshake,
+  Phone,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import logoUrl from '@/assets/logo-academy-2-82c76.png'
@@ -60,8 +61,8 @@ export function AppSidebar() {
         <Link to="/" className="flex items-center gap-3 w-full">
           <img
             src={logoUrl}
-            alt="Observatório Academy (DEMO)"
-            className="h-10 w-auto brightness-0 invert"
+            alt="Observatório Academy"
+            className="h-10 w-auto bg-transparent object-contain drop-shadow-sm"
           />
         </Link>
       </div>
@@ -98,10 +99,31 @@ export function AppSidebar() {
         </div>
         <nav className="space-y-1.5 px-3">
           <Link
-            to="/sobre"
+            to="/cursos"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
           >
             <BookOpen className="h-5 w-5 text-slate-500" />
+            Catálogo de Cursos
+          </Link>
+          <Link
+            to="/planos"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
+          >
+            <CreditCard className="h-5 w-5 text-slate-500" />
+            Planos de Assinatura
+          </Link>
+          <Link
+            to="/contato"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
+          >
+            <Phone className="h-5 w-5 text-slate-500" />
+            Central de Contato
+          </Link>
+          <Link
+            to="/sobre"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
+          >
+            <Users className="h-5 w-5 text-slate-500" />
             Sobre o Observatório
           </Link>
         </nav>
