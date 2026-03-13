@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type LessonType = 'video' | 'text' | 'exam' | 'file'
+export type LessonType = 'video' | 'text' | 'exam' | 'pdf' | 'excel' | 'audio' | 'image' | 'file'
 export type QuestionType = 'single' | 'multiple' | 'essay'
 
 export interface BankQuestion {
@@ -19,6 +19,7 @@ export interface ExamConfig {
   manualQuestionIds?: string[]
   randomCategory?: string
   randomCount?: number
+  minGradeRequired?: number
 }
 
 export interface Lesson {
@@ -26,15 +27,19 @@ export interface Lesson {
   title: string
   type: LessonType
   content?: string
+  mediaUrl?: string
+  downloadable?: boolean
   fileUrl?: string
   examConfig?: ExamConfig
-  questions?: any[] // legacy
+  prerequisiteLessonIds?: string[]
+  questions?: any[]
 }
 
 export interface Module {
   id: string
   title: string
   lessons: Lesson[]
+  prerequisiteModuleIds?: string[]
 }
 
 export interface Batch {
@@ -60,7 +65,7 @@ export interface Course {
 export interface ActivityLog {
   id: string
   date: string
-  type: 'enrollment' | 'lesson_complete' | 'exam_attempt' | 'exam_graded'
+  type: 'enrollment' | 'lesson_complete' | 'exam_attempt' | 'exam_graded' | 'course_completed'
   details: string
   timeSpentMinutes?: number
 }
@@ -85,6 +90,8 @@ export interface Enrollment {
   examScores: Record<string, number>
   examSubmissions: Record<string, ExamSubmission>
   activityLog: ActivityLog[]
+  isCompleted?: boolean
+  completionDate?: string
 }
 
 export interface User {
@@ -93,6 +100,12 @@ export interface User {
   email: string
   role: 'student' | 'manager' | 'instructor'
   avatar?: string
+}
+
+export interface WebhookConfig {
+  id: string
+  url: string
+  events: string[]
 }
 
 const MOCK_QUESTIONS: BankQuestion[] = [
@@ -118,13 +131,6 @@ const MOCK_QUESTIONS: BankQuestion[] = [
     category: 'Projetos',
     difficulty: 'medium',
   },
-  {
-    id: 'bq3',
-    text: 'Descreva em suas palavras a importância do gerenciamento de riscos.',
-    type: 'essay',
-    category: 'Projetos',
-    difficulty: 'hard',
-  },
 ]
 
 const MOCK_COURSES: Course[] = [
@@ -146,13 +152,23 @@ const MOCK_COURSES: Course[] = [
             id: 'l1',
             title: 'O que é um projeto?',
             type: 'video',
-            content: 'https://img.usecurling.com/p/1280/720?q=presentation',
+            content: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          },
+          {
+            id: 'l2',
+            title: 'Material Complementar',
+            type: 'pdf',
+            mediaUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            downloadable: true,
+            prerequisiteLessonIds: ['l1'],
           },
           {
             id: 'l_exam',
             title: 'Avaliação Final',
             type: 'exam',
-            examConfig: { mode: 'manual', manualQuestionIds: ['bq1', 'bq2', 'bq3'] },
+            prerequisiteLessonIds: ['l2'],
+            examConfig: { mode: 'manual', manualQuestionIds: ['bq1', 'bq2'], minGradeRequired: 50 },
           },
         ],
       },
@@ -160,19 +176,15 @@ const MOCK_COURSES: Course[] = [
   },
 ]
 
-interface NotificationSettings {
-  emailNewLesson: boolean
-  emailExamReminder: boolean
-}
-
 interface LMSStore {
   courses: Course[]
   enrollments: Enrollment[]
   students: User[]
   instructors: User[]
   bankQuestions: BankQuestion[]
-  notificationSettings: NotificationSettings
+  notificationSettings: { emailNewLesson: boolean; emailExamReminder: boolean }
   paymentSettings: { provider: string; apiKey: string }
+  webhooks: WebhookConfig[]
 
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
@@ -187,11 +199,35 @@ interface LMSStore {
   updateBankQuestion: (q: BankQuestion) => void
   deleteBankQuestion: (id: string) => void
 
-  updateNotificationSettings: (s: NotificationSettings) => void
+  updateNotificationSettings: (s: { emailNewLesson: boolean; emailExamReminder: boolean }) => void
   updatePaymentSettings: (s: { provider: string; apiKey: string }) => void
+  addWebhook: (w: WebhookConfig) => void
+  deleteWebhook: (id: string) => void
 }
 
-export const useLmsStore = create<LMSStore>((set) => ({
+const checkCourseCompletion = (enrollment: Enrollment, course: Course): Enrollment => {
+  const allLessonIds = course.modules.flatMap((m) => m.lessons.map((l) => l.id))
+  const isCompleted = allLessonIds.every((id) => enrollment.completedLessons.includes(id))
+  if (isCompleted && !enrollment.isCompleted) {
+    return {
+      ...enrollment,
+      isCompleted: true,
+      completionDate: new Date().toISOString(),
+      activityLog: [
+        ...enrollment.activityLog,
+        {
+          id: `act_${Date.now()}`,
+          date: new Date().toISOString(),
+          type: 'course_completed',
+          details: 'Curso concluído com sucesso!',
+        },
+      ],
+    }
+  }
+  return enrollment
+}
+
+export const useLmsStore = create<LMSStore>((set, get) => ({
   courses: MOCK_COURSES,
   students: [{ id: 's1', name: 'João Aluno', email: 'student@empresa.com', role: 'student' }],
   instructors: [
@@ -211,6 +247,7 @@ export const useLmsStore = create<LMSStore>((set) => ({
   bankQuestions: MOCK_QUESTIONS,
   notificationSettings: { emailNewLesson: true, emailExamReminder: true },
   paymentSettings: { provider: 'Stripe', apiKey: '' },
+  webhooks: [],
 
   addCourse: (course) => set((s) => ({ courses: [...s.courses, course] })),
   updateCourse: (course) =>
@@ -220,6 +257,13 @@ export const useLmsStore = create<LMSStore>((set) => ({
   enrollStudent: (studentId, courseId, batchId) =>
     set((s) => {
       if (s.enrollments.some((e) => e.studentId === studentId && e.courseId === courseId)) return s
+      // Mock Webhook Trigger
+      s.webhooks
+        .filter((w) => w.events.includes('enrollment'))
+        .forEach((w) =>
+          console.log(`[Webhook -> ${w.url}] Event: enrollment`, { studentId, courseId }),
+        )
+
       return {
         enrollments: [
           ...s.enrollments,
@@ -249,32 +293,49 @@ export const useLmsStore = create<LMSStore>((set) => ({
         (e) => !(e.studentId === studentId && e.courseId === courseId),
       ),
     })),
+
   markLessonComplete: (enrollmentId, lessonId) =>
-    set((s) => ({
-      enrollments: s.enrollments.map((e) =>
-        e.id === enrollmentId && !e.completedLessons.includes(lessonId)
-          ? {
-              ...e,
-              completedLessons: [...e.completedLessons, lessonId],
-              activityLog: [
-                ...e.activityLog,
-                {
-                  id: `act_${Date.now()}`,
-                  date: new Date().toISOString(),
-                  type: 'lesson_complete',
-                  details: 'Aula concluída',
-                },
-              ],
-            }
-          : e,
-      ),
-    })),
+    set((s) => {
+      const enrollments = s.enrollments.map((e) => {
+        if (e.id !== enrollmentId || e.completedLessons.includes(lessonId)) return e
+        let updatedE = {
+          ...e,
+          completedLessons: [...e.completedLessons, lessonId],
+          activityLog: [
+            ...e.activityLog,
+            {
+              id: `act_${Date.now()}`,
+              date: new Date().toISOString(),
+              type: 'lesson_complete' as const,
+              details: 'Aula concluída',
+            },
+          ],
+        }
+        const course = s.courses.find((c) => c.id === e.courseId)
+        if (course) {
+          updatedE = checkCourseCompletion(updatedE, course)
+          if (updatedE.isCompleted && !e.isCompleted) {
+            // Mock Webhook Trigger
+            s.webhooks
+              .filter((w) => w.events.includes('course_completed'))
+              .forEach((w) =>
+                console.log(`[Webhook -> ${w.url}] Event: course_completed`, {
+                  studentId: e.studentId,
+                  courseId: e.courseId,
+                }),
+              )
+          }
+        }
+        return updatedE
+      })
+      return { enrollments }
+    }),
 
   submitExamAnswers: (enrollmentId, sub) =>
     set((s) => ({
       enrollments: s.enrollments.map((e) => {
         if (e.id !== enrollmentId) return e
-        const updatedE = {
+        let updatedE = {
           ...e,
           examSubmissions: { ...e.examSubmissions, [sub.lessonId]: sub },
           activityLog: [
@@ -287,7 +348,9 @@ export const useLmsStore = create<LMSStore>((set) => ({
             },
           ],
         }
-        if (!sub.isPending) updatedE.examScores = { ...e.examScores, [sub.lessonId]: sub.autoScore }
+        if (!sub.isPending) {
+          updatedE.examScores = { ...e.examScores, [sub.lessonId]: sub.autoScore }
+        }
         return updatedE
       }),
     })),
@@ -299,7 +362,7 @@ export const useLmsStore = create<LMSStore>((set) => ({
         const sub = e.examSubmissions[lessonId]
         if (!sub) return e
         const finalScore = sub.autoScore + essayScore
-        return {
+        let updatedE = {
           ...e,
           examScores: { ...e.examScores, [lessonId]: finalScore },
           examSubmissions: {
@@ -312,11 +375,21 @@ export const useLmsStore = create<LMSStore>((set) => ({
             {
               id: `act_${Date.now()}`,
               date: new Date().toISOString(),
-              type: 'exam_graded',
+              type: 'exam_graded' as const,
               details: `Prova corrigida manualmente. Nota: ${finalScore}`,
             },
           ],
         }
+        const course = s.courses.find((c) => c.id === e.courseId)
+        if (course) {
+          updatedE = checkCourseCompletion(updatedE, course)
+          if (updatedE.isCompleted && !e.isCompleted) {
+            s.webhooks
+              .filter((w) => w.events.includes('course_completed'))
+              .forEach((w) => console.log(`[Webhook -> ${w.url}] Event: course_completed`))
+          }
+        }
+        return updatedE
       }),
     })),
 
@@ -328,4 +401,6 @@ export const useLmsStore = create<LMSStore>((set) => ({
 
   updateNotificationSettings: (s) => set({ notificationSettings: s }),
   updatePaymentSettings: (s) => set({ paymentSettings: s }),
+  addWebhook: (w) => set((s) => ({ webhooks: [...s.webhooks, w] })),
+  deleteWebhook: (id) => set((s) => ({ webhooks: s.webhooks.filter((w) => w.id !== id) })),
 }))

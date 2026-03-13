@@ -18,10 +18,12 @@ import ManagerEnrollments from './pages/manager/Enrollments'
 import Reports from './pages/manager/Reports'
 import PaymentSettings from './pages/manager/PaymentSettings'
 import NotificationSettings from './pages/manager/NotificationSettings'
+import Integrations from './pages/manager/Integrations'
 import StudentDetails from './pages/manager/StudentDetails'
 
 import QuestionBank from './pages/shared/QuestionBank'
 import GradeExams from './pages/instructor/GradeExams'
+import ValidateCertificate from './pages/public/ValidateCertificate'
 
 import { useAuthStore, UserRole } from './stores/authStore'
 
@@ -48,6 +50,7 @@ const App = () => (
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/validate/:code" element={<ValidateCertificate />} />
 
         {/* Student Routes */}
         <Route
@@ -80,6 +83,7 @@ const App = () => (
           <Route path="/manager/questions" element={<QuestionBank />} />
           <Route path="/manager/settings/payments" element={<PaymentSettings />} />
           <Route path="/manager/settings/notifications" element={<NotificationSettings />} />
+          <Route path="/manager/settings/integrations" element={<Integrations />} />
         </Route>
 
         {/* Instructor Routes */}

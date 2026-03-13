@@ -19,7 +19,8 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from '@/components/ui/accordion'
-import { Plus, Trash2, ArrowLeft, Save, GripVertical } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Plus, Trash2, ArrowLeft, Save } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function CourseEditor() {
@@ -58,16 +59,7 @@ export default function CourseEditor() {
   const addLesson = (moduleId: string) => {
     const title = window.prompt('Título da Aula:')
     if (!title) return
-    const typeInput = window.prompt('Tipo (1: Vídeo, 2: Texto, 3: Prova, 4: Arquivo):', '1')
-    const typeMap: Record<string, any> = { '1': 'video', '2': 'text', '3': 'exam', '4': 'file' }
-    const type = typeMap[typeInput || '1'] || 'video'
-    const newLesson: any = { id: `l_${Date.now()}`, title, type }
-
-    if (type === 'exam')
-      newLesson.examConfig = { mode: 'random', randomCount: 5, randomCategory: 'Geral' }
-    else if (type === 'video')
-      newLesson.content = 'https://img.usecurling.com/p/800/450?q=presentation'
-
+    const newLesson: any = { id: `l_${Date.now()}`, title, type: 'video' }
     setCourse({
       ...course,
       modules: course.modules.map((m) =>
@@ -76,8 +68,29 @@ export default function CourseEditor() {
     })
   }
 
+  const updateLesson = (modId: string, lessonId: string, data: any) => {
+    setCourse({
+      ...course,
+      modules: course.modules.map((m) =>
+        m.id === modId
+          ? { ...m, lessons: m.lessons.map((l) => (l.id === lessonId ? { ...l, ...data } : l)) }
+          : m,
+      ),
+    })
+  }
+
+  const updateModule = (modId: string, data: any) => {
+    setCourse({
+      ...course,
+      modules: course.modules.map((m) => (m.id === modId ? { ...m, ...data } : m)),
+    })
+  }
+
+  const allModules = course.modules
+  const allLessons = course.modules.flatMap((m) => m.lessons)
+
   return (
-    <div className="space-y-8 max-w-4xl mx-auto pb-16">
+    <div className="space-y-8 max-w-5xl mx-auto pb-16">
       <div className="flex items-center justify-between border-b pb-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
@@ -110,22 +123,7 @@ export default function CourseEditor() {
               />
             </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-semibold">Descrição</label>
-            <Textarea
-              value={course.description}
-              onChange={(e) => setCourse({ ...course, description: e.target.value })}
-            />
-          </div>
           <div className="grid sm:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold">Nota Aprovação (%)</label>
-              <Input
-                type="number"
-                value={course.passingGrade}
-                onChange={(e) => setCourse({ ...course, passingGrade: Number(e.target.value) })}
-              />
-            </div>
             {user?.role === 'manager' && (
               <div className="space-y-2">
                 <label className="text-sm font-semibold">Professor/Instrutor</label>
@@ -153,7 +151,7 @@ export default function CourseEditor() {
 
       <div className="space-y-4">
         <div className="flex justify-between items-center bg-muted/30 p-4 rounded-lg border">
-          <h2 className="text-lg font-semibold">Estrutura de Módulos</h2>
+          <h2 className="text-lg font-semibold">Estrutura de Módulos & Trilhas</h2>
           <Button
             variant="outline"
             onClick={() =>
@@ -177,21 +175,67 @@ export default function CourseEditor() {
           {course.modules.map((mod, mIdx) => (
             <AccordionItem key={mod.id} value={mod.id} className="border rounded-lg bg-card">
               <AccordionTrigger className="px-5 py-4 hover:no-underline">
-                <span className="font-semibold text-base">
-                  Módulo {mIdx + 1}: {mod.title}
-                </span>
+                <div className="flex flex-col text-left">
+                  <span className="font-semibold text-base">
+                    Módulo {mIdx + 1}: {mod.title}
+                  </span>
+                  {mod.prerequisiteModuleIds && mod.prerequisiteModuleIds.length > 0 && (
+                    <span className="text-xs text-muted-foreground font-normal">
+                      Pré-requisitos: {mod.prerequisiteModuleIds.length} módulo(s)
+                    </span>
+                  )}
+                </div>
               </AccordionTrigger>
               <AccordionContent className="p-0 border-t">
+                <div className="p-4 bg-muted/10 border-b space-y-3">
+                  <div className="space-y-1">
+                    <label className="text-xs font-semibold">
+                      Módulos Pré-requisitos (Bloqueio Condicional)
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {allModules
+                        .filter((m) => m.id !== mod.id)
+                        .map((otherMod) => (
+                          <label
+                            key={otherMod.id}
+                            className="flex items-center space-x-2 border p-2 rounded bg-background text-sm cursor-pointer"
+                          >
+                            <Checkbox
+                              checked={mod.prerequisiteModuleIds?.includes(otherMod.id)}
+                              onCheckedChange={(c) => {
+                                let reqs = mod.prerequisiteModuleIds || []
+                                reqs = c
+                                  ? [...reqs, otherMod.id]
+                                  : reqs.filter((id) => id !== otherMod.id)
+                                updateModule(mod.id, { prerequisiteModuleIds: reqs })
+                              }}
+                            />
+                            <span>{otherMod.title}</span>
+                          </label>
+                        ))}
+                      {allModules.length <= 1 && (
+                        <span className="text-xs text-muted-foreground">
+                          Nenhum outro módulo disponível.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 <div className="divide-y">
                   {mod.lessons.map((lesson, lIdx) => (
-                    <div key={lesson.id} className="p-4 hover:bg-muted/20">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                          <span className="text-muted-foreground text-sm">Aula {lIdx + 1}</span>
-                          <span className="font-medium">{lesson.title}</span>
-                          <span className="text-[10px] uppercase font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-sm">
-                            {lesson.type}
+                    <div key={lesson.id} className="p-4 hover:bg-muted/5 transition-colors">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-3">
+                          <span className="text-muted-foreground font-mono text-sm">
+                            A{lIdx + 1}
                           </span>
+                          <Input
+                            value={lesson.title}
+                            onChange={(e) =>
+                              updateLesson(mod.id, lesson.id, { title: e.target.value })
+                            }
+                            className="h-8 w-64 font-medium"
+                          />
                         </div>
                         <Button
                           variant="ghost"
@@ -211,107 +255,161 @@ export default function CourseEditor() {
                           <Trash2 className="size-4" />
                         </Button>
                       </div>
-                      {lesson.type === 'exam' && (
-                        <div className="mt-4 p-4 bg-muted/30 border rounded-md space-y-4">
-                          <p className="text-sm font-semibold">Configuração da Prova</p>
-                          <Select
-                            value={lesson.examConfig?.mode || 'random'}
-                            onValueChange={(v) =>
-                              setCourse({
-                                ...course,
-                                modules: course.modules.map((m) =>
-                                  m.id === mod.id
-                                    ? {
-                                        ...m,
-                                        lessons: m.lessons.map((l) =>
-                                          l.id === lesson.id
-                                            ? {
-                                                ...l,
-                                                examConfig: { ...l.examConfig, mode: v as any },
-                                              }
-                                            : l,
-                                        ),
-                                      }
-                                    : m,
-                                ),
-                              })
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="random">Sorteio Aleatório do Banco</SelectItem>
-                              <SelectItem value="manual">Seleção Manual</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {lesson.examConfig?.mode === 'random' && (
-                            <div className="flex gap-4">
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted/20 p-4 rounded-md border">
+                        <div className="space-y-4">
+                          <div className="space-y-1">
+                            <label className="text-xs font-semibold">Tipo de Conteúdo</label>
+                            <Select
+                              value={lesson.type}
+                              onValueChange={(v) => {
+                                const update: any = { type: v }
+                                if (v === 'exam' && !lesson.examConfig)
+                                  update.examConfig = { mode: 'random', randomCount: 5 }
+                                updateLesson(mod.id, lesson.id, update)
+                              }}
+                            >
+                              <SelectTrigger className="h-8 bg-background">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="video">Vídeo</SelectItem>
+                                <SelectItem value="pdf">Documento PDF</SelectItem>
+                                <SelectItem value="excel">Planilha Excel</SelectItem>
+                                <SelectItem value="audio">Áudio / Podcast</SelectItem>
+                                <SelectItem value="image">Imagem</SelectItem>
+                                <SelectItem value="text">Texto Rico</SelectItem>
+                                <SelectItem value="exam">Avaliação / Prova</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {lesson.type !== 'exam' && lesson.type !== 'text' && (
+                            <div className="space-y-1">
+                              <label className="text-xs font-semibold">
+                                URL da Mídia / Arquivo
+                              </label>
                               <Input
-                                placeholder="Categoria"
-                                value={lesson.examConfig.randomCategory || ''}
+                                className="h-8 bg-background"
+                                placeholder="https://..."
+                                value={lesson.mediaUrl || ''}
                                 onChange={(e) =>
-                                  setCourse({
-                                    ...course,
-                                    modules: course.modules.map((m) =>
-                                      m.id === mod.id
-                                        ? {
-                                            ...m,
-                                            lessons: m.lessons.map((l) =>
-                                              l.id === lesson.id
-                                                ? {
-                                                    ...l,
-                                                    examConfig: {
-                                                      ...l.examConfig,
-                                                      randomCategory: e.target.value,
-                                                    } as any,
-                                                  }
-                                                : l,
-                                            ),
-                                          }
-                                        : m,
-                                    ),
-                                  })
-                                }
-                              />
-                              <Input
-                                type="number"
-                                placeholder="Qtd"
-                                value={lesson.examConfig.randomCount || 5}
-                                onChange={(e) =>
-                                  setCourse({
-                                    ...course,
-                                    modules: course.modules.map((m) =>
-                                      m.id === mod.id
-                                        ? {
-                                            ...m,
-                                            lessons: m.lessons.map((l) =>
-                                              l.id === lesson.id
-                                                ? {
-                                                    ...l,
-                                                    examConfig: {
-                                                      ...l.examConfig,
-                                                      randomCount: Number(e.target.value),
-                                                    } as any,
-                                                  }
-                                                : l,
-                                            ),
-                                          }
-                                        : m,
-                                    ),
-                                  })
+                                  updateLesson(mod.id, lesson.id, { mediaUrl: e.target.value })
                                 }
                               />
                             </div>
                           )}
-                          {lesson.examConfig?.mode === 'manual' && (
-                            <p className="text-xs text-muted-foreground">
-                              ID das questões:{' '}
-                              {lesson.examConfig?.manualQuestionIds?.join(', ') || 'Nenhuma'}
-                            </p>
+
+                          {(lesson.type === 'pdf' ||
+                            lesson.type === 'excel' ||
+                            lesson.type === 'image') && (
+                            <div className="flex items-center space-x-2 pt-1">
+                              <Checkbox
+                                id={`dl-${lesson.id}`}
+                                checked={lesson.downloadable}
+                                onCheckedChange={(c) =>
+                                  updateLesson(mod.id, lesson.id, { downloadable: !!c })
+                                }
+                              />
+                              <label htmlFor={`dl-${lesson.id}`} className="text-sm cursor-pointer">
+                                Permitir download do material
+                              </label>
+                            </div>
                           )}
                         </div>
-                      )}
+
+                        <div className="space-y-4 border-l pl-6">
+                          <div className="space-y-1">
+                            <label className="text-xs font-semibold text-primary">
+                              Aulas Pré-requisito (Bloqueio)
+                            </label>
+                            <Select
+                              value="add"
+                              onValueChange={(v) => {
+                                if (v === 'none' || lesson.prerequisiteLessonIds?.includes(v))
+                                  return
+                                updateLesson(mod.id, lesson.id, {
+                                  prerequisiteLessonIds: [
+                                    ...(lesson.prerequisiteLessonIds || []),
+                                    v,
+                                  ],
+                                })
+                              }}
+                            >
+                              <SelectTrigger className="h-8 bg-background">
+                                <SelectValue placeholder="Adicionar pré-requisito..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {allLessons
+                                  .filter((l) => l.id !== lesson.id)
+                                  .map((l) => (
+                                    <SelectItem key={l.id} value={l.id}>
+                                      {l.title}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            {lesson.prerequisiteLessonIds &&
+                              lesson.prerequisiteLessonIds.length > 0 && (
+                                <div className="mt-2 space-y-1">
+                                  {lesson.prerequisiteLessonIds.map((reqId) => {
+                                    const reqL = allLessons.find((x) => x.id === reqId)
+                                    return (
+                                      <div
+                                        key={reqId}
+                                        className="flex justify-between items-center text-xs bg-background border px-2 py-1 rounded"
+                                      >
+                                        <span className="truncate pr-2">
+                                          {reqL?.title || 'Aula Removida'}
+                                        </span>
+                                        <button
+                                          onClick={() =>
+                                            updateLesson(mod.id, lesson.id, {
+                                              prerequisiteLessonIds:
+                                                lesson.prerequisiteLessonIds!.filter(
+                                                  (id) => id !== reqId,
+                                                ),
+                                            })
+                                          }
+                                          className="text-destructive hover:underline"
+                                        >
+                                          X
+                                        </button>
+                                      </div>
+                                    )
+                                  })}
+                                </div>
+                              )}
+                          </div>
+
+                          {lesson.type === 'exam' && (
+                            <div className="space-y-3 pt-2">
+                              <div className="space-y-1">
+                                <label className="text-xs font-semibold">
+                                  Nota Mínima p/ Aprovação (0-100)
+                                </label>
+                                <Input
+                                  type="number"
+                                  className="h-8 bg-background"
+                                  value={lesson.examConfig?.minGradeRequired || 0}
+                                  onChange={(e) =>
+                                    updateLesson(mod.id, lesson.id, {
+                                      examConfig: {
+                                        ...lesson.examConfig,
+                                        minGradeRequired: Number(e.target.value),
+                                      },
+                                    })
+                                  }
+                                />
+                                <p className="text-[10px] text-muted-foreground leading-tight">
+                                  Se configurado, aulas que dependem desta prova só serão liberadas
+                                  caso o aluno atinja a nota.
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -9,6 +9,7 @@ import {
   Database,
   BellRing,
   CheckCircle,
+  Webhook,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -35,6 +36,7 @@ export function AppSidebar() {
     { title: 'Relatórios', icon: BarChart, url: '/manager/reports' },
     { title: 'Integração Pagamentos', icon: CreditCard, url: '/manager/settings/payments' },
     { title: 'Avisos Automáticos', icon: BellRing, url: '/manager/settings/notifications' },
+    { title: 'Webhooks (Integrações)', icon: Webhook, url: '/manager/settings/integrations' },
   ]
 
   const instructorNav = [
