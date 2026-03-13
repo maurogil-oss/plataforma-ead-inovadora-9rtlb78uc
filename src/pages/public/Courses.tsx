@@ -58,14 +58,14 @@ const MOCK_COURSES = [
 
 export default function Courses() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground tracking-tight">
             Catálogo de Cursos
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Explore nossos cursos de alta qualidade e acelere sua carreira profissional com a melhor
             metodologia do mercado.
           </p>
@@ -75,11 +75,11 @@ export default function Courses() {
           {MOCK_COURSES.map((c) => (
             <Card
               key={c.id}
-              className="overflow-hidden flex flex-col hover:shadow-lg transition-all hover:-translate-y-1 border-slate-200"
+              className="overflow-hidden flex flex-col hover:shadow-lg transition-all hover:-translate-y-1 border-border bg-card"
             >
               <div className="relative h-48 bg-muted">
                 <img src={c.img} alt={c.title} className="w-full h-full object-cover" />
-                <Badge className="absolute top-3 left-3 bg-white/95 text-slate-900 hover:bg-white border-none shadow-sm backdrop-blur-sm font-semibold">
+                <Badge className="absolute top-3 left-3 bg-background/95 text-foreground hover:bg-background border-none shadow-sm backdrop-blur-sm font-semibold">
                   {c.cat}
                 </Badge>
                 <div className="absolute bottom-3 right-3 bg-[#176a7e] text-white font-bold px-3 py-1.5 rounded-md shadow-sm flex items-center gap-1.5 text-sm">
@@ -87,13 +87,18 @@ export default function Courses() {
                 </div>
               </div>
               <CardHeader className="pb-3">
-                <CardTitle className="line-clamp-2 text-xl leading-tight">{c.title}</CardTitle>
+                <CardTitle className="line-clamp-2 text-xl leading-tight text-foreground">
+                  {c.title}
+                </CardTitle>
               </CardHeader>
               <CardContent className="flex-1">
-                <p className="text-slate-600 line-clamp-3 leading-relaxed">{c.desc}</p>
+                <p className="text-muted-foreground line-clamp-3 leading-relaxed">{c.desc}</p>
               </CardContent>
               <CardFooter className="pt-0">
-                <Button className="w-full bg-[#176a7e] hover:bg-[#115060] font-semibold" asChild>
+                <Button
+                  className="w-full bg-[#176a7e] hover:bg-[#115060] text-white font-semibold"
+                  asChild
+                >
                   <Link to="/login">Garantir Vaga</Link>
                 </Button>
               </CardFooter>

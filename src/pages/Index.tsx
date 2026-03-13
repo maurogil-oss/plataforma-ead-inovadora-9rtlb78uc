@@ -6,33 +6,37 @@ import logoUrl from '@/assets/logo-academy-2-82c76.png'
 export default function Index() {
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans">
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logoUrl} alt="Observatório Academy (DEMO)" className="h-12 w-auto" />
+            <img
+              src={logoUrl}
+              alt="Observatório Academy (DEMO)"
+              className="h-12 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+            />
           </div>
           <nav className="hidden md:flex gap-8">
             <Link
               to="/cursos"
-              className="text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors"
+              className="text-sm font-semibold text-foreground/80 hover:text-[#176a7e] transition-colors"
             >
               Cursos
             </Link>
             <Link
               to="/sobre"
-              className="text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors"
+              className="text-sm font-semibold text-foreground/80 hover:text-[#176a7e] transition-colors"
             >
               Sobre a Academia
             </Link>
             <Link
               to="/planos"
-              className="text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors"
+              className="text-sm font-semibold text-foreground/80 hover:text-[#176a7e] transition-colors"
             >
               Planos
             </Link>
             <Link
               to="/contato"
-              className="text-sm font-semibold text-slate-700 hover:text-[#176a7e] transition-colors"
+              className="text-sm font-semibold text-foreground/80 hover:text-[#176a7e] transition-colors"
             >
               Contato
             </Link>
@@ -41,11 +45,11 @@ export default function Index() {
             <Button
               variant="ghost"
               asChild
-              className="hidden sm:inline-flex text-slate-700 font-semibold"
+              className="hidden sm:inline-flex text-foreground font-semibold"
             >
               <Link to="/login">Entrar</Link>
             </Button>
-            <Button className="bg-[#176a7e] hover:bg-[#115060] font-semibold" asChild>
+            <Button className="bg-[#176a7e] hover:bg-[#115060] text-white font-semibold" asChild>
               <Link to="/student/dashboard">Área do Aluno</Link>
             </Button>
           </div>
@@ -54,26 +58,26 @@ export default function Index() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="py-24 md:py-32 overflow-hidden relative bg-slate-50">
-          <div className="absolute inset-0 bg-grid-slate-200/[0.4] bg-[size:40px_40px]" />
+        <section className="py-24 md:py-32 overflow-hidden relative bg-background">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
           <div className="container mx-auto px-4 relative">
             <div className="flex flex-col md:flex-row gap-16 items-center">
               <div className="flex-1 text-center md:text-left space-y-8">
-                <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold transition-colors border-slate-200 bg-white text-[#176a7e] shadow-sm">
+                <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold transition-colors border-border bg-background text-[#176a7e] shadow-sm">
                   Novo: Certificados com Validação QR Code
                 </div>
-                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+                <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
                   Transforme seu futuro com o{' '}
                   <span className="text-[#176a7e]">Observatório Academy</span>
                 </h1>
-                <p className="text-xl text-slate-600 md:max-w-[85%] leading-relaxed">
+                <p className="text-xl text-muted-foreground md:max-w-[85%] leading-relaxed">
                   A plataforma EAD definitiva para alavancar sua carreira. Cursos de alta qualidade,
                   metodologia inovadora e certificados amplamente reconhecidos pelo mercado.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                   <Button
                     size="lg"
-                    className="h-14 px-8 bg-[#176a7e] hover:bg-[#115060] text-base"
+                    className="h-14 px-8 bg-[#176a7e] hover:bg-[#115060] text-white text-base"
                     asChild
                   >
                     <Link to="/cursos">
@@ -83,7 +87,7 @@ export default function Index() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-14 px-8 text-base border-slate-300 hover:bg-slate-100"
+                    className="h-14 px-8 text-base border-border hover:bg-muted text-foreground"
                     asChild
                   >
                     <Link to="/sobre">Conheça a Academia</Link>
@@ -92,19 +96,19 @@ export default function Index() {
               </div>
               <div className="flex-1 relative w-full max-w-lg mx-auto md:max-w-none">
                 <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-[#176a7e] to-cyan-300 opacity-20 blur-3xl" />
-                <div className="relative rounded-2xl border bg-white p-2 shadow-2xl">
+                <div className="relative rounded-2xl border border-border bg-card p-2 shadow-2xl">
                   <img
                     src="https://img.usecurling.com/p/800/600?q=online%20education&color=blue&dpr=2"
                     alt="Plataforma de ensino Observatório Academy"
-                    className="rounded-xl object-cover w-full h-auto border border-slate-100"
+                    className="rounded-xl object-cover w-full h-auto border border-border"
                   />
-                  <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-5 shadow-xl border border-slate-100 flex items-center gap-4 animate-fade-in-up">
-                    <div className="h-14 w-14 bg-teal-50 rounded-full flex items-center justify-center">
+                  <div className="absolute -bottom-8 -left-8 bg-card rounded-2xl p-5 shadow-xl border border-border flex items-center gap-4 animate-fade-in-up">
+                    <div className="h-14 w-14 bg-[#176a7e]/10 rounded-full flex items-center justify-center">
                       <GraduationCap className="h-7 w-7 text-[#176a7e]" />
                     </div>
                     <div>
-                      <p className="font-extrabold text-2xl text-slate-900">+10k</p>
-                      <p className="text-sm font-medium text-slate-500">Alunos formados</p>
+                      <p className="font-extrabold text-2xl text-foreground">+10k</p>
+                      <p className="text-sm font-medium text-muted-foreground">Alunos formados</p>
                     </div>
                   </div>
                 </div>
@@ -114,45 +118,45 @@ export default function Index() {
         </section>
 
         {/* Features Section */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-20">
-              <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-slate-900">
+              <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-foreground">
                 Por que escolher o Observatório Academy (DEMO)?
               </h2>
-              <p className="text-lg text-slate-600">
+              <p className="text-lg text-muted-foreground">
                 Oferecemos a melhor experiência de aprendizado com recursos exclusivos que aceleram
                 seu desenvolvimento profissional.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-slate-50 p-10 rounded-3xl border border-slate-100 transition-all hover:shadow-lg hover:-translate-y-1">
-                <div className="h-14 w-14 bg-white shadow-sm rounded-xl border border-slate-100 flex items-center justify-center mb-8">
+              <div className="bg-card p-10 rounded-3xl border border-border transition-all hover:shadow-lg hover:-translate-y-1">
+                <div className="h-14 w-14 bg-background shadow-sm rounded-xl border border-border flex items-center justify-center mb-8">
                   <Layout className="h-7 w-7 text-[#176a7e]" />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-slate-900">Plataforma Intuitiva</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl font-bold mb-4 text-foreground">Plataforma Intuitiva</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   Interface moderna e extremamente fácil de usar, permitindo que você foque 100% no
                   seu aprendizado, sem distrações desnecessárias.
                 </p>
               </div>
-              <div className="bg-slate-50 p-10 rounded-3xl border border-slate-100 transition-all hover:shadow-lg hover:-translate-y-1">
-                <div className="h-14 w-14 bg-white shadow-sm rounded-xl border border-slate-100 flex items-center justify-center mb-8">
+              <div className="bg-card p-10 rounded-3xl border border-border transition-all hover:shadow-lg hover:-translate-y-1">
+                <div className="h-14 w-14 bg-background shadow-sm rounded-xl border border-border flex items-center justify-center mb-8">
                   <Play className="h-7 w-7 text-[#176a7e]" />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-slate-900">Aulas em Alta Qualidade</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl font-bold mb-4 text-foreground">Aulas em Alta Qualidade</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   Conteúdo em vídeo de altíssima definição, materiais complementares em PDF e
                   exercícios práticos dinâmicos para fixação.
                 </p>
               </div>
-              <div className="bg-slate-50 p-10 rounded-3xl border border-slate-100 transition-all hover:shadow-lg hover:-translate-y-1">
-                <div className="h-14 w-14 bg-white shadow-sm rounded-xl border border-slate-100 flex items-center justify-center mb-8">
+              <div className="bg-card p-10 rounded-3xl border border-border transition-all hover:shadow-lg hover:-translate-y-1">
+                <div className="h-14 w-14 bg-background shadow-sm rounded-xl border border-border flex items-center justify-center mb-8">
                   <CheckCircle2 className="h-7 w-7 text-[#176a7e]" />
                 </div>
-                <h3 className="text-xl font-bold mb-4 text-slate-900">Certificado Reconhecido</h3>
-                <p className="text-slate-600 leading-relaxed">
+                <h3 className="text-xl font-bold mb-4 text-foreground">Certificado Reconhecido</h3>
+                <p className="text-muted-foreground leading-relaxed">
                   Ao concluir, garanta seus certificados com autenticação por QR Code, amplamente
                   aceitos em todo o território nacional.
                 </p>
@@ -170,7 +174,7 @@ export default function Index() {
                 <img
                   src={logoUrl}
                   alt="Observatório Academy"
-                  className="h-12 brightness-0 invert"
+                  className="h-12 object-contain mix-blend-screen brightness-0 invert opacity-90"
                 />
               </div>
               <p className="text-base text-slate-400 max-w-sm leading-relaxed">

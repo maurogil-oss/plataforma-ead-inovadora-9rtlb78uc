@@ -8,14 +8,14 @@ import { Mail, Phone, MapPin, Instagram, Linkedin, Youtube, Send } from 'lucide-
 
 export default function Contact() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-16 max-w-6xl">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground tracking-tight">
             Fale Conosco
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Tem dúvidas sobre a plataforma ou nossos cursos? Preencha o formulário abaixo e nossa
             equipe entrará em contato o mais rápido possível.
           </p>
@@ -97,49 +97,53 @@ export default function Contact() {
           </div>
 
           <div className="lg:col-span-3">
-            <Card className="border-slate-200 shadow-sm">
+            <Card className="border-border shadow-sm bg-card">
               <CardContent className="p-8">
                 <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-slate-700">
+                      <Label htmlFor="name" className="text-foreground">
                         Nome Completo
                       </Label>
-                      <Input id="name" placeholder="Ex: João da Silva" className="bg-slate-50" />
+                      <Input
+                        id="name"
+                        placeholder="Ex: João da Silva"
+                        className="bg-background border-input"
+                      />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-slate-700">
+                      <Label htmlFor="email" className="text-foreground">
                         E-mail Corporativo ou Pessoal
                       </Label>
                       <Input
                         id="email"
                         type="email"
                         placeholder="joao@exemplo.com"
-                        className="bg-slate-50"
+                        className="bg-background border-input"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-slate-700">
+                    <Label htmlFor="subject" className="text-foreground">
                       Assunto
                     </Label>
                     <Input
                       id="subject"
                       placeholder="Como podemos ajudar?"
-                      className="bg-slate-50"
+                      className="bg-background border-input"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-slate-700">
+                    <Label htmlFor="message" className="text-foreground">
                       Mensagem
                     </Label>
                     <Textarea
                       id="message"
                       placeholder="Descreva detalhadamente sua dúvida ou solicitação..."
-                      className="min-h-[150px] bg-slate-50 resize-y"
+                      className="min-h-[150px] bg-background border-input resize-y"
                     />
                   </div>
-                  <Button className="w-full sm:w-auto px-8 h-12 bg-[#176a7e] hover:bg-[#115060] text-base font-semibold">
+                  <Button className="w-full sm:w-auto px-8 h-12 bg-[#176a7e] hover:bg-[#115060] text-white text-base font-semibold">
                     <Send className="mr-2 size-4" /> Enviar Mensagem
                   </Button>
                 </form>

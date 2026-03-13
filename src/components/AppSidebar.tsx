@@ -62,7 +62,7 @@ export function AppSidebar() {
           <img
             src={logoUrl}
             alt="Observatório Academy"
-            className="h-10 w-auto bg-transparent object-contain drop-shadow-sm"
+            className="h-10 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
           />
         </Link>
       </div>

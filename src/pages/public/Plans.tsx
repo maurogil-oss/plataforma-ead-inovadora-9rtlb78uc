@@ -56,14 +56,14 @@ export default function Plans() {
   const [isAnnual, setIsAnnual] = useState(true)
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground tracking-tight">
             Planos e Assinaturas
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Escolha o plano ideal para o seu momento profissional e tenha acesso à melhor plataforma
             de ensino.
           </p>
@@ -73,7 +73,7 @@ export default function Plans() {
           <Label
             className={cn(
               'text-sm font-semibold cursor-pointer',
-              !isAnnual ? 'text-slate-900' : 'text-slate-500',
+              !isAnnual ? 'text-foreground' : 'text-muted-foreground',
             )}
             onClick={() => setIsAnnual(false)}
           >
@@ -83,12 +83,12 @@ export default function Plans() {
           <Label
             className={cn(
               'text-sm font-semibold cursor-pointer flex items-center',
-              isAnnual ? 'text-slate-900' : 'text-slate-500',
+              isAnnual ? 'text-foreground' : 'text-muted-foreground',
             )}
             onClick={() => setIsAnnual(true)}
           >
             Anual{' '}
-            <span className="ml-2 bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-xs font-bold">
+            <span className="ml-2 bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-xs font-bold">
               Economize 20%
             </span>
           </Label>
@@ -101,10 +101,10 @@ export default function Plans() {
               <Card
                 key={plan.name}
                 className={cn(
-                  'flex flex-col relative transition-all duration-300',
+                  'flex flex-col relative transition-all duration-300 bg-card',
                   plan.popular
-                    ? 'border-[#176a7e] shadow-xl scale-105 z-10'
-                    : 'border-slate-200 hover:shadow-lg',
+                    ? 'border-[#176a7e] shadow-xl shadow-[#176a7e]/10 scale-105 z-10'
+                    : 'border-border hover:shadow-lg',
                 )}
               >
                 {plan.popular && (
@@ -113,14 +113,14 @@ export default function Plans() {
                   </div>
                 )}
                 <CardHeader className="text-center pb-8 pt-8">
-                  <CardTitle className="text-2xl font-bold text-slate-900">{plan.name}</CardTitle>
-                  <p className="text-sm text-slate-500 mt-2">{plan.desc}</p>
+                  <CardTitle className="text-2xl font-bold text-foreground">{plan.name}</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-2">{plan.desc}</p>
                   <div className="mt-6 flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-extrabold text-slate-900">R$ {price}</span>
-                    <span className="text-slate-500 font-medium">/mês</span>
+                    <span className="text-4xl font-extrabold text-foreground">R$ {price}</span>
+                    <span className="text-muted-foreground font-medium">/mês</span>
                   </div>
                   {isAnnual && price > 0 && (
-                    <p className="text-xs text-slate-400 mt-2">
+                    <p className="text-xs text-muted-foreground mt-2">
                       Faturado R$ {price * 12} anualmente
                     </p>
                   )}
@@ -129,10 +129,10 @@ export default function Plans() {
                   <ul className="space-y-4">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <div className="bg-emerald-50 rounded-full p-1 shrink-0 mt-0.5">
-                          <Check className="size-3.5 text-emerald-600" strokeWidth={3} />
+                        <div className="bg-emerald-500/20 rounded-full p-1 shrink-0 mt-0.5">
+                          <Check className="size-3.5 text-emerald-400" strokeWidth={3} />
                         </div>
-                        <span className="text-sm text-slate-700">{feature}</span>
+                        <span className="text-sm text-card-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -142,8 +142,8 @@ export default function Plans() {
                     className={cn(
                       'w-full h-12 text-base font-semibold',
                       plan.popular
-                        ? 'bg-[#176a7e] hover:bg-[#115060]'
-                        : 'bg-white text-slate-900 border-2 border-slate-200 hover:bg-slate-50',
+                        ? 'bg-[#176a7e] hover:bg-[#115060] text-white'
+                        : 'bg-background text-foreground border-2 border-border hover:bg-muted',
                     )}
                     asChild
                   >

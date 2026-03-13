@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom'
-import { useAuthStore, UserRole } from '@/stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ShieldCheck, GraduationCap, Presentation } from 'lucide-react'
@@ -16,18 +16,18 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
       <div className="flex flex-col items-center gap-4 mb-8">
         <img
           src={logoUrl}
           alt="Observatório Academy"
-          className="h-16 w-auto bg-transparent object-contain drop-shadow-md"
+          className="h-16 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
         />
       </div>
 
-      <Card className="w-full max-w-md shadow-xl border-slate-200 bg-white">
+      <Card className="w-full max-w-md shadow-xl border-border bg-card">
         <CardHeader className="text-center pb-8 pt-8">
-          <CardTitle className="text-2xl font-bold text-slate-900">Acesso à Plataforma</CardTitle>
+          <CardTitle className="text-2xl font-bold text-foreground">Acesso à Plataforma</CardTitle>
           <CardDescription className="text-base mt-2">
             Selecione seu perfil para acessar o ambiente de demonstração.
           </CardDescription>
@@ -35,7 +35,7 @@ export default function Login() {
         <CardContent className="space-y-4 pb-8">
           <Button
             size="lg"
-            className="w-full h-14 text-lg justify-start px-6 bg-[#176a7e] hover:bg-[#115060]"
+            className="w-full h-14 text-lg justify-start px-6 bg-[#176a7e] hover:bg-[#115060] text-white"
             onClick={() => login('student')}
           >
             <GraduationCap className="mr-4 size-5" />
@@ -44,19 +44,19 @@ export default function Login() {
           <Button
             size="lg"
             variant="secondary"
-            className="w-full h-14 text-lg justify-start px-6 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
+            className="w-full h-14 text-lg justify-start px-6 border border-border bg-background hover:bg-muted text-foreground"
             onClick={() => login('instructor')}
           >
-            <Presentation className="mr-4 size-5 text-slate-500" />
+            <Presentation className="mr-4 size-5 text-muted-foreground" />
             Acesso Professor
           </Button>
           <Button
             size="lg"
             variant="secondary"
-            className="w-full h-14 text-lg justify-start px-6 border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700"
+            className="w-full h-14 text-lg justify-start px-6 border border-border bg-background hover:bg-muted text-foreground"
             onClick={() => login('manager')}
           >
-            <ShieldCheck className="mr-4 size-5 text-slate-500" />
+            <ShieldCheck className="mr-4 size-5 text-muted-foreground" />
             Acesso Gestor
           </Button>
         </CardContent>
