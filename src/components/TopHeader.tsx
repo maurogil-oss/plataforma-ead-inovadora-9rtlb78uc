@@ -25,7 +25,7 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
             <img
               src={logoUrl}
               alt="Observatório Academy"
-              className="h-9 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
+              className="h-9 w-auto object-contain mix-blend-screen invert hue-rotate-180 opacity-95 transition-transform duration-300 group-hover:scale-105"
             />
             <span className="hidden sm:inline-block font-bold text-foreground tracking-tight group-hover:text-[#176a7e] transition-colors">
               Observatório Academy

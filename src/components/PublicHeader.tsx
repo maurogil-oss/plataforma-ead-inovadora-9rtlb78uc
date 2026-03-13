@@ -11,7 +11,7 @@ export function PublicHeader() {
           <img
             src={logoUrl}
             alt="Observatório Academy"
-            className="h-10 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
+            className="h-10 w-auto object-contain mix-blend-screen invert hue-rotate-180 opacity-95 transition-transform duration-300 group-hover:scale-105"
           />
         </Link>
         <nav className="hidden md:flex gap-8">
