@@ -9,9 +9,9 @@ export default function Login() {
   const login = useAuthStore((s) => s.login)
 
   if (user) {
-    if (user.role === 'student') return <Navigate to="/student" replace />
-    if (user.role === 'instructor') return <Navigate to="/instructor" replace />
-    return <Navigate to="/manager" replace />
+    if (user.role === 'student') return <Navigate to="/student/dashboard" replace />
+    if (user.role === 'instructor') return <Navigate to="/instructor/dashboard" replace />
+    return <Navigate to="/manager/dashboard" replace />
   }
 
   return (

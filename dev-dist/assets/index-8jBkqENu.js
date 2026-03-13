@@ -17932,22 +17932,6 @@ var CirclePlus = createLucideIcon("circle-plus", [
 		key: "napkw2"
 	}]
 ]);
-var CircleQuestionMark = createLucideIcon("circle-question-mark", [
-	["circle", {
-		cx: "12",
-		cy: "12",
-		r: "10",
-		key: "1mglay"
-	}],
-	["path", {
-		d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3",
-		key: "1u773s"
-	}],
-	["path", {
-		d: "M12 17h.01",
-		key: "p32p05"
-	}]
-]);
 var CircleX = createLucideIcon("circle-x", [
 	["circle", {
 		cx: "12",
@@ -25221,8 +25205,263 @@ var createImpl = (createState) => {
 };
 var create = (createState) => createState ? createImpl(createState) : createImpl;
 //#endregion
+//#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/zustand@4.5.7_@types+react@19.2.14_react@19.2.4/node_modules/zustand/esm/middleware.mjs
+function createJSONStorage(getStorage, options) {
+	let storage;
+	try {
+		storage = getStorage();
+	} catch (_e) {
+		return;
+	}
+	return {
+		getItem: (name) => {
+			var _a;
+			const parse = (str2) => {
+				if (str2 === null) return null;
+				return JSON.parse(str2, options == null ? void 0 : options.reviver);
+			};
+			const str = (_a = storage.getItem(name)) != null ? _a : null;
+			if (str instanceof Promise) return str.then(parse);
+			return parse(str);
+		},
+		setItem: (name, newValue) => storage.setItem(name, JSON.stringify(newValue, options == null ? void 0 : options.replacer)),
+		removeItem: (name) => storage.removeItem(name)
+	};
+}
+var toThenable = (fn) => (input) => {
+	try {
+		const result = fn(input);
+		if (result instanceof Promise) return result;
+		return {
+			then(onFulfilled) {
+				return toThenable(onFulfilled)(result);
+			},
+			catch(_onRejected) {
+				return this;
+			}
+		};
+	} catch (e) {
+		return {
+			then(_onFulfilled) {
+				return this;
+			},
+			catch(onRejected) {
+				return toThenable(onRejected)(e);
+			}
+		};
+	}
+};
+var oldImpl = (config, baseOptions) => (set, get, api) => {
+	let options = {
+		getStorage: () => localStorage,
+		serialize: JSON.stringify,
+		deserialize: JSON.parse,
+		partialize: (state) => state,
+		version: 0,
+		merge: (persistedState, currentState) => ({
+			...currentState,
+			...persistedState
+		}),
+		...baseOptions
+	};
+	let hasHydrated = false;
+	const hydrationListeners = /* @__PURE__ */ new Set();
+	const finishHydrationListeners = /* @__PURE__ */ new Set();
+	let storage;
+	try {
+		storage = options.getStorage();
+	} catch (_e) {}
+	if (!storage) return config((...args) => {
+		console.warn(`[zustand persist middleware] Unable to update item '${options.name}', the given storage is currently unavailable.`);
+		set(...args);
+	}, get, api);
+	const thenableSerialize = toThenable(options.serialize);
+	const setItem = () => {
+		const state = options.partialize({ ...get() });
+		let errorInSync;
+		const thenable = thenableSerialize({
+			state,
+			version: options.version
+		}).then((serializedValue) => storage.setItem(options.name, serializedValue)).catch((e) => {
+			errorInSync = e;
+		});
+		if (errorInSync) throw errorInSync;
+		return thenable;
+	};
+	const savedSetState = api.setState;
+	api.setState = (state, replace) => {
+		savedSetState(state, replace);
+		setItem();
+	};
+	const configResult = config((...args) => {
+		set(...args);
+		setItem();
+	}, get, api);
+	let stateFromStorage;
+	const hydrate = () => {
+		var _a;
+		if (!storage) return;
+		hasHydrated = false;
+		hydrationListeners.forEach((cb) => cb(get()));
+		const postRehydrationCallback = ((_a = options.onRehydrateStorage) == null ? void 0 : _a.call(options, get())) || void 0;
+		return toThenable(storage.getItem.bind(storage))(options.name).then((storageValue) => {
+			if (storageValue) return options.deserialize(storageValue);
+		}).then((deserializedStorageValue) => {
+			if (deserializedStorageValue) if (typeof deserializedStorageValue.version === "number" && deserializedStorageValue.version !== options.version) {
+				if (options.migrate) return options.migrate(deserializedStorageValue.state, deserializedStorageValue.version);
+				console.error(`State loaded from storage couldn't be migrated since no migrate function was provided`);
+			} else return deserializedStorageValue.state;
+		}).then((migratedState) => {
+			var _a2;
+			stateFromStorage = options.merge(migratedState, (_a2 = get()) != null ? _a2 : configResult);
+			set(stateFromStorage, true);
+			return setItem();
+		}).then(() => {
+			postRehydrationCallback?.(stateFromStorage, void 0);
+			hasHydrated = true;
+			finishHydrationListeners.forEach((cb) => cb(stateFromStorage));
+		}).catch((e) => {
+			postRehydrationCallback?.(void 0, e);
+		});
+	};
+	api.persist = {
+		setOptions: (newOptions) => {
+			options = {
+				...options,
+				...newOptions
+			};
+			if (newOptions.getStorage) storage = newOptions.getStorage();
+		},
+		clearStorage: () => {
+			storage?.removeItem(options.name);
+		},
+		getOptions: () => options,
+		rehydrate: () => hydrate(),
+		hasHydrated: () => hasHydrated,
+		onHydrate: (cb) => {
+			hydrationListeners.add(cb);
+			return () => {
+				hydrationListeners.delete(cb);
+			};
+		},
+		onFinishHydration: (cb) => {
+			finishHydrationListeners.add(cb);
+			return () => {
+				finishHydrationListeners.delete(cb);
+			};
+		}
+	};
+	hydrate();
+	return stateFromStorage || configResult;
+};
+var newImpl = (config, baseOptions) => (set, get, api) => {
+	let options = {
+		storage: createJSONStorage(() => localStorage),
+		partialize: (state) => state,
+		version: 0,
+		merge: (persistedState, currentState) => ({
+			...currentState,
+			...persistedState
+		}),
+		...baseOptions
+	};
+	let hasHydrated = false;
+	const hydrationListeners = /* @__PURE__ */ new Set();
+	const finishHydrationListeners = /* @__PURE__ */ new Set();
+	let storage = options.storage;
+	if (!storage) return config((...args) => {
+		console.warn(`[zustand persist middleware] Unable to update item '${options.name}', the given storage is currently unavailable.`);
+		set(...args);
+	}, get, api);
+	const setItem = () => {
+		const state = options.partialize({ ...get() });
+		return storage.setItem(options.name, {
+			state,
+			version: options.version
+		});
+	};
+	const savedSetState = api.setState;
+	api.setState = (state, replace) => {
+		savedSetState(state, replace);
+		setItem();
+	};
+	const configResult = config((...args) => {
+		set(...args);
+		setItem();
+	}, get, api);
+	api.getInitialState = () => configResult;
+	let stateFromStorage;
+	const hydrate = () => {
+		var _a, _b;
+		if (!storage) return;
+		hasHydrated = false;
+		hydrationListeners.forEach((cb) => {
+			var _a2;
+			return cb((_a2 = get()) != null ? _a2 : configResult);
+		});
+		const postRehydrationCallback = ((_b = options.onRehydrateStorage) == null ? void 0 : _b.call(options, (_a = get()) != null ? _a : configResult)) || void 0;
+		return toThenable(storage.getItem.bind(storage))(options.name).then((deserializedStorageValue) => {
+			if (deserializedStorageValue) if (typeof deserializedStorageValue.version === "number" && deserializedStorageValue.version !== options.version) {
+				if (options.migrate) return [true, options.migrate(deserializedStorageValue.state, deserializedStorageValue.version)];
+				console.error(`State loaded from storage couldn't be migrated since no migrate function was provided`);
+			} else return [false, deserializedStorageValue.state];
+			return [false, void 0];
+		}).then((migrationResult) => {
+			var _a2;
+			const [migrated, migratedState] = migrationResult;
+			stateFromStorage = options.merge(migratedState, (_a2 = get()) != null ? _a2 : configResult);
+			set(stateFromStorage, true);
+			if (migrated) return setItem();
+		}).then(() => {
+			postRehydrationCallback?.(stateFromStorage, void 0);
+			stateFromStorage = get();
+			hasHydrated = true;
+			finishHydrationListeners.forEach((cb) => cb(stateFromStorage));
+		}).catch((e) => {
+			postRehydrationCallback?.(void 0, e);
+		});
+	};
+	api.persist = {
+		setOptions: (newOptions) => {
+			options = {
+				...options,
+				...newOptions
+			};
+			if (newOptions.storage) storage = newOptions.storage;
+		},
+		clearStorage: () => {
+			storage?.removeItem(options.name);
+		},
+		getOptions: () => options,
+		rehydrate: () => hydrate(),
+		hasHydrated: () => hasHydrated,
+		onHydrate: (cb) => {
+			hydrationListeners.add(cb);
+			return () => {
+				hydrationListeners.delete(cb);
+			};
+		},
+		onFinishHydration: (cb) => {
+			finishHydrationListeners.add(cb);
+			return () => {
+				finishHydrationListeners.delete(cb);
+			};
+		}
+	};
+	if (!options.skipHydration) hydrate();
+	return stateFromStorage || configResult;
+};
+var persistImpl = (config, baseOptions) => {
+	if ("getStorage" in baseOptions || "serialize" in baseOptions || "deserialize" in baseOptions) {
+		console.warn("[DEPRECATED] `getStorage`, `serialize` and `deserialize` options are deprecated. Use `storage` option instead.");
+		return oldImpl(config, baseOptions);
+	}
+	return newImpl(config, baseOptions);
+};
+var persist = persistImpl;
+//#endregion
 //#region src/stores/authStore.ts
-var useAuthStore = create((set) => ({
+var useAuthStore = create()(persist((set) => ({
 	user: null,
 	login: (role) => set({ user: {
 		id: role === "manager" ? "m1" : role === "instructor" ? "i1" : "s1",
@@ -25232,7 +25471,7 @@ var useAuthStore = create((set) => ({
 		avatar: `https://img.usecurling.com/ppl/thumbnail?seed=${role}`
 	} }),
 	logout: () => set({ user: null })
-}));
+}), { name: "auth-storage" }));
 //#endregion
 //#region src/assets/logo-academy-2-82c76.png
 var logo_academy_2_82c76_default = "/assets/logo-academy-2-82c76-Q8NJYvnh.png";
@@ -25276,6 +25515,11 @@ var getNavigation = (role) => {
 				name: "Configurações",
 				href: "/manager/integrations",
 				icon: Settings
+			},
+			{
+				name: "Parceiros",
+				href: "/partner/dashboard",
+				icon: Handshake
 			}
 		];
 		case "instructor": return [
@@ -25298,25 +25542,22 @@ var getNavigation = (role) => {
 				name: "Banco de Questões",
 				href: "/instructor/questions",
 				icon: ShieldAlert
-			}
-		];
-		default: return [
-			{
-				name: "Meu Aprendizado",
-				href: "/student/dashboard",
-				icon: BookOpen
 			},
 			{
-				name: "Certificados",
-				href: "/student/certificate/1",
-				icon: GraduationCap
-			},
-			{
-				name: "Dúvidas",
-				href: "/student/questions",
-				icon: CircleQuestionMark
+				name: "Área de Parceiros",
+				href: "/instructor/partner",
+				icon: Handshake
 			}
 		];
+		default: return [{
+			name: "Meu Aprendizado",
+			href: "/student/dashboard",
+			icon: BookOpen
+		}, {
+			name: "Programa de Parceiros",
+			href: "/student/partner",
+			icon: Handshake
+		}];
 	}
 };
 function AppSidebar() {
@@ -25341,7 +25582,7 @@ function AppSidebar() {
 						"data-uid": "src/components/AppSidebar.tsx:61:11",
 						"data-prohibitions": "[editContent]",
 						src: logo_academy_2_82c76_default,
-						alt: "Observatório Academy",
+						alt: "Observatório Academy (DEMO)",
 						className: "h-10 w-auto brightness-0 invert"
 					})
 				})
@@ -25350,68 +25591,93 @@ function AppSidebar() {
 				"data-uid": "src/components/AppSidebar.tsx:69:7",
 				"data-prohibitions": "[editContent]",
 				className: "flex-1 overflow-y-auto py-6 custom-scrollbar",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/AppSidebar.tsx:70:9",
-					"data-prohibitions": "[]",
-					className: "px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider",
-					children: "Menu Principal"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
-					"data-uid": "src/components/AppSidebar.tsx:73:9",
-					"data-prohibitions": "[editContent]",
-					className: "space-y-1.5 px-3",
-					children: navigation.map((item) => {
-						const isActive = location.pathname.startsWith(item.href);
-						return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-							"data-uid": "src/components/AppSidebar.tsx:77:15",
-							"data-prohibitions": "[editContent]",
-							to: item.href,
-							className: cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200", isActive ? "bg-[#176a7e] text-white shadow-md" : "text-slate-400 hover:bg-slate-800 hover:text-white"),
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
-								"data-uid": "src/components/AppSidebar.tsx:87:17",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/AppSidebar.tsx:70:9",
+						"data-prohibitions": "[]",
+						className: "px-4 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider",
+						children: "Menu Principal"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+						"data-uid": "src/components/AppSidebar.tsx:73:9",
+						"data-prohibitions": "[editContent]",
+						className: "space-y-1.5 px-3",
+						children: navigation.map((item) => {
+							const isActive = location.pathname.startsWith(item.href);
+							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+								"data-uid": "src/components/AppSidebar.tsx:77:15",
 								"data-prohibitions": "[editContent]",
-								className: cn("h-5 w-5", isActive ? "text-cyan-100" : "text-slate-500")
-							}), item.name]
-						}, item.name);
+								to: item.href,
+								className: cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200", isActive ? "bg-[#176a7e] text-white shadow-md" : "text-slate-400 hover:bg-slate-800 hover:text-white"),
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
+									"data-uid": "src/components/AppSidebar.tsx:87:17",
+									"data-prohibitions": "[editContent]",
+									className: cn("h-5 w-5", isActive ? "text-cyan-100" : "text-slate-500")
+								}), item.name]
+							}, item.name);
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/AppSidebar.tsx:96:9",
+						"data-prohibitions": "[]",
+						className: "px-4 mt-8 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider",
+						children: "Institucional"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("nav", {
+						"data-uid": "src/components/AppSidebar.tsx:99:9",
+						"data-prohibitions": "[]",
+						className: "space-y-1.5 px-3",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
+							"data-uid": "src/components/AppSidebar.tsx:100:11",
+							"data-prohibitions": "[]",
+							to: "/sobre",
+							className: "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BookOpen, {
+								"data-uid": "src/components/AppSidebar.tsx:104:13",
+								"data-prohibitions": "[editContent]",
+								className: "h-5 w-5 text-slate-500"
+							}), "Sobre o Observatório"]
+						})
 					})
-				})]
+				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/AppSidebar.tsx:97:7",
+				"data-uid": "src/components/AppSidebar.tsx:110:7",
 				"data-prohibitions": "[editContent]",
 				className: "border-t border-slate-800 p-4 bg-slate-950",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/AppSidebar.tsx:98:9",
+					"data-uid": "src/components/AppSidebar.tsx:111:9",
 					"data-prohibitions": "[editContent]",
 					className: "flex items-center gap-3 mb-4 px-2",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/AppSidebar.tsx:99:11",
+						"data-uid": "src/components/AppSidebar.tsx:112:11",
 						"data-prohibitions": "[editContent]",
 						className: "h-10 w-10 rounded-full bg-[#176a7e] flex items-center justify-center text-white font-bold shadow-inner border border-cyan-800",
 						children: user?.name?.charAt(0) || "U"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/AppSidebar.tsx:102:11",
+						"data-uid": "src/components/AppSidebar.tsx:115:11",
 						"data-prohibitions": "[editContent]",
 						className: "flex flex-col overflow-hidden",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/AppSidebar.tsx:103:13",
+							"data-uid": "src/components/AppSidebar.tsx:116:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-sm font-bold text-slate-200 truncate",
 							children: user?.name || "Usuário"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/components/AppSidebar.tsx:106:13",
+							"data-uid": "src/components/AppSidebar.tsx:119:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-xs text-slate-500 truncate capitalize font-medium",
 							children: user?.role || "student"
 						})]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-					"data-uid": "src/components/AppSidebar.tsx:111:9",
+					"data-uid": "src/components/AppSidebar.tsx:124:9",
 					"data-prohibitions": "[]",
 					variant: "outline",
 					className: "w-full justify-start text-slate-400 border-slate-700 bg-transparent hover:bg-slate-800 hover:text-white",
 					onClick: () => logout(),
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogOut, {
-						"data-uid": "src/components/AppSidebar.tsx:116:11",
+						"data-uid": "src/components/AppSidebar.tsx:129:11",
 						"data-prohibitions": "[editContent]",
 						className: "mr-2 h-4 w-4"
 					}), "Sair do Sistema"]
@@ -25517,7 +25783,7 @@ function TopHeader({ onMenuClick }) {
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 							"data-uid": "src/components/TopHeader.tsx:54:17",
 							"data-prohibitions": "[]",
-							to: "/register",
+							to: "/login",
 							children: "Cadastrar"
 						})
 					})]
@@ -26176,19 +26442,19 @@ function Login() {
 		if (user.role === "student") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
 			"data-uid": "src/pages/auth/Login.tsx:12:41",
 			"data-prohibitions": "[editContent]",
-			to: "/student",
+			to: "/student/dashboard",
 			replace: true
 		});
 		if (user.role === "instructor") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
 			"data-uid": "src/pages/auth/Login.tsx:13:44",
 			"data-prohibitions": "[editContent]",
-			to: "/instructor",
+			to: "/instructor/dashboard",
 			replace: true
 		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
 			"data-uid": "src/pages/auth/Login.tsx:14:12",
 			"data-prohibitions": "[editContent]",
-			to: "/manager",
+			to: "/manager/dashboard",
 			replace: true
 		});
 	}
@@ -35775,28 +36041,31 @@ function QuestionBank() {
 //#endregion
 //#region src/App.tsx
 function ProtectedRoute({ children, allowedRoles }) {
-	const { user, isAuthenticated } = useAuthStore();
+	const { user, isAuthenticated } = useAuthStore((s) => ({
+		user: s.user,
+		isAuthenticated: !!s.user
+	}));
 	if (!isAuthenticated || !user) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:49:12",
+		"data-uid": "src/App.tsx:52:12",
 		"data-prohibitions": "[editContent]",
 		to: "/login",
 		replace: true
 	});
 	if (allowedRoles && !allowedRoles.includes(user.role)) {
 		if (user.role === "manager" || user.role === "admin") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-			"data-uid": "src/App.tsx:55:14",
+			"data-uid": "src/App.tsx:58:14",
 			"data-prohibitions": "[editContent]",
 			to: "/manager/dashboard",
 			replace: true
 		});
 		if (user.role === "instructor") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-			"data-uid": "src/App.tsx:56:44",
+			"data-uid": "src/App.tsx:59:44",
 			"data-prohibitions": "[editContent]",
 			to: "/instructor/dashboard",
 			replace: true
 		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-			"data-uid": "src/App.tsx:57:12",
+			"data-uid": "src/App.tsx:60:12",
 			"data-prohibitions": "[editContent]",
 			to: "/student/dashboard",
 			replace: true
@@ -35806,105 +36075,106 @@ function ProtectedRoute({ children, allowedRoles }) {
 }
 function App() {
 	(0, import_react.useEffect)(() => {
+		document.title = "Observatório Academy (DEMO)";
 		const ref = new URLSearchParams(window.location.search).get("ref");
 		if (ref) localStorage.setItem("affiliate_ref", ref);
 	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
-		"data-uid": "src/App.tsx:74:5",
+		"data-uid": "src/App.tsx:78:5",
 		"data-prohibitions": "[editContent]",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
-			"data-uid": "src/App.tsx:75:7",
+			"data-uid": "src/App.tsx:79:7",
 			"data-prohibitions": "[editContent]",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-					"data-uid": "src/App.tsx:76:9",
+					"data-uid": "src/App.tsx:80:9",
 					"data-prohibitions": "[editContent]",
 					path: "/",
 					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
-						"data-uid": "src/App.tsx:76:34",
+						"data-uid": "src/App.tsx:80:34",
 						"data-prohibitions": "[editContent]"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-					"data-uid": "src/App.tsx:77:9",
+					"data-uid": "src/App.tsx:81:9",
 					"data-prohibitions": "[editContent]",
 					path: "/sobre",
 					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(About, {
-						"data-uid": "src/App.tsx:77:39",
+						"data-uid": "src/App.tsx:81:39",
 						"data-prohibitions": "[editContent]"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-					"data-uid": "src/App.tsx:78:9",
+					"data-uid": "src/App.tsx:82:9",
 					"data-prohibitions": "[editContent]",
 					path: "/login",
 					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
-						"data-uid": "src/App.tsx:78:39",
+						"data-uid": "src/App.tsx:82:39",
 						"data-prohibitions": "[editContent]"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-					"data-uid": "src/App.tsx:79:9",
+					"data-uid": "src/App.tsx:83:9",
 					"data-prohibitions": "[editContent]",
 					path: "/validate-certificate/:id",
 					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ValidateCertificate, {
-						"data-uid": "src/App.tsx:79:58",
+						"data-uid": "src/App.tsx:83:58",
 						"data-prohibitions": "[editContent]"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-					"data-uid": "src/App.tsx:82:9",
+					"data-uid": "src/App.tsx:86:9",
 					"data-prohibitions": "[editContent]",
 					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
-						"data-uid": "src/App.tsx:82:25",
+						"data-uid": "src/App.tsx:86:25",
 						"data-prohibitions": "[editContent]"
 					}),
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:84:11",
+							"data-uid": "src/App.tsx:88:11",
 							"data-prohibitions": "[editContent]",
 							path: "/student/dashboard",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:87:15",
+								"data-uid": "src/App.tsx:91:15",
 								"data-prohibitions": "[]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
-									"data-uid": "src/App.tsx:88:17",
+									"data-uid": "src/App.tsx:92:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:92:11",
+							"data-uid": "src/App.tsx:96:11",
 							"data-prohibitions": "[editContent]",
 							path: "/student/course/:id",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:95:15",
+								"data-uid": "src/App.tsx:99:15",
 								"data-prohibitions": "[]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CoursePlayer, {
-									"data-uid": "src/App.tsx:96:17",
+									"data-uid": "src/App.tsx:100:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:100:11",
+							"data-uid": "src/App.tsx:104:11",
 							"data-prohibitions": "[editContent]",
 							path: "/student/certificate/:id",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:103:15",
+								"data-uid": "src/App.tsx:107:15",
 								"data-prohibitions": "[]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Certificate, {
-									"data-uid": "src/App.tsx:104:17",
+									"data-uid": "src/App.tsx:108:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:110:11",
+							"data-uid": "src/App.tsx:114:11",
 							"data-prohibitions": "[editContent]",
 							path: "/instructor/dashboard",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:113:15",
+								"data-uid": "src/App.tsx:117:15",
 								"data-prohibitions": "[]",
 								allowedRoles: [
 									"instructor",
@@ -35912,17 +36182,17 @@ function App() {
 									"admin"
 								],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
-									"data-uid": "src/App.tsx:114:17",
+									"data-uid": "src/App.tsx:118:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:118:11",
+							"data-uid": "src/App.tsx:122:11",
 							"data-prohibitions": "[editContent]",
 							path: "/instructor/grade-exams",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:121:15",
+								"data-uid": "src/App.tsx:125:15",
 								"data-prohibitions": "[]",
 								allowedRoles: [
 									"instructor",
@@ -35930,17 +36200,17 @@ function App() {
 									"admin"
 								],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GradeExams, {
-									"data-uid": "src/App.tsx:122:17",
+									"data-uid": "src/App.tsx:126:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:126:11",
+							"data-uid": "src/App.tsx:130:11",
 							"data-prohibitions": "[editContent]",
 							path: "/instructor/revenue",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:129:15",
+								"data-uid": "src/App.tsx:133:15",
 								"data-prohibitions": "[]",
 								allowedRoles: [
 									"instructor",
@@ -35948,17 +36218,17 @@ function App() {
 									"admin"
 								],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Revenue, {
-									"data-uid": "src/App.tsx:130:17",
+									"data-uid": "src/App.tsx:134:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:134:11",
+							"data-uid": "src/App.tsx:138:11",
 							"data-prohibitions": "[editContent]",
 							path: "/instructor/questions",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:137:15",
+								"data-uid": "src/App.tsx:141:15",
 								"data-prohibitions": "[]",
 								allowedRoles: [
 									"instructor",
@@ -35966,171 +36236,171 @@ function App() {
 									"admin"
 								],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(QuestionBank, {
-									"data-uid": "src/App.tsx:138:17",
+									"data-uid": "src/App.tsx:142:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:144:11",
+							"data-uid": "src/App.tsx:148:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/dashboard",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:147:15",
+								"data-uid": "src/App.tsx:151:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerDashboard, {
-									"data-uid": "src/App.tsx:148:17",
+									"data-uid": "src/App.tsx:152:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:152:11",
+							"data-uid": "src/App.tsx:156:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/courses",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:155:15",
+								"data-uid": "src/App.tsx:159:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerCourses, {
-									"data-uid": "src/App.tsx:156:17",
+									"data-uid": "src/App.tsx:160:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:160:11",
+							"data-uid": "src/App.tsx:164:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/course/:id",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:163:15",
+								"data-uid": "src/App.tsx:167:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
-									"data-uid": "src/App.tsx:164:17",
+									"data-uid": "src/App.tsx:168:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:168:11",
+							"data-uid": "src/App.tsx:172:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/enrollments",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:171:15",
+								"data-uid": "src/App.tsx:175:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerEnrollments, {
-									"data-uid": "src/App.tsx:172:17",
+									"data-uid": "src/App.tsx:176:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:176:11",
+							"data-uid": "src/App.tsx:180:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/student/:id",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:179:15",
+								"data-uid": "src/App.tsx:183:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDetails, {
-									"data-uid": "src/App.tsx:180:17",
+									"data-uid": "src/App.tsx:184:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:184:11",
+							"data-uid": "src/App.tsx:188:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/reports",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:187:15",
+								"data-uid": "src/App.tsx:191:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reports, {
-									"data-uid": "src/App.tsx:188:17",
+									"data-uid": "src/App.tsx:192:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:192:11",
+							"data-uid": "src/App.tsx:196:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/finance",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:195:15",
+								"data-uid": "src/App.tsx:199:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FinancialReports, {
-									"data-uid": "src/App.tsx:196:17",
+									"data-uid": "src/App.tsx:200:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:200:11",
+							"data-uid": "src/App.tsx:204:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/notifications",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:203:15",
+								"data-uid": "src/App.tsx:207:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotificationSettings, {
-									"data-uid": "src/App.tsx:204:17",
+									"data-uid": "src/App.tsx:208:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:208:11",
+							"data-uid": "src/App.tsx:212:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/integrations",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:211:15",
+								"data-uid": "src/App.tsx:215:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Integrations, {
-									"data-uid": "src/App.tsx:212:17",
+									"data-uid": "src/App.tsx:216:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:216:11",
+							"data-uid": "src/App.tsx:220:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/commissions",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:219:15",
+								"data-uid": "src/App.tsx:223:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommissionSettings, {
-									"data-uid": "src/App.tsx:220:17",
+									"data-uid": "src/App.tsx:224:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:224:11",
+							"data-uid": "src/App.tsx:228:11",
 							"data-prohibitions": "[editContent]",
 							path: "/manager/payments",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:227:15",
+								"data-uid": "src/App.tsx:231:15",
 								"data-prohibitions": "[]",
 								allowedRoles: ["manager", "admin"],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PaymentSettings, {
-									"data-uid": "src/App.tsx:228:17",
+									"data-uid": "src/App.tsx:232:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-							"data-uid": "src/App.tsx:234:11",
+							"data-uid": "src/App.tsx:238:11",
 							"data-prohibitions": "[editContent]",
 							path: "/partner/dashboard",
 							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-								"data-uid": "src/App.tsx:237:15",
+								"data-uid": "src/App.tsx:241:15",
 								"data-prohibitions": "[]",
 								allowedRoles: [
 									"partner",
@@ -36138,7 +36408,44 @@ function App() {
 									"admin"
 								],
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-									"data-uid": "src/App.tsx:238:17",
+									"data-uid": "src/App.tsx:242:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:246:11",
+							"data-prohibitions": "[editContent]",
+							path: "/instructor/partner",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:249:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"instructor",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
+									"data-uid": "src/App.tsx:250:17",
+									"data-prohibitions": "[editContent]"
+								})
+							})
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+							"data-uid": "src/App.tsx:254:11",
+							"data-prohibitions": "[editContent]",
+							path: "/student/partner",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+								"data-uid": "src/App.tsx:257:15",
+								"data-prohibitions": "[]",
+								allowedRoles: [
+									"student",
+									"instructor",
+									"manager",
+									"admin"
+								],
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
+									"data-uid": "src/App.tsx:258:17",
 									"data-prohibitions": "[editContent]"
 								})
 							})
@@ -36146,11 +36453,11 @@ function App() {
 					]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-					"data-uid": "src/App.tsx:244:9",
+					"data-uid": "src/App.tsx:264:9",
 					"data-prohibitions": "[editContent]",
 					path: "*",
 					element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
-						"data-uid": "src/App.tsx:244:34",
+						"data-uid": "src/App.tsx:264:34",
 						"data-prohibitions": "[editContent]"
 					})
 				})
@@ -36166,4 +36473,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-D_tjjqjA.js.map
+//# sourceMappingURL=index-8jBkqENu.js.map

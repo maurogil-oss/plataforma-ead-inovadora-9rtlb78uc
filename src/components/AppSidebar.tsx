@@ -6,15 +6,14 @@ import {
   LayoutDashboard,
   Settings,
   Users,
-  GraduationCap,
   CreditCard,
   PieChart,
   Bell,
   CheckCircle,
-  HelpCircle,
   LogOut,
   Wallet,
   ShieldAlert,
+  Handshake,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import logoUrl from '@/assets/logo-academy-2-82c76.png'
@@ -31,6 +30,7 @@ const getNavigation = (role?: string) => {
         { name: 'Financeiro', href: '/manager/finance', icon: CreditCard },
         { name: 'Comunicações', href: '/manager/notifications', icon: Bell },
         { name: 'Configurações', href: '/manager/integrations', icon: Settings },
+        { name: 'Parceiros', href: '/partner/dashboard', icon: Handshake },
       ]
     case 'instructor':
       return [
@@ -38,13 +38,13 @@ const getNavigation = (role?: string) => {
         { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
         { name: 'Minha Receita', href: '/instructor/revenue', icon: Wallet },
         { name: 'Banco de Questões', href: '/instructor/questions', icon: ShieldAlert },
+        { name: 'Área de Parceiros', href: '/instructor/partner', icon: Handshake },
       ]
     case 'student':
     default:
       return [
         { name: 'Meu Aprendizado', href: '/student/dashboard', icon: BookOpen },
-        { name: 'Certificados', href: '/student/certificate/1', icon: GraduationCap },
-        { name: 'Dúvidas', href: '/student/questions', icon: HelpCircle },
+        { name: 'Programa de Parceiros', href: '/student/partner', icon: Handshake },
       ]
   }
 }
@@ -60,7 +60,7 @@ export function AppSidebar() {
         <Link to="/" className="flex items-center gap-3 w-full">
           <img
             src={logoUrl}
-            alt="Observatório Academy"
+            alt="Observatório Academy (DEMO)"
             className="h-10 w-auto brightness-0 invert"
           />
         </Link>
@@ -91,6 +91,19 @@ export function AppSidebar() {
               </Link>
             )
           })}
+        </nav>
+
+        <div className="px-4 mt-8 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          Institucional
+        </div>
+        <nav className="space-y-1.5 px-3">
+          <Link
+            to="/sobre"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 text-slate-400 hover:bg-slate-800 hover:text-white"
+          >
+            <BookOpen className="h-5 w-5 text-slate-500" />
+            Sobre o Observatório
+          </Link>
         </nav>
       </div>
 

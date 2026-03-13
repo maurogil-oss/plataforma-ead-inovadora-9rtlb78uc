@@ -51,7 +51,7 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
                 <Link to="/login">Entrar</Link>
               </Button>
               <Button className="bg-[#176a7e] hover:bg-[#115060] font-semibold" asChild>
-                <Link to="/register">Cadastrar</Link>
+                <Link to="/login">Cadastrar</Link>
               </Button>
             </div>
           )}

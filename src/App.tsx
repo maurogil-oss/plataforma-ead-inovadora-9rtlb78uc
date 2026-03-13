@@ -43,7 +43,10 @@ function ProtectedRoute({
   children: React.ReactNode
   allowedRoles?: string[]
 }) {
-  const { user, isAuthenticated } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore((s) => ({
+    user: s.user,
+    isAuthenticated: !!s.user,
+  }))
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />
@@ -61,8 +64,9 @@ function ProtectedRoute({
 }
 
 export default function App() {
-  // Capture affiliate tracking query param if exists
+  // Brand persistence and affiliate tracking
   useEffect(() => {
+    document.title = 'Observatório Academy (DEMO)'
     const params = new URLSearchParams(window.location.search)
     const ref = params.get('ref')
     if (ref) {
@@ -235,6 +239,22 @@ export default function App() {
             path="/partner/dashboard"
             element={
               <ProtectedRoute allowedRoles={['partner', 'manager', 'admin']}>
+                <PartnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/instructor/partner"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <PartnerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/partner"
+            element={
+              <ProtectedRoute allowedRoles={['student', 'instructor', 'manager', 'admin']}>
                 <PartnerDashboard />
               </ProtectedRoute>
             }
