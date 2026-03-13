@@ -7,15 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import {
-  ArrowLeft,
-  Lock,
-  Download,
-  FileSpreadsheet,
-  FileAudio,
-  FileImage,
-  ExternalLink,
-} from 'lucide-react'
+import { ArrowLeft, Lock, Download, FileSpreadsheet, FileAudio } from 'lucide-react'
 
 export default function CoursePlayer() {
   const { id } = useParams()
@@ -188,10 +180,17 @@ export default function CoursePlayer() {
             </div>
             <div>
               <h3 className="font-semibold text-lg">Planilha de Estudos</h3>
-              <p className="text-muted-foreground text-sm max-w-sm mt-1">
+              <p className="text-muted-foreground text-sm max-w-sm mt-1 mb-4">
                 Este conteúdo é uma planilha interativa. Faça o download para o seu dispositivo para
                 visualizar e editar.
               </p>
+              {lesson.mediaUrl && (
+                <Button asChild variant="default">
+                  <a href={lesson.mediaUrl} target="_blank" rel="noreferrer" download>
+                    <Download className="mr-2 size-4" /> Baixar Planilha
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
         )
@@ -282,13 +281,15 @@ export default function CoursePlayer() {
             <div className="w-full mx-auto space-y-8 flex-1 flex flex-col">
               <div className="flex justify-between items-start gap-4 flex-wrap">
                 <h2 className="text-3xl font-bold tracking-tight">{activeLesson.title}</h2>
-                {activeLesson.downloadable && activeLesson.mediaUrl && (
-                  <Button variant="outline" asChild size="sm">
-                    <a href={activeLesson.mediaUrl} target="_blank" rel="noreferrer" download>
-                      <Download className="mr-2 size-4" /> Download Material
-                    </a>
-                  </Button>
-                )}
+                {activeLesson.downloadable &&
+                  activeLesson.mediaUrl &&
+                  activeLesson.type !== 'excel' && (
+                    <Button variant="outline" asChild size="sm">
+                      <a href={activeLesson.mediaUrl} target="_blank" rel="noreferrer" download>
+                        <Download className="mr-2 size-4" /> Download Material
+                      </a>
+                    </Button>
+                  )}
               </div>
 
               <div className="flex-1 w-full relative">{renderMedia(activeLesson)}</div>

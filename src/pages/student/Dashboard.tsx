@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useLmsStore, Course } from '@/stores/lmsStore'
+import { useLmsStore, Course, Enrollment } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { PlayCircle, PlusCircle, CalendarDays, Tag } from 'lucide-react'
+import { PlayCircle, PlusCircle, Tag } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function StudentDashboard() {
@@ -27,14 +27,10 @@ export default function StudentDashboard() {
 
   const myEnrollments = enrollments.filter((e) => e.studentId === user.id)
   const myCourses = myEnrollments
-    .map((e) => ({ course: courses.find((c) => c.id === e.courseId)!, enrollment: e }))
-    .filter((item) => item.course)
-  const availableCourses = courses.filter((c) => !myEnrollments.some((e) => e.courseId === c.id))
+    .map((e) => ({ course: courses.find((c) => c.id === e.courseId), enrollment: e }))
+    .filter((item) => item.course) as { course: Course; enrollment: Enrollment }[]
 
-  const activities = myEnrollments.flatMap((e) =>
-    e.enrollment.activityLog.map((act) => ({ ...act, courseTitle: e.course.title })),
-  )
-  activities.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const availableCourses = courses.filter((c) => !myEnrollments.some((e) => e.courseId === c.id))
 
   const handleEnrollClick = (c: Course) => {
     if (c.batches && c.batches.length > 0) {

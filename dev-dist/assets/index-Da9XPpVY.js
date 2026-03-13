@@ -19486,7 +19486,7 @@ var PanelLeft = createLucideIcon("panel-left", [["rect", {
 	d: "M9 3v18",
 	key: "fh3hqa"
 }]]);
-var Percent$1 = createLucideIcon("percent", [
+var Percent = createLucideIcon("percent", [
 	["line", {
 		x1: "19",
 		x2: "5",
@@ -26963,7 +26963,7 @@ function AppSidebar() {
 		},
 		{
 			title: "Taxas & Comissões",
-			icon: Percent$1,
+			icon: Percent,
 			url: "/manager/settings/commissions"
 		},
 		{
@@ -30549,10 +30549,6 @@ function StudentDashboard() {
 		enrollment: e
 	})).filter((item) => item.course);
 	const availableCourses = courses.filter((c) => !myEnrollments.some((e) => e.courseId === c.id));
-	myEnrollments.flatMap((e) => e.enrollment.activityLog.map((act) => ({
-		...act,
-		courseTitle: e.course.title
-	}))).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 	const handleEnrollClick = (c) => {
 		if (c.batches && c.batches.length > 0) {
 			setSelectedBatch("");
@@ -30572,106 +30568,106 @@ function StudentDashboard() {
 		setEnrollCourse(null);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/student/Dashboard.tsx:61:5",
+		"data-uid": "src/pages/student/Dashboard.tsx:57:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-12 pb-10",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:62:7",
+				"data-uid": "src/pages/student/Dashboard.tsx:58:7",
 				"data-prohibitions": "[editContent]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:63:9",
+					"data-uid": "src/pages/student/Dashboard.tsx:59:9",
 					"data-prohibitions": "[]",
 					className: "mb-6",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/pages/student/Dashboard.tsx:64:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:60:11",
 						"data-prohibitions": "[]",
 						className: "text-3xl font-bold tracking-tight",
 						children: "Meus Cursos"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/student/Dashboard.tsx:65:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:61:11",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground mt-1",
 						children: "Continue seu aprendizado de onde parou."
 					})]
 				}), myCourses.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:68:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:64:11",
 					"data-prohibitions": "[]",
 					className: "p-8 text-center border border-dashed rounded-xl bg-muted/20 text-muted-foreground",
 					children: "Você ainda não possui matrículas ativas."
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:72:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:68:11",
 					"data-prohibitions": "[editContent]",
 					className: "grid sm:grid-cols-2 lg:grid-cols-3 gap-6",
 					children: myCourses.map(({ course, enrollment }) => {
 						const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
 						const progress = totalLessons > 0 ? Math.round(enrollment.completedLessons.length / totalLessons * 100) : 0;
 						return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-							"data-uid": "src/pages/student/Dashboard.tsx:80:17",
+							"data-uid": "src/pages/student/Dashboard.tsx:76:17",
 							"data-prohibitions": "[editContent]",
 							className: "overflow-hidden group hover:shadow-md transition-shadow border-border/50",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:84:19",
+								"data-uid": "src/pages/student/Dashboard.tsx:80:19",
 								"data-prohibitions": "[]",
 								className: "h-40 relative",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									"data-uid": "src/pages/student/Dashboard.tsx:85:21",
+									"data-uid": "src/pages/student/Dashboard.tsx:81:21",
 									"data-prohibitions": "[editContent]",
 									src: course.thumbnail,
 									alt: course.title,
 									className: "w-full h-full object-cover"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/student/Dashboard.tsx:90:21",
+									"data-uid": "src/pages/student/Dashboard.tsx:86:21",
 									"data-prohibitions": "[editContent]",
 									className: "absolute inset-0 bg-black/20"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-								"data-uid": "src/pages/student/Dashboard.tsx:92:19",
+								"data-uid": "src/pages/student/Dashboard.tsx:88:19",
 								"data-prohibitions": "[editContent]",
 								className: "p-5 space-y-4",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-										"data-uid": "src/pages/student/Dashboard.tsx:93:21",
+										"data-uid": "src/pages/student/Dashboard.tsx:89:21",
 										"data-prohibitions": "[editContent]",
 										className: "font-bold text-lg line-clamp-2 leading-tight group-hover:text-primary",
 										children: course.title
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/Dashboard.tsx:96:21",
+										"data-uid": "src/pages/student/Dashboard.tsx:92:21",
 										"data-prohibitions": "[editContent]",
 										className: "space-y-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/student/Dashboard.tsx:97:23",
+											"data-uid": "src/pages/student/Dashboard.tsx:93:23",
 											"data-prohibitions": "[editContent]",
 											className: "flex justify-between text-xs font-medium text-muted-foreground",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/student/Dashboard.tsx:98:25",
+												"data-uid": "src/pages/student/Dashboard.tsx:94:25",
 												"data-prohibitions": "[]",
 												children: "Progresso"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-												"data-uid": "src/pages/student/Dashboard.tsx:99:25",
+												"data-uid": "src/pages/student/Dashboard.tsx:95:25",
 												"data-prohibitions": "[editContent]",
 												className: "text-foreground",
 												children: [progress, "%"]
 											})]
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Progress, {
-											"data-uid": "src/pages/student/Dashboard.tsx:101:23",
+											"data-uid": "src/pages/student/Dashboard.tsx:97:23",
 											"data-prohibitions": "[editContent]",
 											value: progress,
 											className: "h-1.5"
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/student/Dashboard.tsx:103:21",
+										"data-uid": "src/pages/student/Dashboard.tsx:99:21",
 										"data-prohibitions": "[]",
 										asChild: true,
 										className: "w-full",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-											"data-uid": "src/pages/student/Dashboard.tsx:104:23",
+											"data-uid": "src/pages/student/Dashboard.tsx:100:23",
 											"data-prohibitions": "[]",
 											to: `/student/course/${course.id}`,
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CirclePlay, {
-												"data-uid": "src/pages/student/Dashboard.tsx:105:25",
+												"data-uid": "src/pages/student/Dashboard.tsx:101:25",
 												"data-prohibitions": "[editContent]",
 												className: "mr-2 size-4"
 											}), " Continuar Aula"]
@@ -30684,48 +30680,48 @@ function StudentDashboard() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:116:7",
+				"data-uid": "src/pages/student/Dashboard.tsx:112:7",
 				"data-prohibitions": "[editContent]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:117:9",
+					"data-uid": "src/pages/student/Dashboard.tsx:113:9",
 					"data-prohibitions": "[]",
 					className: "mb-6",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-						"data-uid": "src/pages/student/Dashboard.tsx:118:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:114:11",
 						"data-prohibitions": "[]",
 						className: "text-2xl font-bold tracking-tight",
 						children: "Catálogo de Cursos"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/student/Dashboard.tsx:119:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:115:11",
 						"data-prohibitions": "[]",
 						className: "text-muted-foreground mt-1",
 						children: "Explore novas áreas de conhecimento."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:121:9",
+					"data-uid": "src/pages/student/Dashboard.tsx:117:9",
 					"data-prohibitions": "[editContent]",
 					className: "grid sm:grid-cols-2 lg:grid-cols-3 gap-6",
 					children: availableCourses.map((course) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/student/Dashboard.tsx:123:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:119:13",
 						"data-prohibitions": "[editContent]",
 						className: "overflow-hidden flex flex-col border-border/50",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/student/Dashboard.tsx:124:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:120:15",
 							"data-prohibitions": "[editContent]",
 							className: "h-40 bg-muted relative",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-								"data-uid": "src/pages/student/Dashboard.tsx:125:17",
+								"data-uid": "src/pages/student/Dashboard.tsx:121:17",
 								"data-prohibitions": "[editContent]",
 								src: course.thumbnail,
 								className: "w-full h-full object-cover opacity-90",
 								alt: ""
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:130:17",
+								"data-uid": "src/pages/student/Dashboard.tsx:126:17",
 								"data-prohibitions": "[editContent]",
 								className: "absolute top-3 right-3 bg-background/90 text-foreground font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-sm",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Tag, {
-										"data-uid": "src/pages/student/Dashboard.tsx:131:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:127:19",
 										"data-prohibitions": "[editContent]",
 										className: "size-3 text-primary"
 									}),
@@ -30734,36 +30730,36 @@ function StudentDashboard() {
 								]
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-							"data-uid": "src/pages/student/Dashboard.tsx:134:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:130:15",
 							"data-prohibitions": "[editContent]",
 							className: "p-5 flex-1 flex flex-col",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/student/Dashboard.tsx:135:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:131:17",
 									"data-prohibitions": "[editContent]",
 									className: "text-xs font-semibold text-primary mb-1 uppercase tracking-wider",
 									children: course.area
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-									"data-uid": "src/pages/student/Dashboard.tsx:138:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:134:17",
 									"data-prohibitions": "[editContent]",
 									className: "font-bold text-lg mb-2 leading-tight",
 									children: course.title
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/student/Dashboard.tsx:139:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:135:17",
 									"data-prohibitions": "[editContent]",
 									className: "text-sm text-muted-foreground line-clamp-2 mb-6 flex-1",
 									children: course.description
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-									"data-uid": "src/pages/student/Dashboard.tsx:142:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:138:17",
 									"data-prohibitions": "[]",
 									variant: "outline",
 									className: "w-full",
 									onClick: () => handleEnrollClick(course),
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CirclePlus, {
-										"data-uid": "src/pages/student/Dashboard.tsx:147:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:143:19",
 										"data-prohibitions": "[editContent]",
 										className: "mr-2 size-4"
 									}), " Comprar Curso"]
@@ -30774,68 +30770,68 @@ function StudentDashboard() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
-				"data-uid": "src/pages/student/Dashboard.tsx:155:7",
+				"data-uid": "src/pages/student/Dashboard.tsx:151:7",
 				"data-prohibitions": "[editContent]",
 				open: !!enrollCourse,
 				onOpenChange: (o) => !o && setEnrollCourse(null),
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
-					"data-uid": "src/pages/student/Dashboard.tsx:156:9",
+					"data-uid": "src/pages/student/Dashboard.tsx:152:9",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
-						"data-uid": "src/pages/student/Dashboard.tsx:157:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:153:11",
 						"data-prohibitions": "[editContent]",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogTitle, {
-							"data-uid": "src/pages/student/Dashboard.tsx:158:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:154:13",
 							"data-prohibitions": "[editContent]",
 							children: ["Finalizar Matrícula - ", enrollCourse?.title]
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:160:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:156:11",
 						"data-prohibitions": "[editContent]",
 						className: "space-y-4 py-4",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:161:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:157:13",
 								"data-prohibitions": "[editContent]",
 								className: "flex justify-between items-center bg-muted/50 p-4 rounded-lg font-medium",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/student/Dashboard.tsx:162:15",
+									"data-uid": "src/pages/student/Dashboard.tsx:158:15",
 									"data-prohibitions": "[]",
 									children: "Valor do Curso:"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-									"data-uid": "src/pages/student/Dashboard.tsx:163:15",
+									"data-uid": "src/pages/student/Dashboard.tsx:159:15",
 									"data-prohibitions": "[editContent]",
 									className: "text-lg",
 									children: ["R$ ", enrollCourse?.price.toFixed(2)]
 								})]
 							}),
 							enrollCourse?.batches && enrollCourse.batches.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:166:15",
+								"data-uid": "src/pages/student/Dashboard.tsx:162:15",
 								"data-prohibitions": "[editContent]",
 								className: "space-y-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/student/Dashboard.tsx:167:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:163:17",
 									"data-prohibitions": "[]",
 									className: "text-sm font-medium",
 									children: "Turma / Ciclo de Ensino"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-									"data-uid": "src/pages/student/Dashboard.tsx:168:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:164:17",
 									"data-prohibitions": "[editContent]",
 									value: selectedBatch,
 									onValueChange: setSelectedBatch,
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-										"data-uid": "src/pages/student/Dashboard.tsx:169:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:165:19",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-											"data-uid": "src/pages/student/Dashboard.tsx:170:21",
+											"data-uid": "src/pages/student/Dashboard.tsx:166:21",
 											"data-prohibitions": "[editContent]",
 											placeholder: "Selecione a turma desejada"
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-										"data-uid": "src/pages/student/Dashboard.tsx:172:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:168:19",
 										"data-prohibitions": "[editContent]",
 										children: enrollCourse.batches.map((b) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectItem, {
-											"data-uid": "src/pages/student/Dashboard.tsx:174:23",
+											"data-uid": "src/pages/student/Dashboard.tsx:170:23",
 											"data-prohibitions": "[editContent]",
 											value: b.id,
 											children: [
@@ -30852,12 +30848,12 @@ function StudentDashboard() {
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:183:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:179:13",
 								"data-prohibitions": "[editContent]",
 								className: "bg-muted/30 p-4 rounded-lg border space-y-3",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-										"data-uid": "src/pages/student/Dashboard.tsx:184:15",
+										"data-uid": "src/pages/student/Dashboard.tsx:180:15",
 										"data-prohibitions": "[editContent]",
 										className: "text-sm font-medium text-muted-foreground",
 										children: [
@@ -30867,20 +30863,20 @@ function StudentDashboard() {
 										]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-										"data-uid": "src/pages/student/Dashboard.tsx:187:15",
+										"data-uid": "src/pages/student/Dashboard.tsx:183:15",
 										"data-prohibitions": "[editContent]",
 										placeholder: "Número do Cartão (Fictício)"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/Dashboard.tsx:188:15",
+										"data-uid": "src/pages/student/Dashboard.tsx:184:15",
 										"data-prohibitions": "[]",
 										className: "flex gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/student/Dashboard.tsx:189:17",
+											"data-uid": "src/pages/student/Dashboard.tsx:185:17",
 											"data-prohibitions": "[editContent]",
 											placeholder: "MM/AA"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/student/Dashboard.tsx:190:17",
+											"data-uid": "src/pages/student/Dashboard.tsx:186:17",
 											"data-prohibitions": "[editContent]",
 											placeholder: "CVC"
 										})]
@@ -30888,7 +30884,7 @@ function StudentDashboard() {
 								]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/student/Dashboard.tsx:193:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:189:13",
 								"data-prohibitions": "[]",
 								className: "w-full",
 								onClick: handleFinalizeEnrollment,
@@ -31409,7 +31405,7 @@ function CoursePlayer() {
 		bankQuestions
 	]);
 	if (!course || !enrollment) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/pages/student/CoursePlayer.tsx:63:38",
+		"data-uid": "src/pages/student/CoursePlayer.tsx:55:38",
 		"data-prohibitions": "[]",
 		className: "p-8",
 		children: "Não autorizado."
@@ -31476,18 +31472,18 @@ function CoursePlayer() {
 	};
 	const renderMedia = (lesson) => {
 		if (!lesson.mediaUrl && lesson.type !== "exam") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/pages/student/CoursePlayer.tsx:147:14",
+			"data-uid": "src/pages/student/CoursePlayer.tsx:139:14",
 			"data-prohibitions": "[]",
 			className: "p-8 bg-muted text-center rounded",
 			children: "Mídia não configurada."
 		});
 		switch (lesson.type) {
 			case "video": return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:151:11",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:143:11",
 				"data-prohibitions": "[]",
 				className: "aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("video", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:152:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:144:13",
 					"data-prohibitions": "[editContent]",
 					src: lesson.mediaUrl,
 					controls: true,
@@ -31496,15 +31492,15 @@ function CoursePlayer() {
 				})
 			});
 			case "audio": return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:162:11",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:154:11",
 				"data-prohibitions": "[]",
 				className: "p-8 bg-muted/30 rounded-lg flex flex-col items-center justify-center space-y-4 border",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileHeadphone, {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:163:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:155:13",
 					"data-prohibitions": "[editContent]",
 					className: "size-16 text-primary opacity-50"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("audio", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:164:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:156:13",
 					"data-prohibitions": "[editContent]",
 					src: lesson.mediaUrl,
 					controls: true,
@@ -31512,50 +31508,72 @@ function CoursePlayer() {
 				})]
 			});
 			case "image": return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:169:11",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:161:11",
 				"data-prohibitions": "[editContent]",
 				src: lesson.mediaUrl,
 				alt: lesson.title,
 				className: "w-full rounded-lg max-h-[70vh] object-contain bg-muted"
 			});
 			case "pdf": return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("iframe", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:177:11",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:169:11",
 				"data-prohibitions": "[editContent]",
 				src: lesson.mediaUrl,
 				className: "w-full h-[70vh] rounded-lg border bg-white",
 				title: lesson.title
 			});
 			case "excel": return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:185:11",
-				"data-prohibitions": "[]",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:177:11",
+				"data-prohibitions": "[editContent]",
 				className: "p-12 bg-muted/20 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center space-y-4",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:186:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:178:13",
 					"data-prohibitions": "[]",
 					className: "p-4 bg-emerald-100 text-emerald-700 rounded-full",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileSpreadsheet, {
-						"data-uid": "src/pages/student/CoursePlayer.tsx:187:15",
+						"data-uid": "src/pages/student/CoursePlayer.tsx:179:15",
 						"data-prohibitions": "[editContent]",
 						className: "size-10"
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:189:13",
-					"data-prohibitions": "[]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-						"data-uid": "src/pages/student/CoursePlayer.tsx:190:15",
-						"data-prohibitions": "[]",
-						className: "font-semibold text-lg",
-						children: "Planilha de Estudos"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/pages/student/CoursePlayer.tsx:191:15",
-						"data-prohibitions": "[]",
-						className: "text-muted-foreground text-sm max-w-sm mt-1",
-						children: "Este conteúdo é uma planilha interativa. Faça o download para o seu dispositivo para visualizar e editar."
-					})]
+					"data-uid": "src/pages/student/CoursePlayer.tsx:181:13",
+					"data-prohibitions": "[editContent]",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+							"data-uid": "src/pages/student/CoursePlayer.tsx:182:15",
+							"data-prohibitions": "[]",
+							className: "font-semibold text-lg",
+							children: "Planilha de Estudos"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/student/CoursePlayer.tsx:183:15",
+							"data-prohibitions": "[]",
+							className: "text-muted-foreground text-sm max-w-sm mt-1 mb-4",
+							children: "Este conteúdo é uma planilha interativa. Faça o download para o seu dispositivo para visualizar e editar."
+						}),
+						lesson.mediaUrl && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+							"data-uid": "src/pages/student/CoursePlayer.tsx:188:17",
+							"data-prohibitions": "[]",
+							asChild: true,
+							variant: "default",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
+								"data-uid": "src/pages/student/CoursePlayer.tsx:189:19",
+								"data-prohibitions": "[]",
+								href: lesson.mediaUrl,
+								target: "_blank",
+								rel: "noreferrer",
+								download: true,
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, {
+									"data-uid": "src/pages/student/CoursePlayer.tsx:190:21",
+									"data-prohibitions": "[editContent]",
+									className: "mr-2 size-4"
+								}), " Baixar Planilha"]
+							})
+						})
+					]
 				})]
 			});
 			case "text": return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:200:11",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:199:11",
 				"data-prohibitions": "[editContent]",
 				className: "prose max-w-none p-6 bg-card border rounded-lg",
 				dangerouslySetInnerHTML: { __html: lesson.content || "<p>Conteúdo em texto vazio.</p>" }
@@ -31564,110 +31582,110 @@ function CoursePlayer() {
 		}
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/student/CoursePlayer.tsx:213:5",
+		"data-uid": "src/pages/student/CoursePlayer.tsx:212:5",
 		"data-prohibitions": "[editContent]",
 		className: "flex flex-col min-h-[calc(100vh-8rem)]",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/student/CoursePlayer.tsx:214:7",
+			"data-uid": "src/pages/student/CoursePlayer.tsx:213:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex items-center justify-between mb-6 pb-4 border-b",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:215:9",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:214:9",
 				"data-prohibitions": "[editContent]",
 				className: "flex items-center gap-4",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:216:11",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:215:11",
 					"data-prohibitions": "[]",
 					variant: "outline",
 					size: "icon",
 					asChild: true,
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-						"data-uid": "src/pages/student/CoursePlayer.tsx:217:13",
+						"data-uid": "src/pages/student/CoursePlayer.tsx:216:13",
 						"data-prohibitions": "[]",
 						to: "/student",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:218:15",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:217:15",
 							"data-prohibitions": "[editContent]",
 							className: "size-4"
 						})
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:221:11",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:220:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-2xl font-bold",
 					children: course.title
 				})]
 			}), enrollment.isCompleted && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:224:11",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:223:11",
 				"data-prohibitions": "[]",
 				asChild: true,
 				variant: "default",
 				className: "bg-success hover:bg-success/90 text-success-foreground",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:229:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:228:13",
 					"data-prohibitions": "[]",
 					to: `/student/certificate/${course.id}`,
 					children: "Visualizar Certificado"
 				})
 			})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/student/CoursePlayer.tsx:234:7",
+			"data-uid": "src/pages/student/CoursePlayer.tsx:233:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex gap-6 flex-1 items-start flex-col lg:flex-row",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:235:9",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:234:9",
 				"data-prohibitions": "[editContent]",
 				className: "w-full lg:w-[320px] flex flex-col border rounded-xl bg-card shrink-0 shadow-sm",
 				children: course.modules.map((m, mIdx) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:237:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:236:13",
 					"data-prohibitions": "[editContent]",
 					className: "border-b last:border-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/CoursePlayer.tsx:238:15",
+						"data-uid": "src/pages/student/CoursePlayer.tsx:237:15",
 						"data-prohibitions": "[editContent]",
 						className: "p-3 bg-muted/40 font-semibold text-sm flex items-center justify-between",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:239:17",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:238:17",
 							"data-prohibitions": "[editContent]",
 							children: m.title
 						}), isModuleCompleted(m.id) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:241:19",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:240:19",
 							"data-prohibitions": "[]",
 							className: "text-success text-xs",
 							children: "✓ Concluído"
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/student/CoursePlayer.tsx:244:15",
+						"data-uid": "src/pages/student/CoursePlayer.tsx:243:15",
 						"data-prohibitions": "[editContent]",
 						className: "p-1 space-y-0.5",
 						children: m.lessons.map((l) => {
 							const lLock = checkLockStatus(l, m);
 							const isDone = enrollment.completedLessons.includes(l.id);
 							return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-								"data-uid": "src/pages/student/CoursePlayer.tsx:249:21",
+								"data-uid": "src/pages/student/CoursePlayer.tsx:248:21",
 								"data-prohibitions": "[editContent]",
 								onClick: () => setActiveLessonId(l.id),
 								className: `w-full text-left p-2.5 px-3 text-sm rounded-md flex items-center gap-2 transition-colors ${activeLessonId === l.id ? "bg-primary text-primary-foreground font-medium shadow-sm" : "hover:bg-muted/50"} ${lLock.locked ? "opacity-60 cursor-not-allowed" : ""}`,
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:254:23",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:253:23",
 									"data-prohibitions": "[editContent]",
 									className: "flex-shrink-0",
 									children: lLock.locked ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:256:27",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:255:27",
 										"data-prohibitions": "[editContent]",
 										className: "size-3.5"
 									}) : isDone ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:258:27",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:257:27",
 										"data-prohibitions": "[]",
 										className: "text-success font-bold text-lg leading-none",
 										children: "✓"
 									}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:260:27",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:259:27",
 										"data-prohibitions": "[editContent]",
 										className: "w-3.5 h-3.5 rounded-full border-2 border-current opacity-30 inline-block"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:263:23",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:262:23",
 									"data-prohibitions": "[editContent]",
 									className: "truncate flex-1",
 									children: l.title
@@ -31677,66 +31695,66 @@ function CoursePlayer() {
 					})]
 				}, m.id))
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/student/CoursePlayer.tsx:272:9",
+				"data-uid": "src/pages/student/CoursePlayer.tsx:271:9",
 				"data-prohibitions": "[editContent]",
 				className: "flex-1 w-full bg-card border rounded-xl p-6 lg:p-10 shadow-sm min-h-[60vh] flex flex-col",
 				children: activeLesson && currentLock.locked ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:274:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:273:13",
 					"data-prohibitions": "[editContent]",
 					className: "flex-1 flex flex-col items-center justify-center text-center space-y-4 max-w-md mx-auto",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:275:15",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:274:15",
 							"data-prohibitions": "[]",
 							className: "w-20 h-20 bg-muted rounded-full flex items-center justify-center",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Lock, {
-								"data-uid": "src/pages/student/CoursePlayer.tsx:276:17",
+								"data-uid": "src/pages/student/CoursePlayer.tsx:275:17",
 								"data-prohibitions": "[editContent]",
 								className: "size-10 text-muted-foreground"
 							})
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:278:15",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:277:15",
 							"data-prohibitions": "[]",
 							className: "text-2xl font-bold",
 							children: "Conteúdo Bloqueado"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:279:15",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:278:15",
 							"data-prohibitions": "[editContent]",
 							className: "text-muted-foreground",
 							children: currentLock.reason
 						})
 					]
 				}) : activeLesson ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:282:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:281:13",
 					"data-prohibitions": "[editContent]",
 					className: "w-full mx-auto space-y-8 flex-1 flex flex-col",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:283:15",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:282:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex justify-between items-start gap-4 flex-wrap",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-								"data-uid": "src/pages/student/CoursePlayer.tsx:284:17",
+								"data-uid": "src/pages/student/CoursePlayer.tsx:283:17",
 								"data-prohibitions": "[editContent]",
 								className: "text-3xl font-bold tracking-tight",
 								children: activeLesson.title
-							}), activeLesson.downloadable && activeLesson.mediaUrl && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/student/CoursePlayer.tsx:286:19",
+							}), activeLesson.downloadable && activeLesson.mediaUrl && activeLesson.type !== "excel" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/student/CoursePlayer.tsx:287:21",
 								"data-prohibitions": "[]",
 								variant: "outline",
 								asChild: true,
 								size: "sm",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("a", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:287:21",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:288:23",
 									"data-prohibitions": "[]",
 									href: activeLesson.mediaUrl,
 									target: "_blank",
 									rel: "noreferrer",
 									download: true,
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:288:23",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:289:25",
 										"data-prohibitions": "[editContent]",
 										className: "mr-2 size-4"
 									}), " Download Material"]
@@ -31744,43 +31762,43 @@ function CoursePlayer() {
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:294:15",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:295:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex-1 w-full relative",
 							children: renderMedia(activeLesson)
 						}),
 						activeLesson.type === "exam" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:297:17",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:298:17",
 							"data-prohibitions": "[editContent]",
 							className: "space-y-8 bg-muted/5 p-6 rounded-xl border",
 							children: [
 								submission?.isPending && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:299:21",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:300:21",
 									"data-prohibitions": "[]",
 									className: "p-4 bg-warning/20 text-warning-foreground rounded-lg font-medium",
 									children: "Prova enviada! Aguardando correção do professor."
 								}),
 								submission && !submission.isPending && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:304:21",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:305:21",
 									"data-prohibitions": "[editContent]",
 									className: "p-4 bg-success/10 border border-success/30 rounded-lg flex items-center justify-between",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:305:23",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:306:23",
 										"data-prohibitions": "[editContent]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:306:25",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:307:25",
 											"data-prohibitions": "[]",
 											className: "text-sm font-semibold text-success-foreground uppercase tracking-wider mb-1",
 											children: "Nota Final"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:309:25",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:310:25",
 											"data-prohibitions": "[editContent]",
 											className: "text-3xl font-bold",
 											children: [
 												enrollment.examScores[activeLesson.id]?.toFixed(1),
 												" ",
 												/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-													"data-uid": "src/pages/student/CoursePlayer.tsx:311:27",
+													"data-uid": "src/pages/student/CoursePlayer.tsx:312:27",
 													"data-prohibitions": "[]",
 													className: "text-lg font-normal text-muted-foreground",
 													children: "/ 100"
@@ -31788,16 +31806,16 @@ function CoursePlayer() {
 											]
 										})]
 									}), activeLesson.examConfig?.minGradeRequired && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:315:25",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:316:25",
 										"data-prohibitions": "[editContent]",
 										className: "text-right",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:316:27",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:317:27",
 											"data-prohibitions": "[]",
 											className: "text-sm text-muted-foreground mb-1",
 											children: "Nota Mínima"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:317:27",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:318:27",
 											"data-prohibitions": "[editContent]",
 											className: "font-semibold",
 											children: activeLesson.examConfig.minGradeRequired
@@ -31805,12 +31823,12 @@ function CoursePlayer() {
 									})]
 								}),
 								submission?.feedback && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:325:21",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:326:21",
 									"data-prohibitions": "[editContent]",
 									className: "p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-900",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:326:23",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:327:23",
 											"data-prohibitions": "[]",
 											children: "Feedback do Professor:"
 										}),
@@ -31819,12 +31837,12 @@ function CoursePlayer() {
 									]
 								}),
 								currentExamQuestions.map((q, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:331:21",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:332:21",
 									"data-prohibitions": "[editContent]",
 									className: "border p-6 rounded-lg bg-card shadow-sm space-y-4",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:332:23",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:333:23",
 											"data-prohibitions": "[editContent]",
 											className: "font-semibold text-lg",
 											children: [
@@ -31834,7 +31852,7 @@ function CoursePlayer() {
 											]
 										}),
 										q.type === "single" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroup, {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:336:25",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:337:25",
 											"data-prohibitions": "[editContent]",
 											disabled: !!submission,
 											value: answers[q.id]?.toString(),
@@ -31843,16 +31861,16 @@ function CoursePlayer() {
 												[q.id]: parseInt(v)
 											}),
 											children: q.options?.map((opt, oIdx) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-												"data-uid": "src/pages/student/CoursePlayer.tsx:342:29",
+												"data-uid": "src/pages/student/CoursePlayer.tsx:343:29",
 												"data-prohibitions": "[editContent]",
 												className: "flex items-center space-x-3 p-2 rounded hover:bg-muted/50 transition-colors",
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(RadioGroupItem, {
-													"data-uid": "src/pages/student/CoursePlayer.tsx:346:31",
+													"data-uid": "src/pages/student/CoursePlayer.tsx:347:31",
 													"data-prohibitions": "[editContent]",
 													value: oIdx.toString(),
 													id: `${q.id}-${oIdx}`
 												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-													"data-uid": "src/pages/student/CoursePlayer.tsx:347:31",
+													"data-uid": "src/pages/student/CoursePlayer.tsx:348:31",
 													"data-prohibitions": "[editContent]",
 													htmlFor: `${q.id}-${oIdx}`,
 													className: "text-base font-normal cursor-pointer flex-1",
@@ -31861,15 +31879,15 @@ function CoursePlayer() {
 											}, oIdx))
 										}),
 										q.type === "multiple" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:358:25",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:359:25",
 											"data-prohibitions": "[editContent]",
 											className: "space-y-2",
 											children: q.options?.map((opt, oIdx) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-												"data-uid": "src/pages/student/CoursePlayer.tsx:360:29",
+												"data-uid": "src/pages/student/CoursePlayer.tsx:361:29",
 												"data-prohibitions": "[editContent]",
 												className: "flex items-center space-x-3 p-2 rounded hover:bg-muted/50 transition-colors",
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Checkbox, {
-													"data-uid": "src/pages/student/CoursePlayer.tsx:364:31",
+													"data-uid": "src/pages/student/CoursePlayer.tsx:365:31",
 													"data-prohibitions": "[editContent]",
 													disabled: !!submission,
 													checked: answers[q.id]?.includes(oIdx),
@@ -31882,7 +31900,7 @@ function CoursePlayer() {
 														});
 													}
 												}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-													"data-uid": "src/pages/student/CoursePlayer.tsx:373:31",
+													"data-uid": "src/pages/student/CoursePlayer.tsx:374:31",
 													"data-prohibitions": "[editContent]",
 													className: "text-base font-normal cursor-pointer flex-1",
 													children: opt
@@ -31890,7 +31908,7 @@ function CoursePlayer() {
 											}, oIdx))
 										}),
 										q.type === "essay" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-											"data-uid": "src/pages/student/CoursePlayer.tsx:381:25",
+											"data-uid": "src/pages/student/CoursePlayer.tsx:382:25",
 											"data-prohibitions": "[editContent]",
 											disabled: !!submission,
 											value: answers[q.id] || "",
@@ -31904,11 +31922,11 @@ function CoursePlayer() {
 									]
 								}, q.id)),
 								!submission && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/student/CoursePlayer.tsx:393:21",
+									"data-uid": "src/pages/student/CoursePlayer.tsx:394:21",
 									"data-prohibitions": "[]",
 									className: "pt-4",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/student/CoursePlayer.tsx:394:23",
+										"data-uid": "src/pages/student/CoursePlayer.tsx:395:23",
 										"data-prohibitions": "[]",
 										size: "lg",
 										className: "w-full text-lg h-14",
@@ -31919,11 +31937,11 @@ function CoursePlayer() {
 							]
 						}),
 						activeLesson.type !== "exam" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/student/CoursePlayer.tsx:403:17",
+							"data-uid": "src/pages/student/CoursePlayer.tsx:404:17",
 							"data-prohibitions": "[editContent]",
 							className: "pt-8 flex justify-end border-t mt-8",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/student/CoursePlayer.tsx:404:19",
+								"data-uid": "src/pages/student/CoursePlayer.tsx:405:19",
 								"data-prohibitions": "[editContent]",
 								size: "lg",
 								className: "px-8",
@@ -31935,7 +31953,7 @@ function CoursePlayer() {
 						})
 					]
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/student/CoursePlayer.tsx:423:13",
+					"data-uid": "src/pages/student/CoursePlayer.tsx:424:13",
 					"data-prohibitions": "[]",
 					children: "Selecione uma aula"
 				})
@@ -34946,7 +34964,7 @@ function CommissionSettings() {
 						"data-uid": "src/pages/manager/CommissionSettings.tsx:42:11",
 						"data-prohibitions": "[]",
 						className: "flex items-center gap-2",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent$1, {
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent, {
 							"data-uid": "src/pages/manager/CommissionSettings.tsx:43:13",
 							"data-prohibitions": "[editContent]",
 							className: "size-5 text-primary"
@@ -35878,64 +35896,93 @@ function PartnerDashboard() {
 	const { students, instructors, courses, transactions, becomePartner, commissionSettings } = useLmsStore();
 	const [selectedCourse, setSelectedCourse] = (0, import_react.useState)("");
 	if (!authUser) return null;
-	if (!(students.find((s) => s.id === authUser.id) || instructors.find((i) => i.id === authUser.id))?.isPartner) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/shared/PartnerDashboard.tsx:38:7",
-		"data-prohibitions": "[editContent]",
+	if (authUser.role === "manager") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/shared/PartnerDashboard.tsx:35:7",
+		"data-prohibitions": "[]",
 		className: "max-w-2xl mx-auto mt-12 text-center space-y-6",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:39:9",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:36:9",
 				"data-prohibitions": "[]",
 				className: "bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:40:11",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:37:11",
 					"data-prohibitions": "[editContent]",
 					className: "size-12"
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:42:9",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:39:9",
 				"data-prohibitions": "[]",
 				className: "text-3xl font-bold",
 				children: "Programa de Parceiros"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:43:9",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:40:9",
+				"data-prohibitions": "[]",
+				className: "text-lg text-muted-foreground",
+				children: "Visão de Gestor: Acesse com um perfil de Aluno ou Professor para simular o painel de Afiliado/Parceiro e gerar links de rastreamento."
+			})
+		]
+	});
+	if (!(students.find((s) => s.id === authUser.id) || instructors.find((i) => i.id === authUser.id))?.isPartner) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/shared/PartnerDashboard.tsx:53:7",
+		"data-prohibitions": "[editContent]",
+		className: "max-w-2xl mx-auto mt-12 text-center space-y-6",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:54:9",
+				"data-prohibitions": "[]",
+				className: "bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Handshake, {
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:55:11",
+					"data-prohibitions": "[editContent]",
+					className: "size-12"
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:57:9",
+				"data-prohibitions": "[]",
+				className: "text-3xl font-bold",
+				children: "Programa de Parceiros"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:58:9",
 				"data-prohibitions": "[]",
 				className: "text-lg text-muted-foreground",
 				children: "Torne-se um afiliado e ganhe comissões por cada venda realizada através do seu link exclusivo."
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:47:9",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:62:9",
 				"data-prohibitions": "[editContent]",
 				className: "p-6 bg-muted/30 rounded-xl text-left space-y-4 my-8 border",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:48:11",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:63:11",
 					"data-prohibitions": "[]",
 					className: "font-semibold text-lg",
 					children: "Como funciona?"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:49:11",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:64:11",
 					"data-prohibitions": "[editContent]",
 					className: "space-y-2 text-muted-foreground",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:50:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:65:13",
 							"data-prohibitions": "[]",
 							children: "1. Você ativa sua parceria gratuitamente."
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:51:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:66:13",
 							"data-prohibitions": "[]",
 							children: "2. Gera links exclusivos para os cursos da plataforma."
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:52:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:67:13",
 							"data-prohibitions": "[]",
 							children: "3. Compartilha com sua rede, alunos ou amigos."
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:53:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:68:13",
 							"data-prohibitions": "[editContent]",
 							children: [
 								"4. Recebe a comissão (",
@@ -35947,7 +35994,7 @@ function PartnerDashboard() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:58:9",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:73:9",
 				"data-prohibitions": "[]",
 				size: "lg",
 				className: "w-full text-lg h-14",
@@ -35970,52 +36017,52 @@ function PartnerDashboard() {
 		toast.success("Link de afiliado copiado para a área de transferência.");
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/shared/PartnerDashboard.tsx:87:5",
+		"data-uid": "src/pages/shared/PartnerDashboard.tsx:102:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-8 pb-10",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:88:7",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:103:7",
 				"data-prohibitions": "[]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:89:9",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:104:9",
 					"data-prohibitions": "[]",
 					className: "text-3xl font-bold tracking-tight",
 					children: "Painel do Parceiro"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:90:9",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:105:9",
 					"data-prohibitions": "[]",
 					className: "text-muted-foreground mt-1",
 					children: "Acompanhe suas indicações e comissões."
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:93:7",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:108:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid sm:grid-cols-3 gap-6",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:94:9",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:109:9",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:95:11",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:110:11",
 							"data-prohibitions": "[]",
 							className: "pb-2",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:96:13",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:111:13",
 								"data-prohibitions": "[]",
 								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Activity, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:97:15",
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:112:15",
 									"data-prohibitions": "[editContent]",
 									className: "size-4"
 								}), " Vendas Geradas"]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:100:11",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:115:11",
 							"data-prohibitions": "[editContent]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:101:13",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:116:13",
 								"data-prohibitions": "[editContent]",
 								className: "text-3xl font-bold",
 								children: partnerSales.length
@@ -36023,27 +36070,27 @@ function PartnerDashboard() {
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:104:9",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:119:9",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:105:11",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:120:11",
 							"data-prohibitions": "[]",
 							className: "pb-2",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:106:13",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:121:13",
 								"data-prohibitions": "[]",
 								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DollarSign, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:107:15",
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:122:15",
 									"data-prohibitions": "[editContent]",
 									className: "size-4"
 								}), " Ganhos Totais"]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:110:11",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:125:11",
 							"data-prohibitions": "[editContent]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:111:13",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:126:13",
 								"data-prohibitions": "[editContent]",
 								className: "text-3xl font-bold text-success",
 								children: ["R$ ", totalEarned.toFixed(2)]
@@ -36051,27 +36098,27 @@ function PartnerDashboard() {
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:114:9",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:129:9",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:115:11",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:130:11",
 							"data-prohibitions": "[]",
 							className: "pb-2",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:116:13",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:131:13",
 								"data-prohibitions": "[]",
 								className: "text-sm font-medium text-muted-foreground flex items-center gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Percent, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:117:15",
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:132:15",
 									"data-prohibitions": "[editContent]",
 									className: "size-4"
 								}), " Comissão Padrão"]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:120:11",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:135:11",
 							"data-prohibitions": "[editContent]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:121:13",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:136:13",
 								"data-prohibitions": "[editContent]",
 								className: "text-3xl font-bold",
 								children: [commissionSettings.defaultPartnerRate, "%"]
@@ -36081,47 +36128,47 @@ function PartnerDashboard() {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:126:7",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:141:7",
 				"data-prohibitions": "[editContent]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:127:9",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:142:9",
 					"data-prohibitions": "[]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:128:11",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:143:11",
 						"data-prohibitions": "[]",
 						className: "flex items-center gap-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:129:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:144:13",
 							"data-prohibitions": "[editContent]",
 							className: "size-5 text-primary"
 						}), " Gerador de Links de Afiliado"]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:131:11",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:146:11",
 						"data-prohibitions": "[]",
 						children: "Selecione um curso para gerar sua URL de rastreamento."
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:133:9",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:148:9",
 					"data-prohibitions": "[editContent]",
 					className: "space-y-4",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:134:11",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:149:11",
 						"data-prohibitions": "[editContent]",
 						value: selectedCourse,
 						onValueChange: setSelectedCourse,
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:135:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:150:13",
 							"data-prohibitions": "[]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:136:15",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:151:15",
 								"data-prohibitions": "[editContent]",
 								placeholder: "Selecione o curso que deseja promover"
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:138:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:153:13",
 							"data-prohibitions": "[editContent]",
 							children: courses.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectItem, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:140:17",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:155:17",
 								"data-prohibitions": "[editContent]",
 								value: c.id,
 								children: [
@@ -36133,23 +36180,23 @@ function PartnerDashboard() {
 							}, c.id))
 						})]
 					}), selectedCourse && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:148:13",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:163:13",
 						"data-prohibitions": "[]",
 						className: "flex gap-2",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:149:15",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:164:15",
 							"data-prohibitions": "[editContent]",
 							readOnly: true,
 							value: affiliateLink,
 							className: "bg-muted/50 font-mono text-sm"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:150:15",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:165:15",
 							"data-prohibitions": "[]",
 							onClick: copyLink,
 							variant: "secondary",
 							className: "shrink-0",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:151:17",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:166:17",
 								"data-prohibitions": "[editContent]",
 								className: "mr-2 size-4"
 							}), " Copiar URL"]
@@ -36158,48 +36205,48 @@ function PartnerDashboard() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/shared/PartnerDashboard.tsx:158:7",
+				"data-uid": "src/pages/shared/PartnerDashboard.tsx:173:7",
 				"data-prohibitions": "[editContent]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:159:9",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:174:9",
 					"data-prohibitions": "[]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:160:11",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:175:11",
 						"data-prohibitions": "[]",
 						children: "Histórico de Vendas Indicadas"
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/shared/PartnerDashboard.tsx:162:9",
+					"data-uid": "src/pages/shared/PartnerDashboard.tsx:177:9",
 					"data-prohibitions": "[editContent]",
 					className: "overflow-x-auto",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-						"data-uid": "src/pages/shared/PartnerDashboard.tsx:163:11",
+						"data-uid": "src/pages/shared/PartnerDashboard.tsx:178:11",
 						"data-prohibitions": "[editContent]",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:164:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:179:13",
 							"data-prohibitions": "[]",
 							className: "bg-muted/50",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:165:15",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:180:15",
 								"data-prohibitions": "[]",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:166:17",
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:181:17",
 										"data-prohibitions": "[]",
 										children: "Data"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:167:17",
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:182:17",
 										"data-prohibitions": "[]",
 										children: "Curso"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:168:17",
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:183:17",
 										"data-prohibitions": "[]",
 										children: "Valor da Venda"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-										"data-uid": "src/pages/shared/PartnerDashboard.tsx:169:17",
+										"data-uid": "src/pages/shared/PartnerDashboard.tsx:184:17",
 										"data-prohibitions": "[]",
 										className: "text-right",
 										children: "Sua Comissão"
@@ -36207,33 +36254,33 @@ function PartnerDashboard() {
 								]
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableBody, {
-							"data-uid": "src/pages/shared/PartnerDashboard.tsx:172:13",
+							"data-uid": "src/pages/shared/PartnerDashboard.tsx:187:13",
 							"data-prohibitions": "[editContent]",
 							children: [partnerSales.map((t) => {
 								const course = courses.find((c) => c.id === t.courseId);
 								const split = t.splits.find((s) => s.userId === authUser.id && s.role === "partner");
 								return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:177:19",
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:192:19",
 									"data-prohibitions": "[editContent]",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:178:21",
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:193:21",
 											"data-prohibitions": "[editContent]",
 											className: "font-medium",
 											children: new Date(t.date).toLocaleDateString()
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:181:21",
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:196:21",
 											"data-prohibitions": "[editContent]",
 											children: course?.title || "Curso Removido"
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:182:21",
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:197:21",
 											"data-prohibitions": "[editContent]",
 											children: ["R$ ", t.amount.toFixed(2)]
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableCell, {
-											"data-uid": "src/pages/shared/PartnerDashboard.tsx:183:21",
+											"data-uid": "src/pages/shared/PartnerDashboard.tsx:198:21",
 											"data-prohibitions": "[editContent]",
 											className: "text-right font-bold text-success",
 											children: [
@@ -36241,7 +36288,7 @@ function PartnerDashboard() {
 												split?.amount.toFixed(2),
 												" ",
 												/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-													"data-uid": "src/pages/shared/PartnerDashboard.tsx:185:23",
+													"data-uid": "src/pages/shared/PartnerDashboard.tsx:200:23",
 													"data-prohibitions": "[editContent]",
 													className: "text-xs font-normal text-muted-foreground ml-1",
 													children: [
@@ -36255,10 +36302,10 @@ function PartnerDashboard() {
 									]
 								}, t.id);
 							}), partnerSales.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableRow, {
-								"data-uid": "src/pages/shared/PartnerDashboard.tsx:193:17",
+								"data-uid": "src/pages/shared/PartnerDashboard.tsx:208:17",
 								"data-prohibitions": "[]",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/pages/shared/PartnerDashboard.tsx:194:19",
+									"data-uid": "src/pages/shared/PartnerDashboard.tsx:209:19",
 									"data-prohibitions": "[]",
 									colSpan: 4,
 									className: "text-center py-8 text-muted-foreground",
@@ -37409,4 +37456,4 @@ var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DKYkHreD.js.map
+//# sourceMappingURL=index-Da9XPpVY.js.map

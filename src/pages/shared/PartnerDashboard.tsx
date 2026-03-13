@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Handshake, Copy, Link, DollarSign, Activity } from 'lucide-react'
+import { Handshake, Copy, Link as LinkIcon, DollarSign, Activity, Percent } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function PartnerDashboard() {
@@ -29,6 +29,21 @@ export default function PartnerDashboard() {
   const [selectedCourse, setSelectedCourse] = useState<string>('')
 
   if (!authUser) return null
+
+  if (authUser.role === 'manager') {
+    return (
+      <div className="max-w-2xl mx-auto mt-12 text-center space-y-6">
+        <div className="bg-primary/10 w-24 h-24 mx-auto rounded-full flex items-center justify-center text-primary mb-6">
+          <Handshake className="size-12" />
+        </div>
+        <h1 className="text-3xl font-bold">Programa de Parceiros</h1>
+        <p className="text-lg text-muted-foreground">
+          Visão de Gestor: Acesse com um perfil de Aluno ou Professor para simular o painel de
+          Afiliado/Parceiro e gerar links de rastreamento.
+        </p>
+      </div>
+    )
+  }
 
   const lmsUser =
     students.find((s) => s.id === authUser.id) || instructors.find((i) => i.id === authUser.id)
@@ -126,7 +141,7 @@ export default function PartnerDashboard() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Link className="size-5 text-primary" /> Gerador de Links de Afiliado
+            <LinkIcon className="size-5 text-primary" /> Gerador de Links de Afiliado
           </CardTitle>
           <CardDescription>Selecione um curso para gerar sua URL de rastreamento.</CardDescription>
         </CardHeader>
