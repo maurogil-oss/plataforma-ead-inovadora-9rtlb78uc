@@ -1,5 +1,15 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, PlaySquare, BookOpen, Users, BarChart, CreditCard } from 'lucide-react'
+import {
+  LayoutDashboard,
+  PlaySquare,
+  BookOpen,
+  Users,
+  BarChart,
+  CreditCard,
+  Database,
+  BellRing,
+  CheckCircle,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -21,11 +31,27 @@ export function AppSidebar() {
     { title: 'Dashboard', icon: LayoutDashboard, url: '/manager' },
     { title: 'Gestão de Cursos', icon: BookOpen, url: '/manager/courses' },
     { title: 'Gestão de Alunos', icon: Users, url: '/manager/enrollments' },
-    { title: 'Relatórios de Desempenho', icon: BarChart, url: '/manager/reports' },
+    { title: 'Banco de Questões', icon: Database, url: '/manager/questions' },
+    { title: 'Relatórios', icon: BarChart, url: '/manager/reports' },
     { title: 'Integração Pagamentos', icon: CreditCard, url: '/manager/settings/payments' },
+    { title: 'Avisos Automáticos', icon: BellRing, url: '/manager/settings/notifications' },
   ]
 
-  const navItems = user?.role === 'manager' ? managerNav : studentNav
+  const instructorNav = [
+    { title: 'Meu Painel', icon: LayoutDashboard, url: '/instructor' },
+    { title: 'Meus Cursos', icon: BookOpen, url: '/instructor/courses' },
+    { title: 'Meus Alunos', icon: Users, url: '/instructor/enrollments' },
+    { title: 'Corrigir Provas', icon: CheckCircle, url: '/instructor/grading' },
+    { title: 'Banco de Questões', icon: Database, url: '/instructor/questions' },
+  ]
+
+  const navItems =
+    user?.role === 'manager' ? managerNav : user?.role === 'instructor' ? instructorNav : studentNav
+
+  const getBaseRoute = (url: string) => {
+    if (url === '/manager' || url === '/instructor' || url === '/student') return url
+    return url.split('/').slice(0, 3).join('/')
+  }
 
   return (
     <Sidebar variant="inset" className="border-r bg-muted/10">
@@ -43,8 +69,9 @@ export function AppSidebar() {
             const isActive =
               location.pathname === item.url ||
               (item.url !== '/manager' &&
+                item.url !== '/instructor' &&
                 item.url !== '/student' &&
-                location.pathname.startsWith(item.url))
+                location.pathname.startsWith(getBaseRoute(item.url)))
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>

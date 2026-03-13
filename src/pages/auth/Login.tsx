@@ -1,14 +1,18 @@
 import { Navigate } from 'react-router-dom'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthStore, UserRole } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { BookOpen, ShieldCheck, GraduationCap } from 'lucide-react'
+import { BookOpen, ShieldCheck, GraduationCap, Presentation } from 'lucide-react'
 
 export default function Login() {
   const user = useAuthStore((s) => s.user)
   const login = useAuthStore((s) => s.login)
 
-  if (user) return <Navigate to={user.role === 'manager' ? '/manager' : '/student'} replace />
+  if (user) {
+    if (user.role === 'student') return <Navigate to="/student" replace />
+    if (user.role === 'instructor') return <Navigate to="/instructor" replace />
+    return <Navigate to="/manager" replace />
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-muted/30 p-4">
@@ -29,19 +33,28 @@ export default function Login() {
         <CardContent className="space-y-4">
           <Button
             size="lg"
-            className="w-full h-16 text-lg justify-start px-6"
+            className="w-full h-14 text-lg justify-start px-6"
             onClick={() => login('student')}
           >
-            <GraduationCap className="mr-4 size-6 opacity-70" />
+            <GraduationCap className="mr-4 size-5 opacity-70" />
             Acesso Aluno
           </Button>
           <Button
             size="lg"
             variant="secondary"
-            className="w-full h-16 text-lg justify-start px-6 border bg-muted/50 hover:bg-muted"
+            className="w-full h-14 text-lg justify-start px-6 border bg-muted/50 hover:bg-muted"
+            onClick={() => login('instructor')}
+          >
+            <Presentation className="mr-4 size-5 opacity-70" />
+            Acesso Professor
+          </Button>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="w-full h-14 text-lg justify-start px-6 border bg-muted/50 hover:bg-muted"
             onClick={() => login('manager')}
           >
-            <ShieldCheck className="mr-4 size-6 opacity-70" />
+            <ShieldCheck className="mr-4 size-5 opacity-70" />
             Acesso Gestor
           </Button>
         </CardContent>

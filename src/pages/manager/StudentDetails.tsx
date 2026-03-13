@@ -1,17 +1,26 @@
 import { useParams, Link } from 'react-router-dom'
 import { useLmsStore } from '@/stores/lmsStore'
+import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Clock, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function StudentDetails() {
   const { id } = useParams()
+  const user = useAuthStore((s) => s.user)
   const { students, enrollments, courses } = useLmsStore()
   const student = students.find((s) => s.id === id)
 
   if (!student) return <div className="p-8 text-center">Aluno não encontrado</div>
 
-  const studentEnrollments = enrollments.filter((e) => e.studentId === id)
+  const basePath = user?.role === 'instructor' ? '/instructor' : '/manager'
+
+  let studentEnrollments = enrollments.filter((e) => e.studentId === id)
+
+  if (user?.role === 'instructor') {
+    const myCourseIds = courses.filter((c) => c.instructorId === user.id).map((c) => c.id)
+    studentEnrollments = studentEnrollments.filter((e) => myCourseIds.includes(e.courseId))
+  }
 
   const allActivities = studentEnrollments
     .flatMap((e) =>
@@ -28,7 +37,7 @@ export default function StudentDetails() {
     <div className="space-y-8 pb-10">
       <div className="flex items-center gap-4 border-b pb-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/manager/enrollments">
+          <Link to={`${basePath}/enrollments`}>
             <ArrowLeft className="size-5" />
           </Link>
         </Button>
@@ -52,7 +61,7 @@ export default function StudentDetails() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Tempo Total de Estudo
+              Tempo Estimado de Estudo
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -66,7 +75,7 @@ export default function StudentDetails() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Activity className="size-5 text-primary" /> Log de Atividades (Heatmap de Acesso)
+            <Activity className="size-5 text-primary" /> Log de Atividades
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -82,7 +91,9 @@ export default function StudentDetails() {
                       ? 'Matrícula Realizada'
                       : act.type === 'lesson_complete'
                         ? 'Aula Concluída'
-                        : 'Avaliação Submetida'}
+                        : act.type === 'exam_graded'
+                          ? 'Prova Corrigida'
+                          : 'Tentativa de Prova'}
                   </div>
                   <div className="text-sm text-muted-foreground mt-0.5">
                     {act.details} <span className="font-medium ml-1">({act.courseTitle})</span>
@@ -102,7 +113,7 @@ export default function StudentDetails() {
             ))}
             {allActivities.length === 0 && (
               <p className="text-muted-foreground py-4 text-center">
-                Nenhuma atividade registrada na jornada deste aluno.
+                Nenhuma atividade registrada.
               </p>
             )}
           </div>

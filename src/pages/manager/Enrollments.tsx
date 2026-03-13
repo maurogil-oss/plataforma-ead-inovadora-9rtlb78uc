@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLmsStore } from '@/stores/lmsStore'
+import { useAuthStore } from '@/stores/authStore'
 import { Card } from '@/components/ui/card'
 import {
   Table,
@@ -9,19 +10,29 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { UserPlus, UserMinus } from 'lucide-react'
 
 export default function ManagerEnrollments() {
-  const { students, enrollments, courses, enrollStudent, unenrollStudent } = useLmsStore()
+  const user = useAuthStore((s) => s.user)
+  const { students, enrollments, courses } = useLmsStore()
+
+  const myCourses =
+    user?.role === 'instructor' ? courses.filter((c) => c.instructorId === user.id) : courses
+  const myCourseIds = myCourses.map((c) => c.id)
+
+  const relevantEnrollments =
+    user?.role === 'instructor'
+      ? enrollments.filter((e) => myCourseIds.includes(e.courseId))
+      : enrollments
+
+  const studentIds = Array.from(new Set(relevantEnrollments.map((e) => e.studentId)))
+  const relevantStudents = students.filter((s) => studentIds.includes(s.id))
+  const basePath = user?.role === 'instructor' ? '/instructor' : '/manager'
 
   return (
     <div className="space-y-8 pb-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Gestão de Alunos</h1>
-        <p className="text-muted-foreground mt-1">
-          Gerencie acessos e visualize o histórico detalhado.
-        </p>
+        <h1 className="text-3xl font-bold tracking-tight">Alunos Matriculados</h1>
+        <p className="text-muted-foreground mt-1">Visualize os alunos dos seus cursos.</p>
       </div>
 
       <Card className="overflow-hidden border-border/50">
@@ -29,19 +40,18 @@ export default function ManagerEnrollments() {
           <Table>
             <TableHeader className="bg-muted/50">
               <TableRow>
-                <TableHead className="w-[250px] font-semibold">Identificação do Aluno</TableHead>
-                <TableHead className="font-semibold min-w-[300px]">Cursos Matriculados</TableHead>
-                <TableHead className="text-right font-semibold">Ações de Acesso</TableHead>
+                <TableHead className="font-semibold">Identificação do Aluno</TableHead>
+                <TableHead className="font-semibold">Cursos (Seus Cursos)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student) => {
-                const studentEnrollments = enrollments.filter((e) => e.studentId === student.id)
+              {relevantStudents.map((student) => {
+                const sEnrolls = relevantEnrollments.filter((e) => e.studentId === student.id)
                 return (
                   <TableRow key={student.id} className="hover:bg-muted/20">
                     <TableCell>
                       <Link
-                        to={`/manager/students/${student.id}`}
+                        to={`${basePath}/students/${student.id}`}
                         className="font-medium text-primary hover:underline"
                       >
                         {student.name}
@@ -50,58 +60,29 @@ export default function ManagerEnrollments() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-2">
-                        {studentEnrollments.map((e) => {
-                          const course = courses.find((c) => c.id === e.courseId)
+                        {sEnrolls.map((e) => {
+                          const c = myCourses.find((x) => x.id === e.courseId)
                           return (
                             <span
                               key={e.id}
-                              className="text-xs font-medium bg-primary/10 border border-primary/20 text-primary px-2.5 py-1 rounded-md"
+                              className="text-xs font-medium bg-primary/10 text-primary px-2.5 py-1 rounded-md"
                             >
-                              {course?.title || 'Curso Removido'}
+                              {c?.title}
                             </span>
                           )
                         })}
-                        {studentEnrollments.length === 0 && (
-                          <span className="text-muted-foreground text-sm italic">
-                            Sem matrículas ativas
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 text-xs bg-background"
-                          onClick={() => {
-                            const unenrolled = courses.find(
-                              (c) => !studentEnrollments.some((se) => se.courseId === c.id),
-                            )
-                            if (unenrolled) enrollStudent(student.id, unenrolled.id)
-                          }}
-                        >
-                          <UserPlus className="mr-1.5 size-3.5" /> Adicionar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 text-xs text-destructive hover:bg-destructive/10"
-                          disabled={studentEnrollments.length === 0}
-                          onClick={() =>
-                            unenrollStudent(
-                              student.id,
-                              studentEnrollments[studentEnrollments.length - 1].courseId,
-                            )
-                          }
-                        >
-                          <UserMinus className="mr-1.5 size-3.5" /> Remover
-                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
                 )
               })}
+              {relevantStudents.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">
+                    Nenhum aluno encontrado.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

@@ -1,16 +1,18 @@
 import { create } from 'zustand'
 
-interface User {
+export type UserRole = 'student' | 'manager' | 'instructor'
+
+export interface User {
   id: string
   name: string
   email: string
-  role: 'student' | 'manager'
+  role: UserRole
   avatar?: string
 }
 
 interface AuthStore {
   user: User | null
-  login: (role: 'student' | 'manager') => void
+  login: (role: UserRole) => void
   logout: () => void
 }
 
@@ -19,8 +21,13 @@ export const useAuthStore = create<AuthStore>((set) => ({
   login: (role) =>
     set({
       user: {
-        id: role === 'manager' ? 'm1' : 's1',
-        name: role === 'manager' ? 'Admin Gestor' : 'João Silva',
+        id: role === 'manager' ? 'm1' : role === 'instructor' ? 'i1' : 's1',
+        name:
+          role === 'manager'
+            ? 'Admin Gestor'
+            : role === 'instructor'
+              ? 'Prof. Carlos Silva'
+              : 'João Aluno',
         email: `${role}@empresa.com`,
         role,
         avatar: `https://img.usecurling.com/ppl/thumbnail?seed=${role}`,

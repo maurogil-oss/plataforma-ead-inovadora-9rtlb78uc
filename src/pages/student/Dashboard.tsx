@@ -130,7 +130,9 @@ export default function StudentDashboard() {
                   ? 'Início da Jornada'
                   : act.type === 'lesson_complete'
                     ? 'Avanço no Conteúdo'
-                    : 'Avaliação Concluída'}
+                    : act.type === 'exam_graded'
+                      ? 'Avaliação Corrigida'
+                      : 'Atividade de Prova'}
               </div>
               <div className="text-sm mt-1 text-muted-foreground">
                 {act.details}{' '}

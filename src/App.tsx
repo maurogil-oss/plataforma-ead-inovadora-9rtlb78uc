@@ -17,27 +17,26 @@ import CourseEditor from './pages/manager/CourseEditor'
 import ManagerEnrollments from './pages/manager/Enrollments'
 import Reports from './pages/manager/Reports'
 import PaymentSettings from './pages/manager/PaymentSettings'
+import NotificationSettings from './pages/manager/NotificationSettings'
 import StudentDetails from './pages/manager/StudentDetails'
 
-import { useAuthStore } from './stores/authStore'
+import QuestionBank from './pages/shared/QuestionBank'
+import GradeExams from './pages/instructor/GradeExams'
+
+import { useAuthStore, UserRole } from './stores/authStore'
 
 const RootRedirect = () => {
   const user = useAuthStore((s) => s.user)
   if (!user) return <Navigate to="/login" replace />
-  return <Navigate to={user.role === 'manager' ? '/manager' : '/student'} replace />
+  if (user.role === 'student') return <Navigate to="/student" replace />
+  if (user.role === 'instructor') return <Navigate to="/instructor" replace />
+  return <Navigate to="/manager" replace />
 }
 
-const RoleRoute = ({
-  role,
-  children,
-}: {
-  role: 'student' | 'manager'
-  children: React.ReactNode
-}) => {
+const RoleRoute = ({ roles, children }: { roles: UserRole[]; children: React.ReactNode }) => {
   const user = useAuthStore((s) => s.user)
   if (!user) return <Navigate to="/login" replace />
-  if (user.role !== role)
-    return <Navigate to={user.role === 'manager' ? '/manager' : '/student'} replace />
+  if (!roles.includes(user.role)) return <RootRedirect />
   return <>{children}</>
 }
 
@@ -50,9 +49,10 @@ const App = () => (
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<Login />} />
 
+        {/* Student Routes */}
         <Route
           element={
-            <RoleRoute role="student">
+            <RoleRoute roles={['student']}>
               <Layout />
             </RoleRoute>
           }
@@ -62,9 +62,10 @@ const App = () => (
           <Route path="/student/certificate/:id" element={<Certificate />} />
         </Route>
 
+        {/* Manager Routes */}
         <Route
           element={
-            <RoleRoute role="manager">
+            <RoleRoute roles={['manager']}>
               <Layout />
             </RoleRoute>
           }
@@ -76,7 +77,26 @@ const App = () => (
           <Route path="/manager/enrollments" element={<ManagerEnrollments />} />
           <Route path="/manager/students/:id" element={<StudentDetails />} />
           <Route path="/manager/reports" element={<Reports />} />
+          <Route path="/manager/questions" element={<QuestionBank />} />
           <Route path="/manager/settings/payments" element={<PaymentSettings />} />
+          <Route path="/manager/settings/notifications" element={<NotificationSettings />} />
+        </Route>
+
+        {/* Instructor Routes */}
+        <Route
+          element={
+            <RoleRoute roles={['instructor']}>
+              <Layout />
+            </RoleRoute>
+          }
+        >
+          <Route path="/instructor" element={<ManagerDashboard />} />
+          <Route path="/instructor/courses" element={<ManagerCourses />} />
+          <Route path="/instructor/courses/:id/edit" element={<CourseEditor />} />
+          <Route path="/instructor/enrollments" element={<ManagerEnrollments />} />
+          <Route path="/instructor/students/:id" element={<StudentDetails />} />
+          <Route path="/instructor/questions" element={<QuestionBank />} />
+          <Route path="/instructor/grading" element={<GradeExams />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

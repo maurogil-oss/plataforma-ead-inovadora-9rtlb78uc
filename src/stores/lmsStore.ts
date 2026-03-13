@@ -1,25 +1,42 @@
 import { create } from 'zustand'
 
 export type LessonType = 'video' | 'text' | 'exam' | 'file'
-export interface Question {
+export type QuestionType = 'single' | 'multiple' | 'essay'
+
+export interface BankQuestion {
   id: string
   text: string
-  options: string[]
-  correctOptionIndex: number
+  type: QuestionType
+  options?: string[]
+  correctOptionIndex?: number
+  correctOptions?: number[]
+  category: string
+  difficulty: 'easy' | 'medium' | 'hard'
 }
+
+export interface ExamConfig {
+  mode: 'manual' | 'random'
+  manualQuestionIds?: string[]
+  randomCategory?: string
+  randomCount?: number
+}
+
 export interface Lesson {
   id: string
   title: string
   type: LessonType
   content?: string
-  questions?: Question[]
   fileUrl?: string
+  examConfig?: ExamConfig
+  questions?: any[] // legacy
 }
+
 export interface Module {
   id: string
   title: string
   lessons: Lesson[]
 }
+
 export interface Batch {
   id: string
   name: string
@@ -27,23 +44,38 @@ export interface Batch {
   endDate: string
   capacity: number
 }
+
 export interface Course {
   id: string
   title: string
   area: string
   description: string
   thumbnail: string
+  instructorId?: string
   modules: Module[]
   passingGrade: number
   batches: Batch[]
 }
+
 export interface ActivityLog {
   id: string
   date: string
-  type: 'enrollment' | 'lesson_complete' | 'exam_attempt'
+  type: 'enrollment' | 'lesson_complete' | 'exam_attempt' | 'exam_graded'
   details: string
   timeSpentMinutes?: number
 }
+
+export interface ExamSubmission {
+  lessonId: string
+  answers: Record<string, any>
+  autoScore: number
+  isPending: boolean
+  maxAutoScore: number
+  questions: BankQuestion[]
+  essayScore?: number
+  feedback?: string
+}
+
 export interface Enrollment {
   id: string
   studentId: string
@@ -51,30 +83,49 @@ export interface Enrollment {
   batchId?: string
   completedLessons: string[]
   examScores: Record<string, number>
+  examSubmissions: Record<string, ExamSubmission>
   activityLog: ActivityLog[]
 }
+
 export interface User {
   id: string
   name: string
   email: string
-  role: 'student' | 'manager'
+  role: 'student' | 'manager' | 'instructor'
   avatar?: string
 }
-export interface ForumReply {
-  id: string
-  userId: string
-  text: string
-  createdAt: string
-}
-export interface ForumQuestion {
-  id: string
-  lessonId: string
-  studentId: string
-  text: string
-  createdAt: string
-  resolved: boolean
-  replies: ForumReply[]
-}
+
+const MOCK_QUESTIONS: BankQuestion[] = [
+  {
+    id: 'bq1',
+    text: 'Quais são as fases do ciclo de vida de um projeto?',
+    type: 'single',
+    options: [
+      'Iniciação e Encerramento apenas',
+      'Iniciação, Planejamento, Execução, Monitoramento, Encerramento',
+      'Planejamento e Execução',
+    ],
+    correctOptionIndex: 1,
+    category: 'Projetos',
+    difficulty: 'easy',
+  },
+  {
+    id: 'bq2',
+    text: 'Selecione as metodologias ágeis válidas:',
+    type: 'multiple',
+    options: ['Scrum', 'Cascata (Waterfall)', 'Kanban', 'Prince2'],
+    correctOptions: [0, 2],
+    category: 'Projetos',
+    difficulty: 'medium',
+  },
+  {
+    id: 'bq3',
+    text: 'Descreva em suas palavras a importância do gerenciamento de riscos.',
+    type: 'essay',
+    category: 'Projetos',
+    difficulty: 'hard',
+  },
+]
 
 const MOCK_COURSES: Course[] = [
   {
@@ -82,21 +133,14 @@ const MOCK_COURSES: Course[] = [
     title: 'Fundamentos de Gestão de Projetos',
     area: 'Gestão Empresarial',
     description: 'Aprenda os conceitos básicos.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=business%20meeting&color=blue',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=business&color=blue',
+    instructorId: 'i1',
     passingGrade: 70,
-    batches: [
-      {
-        id: 'b1',
-        name: 'Turma Janeiro',
-        startDate: '2020-01-01',
-        endDate: '2030-12-31',
-        capacity: 100,
-      },
-    ],
+    batches: [],
     modules: [
       {
         id: 'm1',
-        title: 'Introdução e Ciclo de Vida',
+        title: 'Introdução e Avaliação',
         lessons: [
           {
             id: 'l1',
@@ -105,36 +149,10 @@ const MOCK_COURSES: Course[] = [
             content: 'https://img.usecurling.com/p/1280/720?q=presentation',
           },
           {
-            id: 'l2',
-            title: 'Ciclo de Vida do Projeto',
-            type: 'text',
-            content:
-              'O ciclo de vida de um projeto é composto por iniciação, planejamento, execução, monitoramento e encerramento.',
-          },
-          { id: 'l_file', title: 'Apostila (PDF)', type: 'file', fileUrl: '#' },
-        ],
-      },
-      {
-        id: 'm2',
-        title: 'Avaliação Final',
-        lessons: [
-          {
-            id: 'l3',
-            title: 'Teste de Conhecimentos',
+            id: 'l_exam',
+            title: 'Avaliação Final',
             type: 'exam',
-            questions: [
-              {
-                id: 'q1',
-                text: 'Quais são as fases do ciclo de vida?',
-                options: [
-                  'Iniciação e Encerramento apenas',
-                  'Iniciação, Planejamento, Execução, Monitoramento, Encerramento',
-                  'Planejamento e Execução',
-                  'Análise, Design, Desenvolvimento, Testes',
-                ],
-                correctOptionIndex: 1,
-              },
-            ],
+            examConfig: { mode: 'manual', manualQuestionIds: ['bq1', 'bq2', 'bq3'] },
           },
         ],
       },
@@ -142,84 +160,66 @@ const MOCK_COURSES: Course[] = [
   },
 ]
 
-const MOCK_STUDENTS: User[] = [
-  {
-    id: 's1',
-    name: 'João Silva',
-    email: 'joao.silva@empresa.com',
-    role: 'student',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?seed=joao',
-  },
-]
-
-const MOCK_ENROLLMENTS: Enrollment[] = [
-  {
-    id: 'e1',
-    studentId: 's1',
-    courseId: 'c1',
-    completedLessons: ['l1'],
-    examScores: {},
-    activityLog: [
-      {
-        id: 'a1',
-        date: new Date().toISOString(),
-        type: 'enrollment',
-        details: 'Matrícula inicial',
-        timeSpentMinutes: 0,
-      },
-    ],
-  },
-]
+interface NotificationSettings {
+  emailNewLesson: boolean
+  emailExamReminder: boolean
+}
 
 interface LMSStore {
   courses: Course[]
   enrollments: Enrollment[]
   students: User[]
-  forumQuestions: ForumQuestion[]
+  instructors: User[]
+  bankQuestions: BankQuestion[]
+  notificationSettings: NotificationSettings
   paymentSettings: { provider: string; apiKey: string }
+
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
   deleteCourse: (id: string) => void
   enrollStudent: (studentId: string, courseId: string, batchId?: string) => void
   unenrollStudent: (studentId: string, courseId: string) => void
   markLessonComplete: (enrollmentId: string, lessonId: string) => void
-  submitExam: (enrollmentId: string, lessonId: string, score: number) => void
-  addForumQuestion: (q: ForumQuestion) => void
-  addForumReply: (qId: string, r: ForumReply) => void
-  resolveForumQuestion: (qId: string) => void
+  submitExamAnswers: (enrollmentId: string, sub: ExamSubmission) => void
+  gradeExam: (enrollmentId: string, lessonId: string, essayScore: number, feedback: string) => void
+
+  addBankQuestion: (q: BankQuestion) => void
+  updateBankQuestion: (q: BankQuestion) => void
+  deleteBankQuestion: (id: string) => void
+
+  updateNotificationSettings: (s: NotificationSettings) => void
   updatePaymentSettings: (s: { provider: string; apiKey: string }) => void
 }
 
 export const useLmsStore = create<LMSStore>((set) => ({
   courses: MOCK_COURSES,
-  students: MOCK_STUDENTS,
-  enrollments: MOCK_ENROLLMENTS,
-  forumQuestions: [
+  students: [{ id: 's1', name: 'João Aluno', email: 'student@empresa.com', role: 'student' }],
+  instructors: [
+    { id: 'i1', name: 'Prof. Carlos Silva', email: 'instructor@empresa.com', role: 'instructor' },
+  ],
+  enrollments: [
     {
-      id: 'fq1',
-      lessonId: 'l1',
+      id: 'e1',
       studentId: 's1',
-      text: 'Posso usar metodologias ágeis?',
-      createdAt: new Date().toISOString(),
-      resolved: false,
-      replies: [],
+      courseId: 'c1',
+      completedLessons: ['l1'],
+      examScores: {},
+      examSubmissions: {},
+      activityLog: [],
     },
   ],
+  bankQuestions: MOCK_QUESTIONS,
+  notificationSettings: { emailNewLesson: true, emailExamReminder: true },
   paymentSettings: { provider: 'Stripe', apiKey: '' },
+
   addCourse: (course) => set((s) => ({ courses: [...s.courses, course] })),
   updateCourse: (course) =>
     set((s) => ({ courses: s.courses.map((c) => (c.id === course.id ? course : c)) })),
   deleteCourse: (id) => set((s) => ({ courses: s.courses.filter((c) => c.id !== id) })),
+
   enrollStudent: (studentId, courseId, batchId) =>
     set((s) => {
       if (s.enrollments.some((e) => e.studentId === studentId && e.courseId === courseId)) return s
-      const act: ActivityLog = {
-        id: `act_${Date.now()}`,
-        date: new Date().toISOString(),
-        type: 'enrollment',
-        details: 'Matrícula confirmada',
-        timeSpentMinutes: 0,
-      }
       return {
         enrollments: [
           ...s.enrollments,
@@ -230,7 +230,15 @@ export const useLmsStore = create<LMSStore>((set) => ({
             batchId,
             completedLessons: [],
             examScores: {},
-            activityLog: [act],
+            examSubmissions: {},
+            activityLog: [
+              {
+                id: `act_${Date.now()}`,
+                date: new Date().toISOString(),
+                type: 'enrollment',
+                details: 'Matrícula confirmada',
+              },
+            ],
           },
         ],
       }
@@ -243,56 +251,81 @@ export const useLmsStore = create<LMSStore>((set) => ({
     })),
   markLessonComplete: (enrollmentId, lessonId) =>
     set((s) => ({
-      enrollments: s.enrollments.map((e) => {
-        if (e.id === enrollmentId && !e.completedLessons.includes(lessonId)) {
-          const act: ActivityLog = {
-            id: `act_${Date.now()}`,
-            date: new Date().toISOString(),
-            type: 'lesson_complete',
-            details: 'Aula concluída',
-            timeSpentMinutes: Math.floor(Math.random() * 20) + 5,
-          }
-          return {
-            ...e,
-            completedLessons: [...e.completedLessons, lessonId],
-            activityLog: [...e.activityLog, act],
-          }
-        }
-        return e
-      }),
-    })),
-  submitExam: (enrollmentId, lessonId, score) =>
-    set((s) => ({
-      enrollments: s.enrollments.map((e) => {
-        if (e.id === enrollmentId) {
-          const act: ActivityLog = {
-            id: `act_${Date.now()}`,
-            date: new Date().toISOString(),
-            type: 'exam_attempt',
-            details: `Prova concluída com nota ${score.toFixed(0)}`,
-            timeSpentMinutes: Math.floor(Math.random() * 30) + 10,
-          }
-          return {
-            ...e,
-            examScores: { ...e.examScores, [lessonId]: score },
-            activityLog: [...e.activityLog, act],
-          }
-        }
-        return e
-      }),
-    })),
-  addForumQuestion: (q) => set((s) => ({ forumQuestions: [...s.forumQuestions, q] })),
-  addForumReply: (qId, r) =>
-    set((s) => ({
-      forumQuestions: s.forumQuestions.map((fq) =>
-        fq.id === qId ? { ...fq, replies: [...fq.replies, r] } : fq,
+      enrollments: s.enrollments.map((e) =>
+        e.id === enrollmentId && !e.completedLessons.includes(lessonId)
+          ? {
+              ...e,
+              completedLessons: [...e.completedLessons, lessonId],
+              activityLog: [
+                ...e.activityLog,
+                {
+                  id: `act_${Date.now()}`,
+                  date: new Date().toISOString(),
+                  type: 'lesson_complete',
+                  details: 'Aula concluída',
+                },
+              ],
+            }
+          : e,
       ),
     })),
-  resolveForumQuestion: (qId) =>
+
+  submitExamAnswers: (enrollmentId, sub) =>
     set((s) => ({
-      forumQuestions: s.forumQuestions.map((fq) =>
-        fq.id === qId ? { ...fq, resolved: true } : fq,
-      ),
+      enrollments: s.enrollments.map((e) => {
+        if (e.id !== enrollmentId) return e
+        const updatedE = {
+          ...e,
+          examSubmissions: { ...e.examSubmissions, [sub.lessonId]: sub },
+          activityLog: [
+            ...e.activityLog,
+            {
+              id: `act_${Date.now()}`,
+              date: new Date().toISOString(),
+              type: 'exam_attempt' as const,
+              details: sub.isPending ? 'Prova enviada para correção' : 'Prova concluída',
+            },
+          ],
+        }
+        if (!sub.isPending) updatedE.examScores = { ...e.examScores, [sub.lessonId]: sub.autoScore }
+        return updatedE
+      }),
     })),
+
+  gradeExam: (enrollmentId, lessonId, essayScore, feedback) =>
+    set((s) => ({
+      enrollments: s.enrollments.map((e) => {
+        if (e.id !== enrollmentId) return e
+        const sub = e.examSubmissions[lessonId]
+        if (!sub) return e
+        const finalScore = sub.autoScore + essayScore
+        return {
+          ...e,
+          examScores: { ...e.examScores, [lessonId]: finalScore },
+          examSubmissions: {
+            ...e.examSubmissions,
+            [lessonId]: { ...sub, isPending: false, essayScore, feedback },
+          },
+          completedLessons: [...new Set([...e.completedLessons, lessonId])],
+          activityLog: [
+            ...e.activityLog,
+            {
+              id: `act_${Date.now()}`,
+              date: new Date().toISOString(),
+              type: 'exam_graded',
+              details: `Prova corrigida manualmente. Nota: ${finalScore}`,
+            },
+          ],
+        }
+      }),
+    })),
+
+  addBankQuestion: (q) => set((s) => ({ bankQuestions: [...s.bankQuestions, q] })),
+  updateBankQuestion: (q) =>
+    set((s) => ({ bankQuestions: s.bankQuestions.map((b) => (b.id === q.id ? q : b)) })),
+  deleteBankQuestion: (id) =>
+    set((s) => ({ bankQuestions: s.bankQuestions.filter((b) => b.id !== id) })),
+
+  updateNotificationSettings: (s) => set({ notificationSettings: s }),
   updatePaymentSettings: (s) => set({ paymentSettings: s }),
 }))
