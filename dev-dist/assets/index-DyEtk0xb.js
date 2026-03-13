@@ -25645,13 +25645,13 @@ function AppSidebar() {
 					"data-uid": "src/components/AppSidebar.tsx:61:9",
 					"data-prohibitions": "[]",
 					to: "/",
-					className: "flex items-center gap-3 w-full",
+					className: "flex items-center gap-3 w-full group",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						"data-uid": "src/components/AppSidebar.tsx:62:11",
 						"data-prohibitions": "[editContent]",
 						src: logo_academy_2_82c76_default,
 						alt: "Observatório Academy",
-						className: "h-10 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+						className: "h-10 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
 					})
 				})
 			}),
@@ -25823,17 +25823,17 @@ function TopHeader({ onMenuClick }) {
 						"data-uid": "src/components/TopHeader.tsx:24:11",
 						"data-prohibitions": "[]",
 						to: "/",
-						className: "flex items-center gap-3",
+						className: "flex items-center gap-3 group",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							"data-uid": "src/components/TopHeader.tsx:25:13",
 							"data-prohibitions": "[editContent]",
 							src: logo_academy_2_82c76_default,
 							alt: "Observatório Academy",
-							className: "h-9 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+							className: "h-9 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 							"data-uid": "src/components/TopHeader.tsx:30:13",
 							"data-prohibitions": "[]",
-							className: "hidden sm:inline-block font-bold text-foreground tracking-tight",
+							className: "hidden sm:inline-block font-bold text-foreground tracking-tight group-hover:text-[#176a7e] transition-colors",
 							children: "Observatório Academy"
 						})]
 					}),
@@ -26605,7 +26605,7 @@ function Login() {
 				"data-prohibitions": "[editContent]",
 				src: logo_academy_2_82c76_default,
 				alt: "Observatório Academy",
-				className: "h-16 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+				className: "h-24 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-500 hover:scale-105 drop-shadow-md"
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 			"data-uid": "src/pages/auth/Login.tsx:28:7",
@@ -26741,7 +26741,7 @@ function About() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
 				"data-uid": "src/pages/public/About.tsx:48:7",
 				"data-prohibitions": "[]",
-				className: "border-b bg-card sticky top-0 z-50",
+				className: "border-b border-border bg-card sticky top-0 z-50 shadow-sm",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/pages/public/About.tsx:49:9",
 					"data-prohibitions": "[]",
@@ -26750,25 +26750,25 @@ function About() {
 						"data-uid": "src/pages/public/About.tsx:50:11",
 						"data-prohibitions": "[]",
 						to: "/",
-						className: "flex items-center gap-3",
+						className: "flex items-center gap-3 group",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 							"data-uid": "src/pages/public/About.tsx:51:13",
 							"data-prohibitions": "[editContent]",
 							src: logo_academy_2_82c76_default,
-							alt: "Observatório Academy (DEMO)",
-							className: "h-10"
+							alt: "Observatório Academy",
+							className: "h-10 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/pages/public/About.tsx:53:11",
+						"data-uid": "src/pages/public/About.tsx:57:11",
 						"data-prohibitions": "[]",
 						variant: "ghost",
 						asChild: true,
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-							"data-uid": "src/pages/public/About.tsx:54:13",
+							"data-uid": "src/pages/public/About.tsx:58:13",
 							"data-prohibitions": "[]",
 							to: "/",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
-								"data-uid": "src/pages/public/About.tsx:55:15",
+								"data-uid": "src/pages/public/About.tsx:59:15",
 								"data-prohibitions": "[editContent]",
 								className: "mr-2 h-4 w-4"
 							}), " Voltar ao Início"]
@@ -26777,45 +26777,45 @@ function About() {
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("main", {
-				"data-uid": "src/pages/public/About.tsx:61:7",
+				"data-uid": "src/pages/public/About.tsx:65:7",
 				"data-prohibitions": "[editContent]",
 				className: "flex-1",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-						"data-uid": "src/pages/public/About.tsx:63:9",
+						"data-uid": "src/pages/public/About.tsx:67:9",
 						"data-prohibitions": "[]",
 						className: "py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/public/About.tsx:64:11",
+							"data-uid": "src/pages/public/About.tsx:68:11",
 							"data-prohibitions": "[editContent]",
 							className: "absolute inset-0 bg-[url('https://img.usecurling.com/p/1200/800?q=education&color=gray&dpr=1')] opacity-5 bg-cover bg-center"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/public/About.tsx:65:11",
+							"data-uid": "src/pages/public/About.tsx:69:11",
 							"data-prohibitions": "[]",
 							className: "container mx-auto px-4 text-center max-w-4xl relative z-10",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									"data-uid": "src/pages/public/About.tsx:66:13",
+									"data-uid": "src/pages/public/About.tsx:70:13",
 									"data-prohibitions": "[editContent]",
 									src: logo_academy_2_82c76_default,
 									alt: "Logo Observatório Academy",
-									className: "h-28 mx-auto mb-10 drop-shadow-sm"
+									className: "h-28 mx-auto mb-10 w-auto object-contain mix-blend-multiply drop-shadow-sm transition-transform duration-500 hover:scale-105"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-									"data-uid": "src/pages/public/About.tsx:71:13",
+									"data-uid": "src/pages/public/About.tsx:75:13",
 									"data-prohibitions": "[]",
 									className: "text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-slate-900",
 									children: "Sobre o Observatório Academy"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-									"data-uid": "src/pages/public/About.tsx:74:13",
+									"data-uid": "src/pages/public/About.tsx:78:13",
 									"data-prohibitions": "[]",
 									className: "text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto",
 									children: [
 										"O",
 										" ",
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
-											"data-uid": "src/pages/public/About.tsx:76:15",
+											"data-uid": "src/pages/public/About.tsx:80:15",
 											"data-prohibitions": "[]",
 											className: "font-semibold text-slate-900",
 											children: "Observatório Academy (DEMO)"
@@ -26828,51 +26828,51 @@ function About() {
 						})]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
-						"data-uid": "src/pages/public/About.tsx:85:9",
+						"data-uid": "src/pages/public/About.tsx:89:9",
 						"data-prohibitions": "[editContent]",
 						className: "py-24 bg-white border-t",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/public/About.tsx:86:11",
+							"data-uid": "src/pages/public/About.tsx:90:11",
 							"data-prohibitions": "[editContent]",
 							className: "container mx-auto px-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/public/About.tsx:87:13",
+								"data-uid": "src/pages/public/About.tsx:91:13",
 								"data-prohibitions": "[]",
 								className: "text-center mb-16",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-									"data-uid": "src/pages/public/About.tsx:88:15",
+									"data-uid": "src/pages/public/About.tsx:92:15",
 									"data-prohibitions": "[]",
 									className: "text-3xl font-bold text-slate-900 mb-4",
 									children: "Pilares da Academia"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/public/About.tsx:89:15",
+									"data-uid": "src/pages/public/About.tsx:93:15",
 									"data-prohibitions": "[]",
 									className: "text-slate-500 max-w-2xl mx-auto",
 									children: "Nossos valores fundamentais que guiam cada recurso construído e cada curso oferecido em nossa plataforma."
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/public/About.tsx:95:13",
+								"data-uid": "src/pages/public/About.tsx:99:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto",
 								children: pillars.map((pillar, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/public/About.tsx:97:17",
+									"data-uid": "src/pages/public/About.tsx:101:17",
 									"data-prohibitions": "[editContent]",
 									className: "bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 group",
 									children: [
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/public/About.tsx:101:19",
+											"data-uid": "src/pages/public/About.tsx:105:19",
 											"data-prohibitions": "[editContent]",
 											className: "h-14 w-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 border border-slate-100 group-hover:bg-[#176a7e]/10 transition-colors",
 											children: pillar.icon
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-											"data-uid": "src/pages/public/About.tsx:104:19",
+											"data-uid": "src/pages/public/About.tsx:108:19",
 											"data-prohibitions": "[editContent]",
 											className: "text-xl font-bold text-slate-900 mb-3",
 											children: pillar.title
 										}),
 										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/public/About.tsx:105:19",
+											"data-uid": "src/pages/public/About.tsx:109:19",
 											"data-prohibitions": "[editContent]",
 											className: "text-slate-600 leading-relaxed",
 											children: pillar.description
@@ -26883,51 +26883,51 @@ function About() {
 						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
-						"data-uid": "src/pages/public/About.tsx:113:9",
+						"data-uid": "src/pages/public/About.tsx:117:9",
 						"data-prohibitions": "[]",
 						className: "py-20 bg-[#176a7e] text-white",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/public/About.tsx:114:11",
+							"data-uid": "src/pages/public/About.tsx:118:11",
 							"data-prohibitions": "[]",
 							className: "container mx-auto px-4 text-center max-w-3xl",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-									"data-uid": "src/pages/public/About.tsx:115:13",
+									"data-uid": "src/pages/public/About.tsx:119:13",
 									"data-prohibitions": "[]",
 									className: "text-3xl font-bold mb-6",
 									children: "Pronto para iniciar sua jornada?"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/public/About.tsx:116:13",
+									"data-uid": "src/pages/public/About.tsx:120:13",
 									"data-prohibitions": "[]",
 									className: "text-cyan-100 mb-8 text-lg",
 									children: "Junte-se a milhares de alunos que já estão transformando suas carreiras com o Observatório Academy (DEMO)."
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/public/About.tsx:120:13",
+									"data-uid": "src/pages/public/About.tsx:124:13",
 									"data-prohibitions": "[]",
 									className: "flex flex-col sm:flex-row gap-4 justify-center",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/public/About.tsx:121:15",
+										"data-uid": "src/pages/public/About.tsx:125:15",
 										"data-prohibitions": "[]",
 										size: "lg",
 										className: "bg-white text-[#176a7e] hover:bg-slate-100",
 										asChild: true,
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/public/About.tsx:122:17",
+											"data-uid": "src/pages/public/About.tsx:126:17",
 											"data-prohibitions": "[]",
 											to: "/cursos",
 											children: "Explorar Cursos"
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/public/About.tsx:124:15",
+										"data-uid": "src/pages/public/About.tsx:128:15",
 										"data-prohibitions": "[]",
 										size: "lg",
 										variant: "outline",
 										className: "border-white text-white hover:bg-[#115060]",
 										asChild: true,
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/public/About.tsx:130:17",
+											"data-uid": "src/pages/public/About.tsx:134:17",
 											"data-prohibitions": "[]",
 											to: "/register",
 											children: "Criar Conta Grátis"
@@ -26940,21 +26940,21 @@ function About() {
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
-				"data-uid": "src/pages/public/About.tsx:137:7",
+				"data-uid": "src/pages/public/About.tsx:141:7",
 				"data-prohibitions": "[editContent]",
 				className: "py-10 bg-slate-900",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/public/About.tsx:138:9",
+					"data-uid": "src/pages/public/About.tsx:142:9",
 					"data-prohibitions": "[editContent]",
 					className: "container mx-auto px-4 text-center text-slate-400",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-						"data-uid": "src/pages/public/About.tsx:139:11",
+						"data-uid": "src/pages/public/About.tsx:143:11",
 						"data-prohibitions": "[editContent]",
 						src: logo_academy_2_82c76_default,
 						alt: "Logo",
-						className: "h-8 mx-auto mb-6 brightness-0 invert opacity-50"
+						className: "h-8 w-auto mx-auto mb-6 object-contain mix-blend-screen invert opacity-50 hover:opacity-100 transition-opacity"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-						"data-uid": "src/pages/public/About.tsx:144:11",
+						"data-uid": "src/pages/public/About.tsx:148:11",
 						"data-prohibitions": "[editContent]",
 						children: [
 							"© ",
@@ -27511,13 +27511,13 @@ function PublicHeader() {
 					"data-uid": "src/components/PublicHeader.tsx:10:9",
 					"data-prohibitions": "[]",
 					to: "/",
-					className: "flex items-center gap-3",
+					className: "flex items-center gap-3 group",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 						"data-uid": "src/components/PublicHeader.tsx:11:11",
 						"data-prohibitions": "[editContent]",
 						src: logo_academy_2_82c76_default,
 						alt: "Observatório Academy",
-						className: "h-10 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+						className: "h-10 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
@@ -37453,4 +37453,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DZcyQfTp.js.map
+//# sourceMappingURL=index-DyEtk0xb.js.map

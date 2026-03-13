@@ -21,13 +21,13 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
               <Menu className="h-5 w-5" />
             </Button>
           )}
-          <Link to="/" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3 group">
             <img
               src={logoUrl}
               alt="Observatório Academy"
-              className="h-9 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+              className="h-9 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="hidden sm:inline-block font-bold text-foreground tracking-tight">
+            <span className="hidden sm:inline-block font-bold text-foreground tracking-tight group-hover:text-[#176a7e] transition-colors">
               Observatório Academy
             </span>
           </Link>

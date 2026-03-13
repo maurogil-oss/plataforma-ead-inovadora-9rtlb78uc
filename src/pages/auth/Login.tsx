@@ -21,7 +21,7 @@ export default function Login() {
         <img
           src={logoUrl}
           alt="Observatório Academy"
-          className="h-16 w-auto object-contain mix-blend-screen brightness-0 invert opacity-90"
+          className="h-24 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-500 hover:scale-105 drop-shadow-md"
         />
       </div>
 

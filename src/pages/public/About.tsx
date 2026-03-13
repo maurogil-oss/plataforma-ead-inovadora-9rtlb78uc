@@ -45,10 +45,14 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b bg-card sticky top-0 z-50">
+      <header className="border-b border-border bg-card sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={logoUrl} alt="Observatório Academy (DEMO)" className="h-10" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <img
+              src={logoUrl}
+              alt="Observatório Academy"
+              className="h-10 w-auto object-contain mix-blend-screen invert opacity-95 transition-transform duration-300 group-hover:scale-105"
+            />
           </Link>
           <Button variant="ghost" asChild>
             <Link to="/">
@@ -66,7 +70,7 @@ export default function About() {
             <img
               src={logoUrl}
               alt="Logo Observatório Academy"
-              className="h-28 mx-auto mb-10 drop-shadow-sm"
+              className="h-28 mx-auto mb-10 w-auto object-contain mix-blend-multiply drop-shadow-sm transition-transform duration-500 hover:scale-105"
             />
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-slate-900">
               Sobre o Observatório Academy
@@ -139,7 +143,7 @@ export default function About() {
           <img
             src={logoUrl}
             alt="Logo"
-            className="h-8 mx-auto mb-6 brightness-0 invert opacity-50"
+            className="h-8 w-auto mx-auto mb-6 object-contain mix-blend-screen invert opacity-50 hover:opacity-100 transition-opacity"
           />
           <p>
             &copy; {new Date().getFullYear()} Observatório Academy (DEMO). Todos os direitos
