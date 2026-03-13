@@ -3,7 +3,7 @@ import { useLmsStore } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-import { Plus, Edit, Trash2, Layers } from 'lucide-react'
+import { Plus, Edit, Trash2, Layers, Tag } from 'lucide-react'
 
 export default function ManagerCourses() {
   const user = useAuthStore((s) => s.user)
@@ -42,6 +42,9 @@ export default function ManagerCourses() {
                 />
                 <div className="absolute top-3 left-3 bg-background/90 text-foreground text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded">
                   {course.area}
+                </div>
+                <div className="absolute bottom-3 right-3 bg-primary text-primary-foreground font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs">
+                  <Tag className="size-3" /> R$ {course.price.toFixed(2)}
                 </div>
               </div>
               <CardHeader className="pb-4">

@@ -4,8 +4,7 @@ import { useLmsStore, Course } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -20,7 +19,7 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Plus, Trash2, ArrowLeft, Save } from 'lucide-react'
+import { Plus, Trash2, ArrowLeft, Save, DollarSign } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function CourseEditor() {
@@ -38,6 +37,7 @@ export default function CourseEditor() {
       title: '',
       area: '',
       description: '',
+      price: 197.0,
       thumbnail: 'https://img.usecurling.com/p/600/400?q=education',
       passingGrade: 70,
       batches: [],
@@ -145,9 +145,63 @@ export default function CourseEditor() {
                 </Select>
               </div>
             )}
+            <div className="space-y-2">
+              <label className="text-sm font-semibold">Preço de Venda (R$)</label>
+              <Input
+                type="number"
+                value={course.price}
+                onChange={(e) => setCourse({ ...course, price: Number(e.target.value) })}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
+
+      {user?.role === 'manager' && (
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <DollarSign className="size-5 text-primary" /> Financeiro e Comissões
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Sobrescreva as taxas padrões globais apenas para este curso. Deixe em branco para usar
+              o padrão.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">Comissão Professor (%)</label>
+                <Input
+                  type="number"
+                  placeholder="Ex: 50"
+                  value={course.instructorRateOverride || ''}
+                  onChange={(e) =>
+                    setCourse({
+                      ...course,
+                      instructorRateOverride: e.target.value ? Number(e.target.value) : undefined,
+                    })
+                  }
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold">Comissão Afiliado/Parceiro (%)</label>
+                <Input
+                  type="number"
+                  placeholder="Ex: 20"
+                  value={course.partnerRateOverride || ''}
+                  onChange={(e) =>
+                    setCourse({
+                      ...course,
+                      partnerRateOverride: e.target.value ? Number(e.target.value) : undefined,
+                    })
+                  }
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="space-y-4">
         <div className="flex justify-between items-center bg-muted/30 p-4 rounded-lg border">
@@ -299,23 +353,6 @@ export default function CourseEditor() {
                               />
                             </div>
                           )}
-
-                          {(lesson.type === 'pdf' ||
-                            lesson.type === 'excel' ||
-                            lesson.type === 'image') && (
-                            <div className="flex items-center space-x-2 pt-1">
-                              <Checkbox
-                                id={`dl-${lesson.id}`}
-                                checked={lesson.downloadable}
-                                onCheckedChange={(c) =>
-                                  updateLesson(mod.id, lesson.id, { downloadable: !!c })
-                                }
-                              />
-                              <label htmlFor={`dl-${lesson.id}`} className="text-sm cursor-pointer">
-                                Permitir download do material
-                              </label>
-                            </div>
-                          )}
                         </div>
 
                         <div className="space-y-4 border-l pl-6">
@@ -381,33 +418,6 @@ export default function CourseEditor() {
                                 </div>
                               )}
                           </div>
-
-                          {lesson.type === 'exam' && (
-                            <div className="space-y-3 pt-2">
-                              <div className="space-y-1">
-                                <label className="text-xs font-semibold">
-                                  Nota Mínima p/ Aprovação (0-100)
-                                </label>
-                                <Input
-                                  type="number"
-                                  className="h-8 bg-background"
-                                  value={lesson.examConfig?.minGradeRequired || 0}
-                                  onChange={(e) =>
-                                    updateLesson(mod.id, lesson.id, {
-                                      examConfig: {
-                                        ...lesson.examConfig,
-                                        minGradeRequired: Number(e.target.value),
-                                      },
-                                    })
-                                  }
-                                />
-                                <p className="text-[10px] text-muted-foreground leading-tight">
-                                  Se configurado, aulas que dependem desta prova só serão liberadas
-                                  caso o aluno atinja a nota.
-                                </p>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>

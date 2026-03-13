@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { PlayCircle, PlusCircle, CalendarDays } from 'lucide-react'
+import { PlayCircle, PlusCircle, CalendarDays, Tag } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function StudentDashboard() {
@@ -40,17 +40,19 @@ export default function StudentDashboard() {
     if (c.batches && c.batches.length > 0) {
       setSelectedBatch('')
       setEnrollCourse(c)
-    } else if (paymentSettings.apiKey) {
+    } else if (paymentSettings.apiKey || c.price > 0) {
       setEnrollCourse(c)
     } else {
-      enrollStudent(user.id, c.id)
+      const affiliateRef = localStorage.getItem('lms_affiliate_ref') || undefined
+      enrollStudent(user.id, c.id, undefined, affiliateRef)
       toast.success('Matrícula realizada com sucesso.')
     }
   }
 
   const handleFinalizeEnrollment = () => {
     if (enrollCourse?.batches?.length && !selectedBatch) return toast.error('Selecione uma turma.')
-    enrollStudent(user.id, enrollCourse!.id, selectedBatch)
+    const affiliateRef = localStorage.getItem('lms_affiliate_ref') || undefined
+    enrollStudent(user.id, enrollCourse!.id, selectedBatch || undefined, affiliateRef)
     toast.success('Pagamento Aprovado! Matrícula confirmada.')
     setEnrollCourse(null)
   }
@@ -112,41 +114,6 @@ export default function StudentDashboard() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold tracking-tight mb-6">Jornada de Aprendizado</h2>
-        <div className="space-y-6 border-l-2 border-primary/20 ml-3 pl-6 relative">
-          {activities.map((act) => (
-            <div key={act.id} className="relative">
-              <div className="absolute -left-[33px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-background" />
-              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                <CalendarDays className="size-3.5" />{' '}
-                {new Date(act.date).toLocaleDateString('pt-BR')} às{' '}
-                {new Date(act.date).toLocaleTimeString('pt-BR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </div>
-              <div className="font-semibold text-foreground mt-0.5">
-                {act.type === 'enrollment'
-                  ? 'Início da Jornada'
-                  : act.type === 'lesson_complete'
-                    ? 'Avanço no Conteúdo'
-                    : act.type === 'exam_graded'
-                      ? 'Avaliação Corrigida'
-                      : 'Atividade de Prova'}
-              </div>
-              <div className="text-sm mt-1 text-muted-foreground">
-                {act.details}{' '}
-                <span className="text-xs font-medium text-primary ml-1">({act.courseTitle})</span>
-              </div>
-            </div>
-          ))}
-          {activities.length === 0 && (
-            <p className="text-muted-foreground">Nenhuma atividade registrada na sua jornada.</p>
-          )}
-        </div>
-      </section>
-
-      <section>
         <div className="mb-6">
           <h2 className="text-2xl font-bold tracking-tight">Catálogo de Cursos</h2>
           <p className="text-muted-foreground mt-1">Explore novas áreas de conhecimento.</p>
@@ -154,12 +121,15 @@ export default function StudentDashboard() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {availableCourses.map((course) => (
             <Card key={course.id} className="overflow-hidden flex flex-col border-border/50">
-              <div className="h-40 bg-muted">
+              <div className="h-40 bg-muted relative">
                 <img
                   src={course.thumbnail}
                   className="w-full h-full object-cover opacity-90"
                   alt=""
                 />
+                <div className="absolute top-3 right-3 bg-background/90 text-foreground font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-sm">
+                  <Tag className="size-3 text-primary" /> R$ {course.price.toFixed(2)}
+                </div>
               </div>
               <CardContent className="p-5 flex-1 flex flex-col">
                 <div className="text-xs font-semibold text-primary mb-1 uppercase tracking-wider">
@@ -174,7 +144,7 @@ export default function StudentDashboard() {
                   className="w-full"
                   onClick={() => handleEnrollClick(course)}
                 >
-                  <PlusCircle className="mr-2 size-4" /> Realizar Matrícula
+                  <PlusCircle className="mr-2 size-4" /> Comprar Curso
                 </Button>
               </CardContent>
             </Card>
@@ -188,6 +158,10 @@ export default function StudentDashboard() {
             <DialogTitle>Finalizar Matrícula - {enrollCourse?.title}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
+            <div className="flex justify-between items-center bg-muted/50 p-4 rounded-lg font-medium">
+              <span>Valor do Curso:</span>
+              <span className="text-lg">R$ {enrollCourse?.price.toFixed(2)}</span>
+            </div>
             {enrollCourse?.batches && enrollCourse.batches.length > 0 && (
               <div className="space-y-2">
                 <label className="text-sm font-medium">Turma / Ciclo de Ensino</label>
@@ -206,20 +180,18 @@ export default function StudentDashboard() {
                 </Select>
               </div>
             )}
-            {paymentSettings.apiKey && (
-              <div className="bg-muted/30 p-4 rounded-lg border space-y-3">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Simulação de Pagamento ({paymentSettings.provider})
-                </p>
-                <Input placeholder="Número do Cartão (Fictício)" />
-                <div className="flex gap-2">
-                  <Input placeholder="MM/AA" />
-                  <Input placeholder="CVC" />
-                </div>
+            <div className="bg-muted/30 p-4 rounded-lg border space-y-3">
+              <p className="text-sm font-medium text-muted-foreground">
+                Simulação de Pagamento ({paymentSettings.provider})
+              </p>
+              <Input placeholder="Número do Cartão (Fictício)" />
+              <div className="flex gap-2">
+                <Input placeholder="MM/AA" />
+                <Input placeholder="CVC" />
               </div>
-            )}
+            </div>
             <Button className="w-full" onClick={handleFinalizeEnrollment} size="lg">
-              Confirmar e Matricular
+              Confirmar e Pagar
             </Button>
           </div>
         </DialogContent>

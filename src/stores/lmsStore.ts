@@ -56,6 +56,9 @@ export interface Course {
   area: string
   description: string
   thumbnail: string
+  price: number
+  instructorRateOverride?: number
+  partnerRateOverride?: number
   instructorId?: string
   modules: Module[]
   passingGrade: number
@@ -100,12 +103,30 @@ export interface User {
   email: string
   role: 'student' | 'manager' | 'instructor'
   avatar?: string
+  isPartner?: boolean
 }
 
 export interface WebhookConfig {
   id: string
   url: string
   events: string[]
+}
+
+export interface TransactionSplit {
+  role: 'platform' | 'instructor' | 'partner'
+  userId: string | 'platform'
+  amount: number
+  percentage: number
+}
+
+export interface Transaction {
+  id: string
+  date: string
+  courseId: string
+  studentId: string
+  amount: number
+  affiliateId?: string
+  splits: TransactionSplit[]
 }
 
 const MOCK_QUESTIONS: BankQuestion[] = [
@@ -140,6 +161,7 @@ const MOCK_COURSES: Course[] = [
     area: 'Gestão Empresarial',
     description: 'Aprenda os conceitos básicos.',
     thumbnail: 'https://img.usecurling.com/p/800/600?q=business&color=blue',
+    price: 197.0,
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
@@ -182,6 +204,8 @@ interface LMSStore {
   students: User[]
   instructors: User[]
   bankQuestions: BankQuestion[]
+  transactions: Transaction[]
+  commissionSettings: { defaultInstructorRate: number; defaultPartnerRate: number }
   notificationSettings: { emailNewLesson: boolean; emailExamReminder: boolean }
   paymentSettings: { provider: string; apiKey: string }
   webhooks: WebhookConfig[]
@@ -189,11 +213,22 @@ interface LMSStore {
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
   deleteCourse: (id: string) => void
-  enrollStudent: (studentId: string, courseId: string, batchId?: string) => void
+  enrollStudent: (
+    studentId: string,
+    courseId: string,
+    batchId?: string,
+    affiliateId?: string,
+  ) => void
   unenrollStudent: (studentId: string, courseId: string) => void
   markLessonComplete: (enrollmentId: string, lessonId: string) => void
   submitExamAnswers: (enrollmentId: string, sub: ExamSubmission) => void
   gradeExam: (enrollmentId: string, lessonId: string, essayScore: number, feedback: string) => void
+
+  becomePartner: (userId: string) => void
+  updateCommissionSettings: (s: {
+    defaultInstructorRate: number
+    defaultPartnerRate: number
+  }) => void
 
   addBankQuestion: (q: BankQuestion) => void
   updateBankQuestion: (q: BankQuestion) => void
@@ -231,7 +266,13 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
   courses: MOCK_COURSES,
   students: [{ id: 's1', name: 'João Aluno', email: 'student@empresa.com', role: 'student' }],
   instructors: [
-    { id: 'i1', name: 'Prof. Carlos Silva', email: 'instructor@empresa.com', role: 'instructor' },
+    {
+      id: 'i1',
+      name: 'Prof. Carlos Silva',
+      email: 'instructor@empresa.com',
+      role: 'instructor',
+      isPartner: true,
+    },
   ],
   enrollments: [
     {
@@ -245,6 +286,20 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
     },
   ],
   bankQuestions: MOCK_QUESTIONS,
+  transactions: [
+    {
+      id: 'tx1',
+      date: new Date().toISOString(),
+      courseId: 'c1',
+      studentId: 's1',
+      amount: 197.0,
+      splits: [
+        { role: 'instructor', userId: 'i1', amount: 98.5, percentage: 50 },
+        { role: 'platform', userId: 'platform', amount: 98.5, percentage: 50 },
+      ],
+    },
+  ],
+  commissionSettings: { defaultInstructorRate: 50, defaultPartnerRate: 20 },
   notificationSettings: { emailNewLesson: true, emailExamReminder: true },
   paymentSettings: { provider: 'Stripe', apiKey: '' },
   webhooks: [],
@@ -254,10 +309,62 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
     set((s) => ({ courses: s.courses.map((c) => (c.id === course.id ? course : c)) })),
   deleteCourse: (id) => set((s) => ({ courses: s.courses.filter((c) => c.id !== id) })),
 
-  enrollStudent: (studentId, courseId, batchId) =>
+  enrollStudent: (studentId, courseId, batchId, affiliateId) =>
     set((s) => {
       if (s.enrollments.some((e) => e.studentId === studentId && e.courseId === courseId)) return s
-      // Mock Webhook Trigger
+
+      const course = s.courses.find((c) => c.id === courseId)
+      let newTransactions = s.transactions
+
+      if (course) {
+        const amount = course.price || 0
+        const instRate = course.instructorRateOverride ?? s.commissionSettings.defaultInstructorRate
+        const partRate = course.partnerRateOverride ?? s.commissionSettings.defaultPartnerRate
+
+        const splits: TransactionSplit[] = []
+        let platformRate = 100
+
+        if (affiliateId) {
+          splits.push({
+            role: 'partner',
+            userId: affiliateId,
+            amount: (amount * partRate) / 100,
+            percentage: partRate,
+          })
+          platformRate -= partRate
+        }
+
+        if (course.instructorId) {
+          splits.push({
+            role: 'instructor',
+            userId: course.instructorId,
+            amount: (amount * instRate) / 100,
+            percentage: instRate,
+          })
+          platformRate -= instRate
+        }
+
+        splits.push({
+          role: 'platform',
+          userId: 'platform',
+          amount: (amount * platformRate) / 100,
+          percentage: platformRate,
+        })
+
+        newTransactions = [
+          ...s.transactions,
+          {
+            id: `tx_${Date.now()}`,
+            date: new Date().toISOString(),
+            courseId,
+            studentId,
+            amount,
+            affiliateId,
+            splits,
+          },
+        ]
+      }
+
       s.webhooks
         .filter((w) => w.events.includes('enrollment'))
         .forEach((w) =>
@@ -265,6 +372,7 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
         )
 
       return {
+        transactions: newTransactions,
         enrollments: [
           ...s.enrollments,
           {
@@ -287,12 +395,21 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
         ],
       }
     }),
+
   unenrollStudent: (studentId, courseId) =>
     set((s) => ({
       enrollments: s.enrollments.filter(
         (e) => !(e.studentId === studentId && e.courseId === courseId),
       ),
     })),
+
+  becomePartner: (userId) =>
+    set((s) => ({
+      students: s.students.map((u) => (u.id === userId ? { ...u, isPartner: true } : u)),
+      instructors: s.instructors.map((u) => (u.id === userId ? { ...u, isPartner: true } : u)),
+    })),
+
+  updateCommissionSettings: (s) => set({ commissionSettings: s }),
 
   markLessonComplete: (enrollmentId, lessonId) =>
     set((s) => {
@@ -315,7 +432,6 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
         if (course) {
           updatedE = checkCourseCompletion(updatedE, course)
           if (updatedE.isCompleted && !e.isCompleted) {
-            // Mock Webhook Trigger
             s.webhooks
               .filter((w) => w.events.includes('course_completed'))
               .forEach((w) =>

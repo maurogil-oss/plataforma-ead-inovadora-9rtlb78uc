@@ -10,6 +10,9 @@ import {
   BellRing,
   CheckCircle,
   Webhook,
+  Handshake,
+  Percent,
+  Wallet,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -26,7 +29,10 @@ export function AppSidebar() {
   const user = useAuthStore((s) => s.user)
   const location = useLocation()
 
-  const studentNav = [{ title: 'Área do Aluno', icon: PlaySquare, url: '/student' }]
+  const studentNav = [
+    { title: 'Área do Aluno', icon: PlaySquare, url: '/student' },
+    { title: 'Programa de Parceiros', icon: Handshake, url: '/student/partner' },
+  ]
 
   const managerNav = [
     { title: 'Dashboard', icon: LayoutDashboard, url: '/manager' },
@@ -34,6 +40,9 @@ export function AppSidebar() {
     { title: 'Gestão de Alunos', icon: Users, url: '/manager/enrollments' },
     { title: 'Banco de Questões', icon: Database, url: '/manager/questions' },
     { title: 'Relatórios', icon: BarChart, url: '/manager/reports' },
+    { title: 'Taxas & Comissões', icon: Percent, url: '/manager/settings/commissions' },
+    { title: 'Relatório Financeiro', icon: Wallet, url: '/manager/settings/financial' },
+    { title: 'Programa de Parceiros', icon: Handshake, url: '/manager/partner' },
     { title: 'Integração Pagamentos', icon: CreditCard, url: '/manager/settings/payments' },
     { title: 'Avisos Automáticos', icon: BellRing, url: '/manager/settings/notifications' },
     { title: 'Webhooks (Integrações)', icon: Webhook, url: '/manager/settings/integrations' },
@@ -45,6 +54,8 @@ export function AppSidebar() {
     { title: 'Meus Alunos', icon: Users, url: '/instructor/enrollments' },
     { title: 'Corrigir Provas', icon: CheckCircle, url: '/instructor/grading' },
     { title: 'Banco de Questões', icon: Database, url: '/instructor/questions' },
+    { title: 'Minhas Receitas', icon: Wallet, url: '/instructor/revenue' },
+    { title: 'Programa de Parceiros', icon: Handshake, url: '/instructor/partner' },
   ]
 
   const navItems =
