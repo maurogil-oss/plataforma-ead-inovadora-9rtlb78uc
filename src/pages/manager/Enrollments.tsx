@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useLmsStore } from '@/stores/lmsStore'
 import { Card } from '@/components/ui/card'
 import {
@@ -18,7 +19,9 @@ export default function ManagerEnrollments() {
     <div className="space-y-8 pb-10">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Gestão de Alunos</h1>
-        <p className="text-muted-foreground mt-1">Gerencie acessos e matrículas na plataforma.</p>
+        <p className="text-muted-foreground mt-1">
+          Gerencie acessos e visualize o histórico detalhado.
+        </p>
       </div>
 
       <Card className="overflow-hidden border-border/50">
@@ -37,7 +40,12 @@ export default function ManagerEnrollments() {
                 return (
                   <TableRow key={student.id} className="hover:bg-muted/20">
                     <TableCell>
-                      <div className="font-medium text-foreground">{student.name}</div>
+                      <Link
+                        to={`/manager/students/${student.id}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {student.name}
+                      </Link>
                       <div className="text-xs text-muted-foreground mt-0.5">{student.email}</div>
                     </TableCell>
                     <TableCell>
@@ -70,13 +78,7 @@ export default function ManagerEnrollments() {
                             const unenrolled = courses.find(
                               (c) => !studentEnrollments.some((se) => se.courseId === c.id),
                             )
-                            if (unenrolled) {
-                              enrollStudent(student.id, unenrolled.id)
-                            } else {
-                              alert(
-                                'Este aluno já está matriculado em todos os cursos disponíveis.',
-                              )
-                            }
+                            if (unenrolled) enrollStudent(student.id, unenrolled.id)
                           }}
                         >
                           <UserPlus className="mr-1.5 size-3.5" /> Adicionar
@@ -84,18 +86,14 @@ export default function ManagerEnrollments() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20"
-                          onClick={() => {
-                            if (studentEnrollments.length > 0) {
-                              if (window.confirm('Remover acesso ao curso mais recente?')) {
-                                unenrollStudent(
-                                  student.id,
-                                  studentEnrollments[studentEnrollments.length - 1].courseId,
-                                )
-                              }
-                            }
-                          }}
+                          className="h-8 text-xs text-destructive hover:bg-destructive/10"
                           disabled={studentEnrollments.length === 0}
+                          onClick={() =>
+                            unenrollStudent(
+                              student.id,
+                              studentEnrollments[studentEnrollments.length - 1].courseId,
+                            )
+                          }
                         >
                           <UserMinus className="mr-1.5 size-3.5" /> Remover
                         </Button>

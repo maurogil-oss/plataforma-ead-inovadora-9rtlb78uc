@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, PlaySquare, BookOpen, Users } from 'lucide-react'
+import { LayoutDashboard, PlaySquare, BookOpen, Users, BarChart, CreditCard } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +21,8 @@ export function AppSidebar() {
     { title: 'Dashboard', icon: LayoutDashboard, url: '/manager' },
     { title: 'Gestão de Cursos', icon: BookOpen, url: '/manager/courses' },
     { title: 'Gestão de Alunos', icon: Users, url: '/manager/enrollments' },
+    { title: 'Relatórios de Desempenho', icon: BarChart, url: '/manager/reports' },
+    { title: 'Integração Pagamentos', icon: CreditCard, url: '/manager/settings/payments' },
   ]
 
   const navItems = user?.role === 'manager' ? managerNav : studentNav
@@ -29,7 +31,7 @@ export function AppSidebar() {
     <Sidebar variant="inset" className="border-r bg-muted/10">
       <SidebarHeader className="p-4 border-b border-border/50">
         <div className="flex items-center gap-3 px-2 py-1">
-          <div className="bg-primary p-1.5 rounded-md text-primary-foreground">
+          <div className="bg-primary p-1.5 rounded-md text-primary-foreground shadow-sm">
             <BookOpen className="size-5" />
           </div>
           <span className="font-bold text-lg tracking-tight">Olimpo EAD</span>
@@ -43,7 +45,6 @@ export function AppSidebar() {
               (item.url !== '/manager' &&
                 item.url !== '/student' &&
                 location.pathname.startsWith(item.url))
-
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>

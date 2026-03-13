@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type LessonType = 'video' | 'text' | 'exam'
+export type LessonType = 'video' | 'text' | 'exam' | 'file'
 export interface Question {
   id: string
   text: string
@@ -13,11 +13,19 @@ export interface Lesson {
   type: LessonType
   content?: string
   questions?: Question[]
+  fileUrl?: string
 }
 export interface Module {
   id: string
   title: string
   lessons: Lesson[]
+}
+export interface Batch {
+  id: string
+  name: string
+  startDate: string
+  endDate: string
+  capacity: number
 }
 export interface Course {
   id: string
@@ -26,13 +34,24 @@ export interface Course {
   description: string
   thumbnail: string
   modules: Module[]
+  passingGrade: number
+  batches: Batch[]
+}
+export interface ActivityLog {
+  id: string
+  date: string
+  type: 'enrollment' | 'lesson_complete' | 'exam_attempt'
+  details: string
+  timeSpentMinutes?: number
 }
 export interface Enrollment {
   id: string
   studentId: string
   courseId: string
+  batchId?: string
   completedLessons: string[]
   examScores: Record<string, number>
+  activityLog: ActivityLog[]
 }
 export interface User {
   id: string
@@ -41,15 +60,39 @@ export interface User {
   role: 'student' | 'manager'
   avatar?: string
 }
+export interface ForumReply {
+  id: string
+  userId: string
+  text: string
+  createdAt: string
+}
+export interface ForumQuestion {
+  id: string
+  lessonId: string
+  studentId: string
+  text: string
+  createdAt: string
+  resolved: boolean
+  replies: ForumReply[]
+}
 
 const MOCK_COURSES: Course[] = [
   {
     id: 'c1',
     title: 'Fundamentos de Gestão de Projetos',
     area: 'Gestão Empresarial',
-    description:
-      'Aprenda os conceitos básicos para gerenciar projetos com eficácia na sua organização.',
+    description: 'Aprenda os conceitos básicos.',
     thumbnail: 'https://img.usecurling.com/p/800/600?q=business%20meeting&color=blue',
+    passingGrade: 70,
+    batches: [
+      {
+        id: 'b1',
+        name: 'Turma Janeiro',
+        startDate: '2020-01-01',
+        endDate: '2030-12-31',
+        capacity: 100,
+      },
+    ],
     modules: [
       {
         id: 'm1',
@@ -66,8 +109,9 @@ const MOCK_COURSES: Course[] = [
             title: 'Ciclo de Vida do Projeto',
             type: 'text',
             content:
-              'O ciclo de vida de um projeto é composto por iniciação, planejamento, execução, monitoramento e encerramento. Cada fase possui entregáveis específicos e exige diferentes habilidades da equipe envolvida para o sucesso das entregas.',
+              'O ciclo de vida de um projeto é composto por iniciação, planejamento, execução, monitoramento e encerramento.',
           },
+          { id: 'l_file', title: 'Apostila (PDF)', type: 'file', fileUrl: '#' },
         ],
       },
       {
@@ -81,56 +125,16 @@ const MOCK_COURSES: Course[] = [
             questions: [
               {
                 id: 'q1',
-                text: 'Quais são as fases do ciclo de vida de um projeto?',
+                text: 'Quais são as fases do ciclo de vida?',
                 options: [
                   'Iniciação e Encerramento apenas',
-                  'Iniciação, Planejamento, Execução, Monitoramento e Controle, Encerramento',
+                  'Iniciação, Planejamento, Execução, Monitoramento, Encerramento',
                   'Planejamento e Execução',
                   'Análise, Design, Desenvolvimento, Testes',
                 ],
                 correctOptionIndex: 1,
               },
-              {
-                id: 'q2',
-                text: 'O que caracteriza um projeto?',
-                options: [
-                  'Esforço temporário para criar um produto ou serviço exclusivo.',
-                  'Operação contínua e repetitiva da empresa.',
-                  'Qualquer tarefa que dure mais de um mês.',
-                  'Um departamento fixo da organização.',
-                ],
-                correctOptionIndex: 0,
-              },
             ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'c2',
-    title: 'Segurança da Informação Básica',
-    area: 'Tecnologia',
-    description:
-      'Boas práticas para manter a segurança dos dados no ambiente de trabalho corporativo.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=cyber%20security&color=green',
-    modules: [
-      {
-        id: 'm3',
-        title: 'Conceitos Iniciais',
-        lessons: [
-          {
-            id: 'l4',
-            title: 'Senhas Seguras',
-            type: 'text',
-            content:
-              'Sempre utilize senhas complexas, combinando letras maiúsculas, minúsculas, números e caracteres especiais. Nunca reutilize senhas importantes em múltiplos sistemas.',
-          },
-          {
-            id: 'l5',
-            title: 'Phishing: Como identificar',
-            type: 'video',
-            content: 'https://img.usecurling.com/p/1280/720?q=hacker',
           },
         ],
       },
@@ -146,82 +150,149 @@ const MOCK_STUDENTS: User[] = [
     role: 'student',
     avatar: 'https://img.usecurling.com/ppl/thumbnail?seed=joao',
   },
-  {
-    id: 's2',
-    name: 'Maria Souza',
-    email: 'maria.souza@empresa.com',
-    role: 'student',
-    avatar: 'https://img.usecurling.com/ppl/thumbnail?seed=maria',
-  },
 ]
 
 const MOCK_ENROLLMENTS: Enrollment[] = [
-  { id: 'e1', studentId: 's1', courseId: 'c1', completedLessons: ['l1'], examScores: {} },
+  {
+    id: 'e1',
+    studentId: 's1',
+    courseId: 'c1',
+    completedLessons: ['l1'],
+    examScores: {},
+    activityLog: [
+      {
+        id: 'a1',
+        date: new Date().toISOString(),
+        type: 'enrollment',
+        details: 'Matrícula inicial',
+        timeSpentMinutes: 0,
+      },
+    ],
+  },
 ]
 
 interface LMSStore {
   courses: Course[]
   enrollments: Enrollment[]
   students: User[]
+  forumQuestions: ForumQuestion[]
+  paymentSettings: { provider: string; apiKey: string }
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
   deleteCourse: (id: string) => void
-  enrollStudent: (studentId: string, courseId: string) => void
+  enrollStudent: (studentId: string, courseId: string, batchId?: string) => void
   unenrollStudent: (studentId: string, courseId: string) => void
   markLessonComplete: (enrollmentId: string, lessonId: string) => void
   submitExam: (enrollmentId: string, lessonId: string, score: number) => void
+  addForumQuestion: (q: ForumQuestion) => void
+  addForumReply: (qId: string, r: ForumReply) => void
+  resolveForumQuestion: (qId: string) => void
+  updatePaymentSettings: (s: { provider: string; apiKey: string }) => void
 }
 
 export const useLmsStore = create<LMSStore>((set) => ({
   courses: MOCK_COURSES,
   students: MOCK_STUDENTS,
   enrollments: MOCK_ENROLLMENTS,
-
-  addCourse: (course) => set((state) => ({ courses: [...state.courses, course] })),
+  forumQuestions: [
+    {
+      id: 'fq1',
+      lessonId: 'l1',
+      studentId: 's1',
+      text: 'Posso usar metodologias ágeis?',
+      createdAt: new Date().toISOString(),
+      resolved: false,
+      replies: [],
+    },
+  ],
+  paymentSettings: { provider: 'Stripe', apiKey: '' },
+  addCourse: (course) => set((s) => ({ courses: [...s.courses, course] })),
   updateCourse: (course) =>
-    set((state) => ({ courses: state.courses.map((c) => (c.id === course.id ? course : c)) })),
-  deleteCourse: (id) => set((state) => ({ courses: state.courses.filter((c) => c.id !== id) })),
-
-  enrollStudent: (studentId, courseId) =>
-    set((state) => {
-      if (state.enrollments.some((e) => e.studentId === studentId && e.courseId === courseId))
-        return state
+    set((s) => ({ courses: s.courses.map((c) => (c.id === course.id ? course : c)) })),
+  deleteCourse: (id) => set((s) => ({ courses: s.courses.filter((c) => c.id !== id) })),
+  enrollStudent: (studentId, courseId, batchId) =>
+    set((s) => {
+      if (s.enrollments.some((e) => e.studentId === studentId && e.courseId === courseId)) return s
+      const act: ActivityLog = {
+        id: `act_${Date.now()}`,
+        date: new Date().toISOString(),
+        type: 'enrollment',
+        details: 'Matrícula confirmada',
+        timeSpentMinutes: 0,
+      }
       return {
         enrollments: [
-          ...state.enrollments,
+          ...s.enrollments,
           {
             id: `e_${Date.now()}`,
             studentId,
             courseId,
+            batchId,
             completedLessons: [],
             examScores: {},
+            activityLog: [act],
           },
         ],
       }
     }),
   unenrollStudent: (studentId, courseId) =>
-    set((state) => ({
-      enrollments: state.enrollments.filter(
+    set((s) => ({
+      enrollments: s.enrollments.filter(
         (e) => !(e.studentId === studentId && e.courseId === courseId),
       ),
     })),
-
   markLessonComplete: (enrollmentId, lessonId) =>
-    set((state) => ({
-      enrollments: state.enrollments.map((e) => {
+    set((s) => ({
+      enrollments: s.enrollments.map((e) => {
         if (e.id === enrollmentId && !e.completedLessons.includes(lessonId)) {
-          return { ...e, completedLessons: [...e.completedLessons, lessonId] }
+          const act: ActivityLog = {
+            id: `act_${Date.now()}`,
+            date: new Date().toISOString(),
+            type: 'lesson_complete',
+            details: 'Aula concluída',
+            timeSpentMinutes: Math.floor(Math.random() * 20) + 5,
+          }
+          return {
+            ...e,
+            completedLessons: [...e.completedLessons, lessonId],
+            activityLog: [...e.activityLog, act],
+          }
         }
         return e
       }),
     })),
   submitExam: (enrollmentId, lessonId, score) =>
-    set((state) => ({
-      enrollments: state.enrollments.map((e) => {
+    set((s) => ({
+      enrollments: s.enrollments.map((e) => {
         if (e.id === enrollmentId) {
-          return { ...e, examScores: { ...e.examScores, [lessonId]: score } }
+          const act: ActivityLog = {
+            id: `act_${Date.now()}`,
+            date: new Date().toISOString(),
+            type: 'exam_attempt',
+            details: `Prova concluída com nota ${score.toFixed(0)}`,
+            timeSpentMinutes: Math.floor(Math.random() * 30) + 10,
+          }
+          return {
+            ...e,
+            examScores: { ...e.examScores, [lessonId]: score },
+            activityLog: [...e.activityLog, act],
+          }
         }
         return e
       }),
     })),
+  addForumQuestion: (q) => set((s) => ({ forumQuestions: [...s.forumQuestions, q] })),
+  addForumReply: (qId, r) =>
+    set((s) => ({
+      forumQuestions: s.forumQuestions.map((fq) =>
+        fq.id === qId ? { ...fq, replies: [...fq.replies, r] } : fq,
+      ),
+    })),
+  resolveForumQuestion: (qId) =>
+    set((s) => ({
+      forumQuestions: s.forumQuestions.map((fq) =>
+        fq.id === qId ? { ...fq, resolved: true } : fq,
+      ),
+    })),
+  updatePaymentSettings: (s) => set({ paymentSettings: s }),
 }))

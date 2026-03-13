@@ -15,6 +15,9 @@ import ManagerDashboard from './pages/manager/Dashboard'
 import ManagerCourses from './pages/manager/Courses'
 import CourseEditor from './pages/manager/CourseEditor'
 import ManagerEnrollments from './pages/manager/Enrollments'
+import Reports from './pages/manager/Reports'
+import PaymentSettings from './pages/manager/PaymentSettings'
+import StudentDetails from './pages/manager/StudentDetails'
 
 import { useAuthStore } from './stores/authStore'
 
@@ -33,9 +36,8 @@ const RoleRoute = ({
 }) => {
   const user = useAuthStore((s) => s.user)
   if (!user) return <Navigate to="/login" replace />
-  if (user.role !== role) {
+  if (user.role !== role)
     return <Navigate to={user.role === 'manager' ? '/manager' : '/student'} replace />
-  }
   return <>{children}</>
 }
 
@@ -72,6 +74,9 @@ const App = () => (
           <Route path="/manager/courses/new" element={<CourseEditor />} />
           <Route path="/manager/courses/:id/edit" element={<CourseEditor />} />
           <Route path="/manager/enrollments" element={<ManagerEnrollments />} />
+          <Route path="/manager/students/:id" element={<StudentDetails />} />
+          <Route path="/manager/reports" element={<Reports />} />
+          <Route path="/manager/settings/payments" element={<PaymentSettings />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

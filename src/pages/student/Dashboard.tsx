@@ -1,26 +1,59 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useLmsStore } from '@/stores/lmsStore'
+import { useLmsStore, Course } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { PlayCircle, PlusCircle } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { PlayCircle, PlusCircle, CalendarDays } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function StudentDashboard() {
   const user = useAuthStore((s) => s.user)
-  const { courses, enrollments, enrollStudent } = useLmsStore()
+  const { courses, enrollments, enrollStudent, paymentSettings } = useLmsStore()
+  const [enrollCourse, setEnrollCourse] = useState<Course | null>(null)
+  const [selectedBatch, setSelectedBatch] = useState<string>('')
 
   if (!user) return null
 
   const myEnrollments = enrollments.filter((e) => e.studentId === user.id)
   const myCourses = myEnrollments
-    .map((e) => ({
-      course: courses.find((c) => c.id === e.courseId)!,
-      enrollment: e,
-    }))
+    .map((e) => ({ course: courses.find((c) => c.id === e.courseId)!, enrollment: e }))
     .filter((item) => item.course)
-
   const availableCourses = courses.filter((c) => !myEnrollments.some((e) => e.courseId === c.id))
+
+  const activities = myEnrollments.flatMap((e) =>
+    e.enrollment.activityLog.map((act) => ({ ...act, courseTitle: e.course.title })),
+  )
+  activities.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  const handleEnrollClick = (c: Course) => {
+    if (c.batches && c.batches.length > 0) {
+      setSelectedBatch('')
+      setEnrollCourse(c)
+    } else if (paymentSettings.apiKey) {
+      setEnrollCourse(c)
+    } else {
+      enrollStudent(user.id, c.id)
+      toast.success('Matrícula realizada com sucesso.')
+    }
+  }
+
+  const handleFinalizeEnrollment = () => {
+    if (enrollCourse?.batches?.length && !selectedBatch) return toast.error('Selecione uma turma.')
+    enrollStudent(user.id, enrollCourse!.id, selectedBatch)
+    toast.success('Pagamento Aprovado! Matrícula confirmada.')
+    setEnrollCourse(null)
+  }
 
   return (
     <div className="space-y-12 pb-10">
@@ -30,8 +63,8 @@ export default function StudentDashboard() {
           <p className="text-muted-foreground mt-1">Continue seu aprendizado de onde parou.</p>
         </div>
         {myCourses.length === 0 ? (
-          <div className="p-8 text-center border border-dashed rounded-xl bg-muted/20">
-            <p className="text-muted-foreground">Você ainda não possui matrículas ativas.</p>
+          <div className="p-8 text-center border border-dashed rounded-xl bg-muted/20 text-muted-foreground">
+            Você ainda não possui matrículas ativas.
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -41,7 +74,6 @@ export default function StudentDashboard() {
                 totalLessons > 0
                   ? Math.round((enrollment.completedLessons.length / totalLessons) * 100)
                   : 0
-
               return (
                 <Card
                   key={course.id}
@@ -53,18 +85,15 @@ export default function StudentDashboard() {
                       alt={course.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                    <div className="absolute top-3 left-3 bg-background/90 backdrop-blur-sm text-foreground font-medium text-xs px-2.5 py-1 rounded-md">
-                      {course.area}
-                    </div>
+                    <div className="absolute inset-0 bg-black/20" />
                   </div>
                   <CardContent className="p-5 space-y-4">
-                    <h3 className="font-bold text-lg line-clamp-2 leading-tight group-hover:text-primary transition-colors">
+                    <h3 className="font-bold text-lg line-clamp-2 leading-tight group-hover:text-primary">
                       {course.title}
                     </h3>
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs font-medium text-muted-foreground">
-                        <span>Progresso do Curso</span>
+                        <span>Progresso</span>
                         <span className="text-foreground">{progress}%</span>
                       </div>
                       <Progress value={progress} className="h-1.5" />
@@ -83,20 +112,51 @@ export default function StudentDashboard() {
       </section>
 
       <section>
+        <h2 className="text-2xl font-bold tracking-tight mb-6">Jornada de Aprendizado</h2>
+        <div className="space-y-6 border-l-2 border-primary/20 ml-3 pl-6 relative">
+          {activities.map((act) => (
+            <div key={act.id} className="relative">
+              <div className="absolute -left-[33px] top-1 h-4 w-4 rounded-full bg-primary ring-4 ring-background" />
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                <CalendarDays className="size-3.5" />{' '}
+                {new Date(act.date).toLocaleDateString('pt-BR')} às{' '}
+                {new Date(act.date).toLocaleTimeString('pt-BR', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </div>
+              <div className="font-semibold text-foreground mt-0.5">
+                {act.type === 'enrollment'
+                  ? 'Início da Jornada'
+                  : act.type === 'lesson_complete'
+                    ? 'Avanço no Conteúdo'
+                    : 'Avaliação Concluída'}
+              </div>
+              <div className="text-sm mt-1 text-muted-foreground">
+                {act.details}{' '}
+                <span className="text-xs font-medium text-primary ml-1">({act.courseTitle})</span>
+              </div>
+            </div>
+          ))}
+          {activities.length === 0 && (
+            <p className="text-muted-foreground">Nenhuma atividade registrada na sua jornada.</p>
+          )}
+        </div>
+      </section>
+
+      <section>
         <div className="mb-6">
           <h2 className="text-2xl font-bold tracking-tight">Catálogo de Cursos</h2>
-          <p className="text-muted-foreground mt-1">
-            Explore novas áreas de conhecimento e solicite matrícula.
-          </p>
+          <p className="text-muted-foreground mt-1">Explore novas áreas de conhecimento.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {availableCourses.map((course) => (
             <Card key={course.id} className="overflow-hidden flex flex-col border-border/50">
-              <div className="h-40 relative bg-muted">
+              <div className="h-40 bg-muted">
                 <img
                   src={course.thumbnail}
-                  alt={course.title}
                   className="w-full h-full object-cover opacity-90"
+                  alt=""
                 />
               </div>
               <CardContent className="p-5 flex-1 flex flex-col">
@@ -109,21 +169,59 @@ export default function StudentDashboard() {
                 </p>
                 <Button
                   variant="outline"
-                  className="w-full border-primary/20 hover:bg-primary/5 hover:text-primary"
-                  onClick={() => enrollStudent(user.id, course.id)}
+                  className="w-full"
+                  onClick={() => handleEnrollClick(course)}
                 >
                   <PlusCircle className="mr-2 size-4" /> Realizar Matrícula
                 </Button>
               </CardContent>
             </Card>
           ))}
-          {availableCourses.length === 0 && (
-            <div className="col-span-full p-8 text-center text-muted-foreground border border-dashed rounded-xl">
-              Não há novos cursos disponíveis no momento.
-            </div>
-          )}
         </div>
       </section>
+
+      <Dialog open={!!enrollCourse} onOpenChange={(o) => !o && setEnrollCourse(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Finalizar Matrícula - {enrollCourse?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {enrollCourse?.batches && enrollCourse.batches.length > 0 && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Turma / Ciclo de Ensino</label>
+                <Select value={selectedBatch} onValueChange={setSelectedBatch}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a turma desejada" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enrollCourse.batches.map((b) => (
+                      <SelectItem key={b.id} value={b.id}>
+                        {b.name} ({new Date(b.startDate).toLocaleDateString()} a{' '}
+                        {new Date(b.endDate).toLocaleDateString()})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {paymentSettings.apiKey && (
+              <div className="bg-muted/30 p-4 rounded-lg border space-y-3">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Simulação de Pagamento ({paymentSettings.provider})
+                </p>
+                <Input placeholder="Número do Cartão (Fictício)" />
+                <div className="flex gap-2">
+                  <Input placeholder="MM/AA" />
+                  <Input placeholder="CVC" />
+                </div>
+              </div>
+            )}
+            <Button className="w-full" onClick={handleFinalizeEnrollment} size="lg">
+              Confirmar e Matricular
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
