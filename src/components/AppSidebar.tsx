@@ -73,7 +73,9 @@ export function AppSidebar() {
           <div className="bg-primary p-1.5 rounded-md text-primary-foreground shadow-sm">
             <BookOpen className="size-5" />
           </div>
-          <span className="font-bold text-lg tracking-tight">Olimpo EAD</span>
+          <span className="font-bold text-sm tracking-tight leading-tight">
+            Observatório Academy (DEMO)
+          </span>
         </div>
       </SidebarHeader>
       <SidebarContent className="px-3 mt-6">

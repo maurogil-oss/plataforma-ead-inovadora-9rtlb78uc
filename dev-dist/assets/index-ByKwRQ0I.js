@@ -27059,39 +27059,39 @@ function AppSidebar() {
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 					"data-uid": "src/components/AppSidebar.tsx:76:11",
 					"data-prohibitions": "[]",
-					className: "font-bold text-lg tracking-tight",
-					children: "Olimpo EAD"
+					className: "font-bold text-sm tracking-tight leading-tight",
+					children: "Observatório Academy (DEMO)"
 				})]
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarContent, {
-			"data-uid": "src/components/AppSidebar.tsx:79:7",
+			"data-uid": "src/components/AppSidebar.tsx:81:7",
 			"data-prohibitions": "[editContent]",
 			className: "px-3 mt-6",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenu, {
-				"data-uid": "src/components/AppSidebar.tsx:80:9",
+				"data-uid": "src/components/AppSidebar.tsx:82:9",
 				"data-prohibitions": "[editContent]",
 				children: navItems.map((item) => {
 					const isActive = location.pathname === item.url || item.url !== "/manager" && item.url !== "/instructor" && item.url !== "/student" && location.pathname.startsWith(getBaseRoute(item.url));
 					return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenuItem, {
-						"data-uid": "src/components/AppSidebar.tsx:89:15",
+						"data-uid": "src/components/AppSidebar.tsx:91:15",
 						"data-prohibitions": "[editContent]",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarMenuButton, {
-							"data-uid": "src/components/AppSidebar.tsx:90:17",
+							"data-uid": "src/components/AppSidebar.tsx:92:17",
 							"data-prohibitions": "[editContent]",
 							asChild: true,
 							isActive,
 							tooltip: item.title,
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
-								"data-uid": "src/components/AppSidebar.tsx:91:19",
+								"data-uid": "src/components/AppSidebar.tsx:93:19",
 								"data-prohibitions": "[editContent]",
 								to: item.url,
 								className: cn$1("flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200", isActive ? "text-primary bg-primary/10 font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(item.icon, {
-									"data-uid": "src/components/AppSidebar.tsx:100:21",
+									"data-uid": "src/components/AppSidebar.tsx:102:21",
 									"data-prohibitions": "[editContent]",
 									className: "size-5"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/AppSidebar.tsx:101:21",
+									"data-uid": "src/components/AppSidebar.tsx:103:21",
 									"data-prohibitions": "[editContent]",
 									children: item.title
 								})]
@@ -28865,66 +28865,66 @@ function Login() {
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 				"data-uid": "src/pages/auth/Login.tsx:23:9",
 				"data-prohibitions": "[]",
-				className: "font-bold text-3xl tracking-tight text-foreground",
-				children: "Olimpo EAD"
+				className: "font-bold text-2xl sm:text-3xl tracking-tight text-foreground text-center",
+				children: "Observatório Academy (DEMO)"
 			})]
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-			"data-uid": "src/pages/auth/Login.tsx:26:7",
+			"data-uid": "src/pages/auth/Login.tsx:28:7",
 			"data-prohibitions": "[]",
 			className: "w-full max-w-md shadow-elevation border-border/50 bg-card",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-				"data-uid": "src/pages/auth/Login.tsx:27:9",
+				"data-uid": "src/pages/auth/Login.tsx:29:9",
 				"data-prohibitions": "[]",
 				className: "text-center pb-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-					"data-uid": "src/pages/auth/Login.tsx:28:11",
+					"data-uid": "src/pages/auth/Login.tsx:30:11",
 					"data-prohibitions": "[]",
 					className: "text-2xl",
 					children: "Acesso à Plataforma"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
-					"data-uid": "src/pages/auth/Login.tsx:29:11",
+					"data-uid": "src/pages/auth/Login.tsx:31:11",
 					"data-prohibitions": "[]",
 					children: "Selecione seu perfil para acessar o ambiente de demonstração."
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-				"data-uid": "src/pages/auth/Login.tsx:33:9",
+				"data-uid": "src/pages/auth/Login.tsx:35:9",
 				"data-prohibitions": "[]",
 				className: "space-y-4",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/pages/auth/Login.tsx:34:11",
+						"data-uid": "src/pages/auth/Login.tsx:36:11",
 						"data-prohibitions": "[]",
 						size: "lg",
 						className: "w-full h-14 text-lg justify-start px-6",
 						onClick: () => login("student"),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(GraduationCap, {
-							"data-uid": "src/pages/auth/Login.tsx:39:13",
+							"data-uid": "src/pages/auth/Login.tsx:41:13",
 							"data-prohibitions": "[editContent]",
 							className: "mr-4 size-5 opacity-70"
 						}), "Acesso Aluno"]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/pages/auth/Login.tsx:42:11",
+						"data-uid": "src/pages/auth/Login.tsx:44:11",
 						"data-prohibitions": "[]",
 						size: "lg",
 						variant: "secondary",
 						className: "w-full h-14 text-lg justify-start px-6 border bg-muted/50 hover:bg-muted",
 						onClick: () => login("instructor"),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presentation, {
-							"data-uid": "src/pages/auth/Login.tsx:48:13",
+							"data-uid": "src/pages/auth/Login.tsx:50:13",
 							"data-prohibitions": "[editContent]",
 							className: "mr-4 size-5 opacity-70"
 						}), "Acesso Professor"]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/pages/auth/Login.tsx:51:11",
+						"data-uid": "src/pages/auth/Login.tsx:53:11",
 						"data-prohibitions": "[]",
 						size: "lg",
 						variant: "secondary",
 						className: "w-full h-14 text-lg justify-start px-6 border bg-muted/50 hover:bg-muted",
 						onClick: () => login("manager"),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ShieldCheck, {
-							"data-uid": "src/pages/auth/Login.tsx:57:13",
+							"data-uid": "src/pages/auth/Login.tsx:59:13",
 							"data-prohibitions": "[editContent]",
 							className: "mr-4 size-5 opacity-70"
 						}), "Acesso Gestor"]
@@ -37456,4 +37456,4 @@ var App = () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
 }));
 //#endregion
 
-//# sourceMappingURL=index-Da9XPpVY.js.map
+//# sourceMappingURL=index-ByKwRQ0I.js.map

@@ -3643,6 +3643,10 @@ section[aria-label='Notifications alt+T'] {
   .sm\:text-left{
     text-align: left;
   }
+  .sm\:text-3xl{
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
   .data-\[state\=open\]\:sm\:slide-in-from-bottom-full[data-state="open"]{
     --tw-enter-translate-y: 100%;
   }

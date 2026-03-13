@@ -20,7 +20,9 @@ export default function Login() {
         <div className="bg-primary p-2.5 rounded-xl text-primary-foreground shadow-lg">
           <BookOpen className="size-8" />
         </div>
-        <span className="font-bold text-3xl tracking-tight text-foreground">Olimpo EAD</span>
+        <span className="font-bold text-2xl sm:text-3xl tracking-tight text-foreground text-center">
+          Observatório Academy (DEMO)
+        </span>
       </div>
 
       <Card className="w-full max-w-md shadow-elevation border-border/50 bg-card">
