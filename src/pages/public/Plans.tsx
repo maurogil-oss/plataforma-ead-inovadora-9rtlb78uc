@@ -92,7 +92,7 @@ export default function Plans() {
             onClick={() => setIsAnnual(true)}
           >
             Anual{' '}
-            <span className="ml-2 bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider shadow-sm">
+            <span className="ml-2 bg-blue-600 text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider shadow-sm">
               Economize 20%
             </span>
           </Label>
@@ -107,12 +107,12 @@ export default function Plans() {
                 className={cn(
                   'flex flex-col relative transition-all duration-300 bg-slate-900 border-slate-800',
                   plan.popular
-                    ? 'border-red-600 shadow-2xl shadow-red-600/20 scale-105 z-10'
+                    ? 'border-blue-600 shadow-2xl shadow-blue-600/20 scale-105 z-10'
                     : 'hover:shadow-lg',
                 )}
               >
                 {plan.popular && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
                     Mais Assinado
                   </div>
                 )}
@@ -146,7 +146,7 @@ export default function Plans() {
                     className={cn(
                       'w-full h-14 text-base font-bold shadow-md',
                       plan.popular
-                        ? 'bg-red-600 text-white hover:bg-red-700'
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : 'bg-slate-800 text-white hover:bg-slate-700',
                     )}
                     asChild

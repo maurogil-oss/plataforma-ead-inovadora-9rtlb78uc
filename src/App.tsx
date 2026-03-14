@@ -16,6 +16,7 @@ import ContactPage from '@/pages/public/Contact'
 import StudentDashboard from '@/pages/student/Dashboard'
 import CoursePlayer from '@/pages/student/CoursePlayer'
 import Certificate from '@/pages/student/Certificate'
+import MyEnrollments from '@/pages/student/MyEnrollments'
 
 // Instructor & Manager
 import GradeExams from '@/pages/instructor/GradeExams'
@@ -76,14 +77,30 @@ function ProtectedRoute({
 
 export default function App() {
   useEffect(() => {
-    document.title = 'Observatório Academy (DEMO)'
-    // Force dark mode class on html tag since the app is Netflix-themed now
-    document.documentElement.classList.add('dark')
+    document.title = 'Observatório Academy'
+
+    // Auto dark mode detection based on OS preference
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const applyTheme = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+
+    applyTheme(mediaQuery)
+
+    const listener = (e: MediaQueryListEvent) => applyTheme(e)
+    mediaQuery.addEventListener('change', listener)
+
     const params = new URLSearchParams(window.location.search)
     const ref = params.get('ref')
     if (ref) {
       localStorage.setItem('affiliate_ref', ref)
     }
+
+    return () => mediaQuery.removeEventListener('change', listener)
   }, [])
 
   return (
@@ -132,7 +149,7 @@ export default function App() {
             path="/student/courses"
             element={
               <ProtectedRoute>
-                <StudentDashboard />
+                <MyEnrollments />
               </ProtectedRoute>
             }
           />

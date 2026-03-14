@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { Rocket } from 'lucide-react'
+import { Rocket, Sparkles } from 'lucide-react'
 
 const categories = [
   { id: 'all', label: 'Todos' },
@@ -62,9 +62,14 @@ export default function Storefront() {
                       alt={p.title}
                       className="w-full h-full object-cover opacity-90"
                     />
-                    <Badge className="absolute top-3 left-3 bg-background/90 text-foreground border-none shadow-sm backdrop-blur-sm font-semibold uppercase tracking-wider text-[10px]">
+                    <Badge className="absolute top-3 right-3 bg-background/90 text-foreground border-none shadow-sm backdrop-blur-sm font-semibold uppercase tracking-wider text-[10px]">
                       {categories.find((c) => c.id === p.type)?.label || p.type}
                     </Badge>
+
+                    {/* Badge Novo para itens recentes */}
+                    <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
+                      <Sparkles className="size-3" /> Novo
+                    </div>
                   </div>
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg line-clamp-2 leading-tight">{p.title}</CardTitle>
@@ -91,7 +96,7 @@ export default function Storefront() {
                     </div>
                   </CardContent>
                   <CardFooter className="pt-0 border-t p-4 bg-muted/10 mt-auto">
-                    <Button className="w-full" asChild>
+                    <Button className="w-full font-bold shadow-sm" asChild>
                       <Link to={`/store/product/${p.id}`}>Ver Detalhes</Link>
                     </Button>
                   </CardFooter>

@@ -3,7 +3,7 @@ import { PublicHeader } from '@/components/PublicHeader'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tag, PlayCircle, Clock, Layers } from 'lucide-react'
+import { Tag, PlayCircle, Clock, Layers, Sparkles } from 'lucide-react'
 
 const MOCK_COURSES = [
   {
@@ -15,6 +15,7 @@ const MOCK_COURSES = [
     img: 'https://img.usecurling.com/p/600/400?q=ui%20design&color=blue',
     duration: '12h',
     modules: 6,
+    isNew: true,
   },
   {
     id: 2,
@@ -25,6 +26,7 @@ const MOCK_COURSES = [
     img: 'https://img.usecurling.com/p/600/400?q=code&color=purple',
     duration: '24h',
     modules: 12,
+    isNew: true,
   },
   {
     id: 3,
@@ -35,6 +37,7 @@ const MOCK_COURSES = [
     img: 'https://img.usecurling.com/p/600/400?q=marketing&color=orange',
     duration: '8h',
     modules: 4,
+    isNew: false,
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ const MOCK_COURSES = [
     img: 'https://img.usecurling.com/p/600/400?q=agile&color=green',
     duration: '10h',
     modules: 5,
+    isNew: false,
   },
   {
     id: 5,
@@ -55,6 +59,7 @@ const MOCK_COURSES = [
     img: 'https://img.usecurling.com/p/600/400?q=data&color=cyan',
     duration: '32h',
     modules: 16,
+    isNew: false,
   },
   {
     id: 6,
@@ -65,6 +70,7 @@ const MOCK_COURSES = [
     img: 'https://img.usecurling.com/p/600/400?q=leadership&color=gray',
     duration: '14h',
     modules: 7,
+    isNew: false,
   },
 ]
 
@@ -100,10 +106,17 @@ export default function Courses() {
                   <PlayCircle className="size-16 text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300" />
                 </div>
 
-                <Badge className="absolute top-3 left-3 bg-red-600 hover:bg-red-700 text-white border-none shadow-md font-black uppercase tracking-widest text-[10px]">
+                <Badge className="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white border-none shadow-md font-black uppercase tracking-widest text-[10px]">
                   {c.cat}
                 </Badge>
-                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white font-black px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs border border-white/10">
+
+                {c.isNew && (
+                  <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
+                    <Sparkles className="size-3" /> Novo
+                  </div>
+                )}
+
+                <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white font-black px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs border border-white/10">
                   <Tag className="size-3 text-primary" /> R$ {c.price.toFixed(2)}
                 </div>
               </div>

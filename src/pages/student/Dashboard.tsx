@@ -23,7 +23,17 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import { PlayCircle, PlusCircle, Tag, Radio, BadgePercent, Info, Clock, Layers } from 'lucide-react'
+import {
+  PlayCircle,
+  PlusCircle,
+  Tag,
+  Radio,
+  BadgePercent,
+  Info,
+  Clock,
+  Layers,
+  Sparkles,
+} from 'lucide-react'
 import { toast } from 'sonner'
 
 const CourseCard = ({
@@ -63,6 +73,12 @@ const CourseCard = ({
           <Tag className="size-3 text-primary" />{' '}
           {course.price > 0 ? `R$ ${course.price.toFixed(2)}` : 'Grátis'}
         </div>
+
+        {course.isNew && (
+          <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
+            <Sparkles className="size-3" /> Novo
+          </div>
+        )}
       </div>
       <CardContent className="p-5 flex-1 flex flex-col relative z-10 bg-card">
         <div className="text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest">
@@ -147,6 +163,13 @@ const EbookCard = ({ product, onClick }: { product: Product; onClick: () => void
           alt={product.title}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
+
+        {/* Badge New logic using isNew or fallback to true for demonstration */}
+        {product.isPublished && (
+          <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
+            <Sparkles className="size-3" /> Novo
+          </div>
+        )}
       </div>
       <CardContent className="p-4 flex-1 flex flex-col relative z-10 bg-card">
         <h3 className="font-bold text-sm md:text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
@@ -262,7 +285,10 @@ export default function StudentDashboard() {
   const featuredCourse = featuredMyCourse?.course || availableCourses[0] || courses[0]
 
   const recommendedCourses = availableCourses.slice(0, 5)
-  const newCourses = [...availableCourses].reverse().slice(0, 5)
+  const newCourses = [...availableCourses]
+    .filter((c) => c.isNew)
+    .reverse()
+    .slice(0, 5)
   const availableCoursesByArea = availableCourses.reduce(
     (acc, c) => {
       if (!acc[c.area]) acc[c.area] = []
@@ -309,17 +335,17 @@ export default function StudentDashboard() {
           </div>
           <div className="relative z-10 max-w-3xl space-y-6 animate-fade-in-up">
             <div className="flex items-center gap-3">
-              <Badge className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-3 py-1 border-none">
+              <Badge className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-3 py-1 border-none shadow-sm">
                 Destaque
               </Badge>
-              <span className="text-slate-300 font-semibold text-sm uppercase tracking-wider">
+              <span className="text-slate-300 font-semibold text-sm uppercase tracking-wider drop-shadow-md">
                 {featuredCourse.area}
               </span>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
               {featuredCourse.title}
             </h1>
-            <p className="text-lg md:text-xl text-slate-300 font-medium line-clamp-2 max-w-2xl drop-shadow-sm">
+            <p className="text-lg md:text-xl text-slate-300 font-medium line-clamp-2 max-w-2xl drop-shadow-md">
               {featuredCourse.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-6">
@@ -371,6 +397,35 @@ export default function StudentDashboard() {
                     course={course}
                     enrollment={enrollment}
                     onClick={() => navigate(`/student/course/${course.id}`)}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+            </div>
+          </Carousel>
+        </section>
+      )}
+
+      {newCourses.length > 0 && (
+        <section className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1 flex items-center gap-3">
+            <Sparkles className="size-8 text-blue-500" /> Novidades na Plataforma
+          </h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-10 px-1">
+              {newCourses.map((course) => (
+                <CarouselItem
+                  key={course.id}
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10"
+                >
+                  <CourseCard
+                    course={course}
+                    onClick={() => handleEnrollClick(course)}
+                    actionLabel="Adicionar à Lista"
+                    actionIcon={PlusCircle}
                   />
                 </CarouselItem>
               ))}
@@ -445,33 +500,6 @@ export default function StudentDashboard() {
                     onClick={() => handleEnrollClick(course)}
                     actionLabel="Ver Detalhes"
                     actionIcon={Info}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="hidden lg:block">
-              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
-              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
-            </div>
-          </Carousel>
-        </section>
-      )}
-
-      {newCourses.length > 0 && (
-        <section className="space-y-6 px-4 md:px-8">
-          <h2 className="text-3xl font-extrabold tracking-tight px-1">Novos Cursos</h2>
-          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
-            <CarouselContent className="-ml-4 py-10 px-1">
-              {newCourses.map((course) => (
-                <CarouselItem
-                  key={course.id}
-                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10"
-                >
-                  <CourseCard
-                    course={course}
-                    onClick={() => handleEnrollClick(course)}
-                    actionLabel="Adicionar à Lista"
-                    actionIcon={PlusCircle}
                   />
                 </CarouselItem>
               ))}

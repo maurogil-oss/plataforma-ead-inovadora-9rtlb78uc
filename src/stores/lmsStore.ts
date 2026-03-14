@@ -63,6 +63,8 @@ export interface Course {
   modules: Module[]
   passingGrade: number
   batches: Batch[]
+  isNew?: boolean
+  popularityScore?: number
 }
 
 export interface ActivityLog {
@@ -199,6 +201,8 @@ const MOCK_COURSES: Course[] = [
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
+    isNew: true,
+    popularityScore: 85,
     modules: [
       {
         id: 'm1',
@@ -241,6 +245,8 @@ const MOCK_COURSES: Course[] = [
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
+    isNew: true,
+    popularityScore: 98,
     modules: [
       {
         id: 'm2',
@@ -273,6 +279,7 @@ const MOCK_COURSES: Course[] = [
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
+    popularityScore: 72,
     modules: [
       {
         id: 'm3',
@@ -299,6 +306,7 @@ const MOCK_COURSES: Course[] = [
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
+    popularityScore: 95,
     modules: [
       {
         id: 'm4',
@@ -325,6 +333,7 @@ const MOCK_COURSES: Course[] = [
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
+    popularityScore: 60,
     modules: [
       {
         id: 'm5',
@@ -351,6 +360,8 @@ const MOCK_COURSES: Course[] = [
     instructorId: 'i1',
     passingGrade: 70,
     batches: [],
+    isNew: true,
+    popularityScore: 88,
     modules: [
       {
         id: 'm6',

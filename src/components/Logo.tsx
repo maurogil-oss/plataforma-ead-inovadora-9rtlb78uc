@@ -14,23 +14,25 @@ export function Logo({ className, imgClassName, collapsed, linkTo = '/' }: LogoP
   return (
     <Link
       to={linkTo}
-      className={cn('flex items-center gap-2 transition-all group z-50', className)}
+      className={cn(
+        'flex items-center gap-2 transition-all group z-50 focus-visible:outline-none',
+        className,
+      )}
     >
-      {/* High-contrast container to ensure brand visibility on dark backgrounds */}
       <div
         className={cn(
-          'bg-white rounded-2xl shadow-xl ring-1 ring-black/5 flex items-center justify-center transition-all duration-500 group-hover:shadow-2xl group-hover:scale-[1.02]',
-          collapsed ? 'p-1.5 sm:p-2' : 'p-3 sm:p-4 md:p-5',
+          'flex items-center justify-center transition-all duration-500 group-hover:scale-[1.02]',
+          collapsed ? 'p-1' : 'p-2',
         )}
       >
         <img
           src={logoUrl}
           alt="Observatório Academy"
           className={cn(
-            'object-contain transition-all duration-500',
+            'object-contain transition-all duration-500 filter drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] dark:drop-shadow-[0_2px_15px_rgba(255,255,255,0.2)]',
             collapsed
               ? 'h-10 w-10 sm:h-12 sm:w-12 object-cover object-left'
-              : 'h-16 sm:h-20 md:h-24 w-auto max-w-full drop-shadow-sm',
+              : 'h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-full',
             imgClassName,
           )}
         />
