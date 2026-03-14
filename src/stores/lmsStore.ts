@@ -129,6 +129,18 @@ export interface Transaction {
   splits: TransactionSplit[]
 }
 
+export interface LiveClass {
+  id: string
+  courseId: string
+  title: string
+  description: string
+  platform: 'meet' | 'zoom' | 'teams'
+  url: string
+  date: string
+  startTime: string
+  durationMinutes: number
+}
+
 const MOCK_QUESTIONS: BankQuestion[] = [
   {
     id: 'bq1',
@@ -198,6 +210,40 @@ const MOCK_COURSES: Course[] = [
   },
 ]
 
+const getMockLiveClasses = (): LiveClass[] => {
+  const now = new Date()
+  const todayStr = now.toISOString().split('T')[0]
+
+  // Create a live class that started 10 mins ago and lasts 60 mins
+  const liveStartTime = new Date(now.getTime() - 10 * 60000)
+  const liveTimeStr = `${liveStartTime.getHours().toString().padStart(2, '0')}:${liveStartTime.getMinutes().toString().padStart(2, '0')}`
+
+  return [
+    {
+      id: 'lc1',
+      courseId: 'c1',
+      title: 'Aula Inaugural - Gestão de Projetos',
+      description: 'Sessão ao vivo para tirar dúvidas iniciais e apresentar o cronograma.',
+      platform: 'meet',
+      url: 'https://meet.google.com/abc-defg-hij',
+      date: todayStr,
+      startTime: liveTimeStr,
+      durationMinutes: 60,
+    },
+    {
+      id: 'lc2',
+      courseId: 'c1',
+      title: 'Mentoria Extra: Metodologias Ágeis',
+      description: 'Discussão profunda sobre Scrum e Kanban na prática.',
+      platform: 'zoom',
+      url: 'https://zoom.us/j/123456789',
+      date: new Date(now.getTime() + 86400000 * 2).toISOString().split('T')[0], // 2 days from now
+      startTime: '19:00',
+      durationMinutes: 90,
+    },
+  ]
+}
+
 interface LMSStore {
   courses: Course[]
   enrollments: Enrollment[]
@@ -205,6 +251,7 @@ interface LMSStore {
   instructors: User[]
   bankQuestions: BankQuestion[]
   transactions: Transaction[]
+  liveClasses: LiveClass[]
   commissionSettings: { defaultInstructorRate: number; defaultPartnerRate: number }
   notificationSettings: { emailNewLesson: boolean; emailExamReminder: boolean }
   paymentSettings: { provider: string; apiKey: string }
@@ -233,6 +280,10 @@ interface LMSStore {
   addBankQuestion: (q: BankQuestion) => void
   updateBankQuestion: (q: BankQuestion) => void
   deleteBankQuestion: (id: string) => void
+
+  addLiveClass: (lc: LiveClass) => void
+  updateLiveClass: (lc: LiveClass) => void
+  deleteLiveClass: (id: string) => void
 
   updateNotificationSettings: (s: { emailNewLesson: boolean; emailExamReminder: boolean }) => void
   updatePaymentSettings: (s: { provider: string; apiKey: string }) => void
@@ -299,6 +350,7 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
       ],
     },
   ],
+  liveClasses: getMockLiveClasses(),
   commissionSettings: { defaultInstructorRate: 50, defaultPartnerRate: 20 },
   notificationSettings: { emailNewLesson: true, emailExamReminder: true },
   paymentSettings: { provider: 'Stripe', apiKey: '' },
@@ -514,6 +566,11 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
     set((s) => ({ bankQuestions: s.bankQuestions.map((b) => (b.id === q.id ? q : b)) })),
   deleteBankQuestion: (id) =>
     set((s) => ({ bankQuestions: s.bankQuestions.filter((b) => b.id !== id) })),
+
+  addLiveClass: (lc) => set((s) => ({ liveClasses: [...s.liveClasses, lc] })),
+  updateLiveClass: (lc) =>
+    set((s) => ({ liveClasses: s.liveClasses.map((l) => (l.id === lc.id ? lc : l)) })),
+  deleteLiveClass: (id) => set((s) => ({ liveClasses: s.liveClasses.filter((l) => l.id !== id) })),
 
   updateNotificationSettings: (s) => set({ notificationSettings: s }),
   updatePaymentSettings: (s) => set({ paymentSettings: s }),

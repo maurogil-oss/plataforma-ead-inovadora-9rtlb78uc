@@ -15,11 +15,12 @@ import StudentDashboard from '@/pages/student/Dashboard'
 import CoursePlayer from '@/pages/student/CoursePlayer'
 import Certificate from '@/pages/student/Certificate'
 
-// Instructor
+// Instructor & Manager
 import GradeExams from '@/pages/instructor/GradeExams'
 import Revenue from '@/pages/instructor/Revenue'
+import LiveClasses from '@/pages/instructor/LiveClasses'
+import LessonGenerator from '@/pages/instructor/LessonGenerator'
 
-// Manager
 import ManagerDashboard from '@/pages/manager/Dashboard'
 import Courses from '@/pages/manager/Courses'
 import CourseEditor from '@/pages/manager/CourseEditor'
@@ -149,6 +150,22 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/instructor/live-classes"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <LiveClasses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/instructor/lesson-generator"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <LessonGenerator />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Manager/Admin Routes */}
           <Route
@@ -236,6 +253,22 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
                 <PaymentSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/manager/live-classes"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <LiveClasses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/manager/lesson-generator"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <LessonGenerator />
               </ProtectedRoute>
             }
           />

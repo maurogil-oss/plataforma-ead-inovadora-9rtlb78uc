@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useLmsStore, BankQuestion, Lesson, Module } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -7,16 +7,39 @@ import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Lock, Download, FileSpreadsheet, FileAudio } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  ArrowLeft,
+  Lock,
+  Download,
+  FileSpreadsheet,
+  FileAudio,
+  Video,
+  Calendar,
+  Clock,
+} from 'lucide-react'
 
 export default function CoursePlayer() {
   const { id } = useParams()
   const user = useAuthStore((s) => s.user)
-  const { courses, enrollments, markLessonComplete, submitExamAnswers, bankQuestions } =
-    useLmsStore()
+  const {
+    courses,
+    enrollments,
+    liveClasses,
+    markLessonComplete,
+    submitExamAnswers,
+    bankQuestions,
+  } = useLmsStore()
 
   const course = courses.find((c) => c.id === id)
   const enrollment = enrollments.find((e) => e.courseId === id && e.studentId === user?.id)
+  const courseLiveClasses = liveClasses
+    .filter((lc) => lc.courseId === id)
+    .sort(
+      (a, b) =>
+        new Date(`${a.date}T${a.startTime}`).getTime() -
+        new Date(`${b.date}T${b.startTime}`).getTime(),
+    )
 
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Record<string, any>>({})
@@ -99,7 +122,6 @@ export default function CoursePlayer() {
     activeLesson && activeModule
       ? checkLockStatus(activeLesson, activeModule)
       : { locked: false, reason: '' }
-
   const handleComplete = () => activeLesson && markLessonComplete(enrollment.id, activeLesson.id)
 
   const handleSubmitExam = () => {
@@ -180,12 +202,11 @@ export default function CoursePlayer() {
             </div>
             <div>
               <h3 className="font-semibold text-lg">Planilha de Estudos</h3>
-              <p className="text-muted-foreground text-sm max-w-sm mt-1 mb-4">
-                Este conteúdo é uma planilha interativa. Faça o download para o seu dispositivo para
-                visualizar e editar.
+              <p className="text-muted-foreground text-sm mt-1 mb-4">
+                Faça o download para o seu dispositivo para visualizar e editar.
               </p>
               {lesson.mediaUrl && (
-                <Button asChild variant="default">
+                <Button asChild>
                   <a href={lesson.mediaUrl} target="_blank" rel="noreferrer" download>
                     <Download className="mr-2 size-4" /> Baixar Planilha
                   </a>
@@ -198,9 +219,7 @@ export default function CoursePlayer() {
         return (
           <div
             className="prose max-w-none p-6 bg-card border rounded-lg"
-            dangerouslySetInnerHTML={{
-              __html: lesson.content || '<p>Conteúdo em texto vazio.</p>',
-            }}
+            dangerouslySetInnerHTML={{ __html: lesson.content || '<p>Vazio</p>' }}
           />
         )
       default:
@@ -220,211 +239,305 @@ export default function CoursePlayer() {
           <h1 className="text-2xl font-bold">{course.title}</h1>
         </div>
         {enrollment.isCompleted && (
-          <Button
-            asChild
-            variant="default"
-            className="bg-success hover:bg-success/90 text-success-foreground"
-          >
+          <Button asChild className="bg-success hover:bg-success/90 text-success-foreground">
             <Link to={`/student/certificate/${course.id}`}>Visualizar Certificado</Link>
           </Button>
         )}
       </div>
 
-      <div className="flex gap-6 flex-1 items-start flex-col lg:flex-row">
-        <div className="w-full lg:w-[320px] flex flex-col border rounded-xl bg-card shrink-0 shadow-sm">
-          {course.modules.map((m, mIdx) => (
-            <div key={m.id} className="border-b last:border-0">
-              <div className="p-3 bg-muted/40 font-semibold text-sm flex items-center justify-between">
-                <span>{m.title}</span>
-                {isModuleCompleted(m.id) && (
-                  <span className="text-success text-xs">✓ Concluído</span>
+      <Tabs defaultValue="content" className="flex-1 flex flex-col">
+        <TabsList className="w-full justify-start border-b rounded-none px-0 h-auto bg-transparent pb-4 mb-6 gap-6">
+          <TabsTrigger
+            value="content"
+            className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2"
+          >
+            Conteúdo do Curso
+          </TabsTrigger>
+          <TabsTrigger
+            value="live"
+            className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2 relative"
+          >
+            <Video className="mr-2 size-4" /> Aulas ao Vivo
+            {courseLiveClasses.some((lc) => {
+              const now = new Date()
+              const s = new Date(`${lc.date}T${lc.startTime}`)
+              return now >= s && now <= new Date(s.getTime() + lc.durationMinutes * 60000)
+            }) && (
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+              </span>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent
+          value="content"
+          className="flex gap-6 flex-1 items-start flex-col lg:flex-row mt-0 outline-none"
+        >
+          <div className="w-full lg:w-[320px] flex flex-col border rounded-xl bg-card shrink-0 shadow-sm">
+            {course.modules.map((m) => (
+              <div key={m.id} className="border-b last:border-0">
+                <div className="p-3 bg-muted/40 font-semibold text-sm flex items-center justify-between">
+                  <span>{m.title}</span>
+                  {isModuleCompleted(m.id) && (
+                    <span className="text-success text-xs">✓ Concluído</span>
+                  )}
+                </div>
+                <div className="p-1 space-y-0.5">
+                  {m.lessons.map((l) => {
+                    const lLock = checkLockStatus(l, m)
+                    const isDone = enrollment.completedLessons.includes(l.id)
+                    return (
+                      <button
+                        key={l.id}
+                        onClick={() => setActiveLessonId(l.id)}
+                        className={`w-full text-left p-2.5 px-3 text-sm rounded-md flex items-center gap-2 transition-colors ${activeLessonId === l.id ? 'bg-primary text-primary-foreground font-medium shadow-sm' : 'hover:bg-muted/50'} ${lLock.locked ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      >
+                        <span className="flex-shrink-0">
+                          {lLock.locked ? (
+                            <Lock className="size-3.5" />
+                          ) : isDone ? (
+                            <span className="text-success font-bold text-lg leading-none">✓</span>
+                          ) : (
+                            <span className="w-3.5 h-3.5 rounded-full border-2 border-current opacity-30 inline-block" />
+                          )}
+                        </span>
+                        <span className="truncate flex-1">{l.title}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex-1 w-full bg-card border rounded-xl p-6 lg:p-10 shadow-sm min-h-[60vh] flex flex-col">
+            {activeLesson && currentLock.locked ? (
+              <div className="flex-1 flex items-center justify-center flex-col text-center space-y-4">
+                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
+                  <Lock className="size-10 text-muted-foreground" />
+                </div>
+                <h2 className="text-2xl font-bold">Conteúdo Bloqueado</h2>
+                <p className="text-muted-foreground">{currentLock.reason}</p>
+              </div>
+            ) : activeLesson ? (
+              <div className="w-full mx-auto space-y-8 flex-1 flex flex-col">
+                <div className="flex justify-between items-start gap-4 flex-wrap">
+                  <h2 className="text-3xl font-bold tracking-tight">{activeLesson.title}</h2>
+                  {activeLesson.downloadable &&
+                    activeLesson.mediaUrl &&
+                    activeLesson.type !== 'excel' && (
+                      <Button variant="outline" asChild size="sm">
+                        <a href={activeLesson.mediaUrl} target="_blank" rel="noreferrer" download>
+                          <Download className="mr-2 size-4" /> Material
+                        </a>
+                      </Button>
+                    )}
+                </div>
+                <div className="flex-1 w-full relative">{renderMedia(activeLesson)}</div>
+
+                {activeLesson.type === 'exam' && (
+                  <div className="space-y-8 bg-muted/5 p-6 rounded-xl border">
+                    {submission?.isPending && (
+                      <div className="p-4 bg-warning/20 text-warning-foreground rounded-lg font-medium">
+                        Aguardando correção.
+                      </div>
+                    )}
+                    {submission && !submission.isPending && (
+                      <div className="p-4 bg-success/10 border border-success/30 rounded-lg flex justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-success-foreground mb-1">
+                            Nota Final
+                          </p>
+                          <p className="text-3xl font-bold">
+                            {enrollment.examScores[activeLesson.id]?.toFixed(1)}{' '}
+                            <span className="text-lg text-muted-foreground">/ 100</span>
+                          </p>
+                        </div>
+                        {activeLesson.examConfig?.minGradeRequired && (
+                          <div className="text-right">
+                            <p className="text-sm text-muted-foreground mb-1">Mínimo</p>
+                            <p className="font-semibold">
+                              {activeLesson.examConfig.minGradeRequired}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {currentExamQuestions.map((q, i) => (
+                      <div key={q.id} className="border p-6 rounded-lg bg-card shadow-sm space-y-4">
+                        <p className="font-semibold text-lg">
+                          {i + 1}. {q.text}
+                        </p>
+                        {q.type === 'single' && (
+                          <RadioGroup
+                            disabled={!!submission}
+                            value={answers[q.id]?.toString()}
+                            onValueChange={(v) => setAnswers({ ...answers, [q.id]: parseInt(v) })}
+                          >
+                            {q.options?.map((opt, oIdx) => (
+                              <div
+                                key={oIdx}
+                                className="flex items-center space-x-3 p-2 hover:bg-muted/50 rounded"
+                              >
+                                <RadioGroupItem value={oIdx.toString()} id={`${q.id}-${oIdx}`} />
+                                <Label
+                                  htmlFor={`${q.id}-${oIdx}`}
+                                  className="text-base font-normal flex-1 cursor-pointer"
+                                >
+                                  {opt}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        )}
+                        {q.type === 'multiple' && (
+                          <div className="space-y-2">
+                            {q.options?.map((opt, oIdx) => (
+                              <div
+                                key={oIdx}
+                                className="flex items-center space-x-3 p-2 hover:bg-muted/50 rounded"
+                              >
+                                <Checkbox
+                                  disabled={!!submission}
+                                  checked={answers[q.id]?.includes(oIdx)}
+                                  onCheckedChange={(c) => {
+                                    let arr = answers[q.id] || []
+                                    arr = c ? [...arr, oIdx] : arr.filter((x: any) => x !== oIdx)
+                                    setAnswers({ ...answers, [q.id]: arr })
+                                  }}
+                                />
+                                <Label className="text-base font-normal flex-1 cursor-pointer">
+                                  {opt}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {q.type === 'essay' && (
+                          <Textarea
+                            disabled={!!submission}
+                            value={answers[q.id] || ''}
+                            onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+                            placeholder="Escreva sua resposta..."
+                            className="h-40 text-base"
+                          />
+                        )}
+                      </div>
+                    ))}
+                    {!submission && (
+                      <Button size="lg" className="w-full text-lg" onClick={handleSubmitExam}>
+                        Enviar Avaliação
+                      </Button>
+                    )}
+                  </div>
+                )}
+                {activeLesson.type !== 'exam' && (
+                  <div className="pt-8 flex justify-end border-t mt-8">
+                    <Button
+                      size="lg"
+                      onClick={handleComplete}
+                      disabled={enrollment.completedLessons.includes(activeLesson.id)}
+                      variant={
+                        enrollment.completedLessons.includes(activeLesson.id)
+                          ? 'secondary'
+                          : 'default'
+                      }
+                    >
+                      {enrollment.completedLessons.includes(activeLesson.id)
+                        ? 'Concluída'
+                        : 'Marcar como Concluída'}
+                    </Button>
+                  </div>
                 )}
               </div>
-              <div className="p-1 space-y-0.5">
-                {m.lessons.map((l) => {
-                  const lLock = checkLockStatus(l, m)
-                  const isDone = enrollment.completedLessons.includes(l.id)
+            ) : (
+              <p>Selecione uma aula</p>
+            )}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="live" className="outline-none mt-0">
+          <div className="bg-card border rounded-xl p-6 shadow-sm min-h-[60vh]">
+            <h2 className="text-2xl font-bold mb-6">Agenda de Aulas ao Vivo</h2>
+            {courseLiveClasses.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg">
+                <Video className="mx-auto size-12 opacity-20 mb-4" />
+                <p>Nenhuma aula ao vivo agendada para este curso no momento.</p>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {courseLiveClasses.map((lc) => {
+                  const start = new Date(`${lc.date}T${lc.startTime}`)
+                  const end = new Date(start.getTime() + lc.durationMinutes * 60000)
+                  const now = new Date()
+                  const isLive = now >= start && now <= end
+                  const isPast = now > end
+
                   return (
-                    <button
-                      key={l.id}
-                      onClick={() => setActiveLessonId(l.id)}
-                      className={`w-full text-left p-2.5 px-3 text-sm rounded-md flex items-center gap-2 transition-colors ${activeLessonId === l.id ? 'bg-primary text-primary-foreground font-medium shadow-sm' : 'hover:bg-muted/50'} ${lLock.locked ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    <div
+                      key={lc.id}
+                      className={`border rounded-xl p-5 flex flex-col transition-all ${isLive ? 'border-red-500 shadow-md ring-1 ring-red-500/20' : 'bg-background hover:shadow-sm'}`}
                     >
-                      <span className="flex-shrink-0">
-                        {lLock.locked ? (
-                          <Lock className="size-3.5" />
-                        ) : isDone ? (
-                          <span className="text-success font-bold text-lg leading-none">✓</span>
-                        ) : (
-                          <span className="w-3.5 h-3.5 rounded-full border-2 border-current opacity-30 inline-block" />
-                        )}
-                      </span>
-                      <span className="truncate flex-1">{l.title}</span>
-                    </button>
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="space-y-1">
+                          {isLive ? (
+                            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded animate-pulse uppercase tracking-wide">
+                              Ao Vivo Agora
+                            </span>
+                          ) : isPast ? (
+                            <span className="bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
+                              Finalizada
+                            </span>
+                          ) : (
+                            <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
+                              Agendada
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs font-medium bg-muted px-2 py-0.5 rounded uppercase">
+                          {lc.platform}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-lg leading-tight mb-2">{lc.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-1">
+                        {lc.description}
+                      </p>
+
+                      <div className="space-y-2 mb-6">
+                        <div className="flex items-center text-sm font-medium">
+                          <Calendar className="size-4 mr-2 text-muted-foreground" />
+                          {start.toLocaleDateString('pt-BR')}
+                        </div>
+                        <div className="flex items-center text-sm font-medium">
+                          <Clock className="size-4 mr-2 text-muted-foreground" />
+                          {lc.startTime} ({lc.durationMinutes} min)
+                        </div>
+                      </div>
+
+                      {isLive ? (
+                        <Button
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold"
+                          asChild
+                        >
+                          <a href={lc.url} target="_blank" rel="noreferrer">
+                            <Video className="mr-2 size-4" /> Entrar na Sala
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button className="w-full" variant="outline" disabled>
+                          {isPast ? 'Sessão Encerrada' : 'Aguardando Horário'}
+                        </Button>
+                      )}
+                    </div>
                   )
                 })}
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex-1 w-full bg-card border rounded-xl p-6 lg:p-10 shadow-sm min-h-[60vh] flex flex-col">
-          {activeLesson && currentLock.locked ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4 max-w-md mx-auto">
-              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
-                <Lock className="size-10 text-muted-foreground" />
-              </div>
-              <h2 className="text-2xl font-bold">Conteúdo Bloqueado</h2>
-              <p className="text-muted-foreground">{currentLock.reason}</p>
-            </div>
-          ) : activeLesson ? (
-            <div className="w-full mx-auto space-y-8 flex-1 flex flex-col">
-              <div className="flex justify-between items-start gap-4 flex-wrap">
-                <h2 className="text-3xl font-bold tracking-tight">{activeLesson.title}</h2>
-                {activeLesson.downloadable &&
-                  activeLesson.mediaUrl &&
-                  activeLesson.type !== 'excel' && (
-                    <Button variant="outline" asChild size="sm">
-                      <a href={activeLesson.mediaUrl} target="_blank" rel="noreferrer" download>
-                        <Download className="mr-2 size-4" /> Download Material
-                      </a>
-                    </Button>
-                  )}
-              </div>
-
-              <div className="flex-1 w-full relative">{renderMedia(activeLesson)}</div>
-
-              {activeLesson.type === 'exam' && (
-                <div className="space-y-8 bg-muted/5 p-6 rounded-xl border">
-                  {submission?.isPending && (
-                    <div className="p-4 bg-warning/20 text-warning-foreground rounded-lg font-medium">
-                      Prova enviada! Aguardando correção do professor.
-                    </div>
-                  )}
-                  {submission && !submission.isPending && (
-                    <div className="p-4 bg-success/10 border border-success/30 rounded-lg flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-success-foreground uppercase tracking-wider mb-1">
-                          Nota Final
-                        </p>
-                        <p className="text-3xl font-bold">
-                          {enrollment.examScores[activeLesson.id]?.toFixed(1)}{' '}
-                          <span className="text-lg font-normal text-muted-foreground">/ 100</span>
-                        </p>
-                      </div>
-                      {activeLesson.examConfig?.minGradeRequired && (
-                        <div className="text-right">
-                          <p className="text-sm text-muted-foreground mb-1">Nota Mínima</p>
-                          <p className="font-semibold">
-                            {activeLesson.examConfig.minGradeRequired}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  {submission?.feedback && (
-                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-900">
-                      <strong>Feedback do Professor:</strong> {submission.feedback}
-                    </div>
-                  )}
-
-                  {currentExamQuestions.map((q, i) => (
-                    <div key={q.id} className="border p-6 rounded-lg bg-card shadow-sm space-y-4">
-                      <p className="font-semibold text-lg">
-                        {i + 1}. {q.text}
-                      </p>
-                      {q.type === 'single' && (
-                        <RadioGroup
-                          disabled={!!submission}
-                          value={answers[q.id]?.toString()}
-                          onValueChange={(v) => setAnswers({ ...answers, [q.id]: parseInt(v) })}
-                        >
-                          {q.options?.map((opt, oIdx) => (
-                            <div
-                              key={oIdx}
-                              className="flex items-center space-x-3 p-2 rounded hover:bg-muted/50 transition-colors"
-                            >
-                              <RadioGroupItem value={oIdx.toString()} id={`${q.id}-${oIdx}`} />
-                              <Label
-                                htmlFor={`${q.id}-${oIdx}`}
-                                className="text-base font-normal cursor-pointer flex-1"
-                              >
-                                {opt}
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
-                      )}
-                      {q.type === 'multiple' && (
-                        <div className="space-y-2">
-                          {q.options?.map((opt, oIdx) => (
-                            <div
-                              key={oIdx}
-                              className="flex items-center space-x-3 p-2 rounded hover:bg-muted/50 transition-colors"
-                            >
-                              <Checkbox
-                                disabled={!!submission}
-                                checked={answers[q.id]?.includes(oIdx)}
-                                onCheckedChange={(c) => {
-                                  let arr = answers[q.id] || []
-                                  arr = c ? [...arr, oIdx] : arr.filter((x: any) => x !== oIdx)
-                                  setAnswers({ ...answers, [q.id]: arr })
-                                }}
-                              />
-                              <Label className="text-base font-normal cursor-pointer flex-1">
-                                {opt}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      {q.type === 'essay' && (
-                        <Textarea
-                          disabled={!!submission}
-                          value={answers[q.id] || ''}
-                          onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
-                          placeholder="Escreva sua resposta dissertativa aqui..."
-                          className="h-40 resize-none text-base p-4"
-                        />
-                      )}
-                    </div>
-                  ))}
-
-                  {!submission && (
-                    <div className="pt-4">
-                      <Button size="lg" className="w-full text-lg h-14" onClick={handleSubmitExam}>
-                        Enviar Avaliação
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeLesson.type !== 'exam' && (
-                <div className="pt-8 flex justify-end border-t mt-8">
-                  <Button
-                    size="lg"
-                    className="px-8"
-                    onClick={handleComplete}
-                    disabled={enrollment.completedLessons.includes(activeLesson.id)}
-                    variant={
-                      enrollment.completedLessons.includes(activeLesson.id)
-                        ? 'secondary'
-                        : 'default'
-                    }
-                  >
-                    {enrollment.completedLessons.includes(activeLesson.id)
-                      ? 'Aula Concluída'
-                      : 'Marcar Aula como Concluída'}
-                  </Button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p>Selecione uma aula</p>
-          )}
-        </div>
-      </div>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

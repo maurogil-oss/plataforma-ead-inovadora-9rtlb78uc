@@ -15,6 +15,8 @@ import {
   ShieldAlert,
   Handshake,
   Phone,
+  Video,
+  Bot,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -26,9 +28,11 @@ const getNavigation = (role?: string) => {
       return [
         { name: 'Dashboard', href: '/manager/dashboard', icon: LayoutDashboard },
         { name: 'Cursos', href: '/manager/courses', icon: BookOpen },
+        { name: 'Aulas ao Vivo', href: '/manager/live-classes', icon: Video },
         { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
         { name: 'Relatórios', href: '/manager/reports', icon: PieChart },
         { name: 'Financeiro', href: '/manager/finance', icon: CreditCard },
+        { name: 'Gerador de Aulas AI', href: '/manager/lesson-generator', icon: Bot },
         { name: 'Comunicações', href: '/manager/notifications', icon: Bell },
         { name: 'Configurações', href: '/manager/integrations', icon: Settings },
         { name: 'Parceiros', href: '/partner/dashboard', icon: Handshake },
@@ -36,9 +40,11 @@ const getNavigation = (role?: string) => {
     case 'instructor':
       return [
         { name: 'Dashboard', href: '/instructor/dashboard', icon: LayoutDashboard },
+        { name: 'Aulas ao Vivo', href: '/instructor/live-classes', icon: Video },
         { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
-        { name: 'Minha Receita', href: '/instructor/revenue', icon: Wallet },
+        { name: 'Gerador de Aulas AI', href: '/instructor/lesson-generator', icon: Bot },
         { name: 'Banco de Questões', href: '/instructor/questions', icon: ShieldAlert },
+        { name: 'Minha Receita', href: '/instructor/revenue', icon: Wallet },
         { name: 'Área de Parceiros', href: '/instructor/partner', icon: Handshake },
       ]
     case 'student':

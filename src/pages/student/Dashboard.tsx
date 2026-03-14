@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useLmsStore, Course, Enrollment } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent } from '@/components/ui/card'
@@ -14,12 +14,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { PlayCircle, PlusCircle, Tag } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { PlayCircle, PlusCircle, Tag, Radio } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function StudentDashboard() {
   const user = useAuthStore((s) => s.user)
-  const { courses, enrollments, enrollStudent, paymentSettings } = useLmsStore()
+  const navigate = useNavigate()
+  const { courses, enrollments, enrollStudent, paymentSettings, liveClasses } = useLmsStore()
   const [enrollCourse, setEnrollCourse] = useState<Course | null>(null)
   const [selectedBatch, setSelectedBatch] = useState<string>('')
 
@@ -31,6 +33,15 @@ export default function StudentDashboard() {
     .filter((item) => item.course) as { course: Course; enrollment: Enrollment }[]
 
   const availableCourses = courses.filter((c) => !myEnrollments.some((e) => e.courseId === c.id))
+
+  // Find active live classes for enrolled courses
+  const now = new Date()
+  const activeLiveClasses = liveClasses.filter((lc) => {
+    if (!myEnrollments.some((e) => e.courseId === lc.courseId)) return false
+    const start = new Date(`${lc.date}T${lc.startTime}`)
+    const end = new Date(start.getTime() + lc.durationMinutes * 60000)
+    return now >= start && now <= end
+  })
 
   const handleEnrollClick = (c: Course) => {
     if (c.batches && c.batches.length > 0) {
@@ -55,6 +66,28 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-12 pb-10">
+      {activeLiveClasses.length > 0 && (
+        <Alert className="border-red-500 bg-red-50 dark:bg-red-950/20 text-red-900 dark:text-red-200">
+          <Radio className="size-5 text-red-600 dark:text-red-400 animate-pulse" />
+          <AlertTitle className="font-bold text-lg text-red-700 dark:text-red-300">
+            Atenção! Aula ao vivo acontecendo agora.
+          </AlertTitle>
+          <AlertDescription className="mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <span>
+              Você tem {activeLiveClasses.length} aula(s) rolando neste momento. Não perca o
+              conteúdo!
+            </span>
+            <Button
+              size="sm"
+              className="bg-red-600 hover:bg-red-700 text-white shrink-0"
+              onClick={() => navigate(`/student/course/${activeLiveClasses[0].courseId}`)}
+            >
+              Acessar Transmissão
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <section>
         <div className="mb-6">
           <h1 className="text-3xl font-bold tracking-tight">Meus Cursos</h1>
