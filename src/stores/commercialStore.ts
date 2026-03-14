@@ -33,15 +33,27 @@ export interface Product {
   courseId?: string
 }
 
+export interface Coupon {
+  id: string
+  code: string
+  type: 'percentage' | 'fixed'
+  value: number
+  isActive: boolean
+}
+
 interface CommercialStore {
   speakers: Speaker[]
   products: Product[]
+  coupons: Coupon[]
   addSpeaker: (s: Speaker) => void
   updateSpeaker: (s: Speaker) => void
   deleteSpeaker: (id: string) => void
   addProduct: (p: Product) => void
   updateProduct: (p: Product) => void
   deleteProduct: (id: string) => void
+  addCoupon: (c: Coupon) => void
+  updateCoupon: (c: Coupon) => void
+  deleteCoupon: (id: string) => void
 }
 
 const MOCK_SPEAKERS: Speaker[] = [
@@ -89,9 +101,27 @@ const MOCK_PRODUCTS: Product[] = [
   },
 ]
 
+const MOCK_COUPONS: Coupon[] = [
+  {
+    id: 'cp1',
+    code: 'SEGURANCA20',
+    type: 'percentage',
+    value: 20,
+    isActive: true,
+  },
+  {
+    id: 'cp2',
+    code: 'BEMVINDO50',
+    type: 'fixed',
+    value: 50,
+    isActive: true,
+  },
+]
+
 export const useCommercialStore = create<CommercialStore>((set) => ({
   speakers: MOCK_SPEAKERS,
   products: MOCK_PRODUCTS,
+  coupons: MOCK_COUPONS,
   addSpeaker: (s) => set((state) => ({ speakers: [...state.speakers, s] })),
   updateSpeaker: (s) =>
     set((state) => ({ speakers: state.speakers.map((x) => (x.id === s.id ? s : x)) })),
@@ -100,4 +130,8 @@ export const useCommercialStore = create<CommercialStore>((set) => ({
   updateProduct: (p) =>
     set((state) => ({ products: state.products.map((x) => (x.id === p.id ? p : x)) })),
   deleteProduct: (id) => set((state) => ({ products: state.products.filter((x) => x.id !== id) })),
+  addCoupon: (c) => set((state) => ({ coupons: [...state.coupons, c] })),
+  updateCoupon: (c) =>
+    set((state) => ({ coupons: state.coupons.map((x) => (x.id === c.id ? c : x)) })),
+  deleteCoupon: (id) => set((state) => ({ coupons: state.coupons.filter((x) => x.id !== id) })),
 }))

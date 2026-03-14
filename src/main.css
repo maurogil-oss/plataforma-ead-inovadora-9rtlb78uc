@@ -7,50 +7,55 @@
 
 @layer base {
   :root {
-    /* Enforcing Dark Mode as default per spec */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Light Theme - Clean whites and light grays for ONSV Brand Refresh */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
 
-    --card: 222.2 84% 6.5%; /* Slightly lighter than bg */
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
 
-    --popover: 222.2 84% 6.5%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 48 96% 53%; /* Safety Yellow #FACC15 */
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Safety Orange for CTAs */
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* ONSV Navy Blue */
+    --brand-blue: 213 67% 17%;
+    --brand-blue-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --accent: 25 95% 53%; /* Alert Orange #F97316 */
-    --accent-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --destructive: 0 62.8% 30.6%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 142 71% 45%; /* Success Green #22C55E */
-    --success-foreground: 210 40% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 48 96% 53%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 25 95% 53%; /* Safety Orange Focus Ring */
 
     --radius: 0.75rem;
 
-    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-background: 213 67% 17%; /* Navy Blue Sidebar */
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 48 96% 53%;
-    --sidebar-primary-foreground: 222.2 47.4% 11.2%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-primary: 25 95% 53%; /* Orange Sidebar Active */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 213 60% 25%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 48 96% 53%;
+    --sidebar-border: 213 60% 25%;
+    --sidebar-ring: 25 95% 53%;
 
-    --chart-1: 48 96% 53%;
+    --chart-1: 213 67% 17%;
     --chart-2: 25 95% 53%;
     --chart-3: 142 71% 45%;
     --chart-4: 199 89% 48%;
@@ -58,16 +63,32 @@
   }
 
   .dark {
-    /* Same as root since we default to dark */
+    /* Enforce light theme consistency for brand identity */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --brand-blue: 213 67% 17%;
+    --brand-blue-foreground: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --sidebar-background: 213 67% 17%;
+    --sidebar-foreground: 210 40% 98%;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image: radial-gradient(
-      circle at 50% 0%,
-      rgba(250, 204, 21, 0.03) 0%,
-      transparent 50%
-    );
+    background-image: radial-gradient(circle at 50% 0%, rgba(15, 42, 74, 0.03) 0%, transparent 50%);
   }
 
   h1,
@@ -76,7 +97,7 @@
   h4,
   h5,
   h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tight text-brand;
   }
 
   section[aria-label='Notifications alt+T'] {
@@ -123,10 +144,10 @@
   @keyframes pulse-glow {
     0%,
     100% {
-      box-shadow: 0 0 10px rgba(250, 204, 21, 0.2);
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
     }
     50% {
-      box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
     }
   }
 
@@ -147,6 +168,6 @@
   }
 
   .glass-card {
-    @apply bg-card/80 backdrop-blur-md border border-white/5 shadow-elevation hover:shadow-glow transition-all duration-300;
+    @apply bg-white/90 backdrop-blur-md border border-slate-200 shadow-elevation hover:shadow-glow transition-all duration-300;
   }
 }

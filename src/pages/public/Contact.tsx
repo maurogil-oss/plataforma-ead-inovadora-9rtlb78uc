@@ -8,14 +8,14 @@ import { Mail, Phone, MapPin, Instagram, Linkedin, Youtube, Send } from 'lucide-
 
 export default function Contact() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-16 max-w-6xl">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-brand tracking-tight">
             Fale Conosco
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto">
             Tem dúvidas sobre a plataforma ou nossos cursos? Preencha o formulário abaixo e nossa
             equipe entrará em contato o mais rápido possível.
           </p>
@@ -23,42 +23,44 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-5 gap-12 items-start">
           <div className="lg:col-span-2 space-y-8">
-            <Card className="border-none shadow-lg bg-[#176a7e] text-white overflow-hidden relative">
-              <div className="absolute top-0 right-0 p-16 bg-white/10 rounded-full blur-3xl -mr-10 -mt-10" />
+            <Card className="border-none shadow-xl bg-brand text-brand-foreground overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-16 bg-white/5 rounded-full blur-3xl -mr-10 -mt-10" />
               <CardContent className="p-8 relative z-10 space-y-8">
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">Informações de Contato</h3>
-                  <p className="text-cyan-100 text-sm">
+                  <h3 className="text-2xl font-extrabold mb-2">Informações de Contato</h3>
+                  <p className="text-brand-foreground/70 text-sm font-medium">
                     Estamos disponíveis de Segunda a Sexta, das 09h às 18h.
                   </p>
                 </div>
 
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
-                    <div className="bg-white/20 p-3 rounded-full">
+                    <div className="bg-primary/20 text-primary p-3 rounded-full">
                       <Mail className="size-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-cyan-100">E-mail</p>
-                      <p className="font-semibold">contato@observatorio.academy</p>
+                      <p className="text-sm text-brand-foreground/70 font-semibold">E-mail</p>
+                      <p className="font-bold tracking-wide">contato@observatorio.academy</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="bg-white/20 p-3 rounded-full">
+                    <div className="bg-primary/20 text-primary p-3 rounded-full">
                       <Phone className="size-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-cyan-100">Telefone / WhatsApp</p>
-                      <p className="font-semibold">+55 11 99999-9999</p>
+                      <p className="text-sm text-brand-foreground/70 font-semibold">
+                        Telefone / WhatsApp
+                      </p>
+                      <p className="font-bold tracking-wide">+55 11 99999-9999</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="bg-white/20 p-3 rounded-full">
+                    <div className="bg-primary/20 text-primary p-3 rounded-full">
                       <MapPin className="size-5" />
                     </div>
                     <div>
-                      <p className="text-sm text-cyan-100">Endereço</p>
-                      <p className="font-semibold leading-snug">
+                      <p className="text-sm text-brand-foreground/70 font-semibold">Endereço</p>
+                      <p className="font-bold leading-snug">
                         Av. Paulista, 1234 - Bela Vista
                         <br />
                         São Paulo - SP, 01310-100
@@ -67,26 +69,26 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="pt-8 border-t border-white/20">
-                  <p className="text-sm text-cyan-100 mb-4 font-medium">
-                    Siga nossas redes sociais:
+                <div className="pt-8 border-t border-brand-foreground/10">
+                  <p className="text-sm text-brand-foreground/70 mb-4 font-bold uppercase tracking-wider">
+                    Redes sociais
                   </p>
                   <div className="flex gap-4">
                     <a
                       href="#"
-                      className="bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors"
+                      className="bg-white/10 hover:bg-primary hover:text-primary-foreground p-3 rounded-full transition-colors"
                     >
                       <Instagram className="size-5" />
                     </a>
                     <a
                       href="#"
-                      className="bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors"
+                      className="bg-white/10 hover:bg-primary hover:text-primary-foreground p-3 rounded-full transition-colors"
                     >
                       <Linkedin className="size-5" />
                     </a>
                     <a
                       href="#"
-                      className="bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors"
+                      className="bg-white/10 hover:bg-primary hover:text-primary-foreground p-3 rounded-full transition-colors"
                     >
                       <Youtube className="size-5" />
                     </a>
@@ -97,53 +99,53 @@ export default function Contact() {
           </div>
 
           <div className="lg:col-span-3">
-            <Card className="border-border shadow-sm bg-card">
+            <Card className="border-slate-200 shadow-lg bg-white">
               <CardContent className="p-8">
                 <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-foreground">
+                      <Label htmlFor="name" className="text-brand font-bold">
                         Nome Completo
                       </Label>
                       <Input
                         id="name"
                         placeholder="Ex: João da Silva"
-                        className="bg-background border-input"
+                        className="bg-slate-50 border-slate-200 focus-visible:ring-primary"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-foreground">
+                      <Label htmlFor="email" className="text-brand font-bold">
                         E-mail Corporativo ou Pessoal
                       </Label>
                       <Input
                         id="email"
                         type="email"
                         placeholder="joao@exemplo.com"
-                        className="bg-background border-input"
+                        className="bg-slate-50 border-slate-200 focus-visible:ring-primary"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-foreground">
+                    <Label htmlFor="subject" className="text-brand font-bold">
                       Assunto
                     </Label>
                     <Input
                       id="subject"
                       placeholder="Como podemos ajudar?"
-                      className="bg-background border-input"
+                      className="bg-slate-50 border-slate-200 focus-visible:ring-primary"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="message" className="text-foreground">
+                    <Label htmlFor="message" className="text-brand font-bold">
                       Mensagem
                     </Label>
                     <Textarea
                       id="message"
                       placeholder="Descreva detalhadamente sua dúvida ou solicitação..."
-                      className="min-h-[150px] bg-background border-input resize-y"
+                      className="min-h-[150px] bg-slate-50 border-slate-200 resize-y focus-visible:ring-primary"
                     />
                   </div>
-                  <Button className="w-full sm:w-auto px-8 h-12 bg-[#176a7e] hover:bg-[#115060] text-white text-base font-semibold">
+                  <Button className="w-full sm:w-auto px-8 h-12 font-bold text-base shadow-md">
                     <Send className="mr-2 size-4" /> Enviar Mensagem
                   </Button>
                 </form>

@@ -58,14 +58,14 @@ const MOCK_COURSES = [
 
 export default function Courses() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-foreground tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-brand tracking-tight">
             Catálogo de Cursos
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto font-medium">
             Explore nossos cursos de alta qualidade e acelere sua carreira profissional com a melhor
             metodologia do mercado.
           </p>
@@ -75,30 +75,27 @@ export default function Courses() {
           {MOCK_COURSES.map((c) => (
             <Card
               key={c.id}
-              className="overflow-hidden flex flex-col hover:shadow-lg transition-all hover:-translate-y-1 border-border bg-card"
+              className="overflow-hidden flex flex-col hover:shadow-xl transition-all hover:-translate-y-1 border-slate-200 bg-white"
             >
-              <div className="relative h-48 bg-muted">
+              <div className="relative h-48 bg-slate-200">
                 <img src={c.img} alt={c.title} className="w-full h-full object-cover" />
-                <Badge className="absolute top-3 left-3 bg-background/95 text-foreground hover:bg-background border-none shadow-sm backdrop-blur-sm font-semibold">
+                <Badge className="absolute top-3 left-3 bg-brand/95 text-white hover:bg-brand border-none shadow-sm backdrop-blur-sm font-bold uppercase tracking-wider text-[10px]">
                   {c.cat}
                 </Badge>
-                <div className="absolute bottom-3 right-3 bg-[#176a7e] text-white font-bold px-3 py-1.5 rounded-md shadow-sm flex items-center gap-1.5 text-sm">
+                <div className="absolute bottom-3 right-3 bg-primary text-primary-foreground font-extrabold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-1.5 text-sm">
                   <Tag className="size-4" /> R$ {c.price.toFixed(2)}
                 </div>
               </div>
               <CardHeader className="pb-3">
-                <CardTitle className="line-clamp-2 text-xl leading-tight text-foreground">
+                <CardTitle className="line-clamp-2 text-xl leading-tight text-brand">
                   {c.title}
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex-1">
-                <p className="text-muted-foreground line-clamp-3 leading-relaxed">{c.desc}</p>
+                <p className="text-slate-600 font-medium line-clamp-3 leading-relaxed">{c.desc}</p>
               </CardContent>
               <CardFooter className="pt-0">
-                <Button
-                  className="w-full bg-[#176a7e] hover:bg-[#115060] text-white font-semibold"
-                  asChild
-                >
+                <Button className="w-full font-bold shadow-md text-base" asChild>
                   <Link to="/login">Garantir Vaga</Link>
                 </Button>
               </CardFooter>

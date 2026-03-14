@@ -440,57 +440,82 @@ video {
   display: none;
 }
 :root {
-    /* Enforcing Dark Mode as default per spec */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Light Theme - Clean whites and light grays for ONSV Brand Refresh */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
 
-    --card: 222.2 84% 6.5%; /* Slightly lighter than bg */
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
 
-    --popover: 222.2 84% 6.5%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 48 96% 53%; /* Safety Yellow #FACC15 */
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Safety Orange for CTAs */
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* ONSV Navy Blue */
+    --brand-blue: 213 67% 17%;
+    --brand-blue-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --accent: 25 95% 53%; /* Alert Orange #F97316 */
-    --accent-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --destructive: 0 62.8% 30.6%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --success: 142 71% 45%; /* Success Green #22C55E */
-    --success-foreground: 210 40% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 48 96% 53%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 25 95% 53%; /* Safety Orange Focus Ring */
 
     --radius: 0.75rem;
 
-    --sidebar-background: 222.2 84% 4.9%;
+    --sidebar-background: 213 67% 17%; /* Navy Blue Sidebar */
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 48 96% 53%;
-    --sidebar-primary-foreground: 222.2 47.4% 11.2%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-primary: 25 95% 53%; /* Orange Sidebar Active */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 213 60% 25%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 48 96% 53%;
+    --sidebar-border: 213 60% 25%;
+    --sidebar-ring: 25 95% 53%;
 
-    --chart-1: 48 96% 53%;
+    --chart-1: 213 67% 17%;
     --chart-2: 25 95% 53%;
     --chart-3: 142 71% 45%;
     --chart-4: 199 89% 48%;
     --chart-5: 283 39% 53%;
   }
 .dark {
-    /* Same as root since we default to dark */
+    /* Enforce light theme consistency for brand identity */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --brand-blue: 213 67% 17%;
+    --brand-blue-foreground: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --sidebar-background: 213 67% 17%;
+    --sidebar-foreground: 210 40% 98%;
   }
 body{
   background-color: hsl(var(--background));
@@ -498,11 +523,7 @@ body{
   color: hsl(var(--foreground));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-    background-image: radial-gradient(
-      circle at 50% 0%,
-      rgba(250, 204, 21, 0.03) 0%,
-      transparent 50%
-    );
+    background-image: radial-gradient(circle at 50% 0%, rgba(15, 42, 74, 0.03) 0%, transparent 50%);
 }
 h1,
   h2,
@@ -512,6 +533,7 @@ h1,
   h6{
   font-family: Inter, system-ui, sans-serif;
   letter-spacing: -0.025em;
+  color: hsl(var(--brand-blue));
 }
 section[aria-label='Notifications alt+T'] {
     padding: 0 !important;
@@ -1526,6 +1548,9 @@ section[aria-label='Notifications alt+T'] {
 .w-14{
   width: 3.5rem;
 }
+.w-16{
+  width: 4rem;
+}
 .w-2{
   width: 0.5rem;
 }
@@ -2086,10 +2111,6 @@ section[aria-label='Notifications alt+T'] {
 .border-none{
   border-style: none;
 }
-.border-\[\#176a7e\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(23 106 126 / var(--tw-border-opacity, 1));
-}
 .border-\[--color-border\]{
   border-color: var(--color-border);
 }
@@ -2103,12 +2124,17 @@ section[aria-label='Notifications alt+T'] {
 .border-border\/50{
   border-color: hsl(var(--border) / 0.5);
 }
+.border-brand{
+  border-color: hsl(var(--brand-blue));
+}
+.border-brand-foreground\/10{
+  border-color: hsl(var(--brand-blue-foreground) / 0.1);
+}
+.border-brand\/20{
+  border-color: hsl(var(--brand-blue) / 0.2);
+}
 .border-current{
   border-color: currentColor;
-}
-.border-cyan-800{
-  --tw-border-opacity: 1;
-  border-color: rgb(21 94 117 / var(--tw-border-opacity, 1));
 }
 .border-destructive{
   border-color: hsl(var(--destructive));
@@ -2121,9 +2147,6 @@ section[aria-label='Notifications alt+T'] {
 }
 .border-input{
   border-color: hsl(var(--input));
-}
-.border-muted{
-  border-color: hsl(var(--muted));
 }
 .border-primary{
   border-color: hsl(var(--primary));
@@ -2160,14 +2183,6 @@ section[aria-label='Notifications alt+T'] {
   --tw-border-opacity: 1;
   border-color: rgb(148 163 184 / var(--tw-border-opacity, 1));
 }
-.border-slate-700{
-  --tw-border-opacity: 1;
-  border-color: rgb(51 65 85 / var(--tw-border-opacity, 1));
-}
-.border-slate-800{
-  --tw-border-opacity: 1;
-  border-color: rgb(30 41 59 / var(--tw-border-opacity, 1));
-}
 .border-success\/20{
   border-color: hsl(var(--success) / 0.2);
 }
@@ -2177,9 +2192,8 @@ section[aria-label='Notifications alt+T'] {
 .border-transparent{
   border-color: transparent;
 }
-.border-white{
-  --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
+.border-white\/10{
+  border-color: rgb(255 255 255 / 0.1);
 }
 .border-white\/20{
   border-color: rgb(255 255 255 / 0.2);
@@ -2197,9 +2211,6 @@ section[aria-label='Notifications alt+T'] {
   --tw-bg-opacity: 1;
   background-color: rgb(23 106 126 / var(--tw-bg-opacity, 1));
 }
-.bg-\[\#176a7e\]\/10{
-  background-color: rgb(23 106 126 / 0.1);
-}
 .bg-\[--color-bg\]{
   background-color: var(--color-bg);
 }
@@ -2216,15 +2227,9 @@ section[aria-label='Notifications alt+T'] {
 .bg-background\/90{
   background-color: hsl(var(--background) / 0.9);
 }
-.bg-background\/95{
-  background-color: hsl(var(--background) / 0.95);
-}
 .bg-black{
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
-}
-.bg-black\/20{
-  background-color: rgb(0 0 0 / 0.2);
 }
 .bg-black\/80{
   background-color: rgb(0 0 0 / 0.8);
@@ -2236,14 +2241,35 @@ section[aria-label='Notifications alt+T'] {
 .bg-border{
   background-color: hsl(var(--border));
 }
+.bg-brand{
+  background-color: hsl(var(--brand-blue));
+}
+.bg-brand-foreground\/5{
+  background-color: hsl(var(--brand-blue-foreground) / 0.05);
+}
+.bg-brand\/10{
+  background-color: hsl(var(--brand-blue) / 0.1);
+}
+.bg-brand\/20{
+  background-color: hsl(var(--brand-blue) / 0.2);
+}
+.bg-brand\/5{
+  background-color: hsl(var(--brand-blue) / 0.05);
+}
+.bg-brand\/90{
+  background-color: hsl(var(--brand-blue) / 0.9);
+}
+.bg-brand\/95{
+  background-color: hsl(var(--brand-blue) / 0.95);
+}
 .bg-card{
   background-color: hsl(var(--card));
 }
 .bg-destructive{
   background-color: hsl(var(--destructive));
 }
-.bg-destructive\/5{
-  background-color: hsl(var(--destructive) / 0.05);
+.bg-destructive\/10{
+  background-color: hsl(var(--destructive) / 0.1);
 }
 .bg-emerald-100{
   --tw-bg-opacity: 1;
@@ -2252,9 +2278,6 @@ section[aria-label='Notifications alt+T'] {
 .bg-emerald-50{
   --tw-bg-opacity: 1;
   background-color: rgb(236 253 245 / var(--tw-bg-opacity, 1));
-}
-.bg-emerald-500\/20{
-  background-color: rgb(16 185 129 / 0.2);
 }
 .bg-foreground{
   background-color: hsl(var(--foreground));
@@ -2292,6 +2315,9 @@ section[aria-label='Notifications alt+T'] {
 }
 .bg-primary\/10{
   background-color: hsl(var(--primary) / 0.1);
+}
+.bg-primary\/20{
+  background-color: hsl(var(--primary) / 0.2);
 }
 .bg-primary\/5{
   background-color: hsl(var(--primary) / 0.05);
@@ -2333,22 +2359,14 @@ section[aria-label='Notifications alt+T'] {
   --tw-bg-opacity: 1;
   background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
 }
-.bg-slate-900{
-  --tw-bg-opacity: 1;
-  background-color: rgb(15 23 42 / var(--tw-bg-opacity, 1));
-}
-.bg-slate-950{
-  --tw-bg-opacity: 1;
-  background-color: rgb(2 6 23 / var(--tw-bg-opacity, 1));
-}
 .bg-success{
   background-color: hsl(var(--success));
 }
 .bg-success\/10{
   background-color: hsl(var(--success) / 0.1);
 }
-.bg-success\/5{
-  background-color: hsl(var(--success) / 0.05);
+.bg-success\/20{
+  background-color: hsl(var(--success) / 0.2);
 }
 .bg-transparent{
   background-color: transparent;
@@ -2360,11 +2378,14 @@ section[aria-label='Notifications alt+T'] {
 .bg-white\/10{
   background-color: rgb(255 255 255 / 0.1);
 }
-.bg-white\/20{
-  background-color: rgb(255 255 255 / 0.2);
+.bg-white\/5{
+  background-color: rgb(255 255 255 / 0.05);
 }
-.bg-\[linear-gradient\(to_right\2c \#80808012_1px\2c transparent_1px\)\2c linear-gradient\(to_bottom\2c \#80808012_1px\2c transparent_1px\)\]{
-  background-image: linear-gradient(to right,#80808012 1px,transparent 1px),linear-gradient(to bottom,#80808012 1px,transparent 1px);
+.bg-white\/95{
+  background-color: rgb(255 255 255 / 0.95);
+}
+.bg-\[linear-gradient\(to_right\2c \#0f2a4a0a_1px\2c transparent_1px\)\2c linear-gradient\(to_bottom\2c \#0f2a4a0a_1px\2c transparent_1px\)\]{
+  background-image: linear-gradient(to right,#0f2a4a0a 1px,transparent 1px),linear-gradient(to bottom,#0f2a4a0a 1px,transparent 1px);
 }
 .bg-\[url\(\'https\:\/\/img\.usecurling\.com\/p\/1200\/800\?q\=education\&color\=gray\&dpr\=1\'\)\]{
   background-image: url('https://img.usecurling.com/p/1200/800?q=education&color=gray&dpr=1');
@@ -2372,27 +2393,16 @@ section[aria-label='Notifications alt+T'] {
 .bg-\[url\(\'https\:\/\/img\.usecurling\.com\/p\/800\/600\?q\=pattern\&color\=gray\'\)\]{
   background-image: url('https://img.usecurling.com/p/800/600?q=pattern&color=gray');
 }
-.bg-gradient-to-b{
-  background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
-}
 .bg-gradient-to-tr{
   background-image: linear-gradient(to top right, var(--tw-gradient-stops));
 }
-.from-\[\#176a7e\]{
-  --tw-gradient-from: #176a7e var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(23 106 126 / 0) var(--tw-gradient-to-position);
+.from-brand{
+  --tw-gradient-from: hsl(var(--brand-blue)) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--brand-blue) / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
-.from-slate-50{
-  --tw-gradient-from: #f8fafc var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(248 250 252 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-.to-cyan-300{
-  --tw-gradient-to: #67e8f9 var(--tw-gradient-to-position);
-}
-.to-white{
-  --tw-gradient-to: #fff var(--tw-gradient-to-position);
+.to-primary{
+  --tw-gradient-to: hsl(var(--primary)) var(--tw-gradient-to-position);
 }
 .bg-\[size\:40px_40px\]{
   background-size: 40px 40px;
@@ -2750,10 +2760,6 @@ section[aria-label='Notifications alt+T'] {
 .tracking-widest{
   letter-spacing: 0.1em;
 }
-.text-\[\#176a7e\]{
-  --tw-text-opacity: 1;
-  color: rgb(23 106 126 / var(--tw-text-opacity, 1));
-}
 .text-accent-foreground{
   color: hsl(var(--accent-foreground));
 }
@@ -2761,9 +2767,9 @@ section[aria-label='Notifications alt+T'] {
   --tw-text-opacity: 1;
   color: rgb(245 158 11 / var(--tw-text-opacity, 1));
 }
-.text-amber-600{
+.text-amber-700{
   --tw-text-opacity: 1;
-  color: rgb(217 119 6 / var(--tw-text-opacity, 1));
+  color: rgb(180 83 9 / var(--tw-text-opacity, 1));
 }
 .text-black{
   --tw-text-opacity: 1;
@@ -2777,15 +2783,26 @@ section[aria-label='Notifications alt+T'] {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
 }
-.text-card-foreground{
-  color: hsl(var(--card-foreground));
+.text-brand{
+  color: hsl(var(--brand-blue));
+}
+.text-brand-foreground{
+  color: hsl(var(--brand-blue-foreground));
+}
+.text-brand-foreground\/50{
+  color: hsl(var(--brand-blue-foreground) / 0.5);
+}
+.text-brand-foreground\/60{
+  color: hsl(var(--brand-blue-foreground) / 0.6);
+}
+.text-brand-foreground\/70{
+  color: hsl(var(--brand-blue-foreground) / 0.7);
+}
+.text-brand-foreground\/80{
+  color: hsl(var(--brand-blue-foreground) / 0.8);
 }
 .text-current{
   color: currentColor;
-}
-.text-cyan-100{
-  --tw-text-opacity: 1;
-  color: rgb(207 250 254 / var(--tw-text-opacity, 1));
 }
 .text-destructive{
   color: hsl(var(--destructive));
@@ -2793,12 +2810,8 @@ section[aria-label='Notifications alt+T'] {
 .text-destructive-foreground{
   color: hsl(var(--destructive-foreground));
 }
-.text-destructive-foreground\/80{
-  color: hsl(var(--destructive-foreground) / 0.8);
-}
-.text-emerald-400{
-  --tw-text-opacity: 1;
-  color: rgb(52 211 153 / var(--tw-text-opacity, 1));
+.text-destructive\/80{
+  color: hsl(var(--destructive) / 0.8);
 }
 .text-emerald-600{
   --tw-text-opacity: 1;
@@ -2813,9 +2826,6 @@ section[aria-label='Notifications alt+T'] {
 }
 .text-foreground\/50{
   color: hsl(var(--foreground) / 0.5);
-}
-.text-foreground\/80{
-  color: hsl(var(--foreground) / 0.8);
 }
 .text-gray-600{
   --tw-text-opacity: 1;
@@ -2857,14 +2867,6 @@ section[aria-label='Notifications alt+T'] {
 .text-sidebar-foreground\/70{
   color: hsl(var(--sidebar-foreground) / 0.7);
 }
-.text-slate-200{
-  --tw-text-opacity: 1;
-  color: rgb(226 232 240 / var(--tw-text-opacity, 1));
-}
-.text-slate-300{
-  --tw-text-opacity: 1;
-  color: rgb(203 213 225 / var(--tw-text-opacity, 1));
-}
 .text-slate-400{
   --tw-text-opacity: 1;
   color: rgb(148 163 184 / var(--tw-text-opacity, 1));
@@ -2895,12 +2897,15 @@ section[aria-label='Notifications alt+T'] {
 .text-success-foreground{
   color: hsl(var(--success-foreground));
 }
-.text-success-foreground\/80{
-  color: hsl(var(--success-foreground) / 0.8);
+.text-success\/80{
+  color: hsl(var(--success) / 0.8);
 }
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.text-white\/50{
+  color: rgb(255 255 255 / 0.5);
 }
 .underline{
   text-decoration-line: underline;
@@ -2922,9 +2927,6 @@ section[aria-label='Notifications alt+T'] {
 }
 .opacity-40{
   opacity: 0.4;
-}
-.opacity-5{
-  opacity: 0.05;
 }
 .opacity-50{
   opacity: 0.5;
@@ -2987,8 +2989,8 @@ section[aria-label='Notifications alt+T'] {
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
-.shadow-\[\#176a7e\]\/10{
-  --tw-shadow-color: rgb(23 106 126 / 0.1);
+.shadow-primary\/10{
+  --tw-shadow-color: hsl(var(--primary) / 0.1);
   --tw-shadow: var(--tw-shadow-colored);
 }
 .outline-none{
@@ -3029,10 +3031,6 @@ section[aria-label='Notifications alt+T'] {
   --tw-blur: blur(64px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
-.drop-shadow-md{
-  --tw-drop-shadow: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
-  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
 .drop-shadow-sm{
   --tw-drop-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -3046,9 +3044,6 @@ section[aria-label='Notifications alt+T'] {
 }
 .backdrop-blur-sm{
   --tw-backdrop-blur: blur(4px);
-  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-}
-.backdrop-filter{
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
 .transition{
@@ -3204,10 +3199,10 @@ section[aria-label='Notifications alt+T'] {
 @keyframes pulse-glow {
     0%,
     100% {
-      box-shadow: 0 0 10px rgba(250, 204, 21, 0.2);
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
     }
     50% {
-      box-shadow: 0 0 20px rgba(250, 204, 21, 0.5);
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
     }
   }
 .\[--cell-size\:2rem\]{
@@ -3234,6 +3229,14 @@ section[aria-label='Notifications alt+T'] {
 }
 .placeholder\:text-muted-foreground::placeholder{
   color: hsl(var(--muted-foreground));
+}
+.placeholder\:text-slate-400::-moz-placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity, 1));
+}
+.placeholder\:text-slate-400::placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity, 1));
 }
 .after\:absolute::after{
   content: var(--tw-content);
@@ -3301,8 +3304,11 @@ section[aria-label='Notifications alt+T'] {
 .hover\:bg-accent:hover{
   background-color: hsl(var(--accent));
 }
-.hover\:bg-background:hover{
-  background-color: hsl(var(--background));
+.hover\:bg-brand:hover{
+  background-color: hsl(var(--brand-blue));
+}
+.hover\:bg-brand\/90:hover{
+  background-color: hsl(var(--brand-blue) / 0.9);
 }
 .hover\:bg-destructive\/10:hover{
   background-color: hsl(var(--destructive) / 0.1);
@@ -3325,6 +3331,12 @@ section[aria-label='Notifications alt+T'] {
 .hover\:bg-muted\/50:hover{
   background-color: hsl(var(--muted) / 0.5);
 }
+.hover\:bg-primary:hover{
+  background-color: hsl(var(--primary));
+}
+.hover\:bg-primary\/10:hover{
+  background-color: hsl(var(--primary) / 0.1);
+}
 .hover\:bg-primary\/20:hover{
   background-color: hsl(var(--primary) / 0.2);
 }
@@ -3334,8 +3346,9 @@ section[aria-label='Notifications alt+T'] {
 .hover\:bg-primary\/90:hover{
   background-color: hsl(var(--primary) / 0.9);
 }
-.hover\:bg-red-500\/10:hover{
-  background-color: rgb(239 68 68 / 0.1);
+.hover\:bg-red-50:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
 }
 .hover\:bg-red-600:hover{
   --tw-bg-opacity: 1;
@@ -3358,19 +3371,15 @@ section[aria-label='Notifications alt+T'] {
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
 }
-.hover\:bg-slate-800:hover{
+.hover\:bg-slate-200:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(30 41 59 / var(--tw-bg-opacity, 1));
+  background-color: rgb(226 232 240 / var(--tw-bg-opacity, 1));
 }
 .hover\:bg-success\/90:hover{
   background-color: hsl(var(--success) / 0.9);
 }
-.hover\:bg-white\/20:hover{
-  background-color: rgb(255 255 255 / 0.2);
-}
-.hover\:text-\[\#176a7e\]:hover{
-  --tw-text-opacity: 1;
-  color: rgb(23 106 126 / var(--tw-text-opacity, 1));
+.hover\:bg-white\/10:hover{
+  background-color: rgb(255 255 255 / 0.1);
 }
 .hover\:text-accent-foreground:hover{
   color: hsl(var(--accent-foreground));
@@ -3385,9 +3394,15 @@ section[aria-label='Notifications alt+T'] {
 .hover\:text-muted-foreground:hover{
   color: hsl(var(--muted-foreground));
 }
-.hover\:text-red-500:hover{
+.hover\:text-primary:hover{
+  color: hsl(var(--primary));
+}
+.hover\:text-primary-foreground:hover{
+  color: hsl(var(--primary-foreground));
+}
+.hover\:text-red-600:hover{
   --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity, 1));
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
 }
 .hover\:text-sidebar-accent-foreground:hover{
   color: hsl(var(--sidebar-accent-foreground));
@@ -3423,6 +3438,11 @@ section[aria-label='Notifications alt+T'] {
 .hover\:shadow-sm:hover{
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.hover\:shadow-xl:hover{
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 .hover\:after\:bg-sidebar-border:hover::after{
@@ -3467,6 +3487,9 @@ section[aria-label='Notifications alt+T'] {
   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
+.focus-visible\:ring-primary:focus-visible{
+  --tw-ring-color: hsl(var(--primary));
+}
 .focus-visible\:ring-ring:focus-visible{
   --tw-ring-color: hsl(var(--ring));
 }
@@ -3510,14 +3533,27 @@ section[aria-label='Notifications alt+T'] {
   --tw-scale-y: 1.1;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.group:hover .group-hover\:bg-\[\#176a7e\]\/10{
-  background-color: rgb(23 106 126 / 0.1);
+.group:hover .group-hover\:border-primary{
+  border-color: hsl(var(--primary));
+}
+.group:hover .group-hover\:border-primary\/20{
+  border-color: hsl(var(--primary) / 0.2);
+}
+.group:hover .group-hover\:bg-primary{
+  background-color: hsl(var(--primary));
+}
+.group:hover .group-hover\:bg-primary\/10{
+  background-color: hsl(var(--primary) / 0.1);
 }
 .group:hover .group-hover\:text-foreground{
   color: hsl(var(--foreground));
 }
 .group:hover .group-hover\:text-primary{
   color: hsl(var(--primary));
+}
+.group:hover .group-hover\:text-white{
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 .group\/menu-item:hover .group-hover\/menu-item\:opacity-100{
   opacity: 1;
@@ -3692,18 +3728,15 @@ section[aria-label='Notifications alt+T'] {
 .data-\[selected\=\'true\'\]\:bg-accent[data-selected='true']{
   background-color: hsl(var(--accent));
 }
-.data-\[state\=active\]\:bg-\[\#176a7e\][data-state="active"]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(23 106 126 / var(--tw-bg-opacity, 1));
-}
-.data-\[state\=active\]\:bg-background[data-state="active"]{
-  background-color: hsl(var(--background));
-}
 .data-\[state\=active\]\:bg-primary[data-state="active"]{
   background-color: hsl(var(--primary));
 }
 .data-\[state\=active\]\:bg-primary\/10[data-state="active"]{
   background-color: hsl(var(--primary) / 0.1);
+}
+.data-\[state\=active\]\:bg-white[data-state="active"]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 .data-\[state\=checked\]\:bg-primary[data-state="checked"]{
   background-color: hsl(var(--primary));
@@ -3750,18 +3783,14 @@ section[aria-label='Notifications alt+T'] {
 .data-\[selected\=true\]\:text-accent-foreground[data-selected="true"]{
   color: hsl(var(--accent-foreground));
 }
-.data-\[state\=active\]\:text-foreground[data-state="active"]{
-  color: hsl(var(--foreground));
+.data-\[state\=active\]\:text-brand[data-state="active"]{
+  color: hsl(var(--brand-blue));
 }
 .data-\[state\=active\]\:text-primary[data-state="active"]{
   color: hsl(var(--primary));
 }
 .data-\[state\=active\]\:text-primary-foreground[data-state="active"]{
   color: hsl(var(--primary-foreground));
-}
-.data-\[state\=active\]\:text-white[data-state="active"]{
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 .data-\[state\=checked\]\:text-primary-foreground[data-state="checked"]{
   color: hsl(var(--primary-foreground));
@@ -4117,31 +4146,11 @@ section[aria-label='Notifications alt+T'] {
 .peer\/menu-button[data-active="true"] ~ .peer-data-\[active\=true\]\/menu-button\:text-sidebar-accent-foreground{
   color: hsl(var(--sidebar-accent-foreground));
 }
-@supports (backdrop-filter: var(--tw)){
-  .supports-\[backdrop-filter\]\:bg-background\/60{
-    background-color: hsl(var(--background) / 0.6);
-  }
-}
 .dark\:border-destructive:is(.dark *){
   border-color: hsl(var(--destructive));
 }
-.dark\:bg-red-950\/20:is(.dark *){
-  background-color: rgb(69 10 10 / 0.2);
-}
 .dark\:bg-slate-950\/50:is(.dark *){
   background-color: rgb(2 6 23 / 0.5);
-}
-.dark\:text-red-200:is(.dark *){
-  --tw-text-opacity: 1;
-  color: rgb(254 202 202 / var(--tw-text-opacity, 1));
-}
-.dark\:text-red-300:is(.dark *){
-  --tw-text-opacity: 1;
-  color: rgb(252 165 165 / var(--tw-text-opacity, 1));
-}
-.dark\:text-red-400:is(.dark *){
-  --tw-text-opacity: 1;
-  color: rgb(248 113 113 / var(--tw-text-opacity, 1));
 }
 .dark\:text-slate-300:is(.dark *){
   --tw-text-opacity: 1;
@@ -4171,6 +4180,9 @@ section[aria-label='Notifications alt+T'] {
   }
   .sm\:w-auto{
     width: auto;
+  }
+  .sm\:max-w-\[450px\]{
+    max-width: 450px;
   }
   .sm\:max-w-\[500px\]{
     max-width: 500px;

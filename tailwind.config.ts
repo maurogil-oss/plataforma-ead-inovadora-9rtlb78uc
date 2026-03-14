@@ -35,6 +35,10 @@ export default {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        brand: {
+          DEFAULT: 'hsl(var(--brand-blue))',
+          foreground: 'hsl(var(--brand-blue-foreground))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -97,7 +101,7 @@ export default {
       boxShadow: {
         subtle: '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         elevation: '0 4px 20px rgba(0, 0, 0, 0.05)',
-        glow: '0 0 20px rgba(250, 204, 21, 0.15)', // Safety Yellow Glow
+        glow: '0 0 20px rgba(249, 115, 22, 0.25)', // Safety Orange Glow
       },
     },
   },

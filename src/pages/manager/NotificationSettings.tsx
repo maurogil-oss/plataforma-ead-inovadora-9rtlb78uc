@@ -64,11 +64,11 @@ export default function NotificationSettings() {
         </div>
         <div className="p-8 md:p-12 bg-slate-50 flex-1">
           <div className="bg-white max-w-2xl mx-auto w-full rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="text-center p-8 bg-slate-900 border-b border-slate-100 flex justify-center">
+            <div className="text-center p-8 bg-brand border-b border-slate-100 flex justify-center">
               <Logo className="h-14 w-auto text-white" />
             </div>
             <div className="p-8 space-y-6 text-slate-800">
-              <h2 className="text-2xl font-bold border-b border-slate-100 pb-4 text-slate-900">
+              <h2 className="text-2xl font-bold border-b border-slate-100 pb-4 text-brand">
                 {template.subject}
               </h2>
               <div className="whitespace-pre-wrap font-sans text-base leading-relaxed text-slate-700">
@@ -80,14 +80,14 @@ export default function NotificationSettings() {
 
               {templateKey === 'recovery' && (
                 <div className="mt-8 text-center pt-4">
-                  <Button className="bg-[#176a7e] hover:bg-[#115060] text-white h-12 px-8 text-base shadow-md">
+                  <Button className="h-12 px-8 text-base font-bold shadow-md">
                     Redefinir Minha Senha
                   </Button>
                 </div>
               )}
               {templateKey === 'welcome' && (
                 <div className="mt-8 text-center pt-4">
-                  <Button className="bg-[#176a7e] hover:bg-[#115060] text-white h-12 px-8 text-base shadow-md">
+                  <Button className="h-12 px-8 text-base font-bold shadow-md">
                     Acessar Plataforma
                   </Button>
                 </div>
@@ -112,14 +112,12 @@ export default function NotificationSettings() {
     <div className="space-y-6 max-w-6xl mx-auto pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            Comunicações e Emails
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight text-brand">Comunicações e Emails</h1>
           <p className="text-muted-foreground mt-1">
             Gerencie os templates de email enviados pelo Observatório Academy (DEMO).
           </p>
         </div>
-        <Button onClick={handleSave} disabled={saving} className="bg-[#176a7e] hover:bg-[#115060]">
+        <Button onClick={handleSave} disabled={saving}>
           <Save className="mr-2 h-4 w-4" />
           {saving ? 'Salvando Alterações...' : 'Salvar Alterações'}
         </Button>
@@ -129,19 +127,19 @@ export default function NotificationSettings() {
         <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto gap-2 bg-transparent">
           <TabsTrigger
             value="welcome"
-            className="data-[state=active]:bg-[#176a7e] data-[state=active]:text-white border shadow-sm py-3"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-3 font-semibold"
           >
             Boas-vindas
           </TabsTrigger>
           <TabsTrigger
             value="recovery"
-            className="data-[state=active]:bg-[#176a7e] data-[state=active]:text-white border shadow-sm py-3"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-3 font-semibold"
           >
             Recuperação de Senha
           </TabsTrigger>
           <TabsTrigger
             value="commission"
-            className="data-[state=active]:bg-[#176a7e] data-[state=active]:text-white border shadow-sm py-3"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-3 font-semibold"
           >
             Notificação de Comissão
           </TabsTrigger>
@@ -152,12 +150,12 @@ export default function NotificationSettings() {
             <Card className="border-slate-200 shadow-sm">
               <CardHeader className="flex flex-row items-center justify-between border-b bg-slate-50 rounded-t-xl pb-6">
                 <div>
-                  <CardTitle className="text-xl text-[#176a7e]">
+                  <CardTitle className="text-xl text-brand">
                     {key === 'welcome' && 'Email de Boas-vindas a Novos Usuários'}
                     {key === 'recovery' && 'Email de Recuperação de Senha Segura'}
                     {key === 'commission' && 'Email de Aviso de Nova Comissão'}
                   </CardTitle>
-                  <CardDescription className="mt-1.5 text-base">
+                  <CardDescription className="mt-1.5 text-base font-medium">
                     Configure como este email será enviado com a identidade do Observatório Academy
                     (DEMO).
                   </CardDescription>
@@ -175,17 +173,17 @@ export default function NotificationSettings() {
               </CardHeader>
               <CardContent className="space-y-6 pt-8">
                 <div className="space-y-3">
-                  <Label className="text-base font-semibold">Assunto do Email</Label>
+                  <Label className="text-base font-bold text-brand">Assunto do Email</Label>
                   <Input
                     value={templates[key].subject}
                     onChange={(e) => updateTemplate(key, 'subject', e.target.value)}
-                    className="text-base py-6"
+                    className="text-base py-6 font-medium"
                   />
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between items-end">
-                    <Label className="text-base font-semibold">Corpo do Email</Label>
-                    <div className="flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 px-2.5 py-1 rounded border border-amber-200">
+                    <Label className="text-base font-bold text-brand">Corpo do Email</Label>
+                    <div className="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 px-2.5 py-1 rounded border border-amber-200 font-semibold">
                       <AlertCircle className="h-3.5 w-3.5" />
                       <span>Não remova as variáveis em {'{{ chaves }}'}</span>
                     </div>
@@ -197,15 +195,15 @@ export default function NotificationSettings() {
                   />
                   <p className="text-sm text-slate-500 font-medium">
                     Variáveis disponíveis para uso no texto:{' '}
-                    <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800">
+                    <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 font-bold">
                       {'{{nome}}'}
                     </code>
                     {key === 'commission' && (
                       <>
-                        <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 ml-1">
+                        <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 ml-1 font-bold">
                           {'{{valor}}'}
                         </code>{' '}
-                        <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 ml-1">
+                        <code className="bg-slate-100 px-1.5 py-0.5 rounded text-slate-800 ml-1 font-bold">
                           {'{{produto}}'}
                         </code>
                       </>
