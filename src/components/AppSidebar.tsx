@@ -22,6 +22,7 @@ import {
   Store,
   Film,
   Compass,
+  MessageSquare,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -36,6 +37,7 @@ const getNavigation = (role?: string) => {
         { name: 'Gestão Comercial', href: '/manager/commercial', icon: Store },
         { name: 'Cursos', href: '/manager/courses', icon: BookOpen },
         { name: 'Aulas ao Vivo', href: '/manager/live-classes', icon: Video },
+        { name: 'Fórum da Comunidade', href: '/forum', icon: MessageSquare },
         { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
         { name: 'Relatórios', href: '/manager/reports', icon: PieChart },
         { name: 'Financeiro', href: '/manager/finance', icon: CreditCard },
@@ -50,6 +52,7 @@ const getNavigation = (role?: string) => {
         { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
         { name: 'Gestão Comercial', href: '/instructor/commercial', icon: Store },
         { name: 'Aulas ao Vivo', href: '/instructor/live-classes', icon: Video },
+        { name: 'Fórum da Comunidade', href: '/forum', icon: MessageSquare },
         { name: 'Engajamento', href: '/instructor/engagement', icon: Activity },
         { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
         { name: 'Gerador de Aulas AI', href: '/instructor/lesson-generator', icon: Bot },
@@ -63,6 +66,7 @@ const getNavigation = (role?: string) => {
         { name: 'Início', href: '/student/dashboard', icon: Film },
         { name: 'Meu Aprendizado', href: '/student/courses', icon: BookOpen },
         { name: 'Descobrir', href: '/store', icon: Compass },
+        { name: 'Fórum da Comunidade', href: '/forum', icon: MessageSquare },
         { name: 'Programa de Parceiros', href: '/student/partner', icon: Handshake },
       ]
   }
@@ -75,13 +79,9 @@ export function AppSidebar() {
 
   return (
     <div className="flex h-full w-72 lg:w-80 flex-col bg-slate-950 text-slate-300 shadow-2xl z-20 relative border-r border-slate-800 transition-all duration-300">
-      {/* Increased padding and height to accommodate the larger logo and wrapper seamlessly */}
       <div className="flex min-h-[200px] md:min-h-[240px] items-center px-4 md:px-6 py-8 shrink-0 justify-center z-30">
         <Link to="/" className="flex items-center justify-center w-full relative z-10">
-          <Logo
-            imgClassName="h-20 md:h-28 lg:h-32 w-full max-w-[220px] object-contain"
-            className="w-full justify-center"
-          />
+          <Logo className="w-full justify-center" />
         </Link>
       </div>
 

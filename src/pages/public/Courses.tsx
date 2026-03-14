@@ -1,80 +1,14 @@
 import { Link } from 'react-router-dom'
 import { PublicHeader } from '@/components/PublicHeader'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tag, PlayCircle, Clock, Layers, Sparkles } from 'lucide-react'
-
-const MOCK_COURSES = [
-  {
-    id: 1,
-    title: 'Design de Interfaces (UI/UX)',
-    desc: 'Aprenda a criar interfaces incríveis e focadas no usuário utilizando o Figma.',
-    cat: 'Design',
-    price: 197.0,
-    img: 'https://img.usecurling.com/p/600/400?q=ui%20design&color=blue',
-    duration: '12h',
-    modules: 6,
-    isNew: true,
-  },
-  {
-    id: 2,
-    title: 'Desenvolvimento Web com ReactJS',
-    desc: 'Domine a biblioteca mais popular do mercado e construa aplicações modernas.',
-    cat: 'Tecnologia',
-    price: 297.0,
-    img: 'https://img.usecurling.com/p/600/400?q=code&color=purple',
-    duration: '24h',
-    modules: 12,
-    isNew: true,
-  },
-  {
-    id: 3,
-    title: 'Marketing Digital e Growth Hacking',
-    desc: 'Estratégias avançadas para alavancar vendas e engajamento em múltiplos canais.',
-    cat: 'Marketing',
-    price: 147.0,
-    img: 'https://img.usecurling.com/p/600/400?q=marketing&color=orange',
-    duration: '8h',
-    modules: 4,
-    isNew: false,
-  },
-  {
-    id: 4,
-    title: 'Gestão Ágil com Scrum e Kanban',
-    desc: 'Lidere equipes de alta performance com metodologias ágeis reconhecidas pelo mercado.',
-    cat: 'Negócios',
-    price: 247.0,
-    img: 'https://img.usecurling.com/p/600/400?q=agile&color=green',
-    duration: '10h',
-    modules: 5,
-    isNew: false,
-  },
-  {
-    id: 5,
-    title: 'Data Science para Iniciantes',
-    desc: 'Introdução prática à análise de dados, Python e Machine Learning com projetos reais.',
-    cat: 'Tecnologia',
-    price: 397.0,
-    img: 'https://img.usecurling.com/p/600/400?q=data&color=cyan',
-    duration: '32h',
-    modules: 16,
-    isNew: false,
-  },
-  {
-    id: 6,
-    title: 'Liderança e Comunicação Assertiva',
-    desc: 'Desenvolva soft skills essenciais para assumir cargos de liderança no mercado atual.',
-    cat: 'Carreira',
-    price: 197.0,
-    img: 'https://img.usecurling.com/p/600/400?q=leadership&color=gray',
-    duration: '14h',
-    modules: 7,
-    isNew: false,
-  },
-]
+import { useLmsStore } from '@/stores/lmsStore'
 
 export default function Courses() {
+  const { courses } = useLmsStore()
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
       <PublicHeader />
@@ -84,20 +18,20 @@ export default function Courses() {
             Catálogo de Cursos
           </h1>
           <p className="text-xl text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed">
-            Explore nossos cursos de alta qualidade e acelere sua carreira profissional com a melhor
-            metodologia do mercado. Formato Netflix para um aprendizado imersivo.
+            Explore nossos cursos de alta qualidade e seja um especialista nas áreas de Segurança
+            Viária, Mobilidade e Cidades Inteligentes.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {MOCK_COURSES.map((c) => (
+          {courses.map((c) => (
             <Card
               key={c.id}
               className="group overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-2 border-slate-800 bg-slate-900 cursor-pointer"
             >
               <div className="relative aspect-video bg-slate-800 overflow-hidden">
                 <img
-                  src={c.img}
+                  src={c.thumbnail}
                   alt={c.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -107,7 +41,7 @@ export default function Courses() {
                 </div>
 
                 <Badge className="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white border-none shadow-md font-black uppercase tracking-widest text-[10px]">
-                  {c.cat}
+                  {c.area}
                 </Badge>
 
                 {c.isNew && (
@@ -126,10 +60,10 @@ export default function Courses() {
                 </CardTitle>
                 <div className="flex items-center text-xs text-slate-300 font-bold gap-3">
                   <span className="flex items-center gap-1">
-                    <Clock className="size-3" /> {c.duration}
+                    <Clock className="size-3" /> {c.modules.length * 2}h
                   </span>
                   <span className="flex items-center gap-1">
-                    <Layers className="size-3" /> {c.modules} Módulos
+                    <Layers className="size-3" /> {c.modules.length} Módulos
                   </span>
                 </div>
               </CardContent>

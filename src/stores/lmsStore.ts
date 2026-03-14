@@ -164,27 +164,41 @@ export interface ThemeSettings {
   carouselArrowColor: string
 }
 
+export interface ForumTopic {
+  id: string
+  forumId: string // 'general' or courseId
+  authorId: string
+  title: string
+  content: string
+  createdAt: string
+  replies: number
+}
+
+export interface ForumReply {
+  id: string
+  topicId: string
+  authorId: string
+  content: string
+  createdAt: string
+}
+
 const MOCK_QUESTIONS: BankQuestion[] = [
   {
     id: 'bq1',
-    text: 'Quais são as fases do ciclo de vida de um projeto?',
+    text: 'Quais são os principais fatores de risco na segurança viária urbana?',
     type: 'single',
-    options: [
-      'Iniciação e Encerramento apenas',
-      'Iniciação, Planejamento, Execução, Monitoramento, Encerramento',
-      'Planejamento e Execução',
-    ],
+    options: ['Clima e Vegetação', 'Velocidade, Álcool e Distração', 'Sinalização e Pedágios'],
     correctOptionIndex: 1,
-    category: 'Projetos',
+    category: 'Segurança Viária',
     difficulty: 'easy',
   },
   {
     id: 'bq2',
-    text: 'Selecione as metodologias ágeis válidas:',
+    text: 'Selecione as tecnologias base de Cidades Inteligentes:',
     type: 'multiple',
-    options: ['Scrum', 'Cascata (Waterfall)', 'Kanban', 'Prince2'],
+    options: ['IoT (Internet das Coisas)', 'Arquitetura Gótica', 'Big Data', 'Máquinas a Vapor'],
     correctOptions: [0, 2],
-    category: 'Projetos',
+    category: 'Cidades Inteligentes',
     difficulty: 'medium',
   },
 ]
@@ -192,11 +206,11 @@ const MOCK_QUESTIONS: BankQuestion[] = [
 const MOCK_COURSES: Course[] = [
   {
     id: 'c1',
-    title: 'Fundamentos de Gestão de Projetos Ágeis',
-    area: 'Negócios',
+    title: 'Fundamentos de Segurança Viária',
+    area: 'Segurança Viária',
     description:
-      'Aprenda os conceitos básicos e avançados para dominar o gerenciamento de qualquer equipe com agilidade.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=agile%20team&color=blue',
+      'Aprenda os conceitos básicos e avançados para reduzir acidentes e preservar vidas no trânsito.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=road%20safety&color=blue',
     price: 197.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -210,7 +224,7 @@ const MOCK_COURSES: Course[] = [
         lessons: [
           {
             id: 'l1',
-            title: 'O que é um projeto ágil?',
+            title: 'O que é Visão Zero?',
             type: 'video',
             content: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
@@ -236,11 +250,11 @@ const MOCK_COURSES: Course[] = [
   },
   {
     id: 'c2',
-    title: 'Masterclass: ReactJS e Interfaces Modernas',
-    area: 'Tecnologia',
+    title: 'Gestão de Mobilidade Urbana',
+    area: 'Mobilidade',
     description:
-      'Um mergulho profundo na biblioteca mais utilizada no mundo corporativo para a criação de sistemas web incríveis.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=programming%20code&color=purple',
+      'Estratégias e tecnologias para otimizar o fluxo de veículos e pedestres nas grandes cidades.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=urban%20mobility&color=green',
     price: 297.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -254,13 +268,7 @@ const MOCK_COURSES: Course[] = [
         lessons: [
           {
             id: 'l2_1',
-            title: 'Setup Inicial',
-            type: 'video',
-            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
-          },
-          {
-            id: 'l2_2',
-            title: 'Componentes Funcionais',
+            title: 'Modais Ativos vs Motorizados',
             type: 'video',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
           },
@@ -270,11 +278,11 @@ const MOCK_COURSES: Course[] = [
   },
   {
     id: 'c3',
-    title: 'Data Science na Prática com Python',
-    area: 'Dados',
+    title: 'Introdução às Cidades Inteligentes',
+    area: 'Cidades Inteligentes',
     description:
-      'Aprenda a analisar milhares de dados, criar dashboards e extrair inteligência para tomada de decisões.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=data%20analysis&color=cyan',
+      'Como a tecnologia, dados e infraestrutura se unem para criar as cidades do futuro.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=smart%20city&color=cyan',
     price: 397.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -287,7 +295,7 @@ const MOCK_COURSES: Course[] = [
         lessons: [
           {
             id: 'l3_1',
-            title: 'Introdução ao Pandas',
+            title: 'IoT Aplicada ao Tráfego',
             type: 'video',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
           },
@@ -297,11 +305,11 @@ const MOCK_COURSES: Course[] = [
   },
   {
     id: 'c4',
-    title: 'Estratégias Avançadas de Marketing Digital',
-    area: 'Marketing',
+    title: 'Engenharia de Tráfego Avançada',
+    area: 'Mobilidade',
     description:
-      'Transforme o alcance da sua marca com táticas comprovadas pelas maiores agências do mundo.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=digital%20marketing&color=orange',
+      'Projete vias eficientes e seguras com as metodologias de engenharia mais atuais do mercado.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=traffic%20engineering&color=orange',
     price: 147.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -310,11 +318,11 @@ const MOCK_COURSES: Course[] = [
     modules: [
       {
         id: 'm4',
-        title: 'Tráfego Pago',
+        title: 'Sinalização',
         lessons: [
           {
             id: 'l4_1',
-            title: 'Meta Ads',
+            title: 'Semaforização Inteligente',
             type: 'video',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
           },
@@ -324,11 +332,11 @@ const MOCK_COURSES: Course[] = [
   },
   {
     id: 'c5',
-    title: 'Liderança e Gestão de Pessoas',
-    area: 'Carreira',
+    title: 'Sistemas de Transporte Inteligente',
+    area: 'Cidades Inteligentes',
     description:
-      'Desenvolva a soft skill mais procurada pelos CEOs: a habilidade de guiar pessoas a resultados exponenciais.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=leadership&color=gray',
+      'Inovações em transporte público e monitoramento de frota para gestão governamental.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=public%20transport&color=gray',
     price: 197.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -337,11 +345,11 @@ const MOCK_COURSES: Course[] = [
     modules: [
       {
         id: 'm5',
-        title: 'A Arte da Liderança',
+        title: 'Visão Geral',
         lessons: [
           {
             id: 'l5_1',
-            title: 'Comunicação Não-Violenta',
+            title: 'Integração de Dados',
             type: 'video',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
           },
@@ -351,11 +359,11 @@ const MOCK_COURSES: Course[] = [
   },
   {
     id: 'c6',
-    title: 'UX/UI Design: Do Zero ao Protótipo',
-    area: 'Design',
+    title: 'Prevenção de Acidentes e Vidas Salvas',
+    area: 'Segurança Viária',
     description:
-      'Aprenda Figma, fundamentos de usabilidade e crie portfólios que atraem recrutadores globais.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=ui%20design&color=pink',
+      'Políticas públicas e conscientização social para zerar estatísticas de mortalidade nas rodovias.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=accident%20prevention&color=pink',
     price: 247.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -365,11 +373,11 @@ const MOCK_COURSES: Course[] = [
     modules: [
       {
         id: 'm6',
-        title: 'Wireframes',
+        title: 'Campanhas',
         lessons: [
           {
             id: 'l6_1',
-            title: 'Baixa vs Alta Fidelidade',
+            title: 'Educação no Trânsito',
             type: 'video',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
           },
@@ -393,7 +401,7 @@ const getMockLiveClasses = (): LiveClass[] => {
     {
       id: 'lc_soon',
       courseId: 'c1',
-      title: 'Tira Dúvidas - Próxima Turma',
+      title: 'Tira Dúvidas - Mobilidade',
       description: 'Entre para tirar suas dúvidas ao vivo.',
       platform: 'meet',
       url: 'https://meet.google.com/test-soon',
@@ -404,7 +412,7 @@ const getMockLiveClasses = (): LiveClass[] => {
     {
       id: 'lc1',
       courseId: 'c1',
-      title: 'Aula Inaugural - Gestão de Projetos',
+      title: 'Aula Inaugural - Segurança Viária',
       description: 'Sessão ao vivo para tirar dúvidas iniciais e apresentar o cronograma.',
       platform: 'meet',
       url: 'https://meet.google.com/abc-defg-hij',
@@ -415,8 +423,8 @@ const getMockLiveClasses = (): LiveClass[] => {
     {
       id: 'lc_past',
       courseId: 'c1',
-      title: 'Gravação: Fundamentos Ágeis (Semana Passada)',
-      description: 'Sessão passada com introdução profunda aos conceitos de Scrum.',
+      title: 'Gravação: Fundamentos (Semana Passada)',
+      description: 'Sessão passada com introdução profunda aos conceitos.',
       platform: 'zoom',
       url: 'https://zoom.us/j/past123',
       date: new Date(now.getTime() - 86400000 * 7).toISOString().split('T')[0],
@@ -443,6 +451,9 @@ interface LMSStore {
   paymentSettings: { provider: string; apiKey: string }
   webhooks: WebhookConfig[]
   themeSettings: ThemeSettings
+
+  forumTopics: ForumTopic[]
+  forumReplies: ForumReply[]
 
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
@@ -485,6 +496,9 @@ interface LMSStore {
   addWebhook: (w: WebhookConfig) => void
   deleteWebhook: (id: string) => void
   updateThemeSettings: (s: ThemeSettings) => void
+
+  addForumTopic: (t: ForumTopic) => void
+  addForumReply: (r: ForumReply) => void
 }
 
 const checkCourseCompletion = (enrollment: Enrollment, course: Course): Enrollment => {
@@ -595,6 +609,39 @@ export const useLmsStore = create<LMSStore>((set) => ({
   paymentSettings: { provider: 'Stripe', apiKey: '' },
   webhooks: [],
   themeSettings: { carouselArrowColor: '#ffffff' },
+
+  forumTopics: [
+    {
+      id: 't1',
+      forumId: 'general',
+      authorId: 's1',
+      title: 'Dúvidas sobre a nova legislação viária',
+      content:
+        'Alguém poderia me explicar as mudanças referentes à mobilidade urbana e limite de velocidade?',
+      createdAt: new Date(Date.now() - 86400000).toISOString(),
+      replies: 1,
+    },
+  ],
+  forumReplies: [
+    {
+      id: 'r1',
+      topicId: 't1',
+      authorId: 'i1',
+      content:
+        'As principais mudanças envolvem a priorização de modais ativos. Recomendo assistir a aula 2 do curso de Mobilidade.',
+      createdAt: new Date().toISOString(),
+    },
+  ],
+
+  addForumTopic: (t) => set((s) => ({ forumTopics: [...s.forumTopics, t] })),
+  addForumReply: (r) =>
+    set((s) => {
+      const newReplies = [...s.forumReplies, r]
+      const newTopics = s.forumTopics.map((t) =>
+        t.id === r.topicId ? { ...t, replies: t.replies + 1 } : t,
+      )
+      return { forumReplies: newReplies, forumTopics: newTopics }
+    }),
 
   addCourse: (course) => set((s) => ({ courses: [...s.courses, course] })),
   updateCourse: (course) =>

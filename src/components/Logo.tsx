@@ -30,9 +30,7 @@ export function Logo({ className, imgClassName, collapsed, linkTo = '/' }: LogoP
           alt="Observatório Academy"
           className={cn(
             'object-contain transition-all duration-500 filter drop-shadow-[0_2px_10px_rgba(255,255,255,0.15)] dark:drop-shadow-[0_2px_15px_rgba(255,255,255,0.2)]',
-            collapsed
-              ? 'h-10 w-10 sm:h-12 sm:w-12 object-cover object-left'
-              : 'h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-w-full',
+            collapsed ? 'h-10 w-10 object-cover object-left' : 'h-10 md:h-11 w-auto max-w-full',
             imgClassName,
           )}
         />

@@ -12,6 +12,11 @@ import CoursesPage from '@/pages/public/Courses'
 import PlansPage from '@/pages/public/Plans'
 import ContactPage from '@/pages/public/Contact'
 
+// Shared Forum Routes
+import ForumIndex from '@/pages/shared/ForumIndex'
+import ForumTopicList from '@/pages/shared/ForumTopicList'
+import ForumTopicView from '@/pages/shared/ForumTopicView'
+
 // Student
 import StudentDashboard from '@/pages/student/Dashboard'
 import CoursePlayer from '@/pages/student/CoursePlayer'
@@ -65,7 +70,6 @@ function ProtectedRoute({
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Redirect to default dashboard based on role
     if (user.role === 'manager' || user.role === 'admin')
       return <Navigate to="/manager/dashboard" replace />
     if (user.role === 'instructor') return <Navigate to="/instructor/dashboard" replace />
@@ -79,7 +83,6 @@ export default function App() {
   useEffect(() => {
     document.title = 'Observatório Academy'
 
-    // Auto dark mode detection based on OS preference
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const applyTheme = (e: MediaQueryListEvent | MediaQueryList) => {
       if (e.matches) {
@@ -116,9 +119,13 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/validate-certificate/:id" element={<ValidateCertificate />} />
 
+        {/* Public / Semi-Public Forum Routes */}
+        <Route path="/forum" element={<ForumIndex />} />
+        <Route path="/forum/:forumId" element={<ForumTopicList />} />
+        <Route path="/forum/topic/:topicId" element={<ForumTopicView />} />
+
         {/* App Layout for authenticated routes */}
         <Route element={<Layout />}>
-          {/* Shared Store Routes */}
           <Route
             path="/store"
             element={
