@@ -1,130 +1,126 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { LogIn, BookOpen, UserCircle, Settings } from 'lucide-react'
 import { Logo } from '@/components/Logo'
-import { useAuthStore } from '@/stores/authStore'
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
+  const [role, setRole] = useState<'student' | 'instructor' | 'manager'>('student')
   const login = useAuthStore((s) => s.login)
+  const navigate = useNavigate()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    setTimeout(() => {
-      let role: 'student' | 'instructor' | 'manager' = 'student'
-      if (email.includes('admin') || email.includes('manager')) role = 'manager'
-      if (email.includes('prof') || email.includes('instructor')) role = 'instructor'
-
-      login(role)
-
-      if (role === 'student') navigate('/student/dashboard')
-      else if (role === 'instructor') navigate('/instructor/dashboard')
-      else navigate('/manager/dashboard')
-
-      setIsLoading(false)
-    }, 800)
+    login(role)
+    if (role === 'manager') navigate('/manager/dashboard')
+    else if (role === 'instructor') navigate('/instructor/dashboard')
+    else navigate('/student/dashboard')
   }
 
   return (
-    // Single-Screen Constraint: Exactly 100vh, hidden overflow to prevent scrolling
-    <div className="flex h-[100dvh] w-full items-center justify-center bg-slate-950 p-4 text-slate-50 overflow-hidden relative">
-      <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1200/800?q=cinema&color=blue&dpr=1')] opacity-[0.15] bg-cover bg-center" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
-
-      <div className="w-full max-w-[420px] flex flex-col justify-center space-y-6 relative z-10 h-full max-h-screen py-2">
-        <div className="flex flex-col items-center justify-center space-y-4 shrink-0">
-          <Link to="/">
-            <Logo imgClassName="h-16 sm:h-20 w-auto object-contain" />
+    <div className="min-h-screen flex flex-col sm:flex-row bg-slate-950 animate-in fade-in duration-1000">
+      <div className="flex-1 flex flex-col justify-center px-4 sm:px-6 lg:flex-none lg:w-1/2 xl:w-[45%] max-w-2xl mx-auto w-full pt-8 pb-12 sm:pb-8">
+        <div className="w-full max-w-sm mx-auto space-y-8">
+          <Link
+            to="/"
+            className="flex items-center justify-center sm:justify-start hover:opacity-80 transition-opacity"
+          >
+            <Logo imgClassName="h-12 w-auto" />
           </Link>
-          <div className="text-center space-y-1.5 px-4">
-            <h2 className="text-2xl font-extrabold tracking-tight text-white drop-shadow-md">
-              Acesso à Plataforma
-            </h2>
-            <p className="text-sm text-slate-400 font-medium">Entre para continuar sua jornada</p>
-          </div>
-        </div>
 
-        <Card className="border-slate-800 bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-2xl overflow-hidden shrink-0">
-          <form onSubmit={handleLogin}>
-            <CardHeader className="space-y-1 pb-4 pt-6 text-center border-b border-slate-800/50">
-              <CardTitle className="text-xl font-bold text-white">Entrar</CardTitle>
-              <CardDescription className="text-xs text-slate-400">
-                Dica: Digite "admin" para Gestor ou "prof" para Instrutor.
+          <Card className="border-slate-800 bg-slate-900 shadow-2xl">
+            <CardHeader className="space-y-1 pb-6">
+              <CardTitle className="text-2xl font-extrabold text-white text-center sm:text-left">
+                Acesso à Plataforma
+              </CardTitle>
+              <CardDescription className="text-slate-400 font-medium text-center sm:text-left">
+                Selecione seu perfil para acessar o ambiente
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4 pt-6">
-              <div className="space-y-2.5">
-                <Label htmlFor="email" className="text-sm font-bold text-slate-300">
-                  Endereço de E-mail
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="aluno@observatorio.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="focus-visible:ring-primary h-12 text-base px-4 bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
-                  required
-                />
-              </div>
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-sm font-bold text-slate-300">
-                    Sua Senha
-                  </Label>
-                  <Link
-                    to="#"
-                    className="text-xs font-bold text-primary hover:text-primary/80 hover:underline"
+            <CardContent>
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  <Button
+                    type="button"
+                    variant={role === 'student' ? 'default' : 'outline'}
+                    className={`h-auto py-3 px-2 flex flex-col gap-2 border-slate-700 ${role === 'student' ? 'bg-blue-600 hover:bg-blue-700 text-white border-transparent shadow-md scale-[1.02]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'}`}
+                    onClick={() => setRole('student')}
                   >
-                    Esqueceu a senha?
-                  </Link>
+                    <BookOpen className="size-5" />
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      Aluno
+                    </span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={role === 'instructor' ? 'default' : 'outline'}
+                    className={`h-auto py-3 px-2 flex flex-col gap-2 border-slate-700 ${role === 'instructor' ? 'bg-amber-600 hover:bg-amber-700 text-white border-transparent shadow-md scale-[1.02]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'}`}
+                    onClick={() => setRole('instructor')}
+                  >
+                    <UserCircle className="size-5" />
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      Docente
+                    </span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={role === 'manager' ? 'default' : 'outline'}
+                    className={`h-auto py-3 px-2 flex flex-col gap-2 border-slate-700 ${role === 'manager' ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent shadow-md scale-[1.02]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white'}`}
+                    onClick={() => setRole('manager')}
+                  >
+                    <Settings className="size-5" />
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                      Gestor
+                    </span>
+                  </Button>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="focus-visible:ring-primary h-12 text-base px-4 bg-slate-950 border-slate-800 text-white placeholder:text-slate-600"
-                  required
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4 pb-6 pt-2 shrink-0">
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full bg-primary hover:bg-primary/90 text-white h-12 text-lg font-bold shadow-lg"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Autenticando...' : 'Acessar Catálogo'}
-              </Button>
-              <div className="text-center text-xs text-slate-400 font-medium">
-                Novo por aqui?{' '}
-                <Link
-                  to="/"
-                  className="font-bold text-white hover:text-primary transition-colors ml-1"
+                <div className="space-y-4">
+                  <Input
+                    placeholder="E-mail"
+                    type="email"
+                    required
+                    defaultValue={`${role}@empresa.com`}
+                    className="h-12 bg-slate-950 border-slate-800 text-white placeholder:text-slate-500 font-medium"
+                  />
+                  <Input
+                    placeholder="Senha"
+                    type="password"
+                    required
+                    defaultValue="123456"
+                    className="h-12 bg-slate-950 border-slate-800 text-white placeholder:text-slate-500 font-medium"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-bold shadow-lg bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  Assine agora.
-                </Link>
-              </div>
-            </CardFooter>
-          </form>
-        </Card>
+                  <LogIn className="mr-2 size-5" /> Entrar no Sistema
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      <div className="hidden lg:block relative w-0 flex-1 bg-slate-900 border-l border-slate-800 overflow-hidden">
+        <img
+          className="absolute inset-0 h-full w-full object-cover opacity-50 mix-blend-overlay transition-transform duration-1000 hover:scale-105"
+          src="https://img.usecurling.com/p/1200/1000?q=smart%20city&color=blue"
+          alt="Smart City"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+        <div className="absolute bottom-12 left-12 right-12 z-10">
+          <h2 className="text-4xl font-extrabold text-white mb-4 drop-shadow-lg leading-tight">
+            Educação que transforma
+            <br />a mobilidade urbana.
+          </h2>
+          <p className="text-lg text-slate-300 font-medium max-w-lg drop-shadow-md">
+            Capacite-se com as melhores práticas de segurança viária e cidades inteligentes do
+            Brasil.
+          </p>
+        </div>
       </div>
     </div>
   )

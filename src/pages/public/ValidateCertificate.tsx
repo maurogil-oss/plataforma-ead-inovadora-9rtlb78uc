@@ -1,124 +1,61 @@
 import { useParams, Link } from 'react-router-dom'
-import { useLmsStore } from '@/stores/lmsStore'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, XCircle, ShieldCheck, Home } from 'lucide-react'
+import { PublicHeader } from '@/components/PublicHeader'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { CheckCircle2, ShieldCheck, Home } from 'lucide-react'
 
 export default function ValidateCertificate() {
-  const { code } = useParams()
-  const { enrollments, students, courses } = useLmsStore()
-
-  let isValid = false
-  let studentName = ''
-  let courseTitle = ''
-  let completionDate = ''
-  let errorMsg = ''
-
-  try {
-    if (!code) throw new Error('Código ausente.')
-    const decoded = atob(code)
-    const [studentId, courseId] = decoded.split('-')
-
-    if (!studentId || !courseId) throw new Error('Formato inválido.')
-
-    const enrollment = enrollments.find((e) => e.studentId === studentId && e.courseId === courseId)
-    if (!enrollment || !enrollment.isCompleted)
-      throw new Error('Certificado não encontrado ou curso não concluído.')
-
-    const student = students.find((s) => s.id === studentId)
-    const course = courses.find((c) => c.id === courseId)
-
-    if (!student || !course) throw new Error('Dados do aluno ou curso não encontrados.')
-
-    isValid = true
-    studentName = student.name
-    courseTitle = course.title
-    completionDate = enrollment.completionDate || new Date().toISOString()
-  } catch (e: any) {
-    errorMsg = e.message || 'Código de validação inválido.'
-  }
+  const { id } = useParams()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-lg space-y-6">
-        <div className="text-center space-y-2 mb-8">
-          <ShieldCheck className="mx-auto size-12 text-brand" />
-          <h1 className="text-3xl font-extrabold tracking-tight text-brand">
-            Portal de Autenticidade
-          </h1>
-          <p className="text-slate-600 font-medium">
-            Verificação de certificados e diplomas emitidos.
-          </p>
-        </div>
-
-        <Card className="border-t-4 border-t-primary shadow-xl overflow-hidden bg-white">
-          {isValid ? (
-            <div className="bg-success/10 border-b border-success/20 p-6 flex flex-col items-center justify-center text-center space-y-3">
-              <div className="bg-success text-white p-3 rounded-full mb-2 shadow-sm">
-                <CheckCircle className="size-8" />
-              </div>
-              <h2 className="text-2xl font-extrabold text-success uppercase tracking-wide">
-                Certificado Válido
-              </h2>
-              <p className="text-success/80 font-bold">
-                Este documento é autêntico e foi emitido pela nossa instituição.
-              </p>
+    <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col animate-in fade-in duration-1000">
+      <PublicHeader />
+      <main className="flex-1 container mx-auto px-4 py-20 flex items-center justify-center">
+        <Card className="w-full max-w-lg bg-slate-900 border-slate-800 shadow-2xl text-center">
+          <CardContent className="p-10 flex flex-col items-center">
+            <div className="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center mb-8 border border-emerald-500/30">
+              <ShieldCheck className="size-12 text-emerald-500" />
             </div>
-          ) : (
-            <div className="bg-destructive/10 border-b border-destructive/20 p-6 flex flex-col items-center justify-center text-center space-y-3">
-              <div className="bg-destructive text-white p-3 rounded-full mb-2 shadow-sm">
-                <XCircle className="size-8" />
-              </div>
-              <h2 className="text-2xl font-extrabold text-destructive uppercase tracking-wide">
-                Documento Inválido
-              </h2>
-              <p className="text-destructive/80 font-bold">{errorMsg}</p>
-            </div>
-          )}
+            <h1 className="text-3xl font-extrabold text-white mb-2 tracking-tight">
+              Certificado Válido
+            </h1>
+            <p className="text-slate-400 font-medium mb-8">
+              O código de validação <strong className="text-white uppercase font-mono">{id}</strong>{' '}
+              é autêntico e reconhecido pela plataforma.
+            </p>
 
-          <CardContent className="p-8 space-y-6">
-            <div className="space-y-1">
-              <p className="text-sm font-bold text-brand uppercase tracking-wider">
-                Código de Verificação
-              </p>
-              <p className="font-mono text-sm bg-slate-100 p-2 rounded break-all text-slate-700 font-semibold">
-                {code}
-              </p>
-            </div>
-
-            {isValid && (
-              <div className="space-y-5 pt-4 border-t border-slate-200">
+            <div className="w-full bg-slate-950 border border-slate-800 rounded-lg p-6 mb-8 text-left space-y-5">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="size-5 text-emerald-500 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm text-slate-500 font-bold mb-1">Nome do Aluno(a)</p>
-                  <p className="text-xl font-extrabold text-brand">{studentName}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500 font-bold mb-1">Curso Concluído</p>
-                  <p className="text-lg font-bold text-slate-800">{courseTitle}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500 font-bold mb-1">Data de Conclusão</p>
-                  <p className="text-base font-bold text-slate-800">
-                    {new Date(completionDate).toLocaleDateString('pt-BR')}
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">
+                    Titular
                   </p>
+                  <p className="text-slate-200 font-bold text-lg">João Aluno</p>
                 </div>
               </div>
-            )}
+              <div className="flex items-start gap-3 border-t border-slate-800 pt-5">
+                <CheckCircle2 className="size-5 text-emerald-500 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">
+                    Programa Concluído
+                  </p>
+                  <p className="text-slate-200 font-bold text-lg">Gestão de Mobilidade Urbana</p>
+                </div>
+              </div>
+            </div>
+
+            <Button
+              asChild
+              className="w-full h-12 font-bold bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <Link to="/">
+                <Home className="mr-2 size-5" /> Voltar ao Início
+              </Link>
+            </Button>
           </CardContent>
         </Card>
-
-        <div className="text-center pt-8">
-          <Button
-            variant="ghost"
-            className="font-bold text-brand hover:text-primary hover:bg-primary/10"
-            asChild
-          >
-            <Link to="/">
-              <Home className="mr-2 size-4" /> Voltar ao Início
-            </Link>
-          </Button>
-        </div>
-      </div>
+      </main>
     </div>
   )
 }

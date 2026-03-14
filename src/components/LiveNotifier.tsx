@@ -1,58 +1,31 @@
-import { useEffect, useRef } from 'react'
-import { useLmsStore } from '@/stores/lmsStore'
-import { useAuthStore } from '@/stores/authStore'
-import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import { Video } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { BellRing } from 'lucide-react'
 
 export function LiveNotifier() {
-  const user = useAuthStore((s) => s.user)
-  const { liveClasses, enrollments } = useLmsStore()
-  const notified = useRef(new Set<string>())
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
-    if (!user) return
-
-    const checkClasses = () => {
-      let relevantClasses = liveClasses
-
-      if (user.role === 'student') {
-        const myCourseIds = enrollments
-          .filter((e) => e.studentId === user.id)
-          .map((e) => e.courseId)
-        relevantClasses = liveClasses.filter((lc) => myCourseIds.includes(lc.courseId))
-      }
-
-      const now = new Date()
-
-      relevantClasses.forEach((lc) => {
-        const start = new Date(`${lc.date}T${lc.startTime}`)
-        const diffMins = (start.getTime() - now.getTime()) / 60000
-
-        if (diffMins > 0 && diffMins <= 15 && !notified.current.has(lc.id)) {
-          notified.current.add(lc.id)
-          toast.info('Aula ao vivo começando em breve!', {
-            description: `${lc.title} começa em ${Math.ceil(diffMins)} minutos.`,
-            icon: <Video className="size-5 text-blue-500" />,
-            action: (
-              <Button
-                size="sm"
-                className="bg-[#176a7e] hover:bg-[#115060]"
-                onClick={() => window.open(lc.url, '_blank')}
-              >
-                Entrar Agora
-              </Button>
-            ),
-            duration: 10000,
-          })
-        }
-      })
+    const t1 = setTimeout(() => setShow(true), 3000)
+    const t2 = setTimeout(() => setShow(false), 10000)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
     }
+  }, [])
 
-    checkClasses()
-    const interval = setInterval(checkClasses, 60000)
-    return () => clearInterval(interval)
-  }, [user, liveClasses, enrollments])
+  if (!show) return null
 
-  return null
+  return (
+    <div className="fixed bottom-4 right-4 z-50 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+      <div className="bg-blue-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-4">
+        <div className="bg-white/20 p-2 rounded-full animate-bounce">
+          <BellRing className="size-5" />
+        </div>
+        <div>
+          <h4 className="font-bold text-sm">Bem-vindo à Plataforma</h4>
+          <p className="text-xs text-blue-100">Explore nosso acervo e trilhas de capacitação.</p>
+        </div>
+      </div>
+    </div>
+  )
 }
