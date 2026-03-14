@@ -72,11 +72,11 @@ export function AppSidebar() {
 
   return (
     <div className="flex h-full w-72 lg:w-80 flex-col border-r border-brand/20 bg-brand text-brand-foreground shadow-xl z-20 relative">
-      <div className="flex h-24 md:h-28 items-center px-6 border-b border-white/10 bg-brand py-4 shrink-0">
-        <Link to="/" className="flex items-center gap-3 w-full group justify-start overflow-hidden">
+      <div className="flex min-h-[180px] md:min-h-[220px] items-center px-4 md:px-6 border-b border-white/10 bg-brand py-6 shrink-0 justify-center">
+        <Link to="/" className="flex items-center justify-center w-full group overflow-hidden">
           <Logo
-            imgClassName="h-16 md:h-20 w-auto max-w-[240px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
-            className="text-white"
+            imgClassName="h-40 md:h-52 w-full max-w-[280px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
+            className="text-white w-full justify-center"
           />
         </Link>
       </div>

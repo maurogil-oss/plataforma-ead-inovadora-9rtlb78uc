@@ -1100,6 +1100,9 @@ section[aria-label='Notifications alt+T'] {
 .right-2{
   right: 0.5rem;
 }
+.right-2\.5{
+  right: 0.625rem;
+}
 .right-3{
   right: 0.75rem;
 }
@@ -1120,6 +1123,9 @@ section[aria-label='Notifications alt+T'] {
 }
 .top-2{
   top: 0.5rem;
+}
+.top-2\.5{
+  top: 0.625rem;
 }
 .top-3{
   top: 0.75rem;
@@ -1447,6 +1453,9 @@ section[aria-label='Notifications alt+T'] {
 .h-5{
   height: 1.25rem;
 }
+.h-56{
+  height: 14rem;
+}
 .h-6{
   height: 1.5rem;
 }
@@ -1498,6 +1507,12 @@ section[aria-label='Notifications alt+T'] {
 .max-h-\[--radix-select-content-available-height\]{
   max-height: var(--radix-select-content-available-height);
 }
+.max-h-\[120px\]{
+  max-height: 120px;
+}
+.max-h-\[180px\]{
+  max-height: 180px;
+}
 .max-h-\[300px\]{
   max-height: 300px;
 }
@@ -1513,20 +1528,29 @@ section[aria-label='Notifications alt+T'] {
 .max-h-\[var\(--radix-dropdown-menu-content-available-height\)\]{
   max-height: var(--radix-dropdown-menu-content-available-height);
 }
-.max-h-full{
-  max-height: 100%;
-}
 .max-h-screen{
   max-height: 100vh;
 }
 .min-h-0{
   min-height: 0px;
 }
+.min-h-\[140px\]{
+  min-height: 140px;
+}
 .min-h-\[150px\]{
   min-height: 150px;
 }
+.min-h-\[160px\]{
+  min-height: 160px;
+}
+.min-h-\[180px\]{
+  min-height: 180px;
+}
 .min-h-\[250px\]{
   min-height: 250px;
+}
+.min-h-\[280px\]{
+  min-height: 280px;
 }
 .min-h-\[40px\]{
   min-height: 40px;
@@ -1680,6 +1704,9 @@ section[aria-label='Notifications alt+T'] {
 .min-w-\[12rem\]{
   min-width: 12rem;
 }
+.min-w-\[200px\]{
+  min-width: 200px;
+}
 .min-w-\[8rem\]{
   min-width: 8rem;
 }
@@ -1707,14 +1734,23 @@ section[aria-label='Notifications alt+T'] {
 .max-w-\[100px\]{
   max-width: 100px;
 }
-.max-w-\[240px\]{
-  max-width: 240px;
-}
 .max-w-\[250px\]{
   max-width: 250px;
 }
-.max-w-\[440px\]{
-  max-width: 440px;
+.max-w-\[280px\]{
+  max-width: 280px;
+}
+.max-w-\[50\%\]{
+  max-width: 50%;
+}
+.max-w-\[540px\]{
+  max-width: 540px;
+}
+.max-w-\[70\%\]{
+  max-width: 70%;
+}
+.max-w-full{
+  max-width: 100%;
 }
 .max-w-lg{
   max-width: 32rem;
@@ -1994,6 +2030,11 @@ section[aria-label='Notifications alt+T'] {
   margin-top: calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.375rem * var(--tw-space-y-reverse));
 }
+.space-y-10 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
+}
 .space-y-12 > :not([hidden]) ~ :not([hidden]){
   --tw-space-y-reverse: 0;
   margin-top: calc(3rem * calc(1 - var(--tw-space-y-reverse)));
@@ -2003,11 +2044,6 @@ section[aria-label='Notifications alt+T'] {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.625rem * var(--tw-space-y-reverse));
 }
 .space-y-3 > :not([hidden]) ~ :not([hidden]){
   --tw-space-y-reverse: 0;
@@ -4424,14 +4460,17 @@ section[aria-label='Notifications alt+T'] {
   .sm\:inline-flex{
     display: inline-flex;
   }
-  .sm\:h-14{
-    height: 3.5rem;
+  .sm\:h-36{
+    height: 9rem;
   }
-  .sm\:h-20{
-    height: 5rem;
+  .sm\:h-48{
+    height: 12rem;
   }
-  .sm\:w-\[240px\]{
-    width: 240px;
+  .sm\:h-72{
+    height: 18rem;
+  }
+  .sm\:w-\[260px\]{
+    width: 260px;
   }
   .sm\:w-auto{
     width: auto;
@@ -4515,23 +4554,38 @@ section[aria-label='Notifications alt+T'] {
   .md\:hidden{
     display: none;
   }
-  .md\:h-20{
-    height: 5rem;
+  .md\:h-48{
+    height: 12rem;
   }
-  .md\:h-24{
-    height: 6rem;
+  .md\:h-52{
+    height: 13rem;
   }
-  .md\:h-28{
-    height: 7rem;
+  .md\:h-60{
+    height: 15rem;
   }
-  .md\:h-32{
-    height: 8rem;
+  .md\:h-80{
+    height: 20rem;
+  }
+  .md\:h-96{
+    height: 24rem;
+  }
+  .md\:max-h-\[200px\]{
+    max-height: 200px;
+  }
+  .md\:min-h-\[160px\]{
+    min-height: 160px;
+  }
+  .md\:min-h-\[220px\]{
+    min-height: 220px;
   }
   .md\:w-\[var\(--radix-navigation-menu-viewport-width\)\]{
     width: var(--radix-navigation-menu-viewport-width);
   }
   .md\:w-auto{
     width: auto;
+  }
+  .md\:max-w-\[40\%\]{
+    max-width: 40%;
   }
   .md\:max-w-\[420px\]{
     max-width: 420px;
@@ -4566,11 +4620,11 @@ section[aria-label='Notifications alt+T'] {
   .md\:justify-start{
     justify-content: flex-start;
   }
+  .md\:gap-10{
+    gap: 2.5rem;
+  }
   .md\:gap-5{
     gap: 1.25rem;
-  }
-  .md\:gap-8{
-    gap: 2rem;
   }
   .md\:border-0{
     border-width: 0px;
@@ -4581,11 +4635,8 @@ section[aria-label='Notifications alt+T'] {
   .md\:p-12{
     padding: 3rem;
   }
-  .md\:p-14{
-    padding: 3.5rem;
-  }
-  .md\:p-6{
-    padding: 1.5rem;
+  .md\:p-20{
+    padding: 5rem;
   }
   .md\:p-8{
     padding: 2rem;
@@ -4607,10 +4658,6 @@ section[aria-label='Notifications alt+T'] {
   }
   .md\:text-left{
     text-align: left;
-  }
-  .md\:text-3xl{
-    font-size: 1.875rem;
-    line-height: 2.25rem;
   }
   .md\:text-4xl{
     font-size: 2.25rem;

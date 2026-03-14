@@ -52,24 +52,24 @@ export default function Reports() {
 
   return (
     <div className="flex-1 space-y-8 p-4 md:p-8 pt-6">
-      <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 bg-gradient-to-r from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="flex items-center gap-6 md:gap-8 w-full xl:w-auto">
-          <div className="p-4 md:p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hidden sm:flex shrink-0 items-center justify-center">
-            <Logo imgClassName="h-16 md:h-20 w-auto object-contain" />
+      <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 bg-gradient-to-r from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 p-6 md:p-10 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex items-center gap-6 md:gap-10 w-full xl:w-auto">
+          <div className="p-6 md:p-8 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hidden sm:flex shrink-0 items-center justify-center min-w-[200px]">
+            <Logo imgClassName="h-32 md:h-48 w-auto object-contain" />
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-brand dark:text-white flex items-center gap-3">
-              <BarChart className="h-8 w-8 text-orange-500" />
+            <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight text-brand dark:text-white flex items-center gap-4">
+              <BarChart className="h-10 w-10 text-orange-500" />
               Central de Relatórios Analíticos
             </h2>
-            <p className="text-base text-slate-500 mt-2 font-medium">
+            <p className="text-lg text-slate-500 mt-3 font-medium">
               Gere, visualize e exporte relatórios oficiais com a identidade atualizada da academia.
             </p>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto shrink-0">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto shrink-0">
           <Select value={reportType} onValueChange={setReportType}>
-            <SelectTrigger className="w-full sm:w-[240px] h-11 bg-white dark:bg-slate-900 text-base font-medium">
+            <SelectTrigger className="w-full sm:w-[260px] h-12 bg-white dark:bg-slate-900 text-base font-medium">
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
             <SelectContent>
@@ -78,8 +78,8 @@ export default function Reports() {
               <SelectItem value="performance">Métricas de Desempenho</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" className="w-full sm:w-auto h-11 px-6 font-bold bg-white">
-            <Filter className="h-4 w-4 mr-2" /> Filtros
+          <Button variant="outline" className="w-full sm:w-auto h-12 px-8 font-bold bg-white">
+            <Filter className="h-5 w-5 mr-2" /> Filtros
           </Button>
         </div>
       </div>
@@ -214,18 +214,18 @@ export default function Reports() {
         </Card>
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-14 dark:border-slate-800 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center mt-12 shadow-sm">
+      <div className="rounded-3xl border border-slate-200 bg-white p-10 md:p-20 dark:border-slate-800 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center mt-12 shadow-sm">
         <Logo
-          imgClassName="h-24 md:h-32 mb-8 opacity-90 hover:opacity-100 transition-all duration-500 object-contain drop-shadow-sm"
+          imgClassName="h-56 sm:h-72 md:h-96 mb-10 opacity-90 hover:opacity-100 transition-all duration-500 object-contain drop-shadow-sm max-w-full"
           linkTo="#"
         />
-        <h3 className="text-2xl font-extrabold mb-4 text-brand dark:text-slate-200">
+        <h3 className="text-3xl font-extrabold mb-5 text-brand dark:text-slate-200">
           Motor de Exportação Oficial
         </h3>
-        <p className="text-slate-500 max-w-3xl text-base leading-relaxed font-medium">
+        <p className="text-slate-500 max-w-4xl text-lg leading-relaxed font-medium">
           Todos os documentos PDF exportados através desta central incluem automaticamente o novo
-          cabeçalho oficial, garantindo o alinhamento total da marca com a identidade visual da
-          Observatório Academy.
+          cabeçalho oficial em alta resolução e formato ampliado, garantindo o alinhamento total da
+          marca com a identidade visual da Observatório Academy.
         </p>
       </div>
     </div>

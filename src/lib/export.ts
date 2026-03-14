@@ -36,11 +36,11 @@ const getStyles = () => `
   <style>
     @page { margin: 20mm; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; color: #1e293b; background: #fff; }
-    .header { display: flex; align-items: center; border-bottom: 4px solid #f97316; padding-bottom: 32px; margin-bottom: 40px; }
-    .logo { height: 110px; max-width: 400px; object-fit: contain; margin-right: 36px; flex-shrink: 0; }
-    .title-container { border-left: 3px solid #e2e8f0; padding-left: 32px; flex-grow: 1; }
-    .title { margin: 0; font-size: 32px; color: #0f172a; font-weight: 800; letter-spacing: -0.02em; }
-    .subtitle { margin: 8px 0 0 0; color: #64748b; font-size: 15px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+    .header { display: flex; align-items: center; border-bottom: 4px solid #f97316; padding-bottom: 48px; margin-bottom: 50px; }
+    .logo { height: 300px; max-width: 700px; object-fit: contain; margin-right: 48px; flex-shrink: 0; }
+    .title-container { border-left: 3px solid #e2e8f0; padding-left: 40px; flex-grow: 1; }
+    .title { margin: 0; font-size: 36px; color: #0f172a; font-weight: 800; letter-spacing: -0.02em; }
+    .subtitle { margin: 12px 0 0 0; color: #64748b; font-size: 16px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
     .content { line-height: 1.7; font-size: 15px; }
     .content h2 { color: #0f172a; font-size: 24px; font-weight: 700; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
     .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 36px 0; }

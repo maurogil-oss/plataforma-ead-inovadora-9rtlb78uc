@@ -29,17 +29,17 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-950">
-      <div className="w-full max-w-[440px] space-y-8">
-        <div className="flex flex-col items-center justify-center space-y-8 mb-8 mt-4">
-          <div className="p-8 md:p-10 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 w-full flex items-center justify-center transition-all hover:shadow-md">
-            <Logo imgClassName="h-24 md:h-32 w-auto object-contain" linkTo="#" />
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 py-12 dark:bg-slate-950 overflow-y-auto">
+      <div className="w-full max-w-[540px] space-y-10">
+        <div className="flex flex-col items-center justify-center space-y-8 mb-8">
+          <div className="p-8 md:p-12 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 w-full flex items-center justify-center transition-all hover:shadow-md min-h-[280px]">
+            <Logo imgClassName="h-56 sm:h-72 md:h-80 w-auto object-contain" linkTo="#" />
           </div>
-          <div className="text-center space-y-2 px-4">
-            <h2 className="text-3xl font-extrabold tracking-tight text-brand dark:text-white">
+          <div className="text-center space-y-3 px-4">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-brand dark:text-white">
               Acesso à Plataforma
             </h2>
-            <p className="text-base text-slate-500 dark:text-slate-400 font-medium">
+            <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
               Entre com suas credenciais para continuar
             </p>
           </div>
@@ -54,8 +54,8 @@ export default function Login() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-5 bg-white dark:bg-slate-900">
-              <div className="space-y-2.5">
-                <Label htmlFor="email" className="text-sm font-bold text-slate-700">
+              <div className="space-y-3">
+                <Label htmlFor="email" className="text-base font-bold text-slate-700">
                   Endereço de E-mail
                 </Label>
                 <Input
@@ -64,18 +64,18 @@ export default function Login() {
                   placeholder="admin@observatorio.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="focus-visible:ring-brand h-12 text-base px-4 bg-slate-50 border-slate-200"
+                  className="focus-visible:ring-brand h-14 text-lg px-4 bg-slate-50 border-slate-200"
                   required
                 />
               </div>
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-sm font-bold text-slate-700">
+                  <Label htmlFor="password" className="text-base font-bold text-slate-700">
                     Sua Senha
                   </Label>
                   <Link
                     to="#"
-                    className="text-sm font-semibold text-brand hover:text-brand/80 dark:text-blue-400 hover:underline"
+                    className="text-[15px] font-semibold text-brand hover:text-brand/80 dark:text-blue-400 hover:underline"
                   >
                     Esqueceu a senha?
                   </Link>
@@ -85,21 +85,21 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="focus-visible:ring-brand h-12 text-base px-4 bg-slate-50 border-slate-200"
+                  className="focus-visible:ring-brand h-14 text-lg px-4 bg-slate-50 border-slate-200"
                   required
                 />
               </div>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-5 bg-white dark:bg-slate-900 pb-8 pt-4">
+            <CardFooter className="flex flex-col space-y-6 bg-white dark:bg-slate-900 pb-10 pt-4">
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-brand hover:bg-brand/90 text-white h-12 text-base font-bold shadow-lg shadow-brand/20"
+                className="w-full bg-brand hover:bg-brand/90 text-white h-14 text-lg font-bold shadow-lg shadow-brand/20"
                 disabled={isLoading}
               >
                 {isLoading ? 'Autenticando...' : 'Entrar na Plataforma'}
               </Button>
-              <div className="text-center text-[15px] text-slate-500 font-medium">
+              <div className="text-center text-base text-slate-500 font-medium">
                 Não possui conta ainda?{' '}
                 <Link
                   to="/register"

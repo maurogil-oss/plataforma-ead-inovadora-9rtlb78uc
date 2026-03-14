@@ -27244,7 +27244,7 @@ function Logo({ className, imgClassName, collapsed, linkTo = "/" }) {
 			"data-prohibitions": "[editContent]",
 			src: logomarca_observatorio_academy_nova_86843_default,
 			alt: "Observatório Academy",
-			className: cn("object-contain transition-all duration-300", collapsed ? "h-10 w-10 object-cover object-left" : "h-16 md:h-20 w-auto", imgClassName)
+			className: cn("object-contain transition-all duration-300", collapsed ? "h-24 w-24 object-cover object-left" : "h-48 md:h-60 w-auto max-w-full", imgClassName)
 		})
 	});
 }
@@ -27398,17 +27398,17 @@ function AppSidebar() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				"data-uid": "src/components/AppSidebar.tsx:75:7",
 				"data-prohibitions": "[]",
-				className: "flex h-24 md:h-28 items-center px-6 border-b border-white/10 bg-brand py-4 shrink-0",
+				className: "flex min-h-[180px] md:min-h-[220px] items-center px-4 md:px-6 border-b border-white/10 bg-brand py-6 shrink-0 justify-center",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 					"data-uid": "src/components/AppSidebar.tsx:76:9",
 					"data-prohibitions": "[]",
 					to: "/",
-					className: "flex items-center gap-3 w-full group justify-start overflow-hidden",
+					className: "flex items-center justify-center w-full group overflow-hidden",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/components/AppSidebar.tsx:77:11",
 						"data-prohibitions": "[editContent]",
-						imgClassName: "h-16 md:h-20 w-auto max-w-[240px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm",
-						className: "text-white"
+						imgClassName: "h-40 md:h-52 w-full max-w-[280px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm",
+						className: "text-white w-full justify-center"
 					})
 				})
 			}),
@@ -27582,24 +27582,24 @@ function TopHeader() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
 		"data-uid": "src/components/TopHeader.tsx:9:5",
 		"data-prohibitions": "[]",
-		className: "sticky top-0 z-30 flex h-20 md:h-28 w-full items-center justify-between border-b bg-white px-4 md:px-8 py-3 shadow-sm dark:bg-slate-950 dark:border-slate-800",
+		className: "sticky top-0 z-30 flex min-h-[140px] md:min-h-[160px] w-full items-center justify-between border-b bg-white px-4 md:px-8 py-4 shadow-sm dark:bg-slate-950 dark:border-slate-800",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/TopHeader.tsx:10:7",
 			"data-prohibitions": "[]",
-			className: "flex items-center gap-4 h-full",
+			className: "flex items-center gap-4 h-full w-full max-w-[70%]",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/components/TopHeader.tsx:11:9",
 				"data-prohibitions": "[]",
-				className: "md:hidden flex items-center gap-3 h-full",
+				className: "md:hidden flex items-center gap-4 h-full w-full",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarTrigger, {
 					"data-uid": "src/components/TopHeader.tsx:12:11",
 					"data-prohibitions": "[editContent]",
-					className: "h-10 w-10 shrink-0 border border-slate-200"
+					className: "h-12 w-12 shrink-0 border border-slate-200"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 					"data-uid": "src/components/TopHeader.tsx:13:11",
 					"data-prohibitions": "[editContent]",
 					collapsed: false,
-					imgClassName: "h-12 sm:h-14 w-auto max-h-full object-contain"
+					imgClassName: "h-28 sm:h-36 w-auto max-h-[120px] object-contain"
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/components/TopHeader.tsx:15:9",
@@ -27620,43 +27620,43 @@ function TopHeader() {
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/TopHeader.tsx:24:7",
 			"data-prohibitions": "[]",
-			className: "flex items-center gap-3 md:gap-5",
+			className: "flex items-center gap-3 md:gap-5 shrink-0",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 					"data-uid": "src/components/TopHeader.tsx:25:9",
 					"data-prohibitions": "[]",
 					variant: "ghost",
 					size: "icon",
-					className: "relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full h-10 w-10",
+					className: "relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full h-11 w-11",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bell, {
 						"data-uid": "src/components/TopHeader.tsx:30:11",
 						"data-prohibitions": "[editContent]",
-						className: "h-5 w-5 text-slate-600 dark:text-slate-300"
+						className: "h-6 w-6 text-slate-600 dark:text-slate-300"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						"data-uid": "src/components/TopHeader.tsx:31:11",
 						"data-prohibitions": "[]",
-						className: "absolute right-2 top-2 flex h-2.5 w-2.5 rounded-full bg-orange-500 ring-2 ring-white dark:ring-slate-950"
+						className: "absolute right-2.5 top-2.5 flex h-3 w-3 rounded-full bg-orange-500 ring-2 ring-white dark:ring-slate-950"
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/components/TopHeader.tsx:33:9",
 					"data-prohibitions": "[]",
-					className: "h-10 w-px bg-slate-200 dark:bg-slate-800 mx-1"
+					className: "h-12 w-px bg-slate-200 dark:bg-slate-800 mx-1"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 					"data-uid": "src/components/TopHeader.tsx:34:9",
 					"data-prohibitions": "[]",
 					variant: "ghost",
-					className: "rounded-full gap-3 pl-2 pr-5 hover:bg-slate-100 dark:hover:bg-slate-800 hidden sm:flex h-11",
+					className: "rounded-full gap-3 pl-2 pr-5 hover:bg-slate-100 dark:hover:bg-slate-800 hidden sm:flex h-12",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						"data-uid": "src/components/TopHeader.tsx:38:11",
 						"data-prohibitions": "[]",
-						className: "h-8 w-8 rounded-full bg-brand flex items-center justify-center text-white font-bold dark:bg-blue-900 dark:text-blue-300 shadow-sm",
+						className: "h-9 w-9 rounded-full bg-brand flex items-center justify-center text-white font-bold dark:bg-blue-900 dark:text-blue-300 shadow-sm",
 						children: "A"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 						"data-uid": "src/components/TopHeader.tsx:41:11",
 						"data-prohibitions": "[]",
-						className: "text-sm font-bold text-slate-700 dark:text-slate-200",
+						className: "text-base font-bold text-slate-700 dark:text-slate-200",
 						children: "Admin"
 					})]
 				})
@@ -28347,38 +28347,38 @@ function Login() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/pages/auth/Login.tsx:32:5",
 		"data-prohibitions": "[editContent]",
-		className: "flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-950",
+		className: "flex min-h-screen items-center justify-center bg-slate-50 p-4 py-12 dark:bg-slate-950 overflow-y-auto",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/pages/auth/Login.tsx:33:7",
 			"data-prohibitions": "[editContent]",
-			className: "w-full max-w-[440px] space-y-8",
+			className: "w-full max-w-[540px] space-y-10",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/pages/auth/Login.tsx:34:9",
 				"data-prohibitions": "[]",
-				className: "flex flex-col items-center justify-center space-y-8 mb-8 mt-4",
+				className: "flex flex-col items-center justify-center space-y-8 mb-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/pages/auth/Login.tsx:35:11",
 					"data-prohibitions": "[]",
-					className: "p-8 md:p-10 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 w-full flex items-center justify-center transition-all hover:shadow-md",
+					className: "p-8 md:p-12 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 w-full flex items-center justify-center transition-all hover:shadow-md min-h-[280px]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/pages/auth/Login.tsx:36:13",
 						"data-prohibitions": "[editContent]",
-						imgClassName: "h-24 md:h-32 w-auto object-contain",
+						imgClassName: "h-56 sm:h-72 md:h-80 w-auto object-contain",
 						linkTo: "#"
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/pages/auth/Login.tsx:38:11",
 					"data-prohibitions": "[]",
-					className: "text-center space-y-2 px-4",
+					className: "text-center space-y-3 px-4",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 						"data-uid": "src/pages/auth/Login.tsx:39:13",
 						"data-prohibitions": "[]",
-						className: "text-3xl font-extrabold tracking-tight text-brand dark:text-white",
+						className: "text-3xl md:text-4xl font-extrabold tracking-tight text-brand dark:text-white",
 						children: "Acesso à Plataforma"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						"data-uid": "src/pages/auth/Login.tsx:42:13",
 						"data-prohibitions": "[]",
-						className: "text-base text-slate-500 dark:text-slate-400 font-medium",
+						className: "text-lg text-slate-500 dark:text-slate-400 font-medium",
 						children: "Entre com suas credenciais para continuar"
 					})]
 				})]
@@ -28414,12 +28414,12 @@ function Login() {
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								"data-uid": "src/pages/auth/Login.tsx:57:15",
 								"data-prohibitions": "[]",
-								className: "space-y-2.5",
+								className: "space-y-3",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$2, {
 									"data-uid": "src/pages/auth/Login.tsx:58:17",
 									"data-prohibitions": "[]",
 									htmlFor: "email",
-									className: "text-sm font-bold text-slate-700",
+									className: "text-base font-bold text-slate-700",
 									children: "Endereço de E-mail"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
 									"data-uid": "src/pages/auth/Login.tsx:61:17",
@@ -28429,13 +28429,13 @@ function Login() {
 									placeholder: "admin@observatorio.com",
 									value: email,
 									onChange: (e) => setEmail(e.target.value),
-									className: "focus-visible:ring-brand h-12 text-base px-4 bg-slate-50 border-slate-200",
+									className: "focus-visible:ring-brand h-14 text-lg px-4 bg-slate-50 border-slate-200",
 									required: true
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								"data-uid": "src/pages/auth/Login.tsx:71:15",
 								"data-prohibitions": "[]",
-								className: "space-y-2.5",
+								className: "space-y-3",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									"data-uid": "src/pages/auth/Login.tsx:72:17",
 									"data-prohibitions": "[]",
@@ -28444,13 +28444,13 @@ function Login() {
 										"data-uid": "src/pages/auth/Login.tsx:73:19",
 										"data-prohibitions": "[]",
 										htmlFor: "password",
-										className: "text-sm font-bold text-slate-700",
+										className: "text-base font-bold text-slate-700",
 										children: "Sua Senha"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 										"data-uid": "src/pages/auth/Login.tsx:76:19",
 										"data-prohibitions": "[]",
 										to: "#",
-										className: "text-sm font-semibold text-brand hover:text-brand/80 dark:text-blue-400 hover:underline",
+										className: "text-[15px] font-semibold text-brand hover:text-brand/80 dark:text-blue-400 hover:underline",
 										children: "Esqueceu a senha?"
 									})]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
@@ -28460,7 +28460,7 @@ function Login() {
 									type: "password",
 									value: password,
 									onChange: (e) => setPassword(e.target.value),
-									className: "focus-visible:ring-brand h-12 text-base px-4 bg-slate-50 border-slate-200",
+									className: "focus-visible:ring-brand h-14 text-lg px-4 bg-slate-50 border-slate-200",
 									required: true
 								})]
 							})]
@@ -28468,19 +28468,19 @@ function Login() {
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardFooter, {
 							"data-uid": "src/pages/auth/Login.tsx:93:13",
 							"data-prohibitions": "[editContent]",
-							className: "flex flex-col space-y-5 bg-white dark:bg-slate-900 pb-8 pt-4",
+							className: "flex flex-col space-y-6 bg-white dark:bg-slate-900 pb-10 pt-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 								"data-uid": "src/pages/auth/Login.tsx:94:15",
 								"data-prohibitions": "[editContent]",
 								type: "submit",
 								size: "lg",
-								className: "w-full bg-brand hover:bg-brand/90 text-white h-12 text-base font-bold shadow-lg shadow-brand/20",
+								className: "w-full bg-brand hover:bg-brand/90 text-white h-14 text-lg font-bold shadow-lg shadow-brand/20",
 								disabled: isLoading,
 								children: isLoading ? "Autenticando..." : "Entrar na Plataforma"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								"data-uid": "src/pages/auth/Login.tsx:102:15",
 								"data-prohibitions": "[]",
-								className: "text-center text-[15px] text-slate-500 font-medium",
+								className: "text-center text-base text-slate-500 font-medium",
 								children: [
 									"Não possui conta ainda?",
 									" ",
@@ -29019,16 +29019,16 @@ function PublicHeader() {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/PublicHeader.tsx:9:7",
 			"data-prohibitions": "[]",
-			className: "container mx-auto flex h-24 md:h-28 items-center justify-between px-4 md:px-6",
+			className: "container mx-auto flex min-h-[160px] md:min-h-[220px] items-center justify-between px-4 md:px-6 py-6",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/components/PublicHeader.tsx:10:9",
 					"data-prohibitions": "[]",
-					className: "flex items-center h-full py-4",
+					className: "flex items-center h-full max-w-[50%] md:max-w-[40%]",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/components/PublicHeader.tsx:11:11",
 						"data-prohibitions": "[editContent]",
-						imgClassName: "h-16 sm:h-20 md:h-24 max-h-full w-auto"
+						imgClassName: "h-32 sm:h-48 md:h-60 max-h-[180px] md:max-h-[200px] w-auto object-contain"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
@@ -29040,14 +29040,14 @@ function PublicHeader() {
 							"data-uid": "src/components/PublicHeader.tsx:14:11",
 							"data-prohibitions": "[]",
 							to: "/courses",
-							className: "text-base font-semibold text-slate-700 hover:text-brand dark:text-slate-300 dark:hover:text-blue-400 transition-colors",
+							className: "text-lg font-semibold text-slate-700 hover:text-brand dark:text-slate-300 dark:hover:text-blue-400 transition-colors",
 							children: "Cursos"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 							"data-uid": "src/components/PublicHeader.tsx:20:11",
 							"data-prohibitions": "[]",
 							to: "/about",
-							className: "text-base font-semibold text-slate-700 hover:text-brand dark:text-slate-300 dark:hover:text-blue-400 transition-colors",
+							className: "text-lg font-semibold text-slate-700 hover:text-brand dark:text-slate-300 dark:hover:text-blue-400 transition-colors",
 							children: "Sobre Nós"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -29063,7 +29063,7 @@ function PublicHeader() {
 									"data-prohibitions": "[]",
 									variant: "ghost",
 									size: "lg",
-									className: "text-base font-bold",
+									className: "text-lg font-bold h-12 px-6",
 									children: "Entrar"
 								})
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
@@ -29074,7 +29074,7 @@ function PublicHeader() {
 									"data-uid": "src/components/PublicHeader.tsx:33:15",
 									"data-prohibitions": "[]",
 									size: "lg",
-									className: "bg-orange-500 hover:bg-orange-600 text-white text-base font-bold px-8 shadow-md",
+									className: "bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold px-8 h-12 shadow-md",
 									children: "Criar Conta"
 								})
 							})]
@@ -29084,7 +29084,7 @@ function PublicHeader() {
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/components/PublicHeader.tsx:42:9",
 					"data-prohibitions": "[]",
-					className: "md:hidden flex items-center gap-3",
+					className: "md:hidden flex items-center gap-4 shrink-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 						"data-uid": "src/components/PublicHeader.tsx:43:11",
 						"data-prohibitions": "[]",
@@ -29092,20 +29092,20 @@ function PublicHeader() {
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 							"data-uid": "src/components/PublicHeader.tsx:44:13",
 							"data-prohibitions": "[]",
-							size: "sm",
-							className: "bg-brand hover:bg-brand/90 text-white font-bold",
+							size: "default",
+							className: "bg-brand hover:bg-brand/90 text-white font-bold h-11 px-5",
 							children: "Login"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/PublicHeader.tsx:48:11",
+						"data-uid": "src/components/PublicHeader.tsx:51:11",
 						"data-prohibitions": "[]",
 						variant: "outline",
 						size: "icon",
-						className: "text-slate-700 border-slate-200",
+						className: "h-11 w-11 text-slate-700 border-slate-200",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Menu$1, {
-							"data-uid": "src/components/PublicHeader.tsx:49:13",
+							"data-uid": "src/components/PublicHeader.tsx:56:13",
 							"data-prohibitions": "[editContent]",
-							className: "h-5 w-5"
+							className: "h-6 w-6"
 						})
 					})]
 				})
@@ -37269,11 +37269,11 @@ var getStyles = () => `
   <style>
     @page { margin: 20mm; }
     body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; color: #1e293b; background: #fff; }
-    .header { display: flex; align-items: center; border-bottom: 4px solid #f97316; padding-bottom: 32px; margin-bottom: 40px; }
-    .logo { height: 110px; max-width: 400px; object-fit: contain; margin-right: 36px; flex-shrink: 0; }
-    .title-container { border-left: 3px solid #e2e8f0; padding-left: 32px; flex-grow: 1; }
-    .title { margin: 0; font-size: 32px; color: #0f172a; font-weight: 800; letter-spacing: -0.02em; }
-    .subtitle { margin: 8px 0 0 0; color: #64748b; font-size: 15px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
+    .header { display: flex; align-items: center; border-bottom: 4px solid #f97316; padding-bottom: 48px; margin-bottom: 50px; }
+    .logo { height: 300px; max-width: 700px; object-fit: contain; margin-right: 48px; flex-shrink: 0; }
+    .title-container { border-left: 3px solid #e2e8f0; padding-left: 40px; flex-grow: 1; }
+    .title { margin: 0; font-size: 36px; color: #0f172a; font-weight: 800; letter-spacing: -0.02em; }
+    .subtitle { margin: 12px 0 0 0; color: #64748b; font-size: 16px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; }
     .content { line-height: 1.7; font-size: 15px; }
     .content h2 { color: #0f172a; font-size: 24px; font-weight: 700; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
     .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 36px 0; }
@@ -37513,19 +37513,19 @@ function Reports() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/pages/manager/Reports.tsx:55:7",
 				"data-prohibitions": "[]",
-				className: "flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 bg-gradient-to-r from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm",
+				className: "flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 bg-gradient-to-r from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 p-6 md:p-10 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/pages/manager/Reports.tsx:56:9",
 					"data-prohibitions": "[]",
-					className: "flex items-center gap-6 md:gap-8 w-full xl:w-auto",
+					className: "flex items-center gap-6 md:gap-10 w-full xl:w-auto",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						"data-uid": "src/pages/manager/Reports.tsx:57:11",
 						"data-prohibitions": "[]",
-						className: "p-4 md:p-6 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hidden sm:flex shrink-0 items-center justify-center",
+						className: "p-6 md:p-8 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hidden sm:flex shrink-0 items-center justify-center min-w-[200px]",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 							"data-uid": "src/pages/manager/Reports.tsx:58:13",
 							"data-prohibitions": "[editContent]",
-							imgClassName: "h-16 md:h-20 w-auto object-contain"
+							imgClassName: "h-32 md:h-48 w-auto object-contain"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/pages/manager/Reports.tsx:60:11",
@@ -37533,23 +37533,23 @@ function Reports() {
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
 							"data-uid": "src/pages/manager/Reports.tsx:61:13",
 							"data-prohibitions": "[]",
-							className: "text-2xl md:text-3xl font-extrabold tracking-tight text-brand dark:text-white flex items-center gap-3",
+							className: "text-2xl md:text-4xl font-extrabold tracking-tight text-brand dark:text-white flex items-center gap-4",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChartNoAxesColumnIncreasing, {
 								"data-uid": "src/pages/manager/Reports.tsx:62:15",
 								"data-prohibitions": "[editContent]",
-								className: "h-8 w-8 text-orange-500"
+								className: "h-10 w-10 text-orange-500"
 							}), "Central de Relatórios Analíticos"]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							"data-uid": "src/pages/manager/Reports.tsx:65:13",
 							"data-prohibitions": "[]",
-							className: "text-base text-slate-500 mt-2 font-medium",
+							className: "text-lg text-slate-500 mt-3 font-medium",
 							children: "Gere, visualize e exporte relatórios oficiais com a identidade atualizada da academia."
 						})]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/pages/manager/Reports.tsx:70:9",
 					"data-prohibitions": "[]",
-					className: "flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto shrink-0",
+					className: "flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto shrink-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
 						"data-uid": "src/pages/manager/Reports.tsx:71:11",
 						"data-prohibitions": "[]",
@@ -37558,7 +37558,7 @@ function Reports() {
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
 							"data-uid": "src/pages/manager/Reports.tsx:72:13",
 							"data-prohibitions": "[]",
-							className: "w-full sm:w-[240px] h-11 bg-white dark:bg-slate-900 text-base font-medium",
+							className: "w-full sm:w-[260px] h-12 bg-white dark:bg-slate-900 text-base font-medium",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
 								"data-uid": "src/pages/manager/Reports.tsx:73:15",
 								"data-prohibitions": "[editContent]",
@@ -37592,11 +37592,11 @@ function Reports() {
 						"data-uid": "src/pages/manager/Reports.tsx:81:11",
 						"data-prohibitions": "[]",
 						variant: "outline",
-						className: "w-full sm:w-auto h-11 px-6 font-bold bg-white",
+						className: "w-full sm:w-auto h-12 px-8 font-bold bg-white",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Funnel, {
 							"data-uid": "src/pages/manager/Reports.tsx:82:13",
 							"data-prohibitions": "[editContent]",
-							className: "h-4 w-4 mr-2"
+							className: "h-5 w-5 mr-2"
 						}), " Filtros"]
 					})]
 				})]
@@ -37924,25 +37924,25 @@ function Reports() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/pages/manager/Reports.tsx:217:7",
 				"data-prohibitions": "[]",
-				className: "rounded-3xl border border-slate-200 bg-white p-8 md:p-14 dark:border-slate-800 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center mt-12 shadow-sm",
+				className: "rounded-3xl border border-slate-200 bg-white p-10 md:p-20 dark:border-slate-800 dark:bg-slate-900/50 flex flex-col items-center justify-center text-center mt-12 shadow-sm",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/pages/manager/Reports.tsx:218:9",
 						"data-prohibitions": "[editContent]",
-						imgClassName: "h-24 md:h-32 mb-8 opacity-90 hover:opacity-100 transition-all duration-500 object-contain drop-shadow-sm",
+						imgClassName: "h-56 sm:h-72 md:h-96 mb-10 opacity-90 hover:opacity-100 transition-all duration-500 object-contain drop-shadow-sm max-w-full",
 						linkTo: "#"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
 						"data-uid": "src/pages/manager/Reports.tsx:222:9",
 						"data-prohibitions": "[]",
-						className: "text-2xl font-extrabold mb-4 text-brand dark:text-slate-200",
+						className: "text-3xl font-extrabold mb-5 text-brand dark:text-slate-200",
 						children: "Motor de Exportação Oficial"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						"data-uid": "src/pages/manager/Reports.tsx:225:9",
 						"data-prohibitions": "[]",
-						className: "text-slate-500 max-w-3xl text-base leading-relaxed font-medium",
-						children: "Todos os documentos PDF exportados através desta central incluem automaticamente o novo cabeçalho oficial, garantindo o alinhamento total da marca com a identidade visual da Observatório Academy."
+						className: "text-slate-500 max-w-4xl text-lg leading-relaxed font-medium",
+						children: "Todos os documentos PDF exportados através desta central incluem automaticamente o novo cabeçalho oficial em alta resolução e formato ampliado, garantindo o alinhamento total da marca com a identidade visual da Observatório Academy."
 					})
 				]
 			})
@@ -44941,4 +44941,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DP5gSOoa.js.map
+//# sourceMappingURL=index-X7ENfi1E.js.map
