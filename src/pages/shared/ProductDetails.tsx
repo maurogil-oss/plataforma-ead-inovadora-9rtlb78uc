@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 
 export default function ProductDetails() {
   const { id } = useParams()
-  const { products, speakers, coupons } = useCommercialStore()
+  const { products, speakers, coupons, incrementCouponUsage } = useCommercialStore()
 
   const [showCheckout, setShowCheckout] = useState(false)
   const [couponCode, setCouponCode] = useState('')
@@ -26,16 +26,25 @@ export default function ProductDetails() {
   const handleApplyCoupon = () => {
     if (!couponCode) return
     const validCoupon = coupons.find((c) => c.code === couponCode.toUpperCase() && c.isActive)
-    if (validCoupon) {
-      setAppliedCoupon(validCoupon)
-      toast.success('Cupom aplicado com sucesso!')
-    } else {
-      setAppliedCoupon(null)
-      toast.error('Cupom inválido ou inativo.')
+
+    if (!validCoupon) {
+      return toast.error('Cupom inválido ou inativo.')
     }
+    if (validCoupon.maxUses && validCoupon.currentUses >= validCoupon.maxUses) {
+      return toast.error('O limite de uso deste cupom já foi atingido.')
+    }
+    if (validCoupon.validCourseIds?.length) {
+      if (!product.courseId || !validCoupon.validCourseIds.includes(product.courseId)) {
+        return toast.error('Este cupom não se aplica a este produto específico.')
+      }
+    }
+
+    setAppliedCoupon(validCoupon)
+    toast.success('Cupom aplicado com sucesso!')
   }
 
   const handleFinalize = () => {
+    if (appliedCoupon) incrementCouponUsage(appliedCoupon.id)
     toast.success('Compra confirmada! O material já está disponível na sua conta.')
     setShowCheckout(false)
   }

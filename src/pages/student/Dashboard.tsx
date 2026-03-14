@@ -23,7 +23,7 @@ export default function StudentDashboard() {
   const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
   const { courses, enrollments, enrollStudent, paymentSettings, liveClasses } = useLmsStore()
-  const { coupons } = useCommercialStore()
+  const { coupons, incrementCouponUsage } = useCommercialStore()
 
   const [enrollCourse, setEnrollCourse] = useState<Course | null>(null)
   const [selectedBatch, setSelectedBatch] = useState<string>('')
@@ -63,21 +63,35 @@ export default function StudentDashboard() {
   }
 
   const handleApplyCoupon = () => {
-    if (!couponCode) return
+    if (!couponCode || !enrollCourse) return
     const validCoupon = coupons.find((c) => c.code === couponCode.toUpperCase() && c.isActive)
-    if (validCoupon) {
-      setAppliedCoupon(validCoupon)
-      toast.success('Cupom aplicado com sucesso!')
-    } else {
-      setAppliedCoupon(null)
-      toast.error('Cupom inválido ou inativo.')
+
+    if (!validCoupon) {
+      return toast.error('Cupom inválido ou inativo.')
     }
+    if (validCoupon.maxUses && validCoupon.currentUses >= validCoupon.maxUses) {
+      return toast.error('O limite de uso deste cupom já foi atingido.')
+    }
+    if (
+      validCoupon.validCourseIds?.length &&
+      !validCoupon.validCourseIds.includes(enrollCourse.id)
+    ) {
+      return toast.error('Este cupom não é válido para este curso.')
+    }
+
+    setAppliedCoupon(validCoupon)
+    toast.success('Cupom aplicado com sucesso!')
   }
 
   const handleFinalizeEnrollment = () => {
     if (enrollCourse?.batches?.length && !selectedBatch) return toast.error('Selecione uma turma.')
     const affiliateRef = localStorage.getItem('lms_affiliate_ref') || undefined
     enrollStudent(user.id, enrollCourse!.id, selectedBatch || undefined, affiliateRef)
+
+    if (appliedCoupon) {
+      incrementCouponUsage(appliedCoupon.id)
+    }
+
     toast.success('Pagamento Aprovado! Matrícula confirmada.')
     setEnrollCourse(null)
   }

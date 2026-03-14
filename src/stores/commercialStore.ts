@@ -39,6 +39,9 @@ export interface Coupon {
   type: 'percentage' | 'fixed'
   value: number
   isActive: boolean
+  maxUses?: number
+  currentUses: number
+  validCourseIds: string[]
 }
 
 interface CommercialStore {
@@ -54,6 +57,7 @@ interface CommercialStore {
   addCoupon: (c: Coupon) => void
   updateCoupon: (c: Coupon) => void
   deleteCoupon: (id: string) => void
+  incrementCouponUsage: (id: string) => void
 }
 
 const MOCK_SPEAKERS: Speaker[] = [
@@ -108,6 +112,9 @@ const MOCK_COUPONS: Coupon[] = [
     type: 'percentage',
     value: 20,
     isActive: true,
+    currentUses: 5,
+    maxUses: 100,
+    validCourseIds: [],
   },
   {
     id: 'cp2',
@@ -115,6 +122,9 @@ const MOCK_COUPONS: Coupon[] = [
     type: 'fixed',
     value: 50,
     isActive: true,
+    currentUses: 1,
+    maxUses: 10,
+    validCourseIds: ['c1'],
   },
 ]
 
@@ -134,4 +144,10 @@ export const useCommercialStore = create<CommercialStore>((set) => ({
   updateCoupon: (c) =>
     set((state) => ({ coupons: state.coupons.map((x) => (x.id === c.id ? c : x)) })),
   deleteCoupon: (id) => set((state) => ({ coupons: state.coupons.filter((x) => x.id !== id) })),
+  incrementCouponUsage: (id) =>
+    set((state) => ({
+      coupons: state.coupons.map((c) =>
+        c.id === id ? { ...c, currentUses: c.currentUses + 1 } : c,
+      ),
+    })),
 }))
