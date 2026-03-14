@@ -75,11 +75,12 @@ export function AppSidebar() {
 
   return (
     <div className="flex h-full w-72 lg:w-80 flex-col bg-slate-950 text-slate-300 shadow-2xl z-20 relative border-r border-slate-800 transition-all duration-300">
-      <div className="flex min-h-[160px] md:min-h-[200px] items-center px-4 md:px-6 py-6 shrink-0 justify-center">
-        <Link to="/" className="flex items-center justify-center w-full group overflow-hidden">
+      {/* Increased padding and height to accommodate the larger logo and wrapper seamlessly */}
+      <div className="flex min-h-[200px] md:min-h-[240px] items-center px-4 md:px-6 py-8 shrink-0 justify-center z-30">
+        <Link to="/" className="flex items-center justify-center w-full relative z-10">
           <Logo
-            imgClassName="h-32 md:h-44 w-full max-w-[280px] object-contain transition-transform duration-500 group-hover:scale-110 filter drop-shadow-lg"
-            className="text-white w-full justify-center"
+            imgClassName="h-20 md:h-28 lg:h-32 w-full max-w-[220px] object-contain"
+            className="w-full justify-center"
           />
         </Link>
       </div>

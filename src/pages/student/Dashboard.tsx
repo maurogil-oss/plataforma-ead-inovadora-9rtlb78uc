@@ -39,7 +39,7 @@ const CourseCard = ({
 }) => {
   return (
     <Card
-      className="group overflow-hidden border-border/50 bg-card hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative h-full flex flex-col cursor-pointer"
+      className="group overflow-hidden border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2 relative h-full flex flex-col cursor-pointer"
       onClick={onClick}
     >
       <div className="aspect-video relative overflow-hidden bg-muted">
@@ -48,9 +48,9 @@ const CourseCard = ({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           alt={course.title}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
 
-        <div className="absolute bottom-3 left-3 right-3 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+        <div className="absolute bottom-3 left-3 right-3 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
           <Button
             size="sm"
             className="w-full bg-primary text-primary-foreground font-bold shadow-md"
@@ -59,24 +59,24 @@ const CourseCard = ({
           </Button>
         </div>
 
-        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white font-bold px-2.5 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs border border-white/10">
+        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white font-bold px-2.5 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs border border-white/10 z-20">
           <Tag className="size-3 text-primary" />{' '}
           {course.price > 0 ? `R$ ${course.price.toFixed(2)}` : 'Grátis'}
         </div>
       </div>
-      <CardContent className="p-4 flex-1 flex flex-col">
+      <CardContent className="p-5 flex-1 flex flex-col relative z-10 bg-card">
         <div className="text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest">
           {course.area}
         </div>
-        <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
+        <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
           {course.title}
         </h3>
-        <div className="mt-3 flex items-center text-xs text-muted-foreground font-medium gap-3">
-          <span className="flex items-center gap-1">
-            <Clock className="size-3" /> {course.modules.length * 2}h
+        <div className="mt-4 flex items-center text-sm text-muted-foreground font-medium gap-4">
+          <span className="flex items-center gap-1.5">
+            <Clock className="size-4" /> {course.modules.length * 2}h
           </span>
-          <span className="flex items-center gap-1">
-            <Layers className="size-3" /> {course.modules.length} Mód.
+          <span className="flex items-center gap-1.5">
+            <Layers className="size-4" /> {course.modules.length} Mód.
           </span>
         </div>
       </CardContent>
@@ -99,7 +99,7 @@ const ContinueWatchingCard = ({
 
   return (
     <Card
-      className="group overflow-hidden border-border/50 bg-card hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative h-full flex flex-col cursor-pointer"
+      className="group overflow-hidden border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2 relative h-full flex flex-col cursor-pointer"
       onClick={onClick}
     >
       <div className="aspect-video relative overflow-hidden bg-muted">
@@ -108,24 +108,24 @@ const ContinueWatchingCard = ({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           alt={course.title}
         />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <PlayCircle className="size-16 text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300" />
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
+          <PlayCircle className="size-16 text-white drop-shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-300" />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-secondary/80 backdrop-blur-sm z-10">
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-secondary/80 backdrop-blur-sm z-20">
           <div
             className="h-full bg-primary transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
-      <CardContent className="p-4 flex-1 flex flex-col">
+      <CardContent className="p-5 flex-1 flex flex-col relative z-10 bg-card">
         <div className="text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest">
           {course.area}
         </div>
-        <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
+        <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
           {course.title}
         </h3>
-        <div className="mt-4 flex items-center justify-between text-xs font-medium">
+        <div className="mt-4 flex items-center justify-between text-sm font-medium">
           <span className="text-muted-foreground">Progresso atual</span>
           <span className="text-primary font-bold">{progress}%</span>
         </div>
@@ -225,9 +225,9 @@ export default function StudentDashboard() {
   )
 
   return (
-    <div className="space-y-12 pb-16 pt-2 overflow-x-hidden">
+    <div className="space-y-16 pb-24 pt-4 md:pt-6 overflow-x-hidden">
       {activeLiveClasses.length > 0 && (
-        <Alert className="border-red-500 bg-red-50 dark:bg-red-950/50 text-red-900 dark:text-red-200 shadow-md">
+        <Alert className="border-red-500 bg-red-50 dark:bg-red-950/50 text-red-900 dark:text-red-200 shadow-md mx-4 md:mx-8 w-auto">
           <Radio className="size-5 text-red-600 dark:text-red-400 animate-pulse" />
           <AlertTitle className="font-bold text-lg text-red-700 dark:text-red-300">
             Atenção! Aula ao vivo acontecendo agora.
@@ -249,7 +249,7 @@ export default function StudentDashboard() {
       )}
 
       {featuredCourse && (
-        <section className="relative w-full rounded-[2rem] overflow-hidden min-h-[450px] lg:min-h-[550px] flex flex-col justify-end p-8 md:p-12 shadow-2xl group border border-border/50">
+        <section className="relative w-full rounded-[2rem] overflow-hidden min-h-[500px] lg:min-h-[600px] flex flex-col justify-end p-8 md:p-12 shadow-2xl group border border-border/50 mx-4 md:mx-8 max-w-[calc(100%-2rem)] md:max-w-[calc(100%-4rem)]">
           <div className="absolute inset-0">
             <img
               src={featuredCourse.thumbnail}
@@ -259,7 +259,7 @@ export default function StudentDashboard() {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent" />
           </div>
-          <div className="relative z-10 max-w-3xl space-y-5 animate-fade-in-up">
+          <div className="relative z-10 max-w-3xl space-y-6 animate-fade-in-up">
             <div className="flex items-center gap-3">
               <Badge className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-3 py-1 border-none">
                 Destaque
@@ -268,13 +268,13 @@ export default function StudentDashboard() {
                 {featuredCourse.area}
               </span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
               {featuredCourse.title}
             </h1>
             <p className="text-lg md:text-xl text-slate-300 font-medium line-clamp-2 max-w-2xl drop-shadow-sm">
               {featuredCourse.description}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-4 pt-6">
               {featuredMyCourse ? (
                 <Button
                   size="lg"
@@ -309,17 +309,16 @@ export default function StudentDashboard() {
         </section>
       )}
 
+      {/* Increased py-10 padding on all carousels to prevent overlap when cards scale up */}
       {myCourses.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">
-            Continuar Assistindo
-          </h2>
+        <section className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1">Continuar Assistindo</h2>
           <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
-            <CarouselContent className="-ml-4 py-4 px-1">
+            <CarouselContent className="-ml-4 py-10 px-1">
               {myCourses.map(({ course, enrollment }) => (
                 <CarouselItem
                   key={course.id}
-                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10"
                 >
                   <ContinueWatchingCard
                     course={course}
@@ -330,24 +329,22 @@ export default function StudentDashboard() {
               ))}
             </CarouselContent>
             <div className="hidden lg:block">
-              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
-              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
             </div>
           </Carousel>
         </section>
       )}
 
       {recommendedCourses.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">
-            Recomendados para Você
-          </h2>
+        <section className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1">Recomendados para Você</h2>
           <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
-            <CarouselContent className="-ml-4 py-4 px-1">
+            <CarouselContent className="-ml-4 py-10 px-1">
               {recommendedCourses.map((course) => (
                 <CarouselItem
                   key={course.id}
-                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10"
                 >
                   <CourseCard
                     course={course}
@@ -359,22 +356,22 @@ export default function StudentDashboard() {
               ))}
             </CarouselContent>
             <div className="hidden lg:block">
-              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
-              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
             </div>
           </Carousel>
         </section>
       )}
 
       {newCourses.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">Novos Cursos</h2>
+        <section className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1">Novos Cursos</h2>
           <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
-            <CarouselContent className="-ml-4 py-4 px-1">
+            <CarouselContent className="-ml-4 py-10 px-1">
               {newCourses.map((course) => (
                 <CarouselItem
                   key={course.id}
-                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10"
                 >
                   <CourseCard
                     course={course}
@@ -386,22 +383,22 @@ export default function StudentDashboard() {
               ))}
             </CarouselContent>
             <div className="hidden lg:block">
-              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
-              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
             </div>
           </Carousel>
         </section>
       )}
 
       {Object.entries(availableCoursesByArea).map(([area, areaCourses]) => (
-        <section key={area} className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">Trilha: {area}</h2>
+        <section key={area} className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1">Trilha: {area}</h2>
           <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
-            <CarouselContent className="-ml-4 py-4 px-1">
+            <CarouselContent className="-ml-4 py-10 px-1">
               {areaCourses.map((course) => (
                 <CarouselItem
                   key={course.id}
-                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10"
                 >
                   <CourseCard
                     course={course}
@@ -413,8 +410,8 @@ export default function StudentDashboard() {
               ))}
             </CarouselContent>
             <div className="hidden lg:block">
-              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
-              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
             </div>
           </Carousel>
         </section>
