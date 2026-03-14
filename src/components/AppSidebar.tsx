@@ -80,9 +80,7 @@ export function AppSidebar() {
   return (
     <div className="flex h-full w-72 lg:w-80 flex-col bg-slate-950 text-slate-300 shadow-2xl z-20 relative border-r border-slate-800 transition-all duration-300">
       <div className="flex min-h-[200px] md:min-h-[240px] items-center px-4 md:px-6 py-8 shrink-0 justify-center z-30">
-        <Link to="/" className="flex items-center justify-center w-full relative z-10">
-          <Logo className="w-full justify-center" />
-        </Link>
+        <Logo className="w-full justify-center relative z-10" imgClassName="h-12 md:h-14 w-auto" />
       </div>
 
       <div className="flex-1 overflow-y-auto py-6 custom-scrollbar px-3">

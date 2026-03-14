@@ -22,7 +22,6 @@ export function Logo({ className, imgClassName, collapsed, linkTo = '/' }: LogoP
       <div
         className={cn(
           'flex items-center justify-center transition-all duration-500 group-hover:scale-[1.02]',
-          collapsed ? 'p-1' : 'p-2',
         )}
       >
         <img

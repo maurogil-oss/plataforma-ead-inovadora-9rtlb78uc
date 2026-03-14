@@ -127,9 +127,10 @@ export default function Index() {
     <div className="flex min-h-screen flex-col font-sans overflow-x-hidden bg-background text-foreground transition-colors duration-300">
       <header className="fixed top-0 z-50 w-full bg-gradient-to-b from-background/95 via-background/80 to-transparent backdrop-blur-md transition-all duration-300">
         <div className="container mx-auto px-4 md:px-8 py-3 min-h-[90px] flex items-center justify-between gap-6">
-          <Link to="/" className="flex shrink-0 z-50 focus-visible:outline-none">
-            <Logo imgClassName="h-10 md:h-11 w-auto" />
-          </Link>
+          <Logo
+            className="flex shrink-0 z-50 focus-visible:outline-none"
+            imgClassName="h-10 md:h-11 w-auto"
+          />
           <nav className="hidden lg:flex gap-8 items-center flex-1 justify-center pl-8">
             <Link
               to="/cursos"

@@ -10,9 +10,10 @@ export function PublicHeader() {
   return (
     <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50 shadow-sm transition-all duration-300">
       <div className="container mx-auto px-4 min-h-[90px] flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group focus-visible:outline-none">
-          <Logo collapsed />
-        </Link>
+        <Logo
+          className="flex shrink-0 focus-visible:outline-none"
+          imgClassName="h-10 md:h-11 w-auto"
+        />
         <div className="flex items-center gap-4">
           <nav className="hidden md:flex gap-6 mr-6">
             <Link
@@ -42,7 +43,7 @@ export function PublicHeader() {
           </nav>
           {user ? (
             <Button
-              className="font-bold shadow-lg h-10 px-6 bg-primary hover:bg-primary/90"
+              className="font-bold shadow-lg h-10 md:h-11 px-4 md:px-6 bg-primary hover:bg-primary/90"
               asChild
             >
               <Link to="/student/dashboard">Área do Aluno</Link>
@@ -52,14 +53,14 @@ export function PublicHeader() {
               <Button
                 variant="ghost"
                 asChild
-                className="text-white font-bold hover:bg-white/10 hover:text-white hidden sm:flex h-10"
+                className="text-white font-bold hover:bg-white/10 hover:text-white hidden sm:flex h-10 md:h-11"
               >
                 <Link to="/">
                   <ArrowLeft className="mr-2 size-4" /> Início
                 </Link>
               </Button>
               <Button
-                className="font-bold shadow-lg h-10 px-6 bg-primary hover:bg-primary/90"
+                className="font-bold shadow-lg h-10 md:h-11 px-4 md:px-6 bg-primary hover:bg-primary/90"
                 asChild
               >
                 <Link to="/login">Entrar</Link>
