@@ -27549,7 +27549,7 @@ SidebarMenuSubButton.displayName = "SidebarMenuSubButton";
 var image_883ff_default = "/assets/image-883ff-DjzSKE0y.png";
 //#endregion
 //#region src/components/Logo.tsx
-function Logo({ className, imageClassName }) {
+function Logo({ className, imgClassName }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/components/Logo.tsx:11:5",
 		"data-prohibitions": "[editContent]",
@@ -27559,7 +27559,7 @@ function Logo({ className, imageClassName }) {
 			"data-prohibitions": "[editContent]",
 			src: image_883ff_default,
 			alt: "Observatório Academy",
-			className: cn("h-full w-auto object-contain transition-all duration-300", "mix-blend-multiply dark:invert dark:hue-rotate-180 dark:brightness-110 dark:mix-blend-screen", imageClassName)
+			className: cn("object-contain transition-all duration-300", "mix-blend-multiply dark:invert dark:hue-rotate-180 dark:brightness-110 dark:mix-blend-screen", imgClassName || "h-full w-auto")
 		})
 	});
 }
@@ -27913,7 +27913,7 @@ function TopHeader() {
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/components/TopHeader.tsx:12:11",
 						"data-prohibitions": "[editContent]",
-						className: "h-9 sm:h-10 md:h-11"
+						imgClassName: "h-9 sm:h-10 md:h-11 w-auto"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -29719,7 +29719,7 @@ function PublicHeader() {
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/components/PublicHeader.tsx:11:11",
 						"data-prohibitions": "[editContent]",
-						className: "h-9 sm:h-10 md:h-11"
+						imgClassName: "h-9 sm:h-10 md:h-11 w-auto"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
@@ -48964,4 +48964,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-CD4plO-c.js.map
+//# sourceMappingURL=index-B66YCc_6.js.map

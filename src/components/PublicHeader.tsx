@@ -8,7 +8,7 @@ export function PublicHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center transition-opacity hover:opacity-80 shrink-0">
-          <Logo className="h-9 sm:h-10 md:h-11" />
+          <Logo imgClassName="h-9 sm:h-10 md:h-11 w-auto" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
