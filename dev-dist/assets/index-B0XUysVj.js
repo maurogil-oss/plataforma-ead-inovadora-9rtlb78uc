@@ -18705,7 +18705,7 @@ var MOCK_COURSES = [
 		title: "Fundamentos de Segurança Viária",
 		area: "Segurança Viária",
 		description: "Aprenda os conceitos básicos e avançados para reduzir acidentes e preservar vidas no trânsito.",
-		thumbnail: "https://img.usecurling.com/p/800/600?q=road%20safety&color=blue",
+		thumbnail: "https://img.usecurling.com/p/1200/800?q=traffic%20cone&color=orange",
 		price: 197,
 		instructorId: "i1",
 		passingGrade: 70,
@@ -49148,4 +49148,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BOAAAIqI.js.map
+//# sourceMappingURL=index-B0XUysVj.js.map
