@@ -1,55 +1,24 @@
+import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
+import logoUrl from '@/assets/logomarca-observatorio-academy-nova-86843.png'
 
 interface LogoProps {
   className?: string
-  showText?: boolean
+  collapsed?: boolean
+  linkTo?: string
 }
 
-export function Logo({ className, showText = true }: LogoProps) {
+export function Logo({ className, collapsed, linkTo = '/' }: LogoProps) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox={showText ? '0 0 350 80' : '0 0 80 80'}
-      className={cn('w-auto h-full', className)}
-      fill="none"
-      role="img"
-      aria-label="Observatório Academy"
-    >
-      <g transform="translate(10, 15)">
-        {/* Hat Top - Navy Blue */}
-        <path d="M30 0 L60 15 L30 30 L0 15 Z" fill="#0f2a4a" />
-        {/* Hat Bottom - Navy Blue */}
-        <path d="M10 20 L10 40 C10 50 50 50 50 40 L50 20 L30 30 Z" fill="#0f2a4a" opacity="0.85" />
-        {/* Tassel - Safety Orange */}
-        <path d="M30 15 L55 35" stroke="#f97316" strokeWidth="2" />
-        <circle cx="55" cy="38" r="4" fill="#f97316" />
-      </g>
-      {showText && (
-        <g>
-          <text
-            x="85"
-            y="45"
-            fill="#0f2a4a"
-            fontFamily="system-ui, sans-serif"
-            fontSize="34"
-            fontWeight="800"
-            letterSpacing="-0.02em"
-          >
-            Observatório
-          </text>
-          <text
-            x="85"
-            y="68"
-            fill="#f97316"
-            fontFamily="system-ui, sans-serif"
-            fontSize="18"
-            fontWeight="700"
-            letterSpacing="0.15em"
-          >
-            ACADEMY
-          </text>
-        </g>
-      )}
-    </svg>
+    <Link to={linkTo} className={cn('flex items-center gap-2 transition-all', className)}>
+      <img
+        src={logoUrl}
+        alt="Observatório Academy"
+        className={cn(
+          'object-contain transition-all duration-300',
+          collapsed ? 'h-8 w-8 object-cover object-left' : 'h-12 w-auto',
+        )}
+      />
+    </Link>
   )
 }
