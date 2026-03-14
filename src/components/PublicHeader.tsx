@@ -6,9 +6,9 @@ import { LogIn } from 'lucide-react'
 export function PublicHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 h-24 flex items-center justify-between">
+      <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center transition-opacity hover:opacity-80 shrink-0">
-          <Logo className="h-10 sm:h-12 md:h-14" imageClassName="h-10 sm:h-12 md:h-14" />
+          <Logo className="h-9 sm:h-10 md:h-11" />
         </Link>
 
         <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
@@ -23,20 +23,20 @@ export function PublicHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0">
           <Button
             variant="ghost"
             asChild
-            className="hidden sm:inline-flex h-10 sm:h-12 md:h-14 px-4 sm:px-6 font-medium text-sm sm:text-base transition-all"
+            className="hidden sm:inline-flex h-10 md:h-11 px-4 sm:px-6 font-medium text-sm md:text-base transition-all"
           >
             <Link to="/login">Entrar</Link>
           </Button>
           <Button
             asChild
-            className="bg-blue-600 hover:bg-blue-700 text-white h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 rounded-md font-medium text-sm sm:text-base shadow-sm transition-all"
+            className="bg-blue-600 hover:bg-blue-700 text-white h-9 sm:h-10 md:h-11 px-4 sm:px-6 md:px-8 rounded-md font-medium text-sm md:text-base shadow-sm transition-all"
           >
             <Link to="/app" className="flex items-center gap-2">
-              <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
+              <LogIn className="w-4 h-4 md:w-5 md:h-5" />
               <span className="hidden sm:inline-block">Área do Aluno</span>
               <span className="sm:hidden">Aluno</span>
             </Link>

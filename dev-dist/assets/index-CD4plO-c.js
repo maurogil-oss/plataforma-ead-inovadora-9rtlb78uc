@@ -27559,7 +27559,7 @@ function Logo({ className, imageClassName }) {
 			"data-prohibitions": "[editContent]",
 			src: image_883ff_default,
 			alt: "Observatório Academy",
-			className: cn("w-auto object-contain transition-all duration-300", "mix-blend-multiply dark:invert dark:hue-rotate-180 dark:brightness-110 dark:mix-blend-screen", imageClassName)
+			className: cn("h-full w-auto object-contain transition-all duration-300", "mix-blend-multiply dark:invert dark:hue-rotate-180 dark:brightness-110 dark:mix-blend-screen", imageClassName)
 		})
 	});
 }
@@ -27903,7 +27903,7 @@ function TopHeader() {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/TopHeader.tsx:10:7",
 			"data-prohibitions": "[editContent]",
-			className: "container mx-auto px-4 h-24 flex items-center justify-between",
+			className: "container mx-auto px-4 h-16 md:h-20 flex items-center justify-between",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 					"data-uid": "src/components/TopHeader.tsx:11:9",
@@ -27913,8 +27913,7 @@ function TopHeader() {
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/components/TopHeader.tsx:12:11",
 						"data-prohibitions": "[editContent]",
-						className: "h-10 sm:h-12 md:h-14",
-						imageClassName: "h-10 sm:h-12 md:h-14"
+						className: "h-9 sm:h-10 md:h-11"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -27926,7 +27925,7 @@ function TopHeader() {
 						"data-prohibitions": "[]",
 						variant: "ghost",
 						asChild: true,
-						className: "h-10 sm:h-12 md:h-14 px-6 font-medium text-base transition-all",
+						className: "h-10 md:h-11 px-6 font-medium text-sm md:text-base transition-all",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 							"data-uid": "src/components/TopHeader.tsx:22:13",
 							"data-prohibitions": "[]",
@@ -27937,7 +27936,7 @@ function TopHeader() {
 						"data-uid": "src/components/TopHeader.tsx:24:11",
 						"data-prohibitions": "[]",
 						asChild: true,
-						className: "bg-blue-600 hover:bg-blue-700 text-white h-10 sm:h-12 md:h-14 px-6 md:px-8 rounded-md font-medium text-base shadow-sm transition-all",
+						className: "bg-blue-600 hover:bg-blue-700 text-white h-10 md:h-11 px-6 md:px-8 rounded-md font-medium text-sm md:text-base shadow-sm transition-all",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
 							"data-uid": "src/components/TopHeader.tsx:28:13",
 							"data-prohibitions": "[]",
@@ -27946,7 +27945,7 @@ function TopHeader() {
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogIn, {
 								"data-uid": "src/components/TopHeader.tsx:29:15",
 								"data-prohibitions": "[editContent]",
-								className: "w-5 h-5"
+								className: "w-4 h-4 md:w-5 md:h-5"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								"data-uid": "src/components/TopHeader.tsx:30:15",
 								"data-prohibitions": "[]",
@@ -27958,12 +27957,12 @@ function TopHeader() {
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/components/TopHeader.tsx:36:9",
 					"data-prohibitions": "[]",
-					className: "md:hidden flex items-center gap-3 shrink-0",
+					className: "md:hidden flex items-center gap-2 sm:gap-3 shrink-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 						"data-uid": "src/components/TopHeader.tsx:37:11",
 						"data-prohibitions": "[]",
 						asChild: true,
-						className: "bg-blue-600 hover:bg-blue-700 text-white h-10 sm:h-12 px-4 sm:px-6 rounded-md font-medium text-sm sm:text-base shadow-sm transition-all",
+						className: "bg-blue-600 hover:bg-blue-700 text-white h-9 sm:h-10 px-4 sm:px-6 rounded-md font-medium text-sm shadow-sm transition-all",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
 							"data-uid": "src/components/TopHeader.tsx:41:13",
 							"data-prohibitions": "[]",
@@ -27973,7 +27972,7 @@ function TopHeader() {
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogIn, {
 									"data-uid": "src/components/TopHeader.tsx:42:15",
 									"data-prohibitions": "[editContent]",
-									className: "w-4 h-4 sm:w-5 sm:h-5"
+									className: "w-4 h-4"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									"data-uid": "src/components/TopHeader.tsx:43:15",
@@ -28001,11 +28000,11 @@ function TopHeader() {
 								"data-prohibitions": "[]",
 								variant: "ghost",
 								size: "icon",
-								className: "h-10 w-10 sm:h-12 sm:w-12 shrink-0",
+								className: "h-9 w-9 sm:h-10 sm:w-10 shrink-0",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Menu$1, {
 									"data-uid": "src/components/TopHeader.tsx:50:17",
 									"data-prohibitions": "[editContent]",
-									className: "h-5 w-5 sm:h-6 sm:w-6"
+									className: "h-4 w-4 sm:h-5 sm:w-5"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									"data-uid": "src/components/TopHeader.tsx:51:17",
 									"data-prohibitions": "[]",
@@ -28031,7 +28030,7 @@ function TopHeader() {
 									"data-prohibitions": "[]",
 									variant: "ghost",
 									asChild: true,
-									className: "w-full justify-start h-12 text-base",
+									className: "w-full justify-start h-11 text-base",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 										"data-uid": "src/components/TopHeader.tsx:58:19",
 										"data-prohibitions": "[]",
@@ -28042,7 +28041,7 @@ function TopHeader() {
 									"data-uid": "src/components/TopHeader.tsx:60:17",
 									"data-prohibitions": "[]",
 									asChild: true,
-									className: "bg-blue-600 hover:bg-blue-700 text-white w-full justify-start h-12 text-base",
+									className: "bg-blue-600 hover:bg-blue-700 text-white w-full justify-start h-11 text-base",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 										"data-uid": "src/components/TopHeader.tsx:64:19",
 										"data-prohibitions": "[]",
@@ -29710,7 +29709,7 @@ function PublicHeader() {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/PublicHeader.tsx:9:7",
 			"data-prohibitions": "[]",
-			className: "container mx-auto px-4 h-24 flex items-center justify-between",
+			className: "container mx-auto px-4 h-16 md:h-20 flex items-center justify-between",
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 					"data-uid": "src/components/PublicHeader.tsx:10:9",
@@ -29720,8 +29719,7 @@ function PublicHeader() {
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
 						"data-uid": "src/components/PublicHeader.tsx:11:11",
 						"data-prohibitions": "[editContent]",
-						className: "h-10 sm:h-12 md:h-14",
-						imageClassName: "h-10 sm:h-12 md:h-14"
+						className: "h-9 sm:h-10 md:h-11"
 					})
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("nav", {
@@ -29755,13 +29753,13 @@ function PublicHeader() {
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/components/PublicHeader.tsx:26:9",
 					"data-prohibitions": "[]",
-					className: "flex items-center gap-3 sm:gap-4 shrink-0",
+					className: "flex items-center gap-2 sm:gap-3 md:gap-4 shrink-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 						"data-uid": "src/components/PublicHeader.tsx:27:11",
 						"data-prohibitions": "[]",
 						variant: "ghost",
 						asChild: true,
-						className: "hidden sm:inline-flex h-10 sm:h-12 md:h-14 px-4 sm:px-6 font-medium text-sm sm:text-base transition-all",
+						className: "hidden sm:inline-flex h-10 md:h-11 px-4 sm:px-6 font-medium text-sm md:text-base transition-all",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
 							"data-uid": "src/components/PublicHeader.tsx:32:13",
 							"data-prohibitions": "[]",
@@ -29772,7 +29770,7 @@ function PublicHeader() {
 						"data-uid": "src/components/PublicHeader.tsx:34:11",
 						"data-prohibitions": "[]",
 						asChild: true,
-						className: "bg-blue-600 hover:bg-blue-700 text-white h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 rounded-md font-medium text-sm sm:text-base shadow-sm transition-all",
+						className: "bg-blue-600 hover:bg-blue-700 text-white h-9 sm:h-10 md:h-11 px-4 sm:px-6 md:px-8 rounded-md font-medium text-sm md:text-base shadow-sm transition-all",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Link$1, {
 							"data-uid": "src/components/PublicHeader.tsx:38:13",
 							"data-prohibitions": "[]",
@@ -29782,7 +29780,7 @@ function PublicHeader() {
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LogIn, {
 									"data-uid": "src/components/PublicHeader.tsx:39:15",
 									"data-prohibitions": "[editContent]",
-									className: "w-4 h-4 sm:w-5 sm:h-5"
+									className: "w-4 h-4 md:w-5 md:h-5"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									"data-uid": "src/components/PublicHeader.tsx:40:15",
@@ -48966,4 +48964,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-BXv9rJ7f.js.map
+//# sourceMappingURL=index-CD4plO-c.js.map

@@ -13,7 +13,7 @@ export function Logo({ className, imageClassName }: LogoProps) {
         src={logoUrl}
         alt="Observatório Academy"
         className={cn(
-          'w-auto object-contain transition-all duration-300',
+          'h-full w-auto object-contain transition-all duration-300',
           'mix-blend-multiply dark:invert dark:hue-rotate-180 dark:brightness-110 dark:mix-blend-screen',
           imageClassName,
         )}
