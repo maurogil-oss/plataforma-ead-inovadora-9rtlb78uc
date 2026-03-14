@@ -158,6 +158,10 @@ export interface LiveClass {
   attendees?: string[]
 }
 
+export interface ThemeSettings {
+  carouselArrowColor: string
+}
+
 const MOCK_QUESTIONS: BankQuestion[] = [
   {
     id: 'bq1',
@@ -427,6 +431,7 @@ interface LMSStore {
   notificationSettings: { emailNewLesson: boolean; emailExamReminder: boolean }
   paymentSettings: { provider: string; apiKey: string }
   webhooks: WebhookConfig[]
+  themeSettings: ThemeSettings
 
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
@@ -468,6 +473,7 @@ interface LMSStore {
   updatePaymentSettings: (s: { provider: string; apiKey: string }) => void
   addWebhook: (w: WebhookConfig) => void
   deleteWebhook: (id: string) => void
+  updateThemeSettings: (s: ThemeSettings) => void
 }
 
 const checkCourseCompletion = (enrollment: Enrollment, course: Course): Enrollment => {
@@ -577,6 +583,7 @@ export const useLmsStore = create<LMSStore>((set) => ({
   notificationSettings: { emailNewLesson: true, emailExamReminder: true },
   paymentSettings: { provider: 'Stripe', apiKey: '' },
   webhooks: [],
+  themeSettings: { carouselArrowColor: '#ffffff' },
 
   addCourse: (course) => set((s) => ({ courses: [...s.courses, course] })),
   updateCourse: (course) =>
@@ -790,4 +797,5 @@ export const useLmsStore = create<LMSStore>((set) => ({
   updatePaymentSettings: (s) => set({ paymentSettings: s }),
   addWebhook: (w) => set((s) => ({ webhooks: [...s.webhooks, w] })),
   deleteWebhook: (id) => set((s) => ({ webhooks: s.webhooks.filter((w) => w.id !== id) })),
+  updateThemeSettings: (s) => set({ themeSettings: s }),
 }))

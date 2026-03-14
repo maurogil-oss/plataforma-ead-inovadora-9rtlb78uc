@@ -1,7 +1,7 @@
 import { useLmsStore } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Users, GraduationCap, ArrowUpRight } from 'lucide-react'
+import { BookOpen, Users, GraduationCap, ArrowUpRight, Palette } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function ManagerDashboard() {
@@ -43,6 +43,16 @@ export default function ManagerDashboard() {
     },
   ]
 
+  if (user?.role === 'manager' || user?.role === 'admin') {
+    stats.push({
+      title: 'Aparência',
+      value: 'Temas',
+      icon: Palette,
+      desc: 'Personalizar visual',
+      link: '/manager/appearance',
+    })
+  }
+
   const recentActivity = myEnrollments
     .flatMap((e) =>
       e.activityLog.map((act) => ({
@@ -62,7 +72,7 @@ export default function ManagerDashboard() {
         <p className="text-muted-foreground mt-1">Acompanhe os indicadores dos seus cursos.</p>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => (
           <Link to={stat.link} key={stat.title} className="group outline-none">
             <Card className="hover:border-primary/50 transition-colors h-full flex flex-col bg-card">

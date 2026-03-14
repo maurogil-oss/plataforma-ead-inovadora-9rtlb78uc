@@ -35,6 +35,7 @@ import Integrations from '@/pages/manager/Integrations'
 import CommissionSettings from '@/pages/manager/CommissionSettings'
 import PaymentSettings from '@/pages/manager/PaymentSettings'
 import StudentDetails from '@/pages/manager/StudentDetails'
+import AppearanceSettings from '@/pages/manager/AppearanceSettings'
 
 // Shared Commercial
 import CommercialDashboard from '@/pages/manager/CommercialDashboard'
@@ -344,6 +345,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
                 <CommercialDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/manager/appearance"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <AppearanceSettings />
               </ProtectedRoute>
             }
           />

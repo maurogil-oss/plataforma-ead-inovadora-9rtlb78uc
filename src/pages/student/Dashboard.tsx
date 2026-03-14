@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLmsStore, Course, Enrollment } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
-import { useCommercialStore, Coupon } from '@/stores/commercialStore'
+import { useCommercialStore, Coupon, Speaker, Product } from '@/stores/commercialStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -111,12 +111,6 @@ const ContinueWatchingCard = ({
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
           <PlayCircle className="size-16 text-white drop-shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-300" />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-secondary/80 backdrop-blur-sm z-20">
-          <div
-            className="h-full bg-primary transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
       </div>
       <CardContent className="p-5 flex-1 flex flex-col relative z-10 bg-card">
         <div className="text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest">
@@ -130,7 +124,58 @@ const ContinueWatchingCard = ({
           <span className="text-primary font-bold">{progress}%</span>
         </div>
       </CardContent>
+      <div className="h-1.5 w-full bg-secondary/80 mt-auto">
+        <div
+          className="h-full bg-primary transition-all duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </Card>
+  )
+}
+
+const EbookCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
+  return (
+    <Card
+      className="group overflow-hidden border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2 relative h-full flex flex-col cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="aspect-[3/4] relative overflow-hidden bg-muted">
+        <img
+          src={product.coverImage}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          alt={product.title}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10" />
+      </div>
+      <CardContent className="p-4 flex-1 flex flex-col relative z-10 bg-card">
+        <h3 className="font-bold text-sm md:text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
+          {product.title}
+        </h3>
+      </CardContent>
+    </Card>
+  )
+}
+
+const SpeakerCard = ({ speaker, onClick }: { speaker: Speaker; onClick: () => void }) => {
+  return (
+    <div
+      className="group flex flex-col items-center cursor-pointer space-y-4 px-2"
+      onClick={onClick}
+    >
+      <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-transparent group-hover:border-primary transition-all duration-300 shadow-xl group-hover:shadow-2xl group-hover:scale-105 relative">
+        <img src={speaker.avatar} className="w-full h-full object-cover" alt={speaker.name} />
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300" />
+      </div>
+      <div className="text-center">
+        <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
+          {speaker.name}
+        </h3>
+        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">
+          {speaker.type === 'internal' ? 'Membro' : 'Convidado'}
+        </p>
+      </div>
+    </div>
   )
 }
 
@@ -138,14 +183,17 @@ export default function StudentDashboard() {
   const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
   const { courses, enrollments, enrollStudent, paymentSettings, liveClasses } = useLmsStore()
-  const { coupons, incrementCouponUsage } = useCommercialStore()
+  const { coupons, incrementCouponUsage, speakers, products } = useCommercialStore()
 
   const [enrollCourse, setEnrollCourse] = useState<Course | null>(null)
   const [selectedBatch, setSelectedBatch] = useState<string>('')
   const [couponCode, setCouponCode] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null)
+  const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null)
 
   if (!user) return null
+
+  const ebooks = products.filter((p) => p.type === 'ebook')
 
   const myEnrollments = enrollments.filter((e) => e.studentId === user.id)
   const myCourses = myEnrollments
@@ -309,7 +357,6 @@ export default function StudentDashboard() {
         </section>
       )}
 
-      {/* Increased py-10 padding on all carousels to prevent overlap when cards scale up */}
       {myCourses.length > 0 && (
         <section className="space-y-6 px-4 md:px-8">
           <h2 className="text-3xl font-extrabold tracking-tight px-1">Continuar Assistindo</h2>
@@ -324,6 +371,53 @@ export default function StudentDashboard() {
                     course={course}
                     enrollment={enrollment}
                     onClick={() => navigate(`/student/course/${course.id}`)}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+            </div>
+          </Carousel>
+        </section>
+      )}
+
+      {speakers.length > 0 && (
+        <section className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1">Palestrantes</h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-10 px-1">
+              {speakers.map((speaker) => (
+                <CarouselItem
+                  key={speaker.id}
+                  className="pl-4 basis-[45%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-[15%] relative z-10"
+                >
+                  <SpeakerCard speaker={speaker} onClick={() => setSelectedSpeaker(speaker)} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+              <CarouselNext className="-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30" />
+            </div>
+          </Carousel>
+        </section>
+      )}
+
+      {ebooks.length > 0 && (
+        <section className="space-y-6 px-4 md:px-8">
+          <h2 className="text-3xl font-extrabold tracking-tight px-1">Ebooks Exclusivos</h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-10 px-1">
+              {ebooks.map((ebook) => (
+                <CarouselItem
+                  key={ebook.id}
+                  className="pl-4 basis-[60%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 relative z-10"
+                >
+                  <EbookCard
+                    product={ebook}
+                    onClick={() => navigate(`/store/product/${ebook.id}`)}
                   />
                 </CarouselItem>
               ))}
@@ -523,6 +617,33 @@ export default function StudentDashboard() {
               onClick={handleFinalizeEnrollment}
             >
               Confirmar e Pagar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!selectedSpeaker} onOpenChange={(o) => !o && setSelectedSpeaker(null)}>
+        <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden">
+          <div className="bg-primary/10 p-8 flex flex-col items-center justify-center relative">
+            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-background shadow-xl mb-4">
+              <img
+                src={selectedSpeaker?.avatar}
+                alt={selectedSpeaker?.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <DialogTitle className="text-2xl font-bold text-center">
+              {selectedSpeaker?.name}
+            </DialogTitle>
+            <p className="text-sm font-medium text-primary mt-1 uppercase tracking-wider">
+              {selectedSpeaker?.type === 'internal' ? 'Membro da Equipe' : 'Convidado Especial'}
+            </p>
+          </div>
+          <div className="p-6">
+            <h4 className="font-semibold text-lg mb-2">Sobre o Palestrante</h4>
+            <p className="text-muted-foreground leading-relaxed text-sm">{selectedSpeaker?.bio}</p>
+            <Button className="w-full mt-6" onClick={() => setSelectedSpeaker(null)}>
+              Fechar
             </Button>
           </div>
         </DialogContent>

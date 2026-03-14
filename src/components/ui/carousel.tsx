@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { useLmsStore } from '@/stores/lmsStore'
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -177,6 +178,7 @@ CarouselItem.displayName = 'CarouselItem'
 const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
   ({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
     const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+    const arrowColor = useLmsStore((s) => s.themeSettings?.carouselArrowColor || '#ffffff')
 
     return (
       <Button
@@ -194,7 +196,7 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
         onClick={scrollPrev}
         {...props}
       >
-        <ChevronLeft className="h-8 w-8" />
+        <ChevronLeft className="h-8 w-8" style={{ color: arrowColor }} />
         <span className="sr-only">Previous slide</span>
       </Button>
     )
@@ -205,6 +207,7 @@ CarouselPrevious.displayName = 'CarouselPrevious'
 const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(
   ({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
     const { orientation, scrollNext, canScrollNext } = useCarousel()
+    const arrowColor = useLmsStore((s) => s.themeSettings?.carouselArrowColor || '#ffffff')
 
     return (
       <Button
@@ -222,7 +225,7 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
         onClick={scrollNext}
         {...props}
       >
-        <ChevronRight className="h-8 w-8" />
+        <ChevronRight className="h-8 w-8" style={{ color: arrowColor }} />
         <span className="sr-only">Next slide</span>
       </Button>
     )

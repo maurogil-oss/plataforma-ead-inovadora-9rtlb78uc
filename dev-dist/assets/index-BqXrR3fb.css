@@ -1428,6 +1428,9 @@ video {
 .aspect-\[1\.414\/1\] {
   aspect-ratio: 1.414/1;
 }
+.aspect-\[3\/4\] {
+  aspect-ratio: 3/4;
+}
 .aspect-\[4\/5\] {
   aspect-ratio: 4/5;
 }
@@ -1680,6 +1683,9 @@ video {
 .w-2\.5 {
   width: 0.625rem;
 }
+.w-20 {
+  width: 5rem;
+}
 .w-24 {
   width: 6rem;
 }
@@ -1865,6 +1871,12 @@ video {
 }
 .grow-0 {
   flex-grow: 0;
+}
+.basis-\[45\%\] {
+  flex-basis: 45%;
+}
+.basis-\[60\%\] {
+  flex-basis: 60%;
 }
 .basis-\[85\%\] {
   flex-basis: 85%;
@@ -2250,6 +2262,9 @@ video {
 .border-2 {
   border-width: 2px;
 }
+.border-4 {
+  border-width: 4px;
+}
 .border-\[1\.5px\] {
   border-width: 1.5px;
 }
@@ -2302,6 +2317,9 @@ video {
 .border-amber-200 {
   --tw-border-opacity: 1;
   border-color: rgb(253 230 138 / var(--tw-border-opacity, 1));
+}
+.border-background {
+  border-color: hsl(var(--background));
 }
 .border-border {
   border-color: hsl(var(--border));
@@ -4053,6 +4071,9 @@ video {
   --tw-scale-y: 1.02;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.group:hover .group-hover\:border-primary {
+  border-color: hsl(var(--primary));
+}
 .group:hover .group-hover\:bg-primary\/20 {
   background-color: hsl(var(--primary) / 0.2);
 }
@@ -4815,6 +4836,10 @@ video {
     flex-basis: 50%;
   }
 
+  .sm\:basis-1\/3 {
+    flex-basis: 33.333333%;
+  }
+
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4940,6 +4965,10 @@ video {
     height: 7rem;
   }
 
+  .md\:h-40 {
+    height: 10rem;
+  }
+
   .md\:h-48 {
     height: 12rem;
   }
@@ -4958,6 +4987,10 @@ video {
 
   .md\:w-11 {
     width: 2.75rem;
+  }
+
+  .md\:w-40 {
+    width: 10rem;
   }
 
   .md\:w-\[var\(--radix-navigation-menu-viewport-width\)\] {
@@ -4982,6 +5015,10 @@ video {
 
   .md\:basis-1\/3 {
     flex-basis: 33.333333%;
+  }
+
+  .md\:basis-1\/4 {
+    flex-basis: 25%;
   }
 
   .md\:grid-cols-12 {
@@ -5115,6 +5152,11 @@ video {
     line-height: 1;
   }
 
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
   .md\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -5202,6 +5244,10 @@ video {
     flex-basis: 25%;
   }
 
+  .lg\:basis-1\/5 {
+    flex-basis: 20%;
+  }
+
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -5252,6 +5298,14 @@ video {
 
   .xl\:basis-1\/5 {
     flex-basis: 20%;
+  }
+
+  .xl\:basis-1\/6 {
+    flex-basis: 16.666667%;
+  }
+
+  .xl\:basis-\[15\%\] {
+    flex-basis: 15%;
   }
 
   .xl\:grid-cols-3 {

@@ -19004,6 +19004,7 @@ var useLmsStore = create((set) => ({
 		apiKey: ""
 	},
 	webhooks: [],
+	themeSettings: { carouselArrowColor: "#ffffff" },
 	addCourse: (course) => set((s) => ({ courses: [...s.courses, course] })),
 	updateCourse: (course) => set((s) => ({ courses: s.courses.map((c) => c.id === course.id ? course : c) })),
 	deleteCourse: (id) => set((s) => ({ courses: s.courses.filter((c) => c.id !== id) })),
@@ -19168,7 +19169,8 @@ var useLmsStore = create((set) => ({
 	updateNotificationSettings: (s) => set({ notificationSettings: s }),
 	updatePaymentSettings: (s) => set({ paymentSettings: s }),
 	addWebhook: (w) => set((s) => ({ webhooks: [...s.webhooks, w] })),
-	deleteWebhook: (id) => set((s) => ({ webhooks: s.webhooks.filter((w) => w.id !== id) }))
+	deleteWebhook: (id) => set((s) => ({ webhooks: s.webhooks.filter((w) => w.id !== id) })),
+	updateThemeSettings: (s) => set({ themeSettings: s })
 }));
 //#endregion
 //#region ../../cache/modules/plataforma-ead-inovadora-da584/node_modules/.pnpm/zustand@4.5.7_@types+react@19.2.14_react@19.2.4/node_modules/zustand/esm/middleware.mjs
@@ -21905,6 +21907,40 @@ var MapPin = createLucideIcon("map-pin", [["path", {
 	r: "3",
 	key: "ilqhr7"
 }]]);
+var Palette = createLucideIcon("palette", [
+	["path", {
+		d: "M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z",
+		key: "e79jfc"
+	}],
+	["circle", {
+		cx: "13.5",
+		cy: "6.5",
+		r: ".5",
+		fill: "currentColor",
+		key: "1okk4w"
+	}],
+	["circle", {
+		cx: "17.5",
+		cy: "10.5",
+		r: ".5",
+		fill: "currentColor",
+		key: "f64h9f"
+	}],
+	["circle", {
+		cx: "6.5",
+		cy: "12.5",
+		r: ".5",
+		fill: "currentColor",
+		key: "qy21gx"
+	}],
+	["circle", {
+		cx: "8.5",
+		cy: "7.5",
+		r: ".5",
+		fill: "currentColor",
+		key: "fotxhn"
+	}]
+]);
 var PanelLeft = createLucideIcon("panel-left", [["rect", {
 	width: "18",
 	height: "18",
@@ -29374,7 +29410,7 @@ var Carousel = import_react.forwardRef(({ orientation = "horizontal", opts, setA
 		};
 	}, [api, onSelect]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContext.Provider, {
-		"data-uid": "src/components/ui/carousel.tsx:108:5",
+		"data-uid": "src/components/ui/carousel.tsx:109:5",
 		"data-prohibitions": "[editContent]",
 		value: {
 			carouselRef,
@@ -29387,7 +29423,7 @@ var Carousel = import_react.forwardRef(({ orientation = "horizontal", opts, setA
 			canScrollNext
 		},
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/ui/carousel.tsx:120:7",
+			"data-uid": "src/components/ui/carousel.tsx:121:7",
 			"data-prohibitions": "[editContent]",
 			ref,
 			onKeyDownCapture: handleKeyDown,
@@ -29403,12 +29439,12 @@ Carousel.displayName = "Carousel";
 var CarouselContent = import_react.forwardRef(({ className, ...props }, ref) => {
 	const { carouselRef, orientation } = useCarousel();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/ui/carousel.tsx:140:7",
+		"data-uid": "src/components/ui/carousel.tsx:141:7",
 		"data-prohibitions": "[editContent]",
 		ref: carouselRef,
 		className: "overflow-hidden w-full",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/ui/carousel.tsx:141:9",
+			"data-uid": "src/components/ui/carousel.tsx:142:9",
 			"data-prohibitions": "[editContent]",
 			ref,
 			className: cn("flex", orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col", className),
@@ -29420,7 +29456,7 @@ CarouselContent.displayName = "CarouselContent";
 var CarouselItem = import_react.forwardRef(({ className, ...props }, ref) => {
 	const { orientation } = useCarousel();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/ui/carousel.tsx:161:7",
+		"data-uid": "src/components/ui/carousel.tsx:162:7",
 		"data-prohibitions": "[editContent]",
 		ref,
 		role: "group",
@@ -29432,8 +29468,9 @@ var CarouselItem = import_react.forwardRef(({ className, ...props }, ref) => {
 CarouselItem.displayName = "CarouselItem";
 var CarouselPrevious = import_react.forwardRef(({ className, variant = "outline", size = "icon", ...props }, ref) => {
 	const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+	const arrowColor = useLmsStore((s) => s.themeSettings?.carouselArrowColor || "#ffffff");
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-		"data-uid": "src/components/ui/carousel.tsx:182:7",
+		"data-uid": "src/components/ui/carousel.tsx:184:7",
 		"data-prohibitions": "[editContent]",
 		ref,
 		variant,
@@ -29443,11 +29480,12 @@ var CarouselPrevious = import_react.forwardRef(({ className, variant = "outline"
 		onClick: scrollPrev,
 		...props,
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronLeft, {
-			"data-uid": "src/components/ui/carousel.tsx:197:9",
+			"data-uid": "src/components/ui/carousel.tsx:199:9",
 			"data-prohibitions": "[editContent]",
-			className: "h-8 w-8"
+			className: "h-8 w-8",
+			style: { color: arrowColor }
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-			"data-uid": "src/components/ui/carousel.tsx:198:9",
+			"data-uid": "src/components/ui/carousel.tsx:200:9",
 			"data-prohibitions": "[]",
 			className: "sr-only",
 			children: "Previous slide"
@@ -29457,8 +29495,9 @@ var CarouselPrevious = import_react.forwardRef(({ className, variant = "outline"
 CarouselPrevious.displayName = "CarouselPrevious";
 var CarouselNext = import_react.forwardRef(({ className, variant = "outline", size = "icon", ...props }, ref) => {
 	const { orientation, scrollNext, canScrollNext } = useCarousel();
+	const arrowColor = useLmsStore((s) => s.themeSettings?.carouselArrowColor || "#ffffff");
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-		"data-uid": "src/components/ui/carousel.tsx:210:7",
+		"data-uid": "src/components/ui/carousel.tsx:213:7",
 		"data-prohibitions": "[editContent]",
 		ref,
 		variant,
@@ -29468,11 +29507,12 @@ var CarouselNext = import_react.forwardRef(({ className, variant = "outline", si
 		onClick: scrollNext,
 		...props,
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronRight, {
-			"data-uid": "src/components/ui/carousel.tsx:225:9",
+			"data-uid": "src/components/ui/carousel.tsx:228:9",
 			"data-prohibitions": "[editContent]",
-			className: "h-8 w-8"
+			className: "h-8 w-8",
+			style: { color: arrowColor }
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-			"data-uid": "src/components/ui/carousel.tsx:226:9",
+			"data-uid": "src/components/ui/carousel.tsx:229:9",
 			"data-prohibitions": "[]",
 			className: "sr-only",
 			children: "Next slide"
@@ -33372,19 +33412,18 @@ var ContinueWatchingCard = ({ course, enrollment, onClick }) => {
 		"data-prohibitions": "[editContent]",
 		className: "group overflow-hidden border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2 relative h-full flex flex-col cursor-pointer",
 		onClick,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/student/Dashboard.tsx:105:7",
-			"data-prohibitions": "[]",
-			className: "aspect-video relative overflow-hidden bg-muted",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/student/Dashboard.tsx:105:7",
+				"data-prohibitions": "[]",
+				className: "aspect-video relative overflow-hidden bg-muted",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 					"data-uid": "src/pages/student/Dashboard.tsx:106:9",
 					"data-prohibitions": "[editContent]",
 					src: course.thumbnail,
 					className: "w-full h-full object-cover transition-transform duration-700 group-hover:scale-110",
 					alt: course.title
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/pages/student/Dashboard.tsx:111:9",
 					"data-prohibitions": "[]",
 					className: "absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10",
@@ -33393,53 +33432,127 @@ var ContinueWatchingCard = ({ course, enrollment, onClick }) => {
 						"data-prohibitions": "[editContent]",
 						className: "size-16 text-white drop-shadow-2xl scale-90 group-hover:scale-100 transition-transform duration-300"
 					})
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:114:9",
-					"data-prohibitions": "[]",
-					className: "absolute bottom-0 left-0 right-0 h-1.5 bg-secondary/80 backdrop-blur-sm z-20",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:115:11",
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+				"data-uid": "src/pages/student/Dashboard.tsx:115:7",
+				"data-prohibitions": "[editContent]",
+				className: "p-5 flex-1 flex flex-col relative z-10 bg-card",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/pages/student/Dashboard.tsx:116:9",
 						"data-prohibitions": "[editContent]",
-						className: "h-full bg-primary transition-all duration-500",
-						style: { width: `${progress}%` }
+						className: "text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest",
+						children: course.area
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+						"data-uid": "src/pages/student/Dashboard.tsx:119:9",
+						"data-prohibitions": "[editContent]",
+						className: "font-bold text-lg leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2",
+						children: course.title
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/student/Dashboard.tsx:122:9",
+						"data-prohibitions": "[editContent]",
+						className: "mt-4 flex items-center justify-between text-sm font-medium",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+							"data-uid": "src/pages/student/Dashboard.tsx:123:11",
+							"data-prohibitions": "[]",
+							className: "text-muted-foreground",
+							children: "Progresso atual"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+							"data-uid": "src/pages/student/Dashboard.tsx:124:11",
+							"data-prohibitions": "[editContent]",
+							className: "text-primary font-bold",
+							children: [progress, "%"]
+						})]
 					})
-				})
-			]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-			"data-uid": "src/pages/student/Dashboard.tsx:121:7",
-			"data-prohibitions": "[editContent]",
-			className: "p-5 flex-1 flex flex-col relative z-10 bg-card",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:122:9",
-					"data-prohibitions": "[editContent]",
-					className: "text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest",
-					children: course.area
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/pages/student/Dashboard.tsx:125:9",
-					"data-prohibitions": "[editContent]",
-					className: "font-bold text-lg leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2",
-					children: course.title
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/student/Dashboard.tsx:127:7",
+				"data-prohibitions": "[]",
+				className: "h-1.5 w-full bg-secondary/80 mt-auto",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 					"data-uid": "src/pages/student/Dashboard.tsx:128:9",
 					"data-prohibitions": "[editContent]",
-					className: "mt-4 flex items-center justify-between text-sm font-medium",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/pages/student/Dashboard.tsx:129:11",
-						"data-prohibitions": "[]",
-						className: "text-muted-foreground",
-						children: "Progresso atual"
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-						"data-uid": "src/pages/student/Dashboard.tsx:130:11",
-						"data-prohibitions": "[editContent]",
-						className: "text-primary font-bold",
-						children: [progress, "%"]
-					})]
+					className: "h-full bg-primary transition-all duration-500",
+					style: { width: `${progress}%` }
 				})
-			]
+			})
+		]
+	});
+};
+var EbookCard = ({ product, onClick }) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+		"data-uid": "src/pages/student/Dashboard.tsx:139:5",
+		"data-prohibitions": "[editContent]",
+		className: "group overflow-hidden border-border/50 bg-card shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.05] hover:-translate-y-2 relative h-full flex flex-col cursor-pointer",
+		onClick,
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/student/Dashboard.tsx:143:7",
+			"data-prohibitions": "[]",
+			className: "aspect-[3/4] relative overflow-hidden bg-muted",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+				"data-uid": "src/pages/student/Dashboard.tsx:144:9",
+				"data-prohibitions": "[editContent]",
+				src: product.coverImage,
+				className: "w-full h-full object-cover transition-transform duration-700 group-hover:scale-110",
+				alt: product.title
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/student/Dashboard.tsx:149:9",
+				"data-prohibitions": "[editContent]",
+				className: "absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity z-10"
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
+			"data-uid": "src/pages/student/Dashboard.tsx:151:7",
+			"data-prohibitions": "[editContent]",
+			className: "p-4 flex-1 flex flex-col relative z-10 bg-card",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+				"data-uid": "src/pages/student/Dashboard.tsx:152:9",
+				"data-prohibitions": "[editContent]",
+				className: "font-bold text-sm md:text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2",
+				children: product.title
+			})
+		})]
+	});
+};
+var SpeakerCard = ({ speaker, onClick }) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/student/Dashboard.tsx:162:5",
+		"data-prohibitions": "[editContent]",
+		className: "group flex flex-col items-center cursor-pointer space-y-4 px-2",
+		onClick,
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/student/Dashboard.tsx:166:7",
+			"data-prohibitions": "[]",
+			className: "w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-4 border-transparent group-hover:border-primary transition-all duration-300 shadow-xl group-hover:shadow-2xl group-hover:scale-105 relative",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+				"data-uid": "src/pages/student/Dashboard.tsx:167:9",
+				"data-prohibitions": "[editContent]",
+				src: speaker.avatar,
+				className: "w-full h-full object-cover",
+				alt: speaker.name
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				"data-uid": "src/pages/student/Dashboard.tsx:168:9",
+				"data-prohibitions": "[editContent]",
+				className: "absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/student/Dashboard.tsx:170:7",
+			"data-prohibitions": "[editContent]",
+			className: "text-center",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
+				"data-uid": "src/pages/student/Dashboard.tsx:171:9",
+				"data-prohibitions": "[editContent]",
+				className: "font-bold text-lg leading-tight group-hover:text-primary transition-colors",
+				children: speaker.name
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/pages/student/Dashboard.tsx:174:9",
+				"data-prohibitions": "[editContent]",
+				className: "text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1",
+				children: speaker.type === "internal" ? "Membro" : "Convidado"
+			})]
 		})]
 	});
 };
@@ -33447,12 +33560,14 @@ function StudentDashboard() {
 	const user = useAuthStore((s) => s.user);
 	const navigate = useNavigate();
 	const { courses, enrollments, enrollStudent, paymentSettings, liveClasses } = useLmsStore();
-	const { coupons, incrementCouponUsage } = useCommercialStore();
+	const { coupons, incrementCouponUsage, speakers, products } = useCommercialStore();
 	const [enrollCourse, setEnrollCourse] = (0, import_react.useState)(null);
 	const [selectedBatch, setSelectedBatch] = (0, import_react.useState)("");
 	const [couponCode, setCouponCode] = (0, import_react.useState)("");
 	const [appliedCoupon, setAppliedCoupon] = (0, import_react.useState)(null);
+	const [selectedSpeaker, setSelectedSpeaker] = (0, import_react.useState)(null);
 	if (!user) return null;
+	const ebooks = products.filter((p) => p.type === "ebook");
 	const myEnrollments = enrollments.filter((e) => e.studentId === user.id);
 	const myCourses = myEnrollments.map((e) => ({
 		course: courses.find((c) => c.id === e.courseId),
@@ -33509,32 +33624,32 @@ function StudentDashboard() {
 		return acc;
 	}, {});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/student/Dashboard.tsx:228:5",
+		"data-uid": "src/pages/student/Dashboard.tsx:276:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-16 pb-24 pt-4 md:pt-6 overflow-x-hidden",
 		children: [
 			activeLiveClasses.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Alert, {
-				"data-uid": "src/pages/student/Dashboard.tsx:230:9",
+				"data-uid": "src/pages/student/Dashboard.tsx:278:9",
 				"data-prohibitions": "[editContent]",
 				className: "border-red-500 bg-red-50 dark:bg-red-950/50 text-red-900 dark:text-red-200 shadow-md mx-4 md:mx-8 w-auto",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio$1, {
-						"data-uid": "src/pages/student/Dashboard.tsx:231:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:279:11",
 						"data-prohibitions": "[editContent]",
 						className: "size-5 text-red-600 dark:text-red-400 animate-pulse"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(AlertTitle, {
-						"data-uid": "src/pages/student/Dashboard.tsx:232:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:280:11",
 						"data-prohibitions": "[]",
 						className: "font-bold text-lg text-red-700 dark:text-red-300",
 						children: "Atenção! Aula ao vivo acontecendo agora."
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(AlertDescription, {
-						"data-uid": "src/pages/student/Dashboard.tsx:235:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:283:11",
 						"data-prohibitions": "[editContent]",
 						className: "mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							"data-uid": "src/pages/student/Dashboard.tsx:236:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:284:13",
 							"data-prohibitions": "[editContent]",
 							children: [
 								"Você tem ",
@@ -33542,7 +33657,7 @@ function StudentDashboard() {
 								" aula(s) rolando neste momento. Não perca o conteúdo!"
 							]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/student/Dashboard.tsx:240:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:288:13",
 							"data-prohibitions": "[]",
 							size: "sm",
 							className: "bg-red-600 hover:bg-red-700 text-white shrink-0 shadow-sm",
@@ -33553,93 +33668,93 @@ function StudentDashboard() {
 				]
 			}),
 			featuredCourse && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:252:9",
+				"data-uid": "src/pages/student/Dashboard.tsx:300:9",
 				"data-prohibitions": "[editContent]",
 				className: "relative w-full rounded-[2rem] overflow-hidden min-h-[500px] lg:min-h-[600px] flex flex-col justify-end p-8 md:p-12 shadow-2xl group border border-border/50 mx-4 md:mx-8 max-w-[calc(100%-2rem)] md:max-w-[calc(100%-4rem)]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:253:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:301:11",
 					"data-prohibitions": "[]",
 					className: "absolute inset-0",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							"data-uid": "src/pages/student/Dashboard.tsx:254:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:302:13",
 							"data-prohibitions": "[editContent]",
 							src: featuredCourse.thumbnail,
 							alt: featuredCourse.title,
 							className: "w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/student/Dashboard.tsx:259:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:307:13",
 							"data-prohibitions": "[editContent]",
 							className: "absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/student/Dashboard.tsx:260:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:308:13",
 							"data-prohibitions": "[editContent]",
 							className: "absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"
 						})
 					]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/student/Dashboard.tsx:262:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:310:11",
 					"data-prohibitions": "[editContent]",
 					className: "relative z-10 max-w-3xl space-y-6 animate-fade-in-up",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/student/Dashboard.tsx:263:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:311:13",
 							"data-prohibitions": "[editContent]",
 							className: "flex items-center gap-3",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-								"data-uid": "src/pages/student/Dashboard.tsx:264:15",
+								"data-uid": "src/pages/student/Dashboard.tsx:312:15",
 								"data-prohibitions": "[]",
 								className: "bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-3 py-1 border-none",
 								children: "Destaque"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/pages/student/Dashboard.tsx:267:15",
+								"data-uid": "src/pages/student/Dashboard.tsx:315:15",
 								"data-prohibitions": "[editContent]",
 								className: "text-slate-300 font-semibold text-sm uppercase tracking-wider",
 								children: featuredCourse.area
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-							"data-uid": "src/pages/student/Dashboard.tsx:271:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:319:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md",
 							children: featuredCourse.title
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/pages/student/Dashboard.tsx:274:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:322:13",
 							"data-prohibitions": "[editContent]",
 							className: "text-lg md:text-xl text-slate-300 font-medium line-clamp-2 max-w-2xl drop-shadow-sm",
 							children: featuredCourse.description
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/student/Dashboard.tsx:277:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:325:13",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-col sm:flex-row gap-4 pt-6",
 							children: [featuredMyCourse ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-								"data-uid": "src/pages/student/Dashboard.tsx:279:17",
+								"data-uid": "src/pages/student/Dashboard.tsx:327:17",
 								"data-prohibitions": "[]",
 								size: "lg",
 								className: "h-14 px-8 text-lg font-bold shadow-xl",
 								onClick: () => navigate(`/student/course/${featuredCourse.id}`),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CirclePlay, {
-									"data-uid": "src/pages/student/Dashboard.tsx:284:19",
+									"data-uid": "src/pages/student/Dashboard.tsx:332:19",
 									"data-prohibitions": "[editContent]",
 									className: "mr-2 size-5"
 								}), " Continuar Assistindo"]
 							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-								"data-uid": "src/pages/student/Dashboard.tsx:287:17",
+								"data-uid": "src/pages/student/Dashboard.tsx:335:17",
 								"data-prohibitions": "[]",
 								size: "lg",
 								className: "h-14 px-8 text-lg font-bold shadow-xl",
 								onClick: () => handleEnrollClick(featuredCourse),
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CirclePlus, {
-									"data-uid": "src/pages/student/Dashboard.tsx:292:19",
+									"data-uid": "src/pages/student/Dashboard.tsx:340:19",
 									"data-prohibitions": "[editContent]",
 									className: "mr-2 size-5"
 								}), " Inscrever-se Agora"]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-								"data-uid": "src/pages/student/Dashboard.tsx:295:15",
+								"data-uid": "src/pages/student/Dashboard.tsx:343:15",
 								"data-prohibitions": "[editContent]",
 								size: "lg",
 								variant: "outline",
@@ -33650,7 +33765,7 @@ function StudentDashboard() {
 								},
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Info, {
-										"data-uid": "src/pages/student/Dashboard.tsx:304:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:352:17",
 										"data-prohibitions": "[editContent]",
 										className: "mr-2 size-5"
 									}),
@@ -33663,16 +33778,16 @@ function StudentDashboard() {
 				})]
 			}),
 			myCourses.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:314:9",
+				"data-uid": "src/pages/student/Dashboard.tsx:361:9",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-6 px-4 md:px-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/pages/student/Dashboard.tsx:315:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:362:11",
 					"data-prohibitions": "[]",
 					className: "text-3xl font-extrabold tracking-tight px-1",
 					children: "Continuar Assistindo"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Carousel, {
-					"data-uid": "src/pages/student/Dashboard.tsx:316:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:363:11",
 					"data-prohibitions": "[editContent]",
 					opts: {
 						align: "start",
@@ -33680,15 +33795,15 @@ function StudentDashboard() {
 					},
 					className: "w-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContent, {
-						"data-uid": "src/pages/student/Dashboard.tsx:317:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:364:13",
 						"data-prohibitions": "[editContent]",
 						className: "-ml-4 py-10 px-1",
 						children: myCourses.map(({ course, enrollment }) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselItem, {
-							"data-uid": "src/pages/student/Dashboard.tsx:319:17",
+							"data-uid": "src/pages/student/Dashboard.tsx:366:17",
 							"data-prohibitions": "[]",
 							className: "pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ContinueWatchingCard, {
-								"data-uid": "src/pages/student/Dashboard.tsx:323:19",
+								"data-uid": "src/pages/student/Dashboard.tsx:370:19",
 								"data-prohibitions": "[editContent]",
 								course,
 								enrollment,
@@ -33696,32 +33811,32 @@ function StudentDashboard() {
 							})
 						}, course.id))
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:331:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:378:13",
 						"data-prohibitions": "[]",
 						className: "hidden lg:block",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselPrevious, {
-							"data-uid": "src/pages/student/Dashboard.tsx:332:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:379:15",
 							"data-prohibitions": "[editContent]",
 							className: "-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselNext, {
-							"data-uid": "src/pages/student/Dashboard.tsx:333:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:380:15",
 							"data-prohibitions": "[editContent]",
 							className: "-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						})]
 					})]
 				})]
 			}),
-			recommendedCourses.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:340:9",
+			speakers.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+				"data-uid": "src/pages/student/Dashboard.tsx:387:9",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-6 px-4 md:px-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/pages/student/Dashboard.tsx:341:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:388:11",
 					"data-prohibitions": "[]",
 					className: "text-3xl font-extrabold tracking-tight px-1",
-					children: "Recomendados para Você"
+					children: "Palestrantes"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Carousel, {
-					"data-uid": "src/pages/student/Dashboard.tsx:342:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:389:11",
 					"data-prohibitions": "[editContent]",
 					opts: {
 						align: "start",
@@ -33729,15 +33844,111 @@ function StudentDashboard() {
 					},
 					className: "w-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContent, {
-						"data-uid": "src/pages/student/Dashboard.tsx:343:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:390:13",
+						"data-prohibitions": "[editContent]",
+						className: "-ml-4 py-10 px-1",
+						children: speakers.map((speaker) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselItem, {
+							"data-uid": "src/pages/student/Dashboard.tsx:392:17",
+							"data-prohibitions": "[]",
+							className: "pl-4 basis-[45%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-[15%] relative z-10",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SpeakerCard, {
+								"data-uid": "src/pages/student/Dashboard.tsx:396:19",
+								"data-prohibitions": "[editContent]",
+								speaker,
+								onClick: () => setSelectedSpeaker(speaker)
+							})
+						}, speaker.id))
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/student/Dashboard.tsx:400:13",
+						"data-prohibitions": "[]",
+						className: "hidden lg:block",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselPrevious, {
+							"data-uid": "src/pages/student/Dashboard.tsx:401:15",
+							"data-prohibitions": "[editContent]",
+							className: "-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselNext, {
+							"data-uid": "src/pages/student/Dashboard.tsx:402:15",
+							"data-prohibitions": "[editContent]",
+							className: "-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
+						})]
+					})]
+				})]
+			}),
+			ebooks.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+				"data-uid": "src/pages/student/Dashboard.tsx:409:9",
+				"data-prohibitions": "[editContent]",
+				className: "space-y-6 px-4 md:px-8",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					"data-uid": "src/pages/student/Dashboard.tsx:410:11",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-extrabold tracking-tight px-1",
+					children: "Ebooks Exclusivos"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Carousel, {
+					"data-uid": "src/pages/student/Dashboard.tsx:411:11",
+					"data-prohibitions": "[editContent]",
+					opts: {
+						align: "start",
+						dragFree: true
+					},
+					className: "w-full",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContent, {
+						"data-uid": "src/pages/student/Dashboard.tsx:412:13",
+						"data-prohibitions": "[editContent]",
+						className: "-ml-4 py-10 px-1",
+						children: ebooks.map((ebook) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselItem, {
+							"data-uid": "src/pages/student/Dashboard.tsx:414:17",
+							"data-prohibitions": "[]",
+							className: "pl-4 basis-[60%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 relative z-10",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EbookCard, {
+								"data-uid": "src/pages/student/Dashboard.tsx:418:19",
+								"data-prohibitions": "[editContent]",
+								product: ebook,
+								onClick: () => navigate(`/store/product/${ebook.id}`)
+							})
+						}, ebook.id))
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/student/Dashboard.tsx:425:13",
+						"data-prohibitions": "[]",
+						className: "hidden lg:block",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselPrevious, {
+							"data-uid": "src/pages/student/Dashboard.tsx:426:15",
+							"data-prohibitions": "[editContent]",
+							className: "-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselNext, {
+							"data-uid": "src/pages/student/Dashboard.tsx:427:15",
+							"data-prohibitions": "[editContent]",
+							className: "-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
+						})]
+					})]
+				})]
+			}),
+			recommendedCourses.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
+				"data-uid": "src/pages/student/Dashboard.tsx:434:9",
+				"data-prohibitions": "[editContent]",
+				className: "space-y-6 px-4 md:px-8",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
+					"data-uid": "src/pages/student/Dashboard.tsx:435:11",
+					"data-prohibitions": "[]",
+					className: "text-3xl font-extrabold tracking-tight px-1",
+					children: "Recomendados para Você"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Carousel, {
+					"data-uid": "src/pages/student/Dashboard.tsx:436:11",
+					"data-prohibitions": "[editContent]",
+					opts: {
+						align: "start",
+						dragFree: true
+					},
+					className: "w-full",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContent, {
+						"data-uid": "src/pages/student/Dashboard.tsx:437:13",
 						"data-prohibitions": "[editContent]",
 						className: "-ml-4 py-10 px-1",
 						children: recommendedCourses.map((course) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselItem, {
-							"data-uid": "src/pages/student/Dashboard.tsx:345:17",
+							"data-uid": "src/pages/student/Dashboard.tsx:439:17",
 							"data-prohibitions": "[]",
 							className: "pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseCard, {
-								"data-uid": "src/pages/student/Dashboard.tsx:349:19",
+								"data-uid": "src/pages/student/Dashboard.tsx:443:19",
 								"data-prohibitions": "[editContent]",
 								course,
 								onClick: () => handleEnrollClick(course),
@@ -33746,15 +33957,15 @@ function StudentDashboard() {
 							})
 						}, course.id))
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:358:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:452:13",
 						"data-prohibitions": "[]",
 						className: "hidden lg:block",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselPrevious, {
-							"data-uid": "src/pages/student/Dashboard.tsx:359:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:453:15",
 							"data-prohibitions": "[editContent]",
 							className: "-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselNext, {
-							"data-uid": "src/pages/student/Dashboard.tsx:360:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:454:15",
 							"data-prohibitions": "[editContent]",
 							className: "-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						})]
@@ -33762,16 +33973,16 @@ function StudentDashboard() {
 				})]
 			}),
 			newCourses.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:367:9",
+				"data-uid": "src/pages/student/Dashboard.tsx:461:9",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-6 px-4 md:px-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-					"data-uid": "src/pages/student/Dashboard.tsx:368:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:462:11",
 					"data-prohibitions": "[]",
 					className: "text-3xl font-extrabold tracking-tight px-1",
 					children: "Novos Cursos"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Carousel, {
-					"data-uid": "src/pages/student/Dashboard.tsx:369:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:463:11",
 					"data-prohibitions": "[editContent]",
 					opts: {
 						align: "start",
@@ -33779,15 +33990,15 @@ function StudentDashboard() {
 					},
 					className: "w-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContent, {
-						"data-uid": "src/pages/student/Dashboard.tsx:370:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:464:13",
 						"data-prohibitions": "[editContent]",
 						className: "-ml-4 py-10 px-1",
 						children: newCourses.map((course) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselItem, {
-							"data-uid": "src/pages/student/Dashboard.tsx:372:17",
+							"data-uid": "src/pages/student/Dashboard.tsx:466:17",
 							"data-prohibitions": "[]",
 							className: "pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseCard, {
-								"data-uid": "src/pages/student/Dashboard.tsx:376:19",
+								"data-uid": "src/pages/student/Dashboard.tsx:470:19",
 								"data-prohibitions": "[editContent]",
 								course,
 								onClick: () => handleEnrollClick(course),
@@ -33796,15 +34007,15 @@ function StudentDashboard() {
 							})
 						}, course.id))
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:385:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:479:13",
 						"data-prohibitions": "[]",
 						className: "hidden lg:block",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselPrevious, {
-							"data-uid": "src/pages/student/Dashboard.tsx:386:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:480:15",
 							"data-prohibitions": "[editContent]",
 							className: "-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselNext, {
-							"data-uid": "src/pages/student/Dashboard.tsx:387:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:481:15",
 							"data-prohibitions": "[editContent]",
 							className: "-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						})]
@@ -33812,16 +34023,16 @@ function StudentDashboard() {
 				})]
 			}),
 			Object.entries(availableCoursesByArea).map(([area, areaCourses]) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				"data-uid": "src/pages/student/Dashboard.tsx:394:9",
+				"data-uid": "src/pages/student/Dashboard.tsx:488:9",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-6 px-4 md:px-8",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h2", {
-					"data-uid": "src/pages/student/Dashboard.tsx:395:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:489:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-3xl font-extrabold tracking-tight px-1",
 					children: ["Trilha: ", area]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Carousel, {
-					"data-uid": "src/pages/student/Dashboard.tsx:396:11",
+					"data-uid": "src/pages/student/Dashboard.tsx:490:11",
 					"data-prohibitions": "[editContent]",
 					opts: {
 						align: "start",
@@ -33829,15 +34040,15 @@ function StudentDashboard() {
 					},
 					className: "w-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselContent, {
-						"data-uid": "src/pages/student/Dashboard.tsx:397:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:491:13",
 						"data-prohibitions": "[editContent]",
 						className: "-ml-4 py-10 px-1",
 						children: areaCourses.map((course) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselItem, {
-							"data-uid": "src/pages/student/Dashboard.tsx:399:17",
+							"data-uid": "src/pages/student/Dashboard.tsx:493:17",
 							"data-prohibitions": "[]",
 							className: "pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 relative z-10",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseCard, {
-								"data-uid": "src/pages/student/Dashboard.tsx:403:19",
+								"data-uid": "src/pages/student/Dashboard.tsx:497:19",
 								"data-prohibitions": "[editContent]",
 								course,
 								onClick: () => handleEnrollClick(course),
@@ -33846,15 +34057,15 @@ function StudentDashboard() {
 							})
 						}, course.id))
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:412:13",
+						"data-uid": "src/pages/student/Dashboard.tsx:506:13",
 						"data-prohibitions": "[]",
 						className: "hidden lg:block",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselPrevious, {
-							"data-uid": "src/pages/student/Dashboard.tsx:413:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:507:15",
 							"data-prohibitions": "[editContent]",
 							className: "-left-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CarouselNext, {
-							"data-uid": "src/pages/student/Dashboard.tsx:414:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:508:15",
 							"data-prohibitions": "[editContent]",
 							className: "-right-4 h-14 w-14 border-2 bg-background/95 backdrop-blur shadow-xl hover:bg-background z-30"
 						})]
@@ -33862,64 +34073,64 @@ function StudentDashboard() {
 				})]
 			}, area)),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
-				"data-uid": "src/pages/student/Dashboard.tsx:420:7",
+				"data-uid": "src/pages/student/Dashboard.tsx:514:7",
 				"data-prohibitions": "[editContent]",
 				open: !!enrollCourse,
 				onOpenChange: (o) => !o && setEnrollCourse(null),
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
-					"data-uid": "src/pages/student/Dashboard.tsx:421:9",
+					"data-uid": "src/pages/student/Dashboard.tsx:515:9",
 					"data-prohibitions": "[editContent]",
 					className: "sm:max-w-[450px] p-0 overflow-hidden",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:422:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:516:11",
 						"data-prohibitions": "[editContent]",
 						className: "h-32 bg-muted relative",
 						children: [enrollCourse?.thumbnail && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							"data-uid": "src/pages/student/Dashboard.tsx:424:15",
+							"data-uid": "src/pages/student/Dashboard.tsx:518:15",
 							"data-prohibitions": "[editContent]",
 							src: enrollCourse.thumbnail,
 							className: "w-full h-full object-cover",
 							alt: "Curso"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/student/Dashboard.tsx:430:13",
+							"data-uid": "src/pages/student/Dashboard.tsx:524:13",
 							"data-prohibitions": "[editContent]",
 							className: "absolute inset-0 bg-gradient-to-t from-background to-transparent"
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/student/Dashboard.tsx:432:11",
+						"data-uid": "src/pages/student/Dashboard.tsx:526:11",
 						"data-prohibitions": "[editContent]",
 						className: "px-6 pb-6 space-y-5",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
-								"data-uid": "src/pages/student/Dashboard.tsx:433:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:527:13",
 								"data-prohibitions": "[editContent]",
 								className: "mt-2",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
-									"data-uid": "src/pages/student/Dashboard.tsx:434:15",
+									"data-uid": "src/pages/student/Dashboard.tsx:528:15",
 									"data-prohibitions": "[editContent]",
 									className: "text-brand text-2xl leading-tight",
 									children: enrollCourse?.title
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:439:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:533:13",
 								"data-prohibitions": "[editContent]",
 								className: "space-y-2 border-b pb-4",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("label", {
-									"data-uid": "src/pages/student/Dashboard.tsx:440:15",
+									"data-uid": "src/pages/student/Dashboard.tsx:534:15",
 									"data-prohibitions": "[]",
 									className: "text-sm font-semibold flex items-center gap-2",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(BadgePercent, {
-										"data-uid": "src/pages/student/Dashboard.tsx:441:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:535:17",
 										"data-prohibitions": "[editContent]",
 										className: "size-4 text-primary"
 									}), " Cupom de Desconto"]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/student/Dashboard.tsx:443:15",
+									"data-uid": "src/pages/student/Dashboard.tsx:537:15",
 									"data-prohibitions": "[editContent]",
 									className: "flex gap-2",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-										"data-uid": "src/pages/student/Dashboard.tsx:444:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:538:17",
 										"data-prohibitions": "[editContent]",
 										placeholder: "Insira o código promocional",
 										value: couponCode,
@@ -33927,13 +34138,13 @@ function StudentDashboard() {
 										className: "uppercase font-mono",
 										disabled: !!appliedCoupon
 									}), !appliedCoupon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/student/Dashboard.tsx:452:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:546:19",
 										"data-prohibitions": "[]",
 										variant: "secondary",
 										onClick: handleApplyCoupon,
 										children: "Aplicar"
 									}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/student/Dashboard.tsx:456:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:550:19",
 										"data-prohibitions": "[]",
 										variant: "outline",
 										className: "text-destructive hover:bg-destructive/10",
@@ -33946,30 +34157,30 @@ function StudentDashboard() {
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:470:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:564:13",
 								"data-prohibitions": "[editContent]",
 								className: "bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border space-y-2",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/Dashboard.tsx:471:15",
+										"data-uid": "src/pages/student/Dashboard.tsx:565:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex justify-between text-sm text-muted-foreground font-medium",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/student/Dashboard.tsx:472:17",
+											"data-uid": "src/pages/student/Dashboard.tsx:566:17",
 											"data-prohibitions": "[]",
 											children: "Valor Base:"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/student/Dashboard.tsx:473:17",
+											"data-uid": "src/pages/student/Dashboard.tsx:567:17",
 											"data-prohibitions": "[editContent]",
 											children: ["R$ ", basePrice.toFixed(2)]
 										})]
 									}),
 									appliedCoupon && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/Dashboard.tsx:476:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:570:17",
 										"data-prohibitions": "[editContent]",
 										className: "flex justify-between text-sm text-success font-bold",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/student/Dashboard.tsx:477:19",
+											"data-uid": "src/pages/student/Dashboard.tsx:571:19",
 											"data-prohibitions": "[editContent]",
 											children: [
 												"Desconto (",
@@ -33977,22 +34188,22 @@ function StudentDashboard() {
 												"):"
 											]
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/student/Dashboard.tsx:478:19",
+											"data-uid": "src/pages/student/Dashboard.tsx:572:19",
 											"data-prohibitions": "[editContent]",
 											children: ["- R$ ", discountAmount.toFixed(2)]
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/Dashboard.tsx:481:15",
+										"data-uid": "src/pages/student/Dashboard.tsx:575:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex justify-between items-center font-bold pt-2 border-t mt-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-											"data-uid": "src/pages/student/Dashboard.tsx:482:17",
+											"data-uid": "src/pages/student/Dashboard.tsx:576:17",
 											"data-prohibitions": "[]",
 											className: "text-brand dark:text-white",
 											children: "Total a Pagar:"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-											"data-uid": "src/pages/student/Dashboard.tsx:483:17",
+											"data-uid": "src/pages/student/Dashboard.tsx:577:17",
 											"data-prohibitions": "[editContent]",
 											className: "text-2xl text-primary",
 											children: ["R$ ", finalPrice.toFixed(2)]
@@ -34001,32 +34212,32 @@ function StudentDashboard() {
 								]
 							}),
 							enrollCourse?.batches && enrollCourse.batches.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:488:15",
+								"data-uid": "src/pages/student/Dashboard.tsx:582:15",
 								"data-prohibitions": "[editContent]",
 								className: "space-y-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-									"data-uid": "src/pages/student/Dashboard.tsx:489:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:583:17",
 									"data-prohibitions": "[]",
 									className: "text-sm font-semibold text-brand dark:text-white",
 									children: "Turma / Ciclo de Ensino"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-									"data-uid": "src/pages/student/Dashboard.tsx:492:17",
+									"data-uid": "src/pages/student/Dashboard.tsx:586:17",
 									"data-prohibitions": "[editContent]",
 									value: selectedBatch,
 									onValueChange: setSelectedBatch,
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-										"data-uid": "src/pages/student/Dashboard.tsx:493:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:587:19",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-											"data-uid": "src/pages/student/Dashboard.tsx:494:21",
+											"data-uid": "src/pages/student/Dashboard.tsx:588:21",
 											"data-prohibitions": "[editContent]",
 											placeholder: "Selecione a turma desejada"
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-										"data-uid": "src/pages/student/Dashboard.tsx:496:19",
+										"data-uid": "src/pages/student/Dashboard.tsx:590:19",
 										"data-prohibitions": "[editContent]",
 										children: enrollCourse.batches.map((b) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectItem, {
-											"data-uid": "src/pages/student/Dashboard.tsx:498:23",
+											"data-uid": "src/pages/student/Dashboard.tsx:592:23",
 											"data-prohibitions": "[editContent]",
 											value: b.id,
 											children: [
@@ -34043,35 +34254,35 @@ function StudentDashboard() {
 								})]
 							}),
 							finalPrice > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/student/Dashboard.tsx:509:15",
+								"data-uid": "src/pages/student/Dashboard.tsx:603:15",
 								"data-prohibitions": "[]",
 								className: "bg-muted/30 p-4 rounded-lg border border-dashed space-y-3",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-										"data-uid": "src/pages/student/Dashboard.tsx:510:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:604:17",
 										"data-prohibitions": "[]",
 										className: "text-sm font-semibold text-muted-foreground flex items-center gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Radio$1, {
-											"data-uid": "src/pages/student/Dashboard.tsx:511:19",
+											"data-uid": "src/pages/student/Dashboard.tsx:605:19",
 											"data-prohibitions": "[editContent]",
 											className: "size-4"
 										}), " Pagamento Seguro"]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-										"data-uid": "src/pages/student/Dashboard.tsx:513:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:607:17",
 										"data-prohibitions": "[editContent]",
 										placeholder: "Número do Cartão"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/student/Dashboard.tsx:514:17",
+										"data-uid": "src/pages/student/Dashboard.tsx:608:17",
 										"data-prohibitions": "[]",
 										className: "flex gap-2",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/student/Dashboard.tsx:515:19",
+											"data-uid": "src/pages/student/Dashboard.tsx:609:19",
 											"data-prohibitions": "[editContent]",
 											placeholder: "MM/AA"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-											"data-uid": "src/pages/student/Dashboard.tsx:516:19",
+											"data-uid": "src/pages/student/Dashboard.tsx:610:19",
 											"data-prohibitions": "[editContent]",
 											placeholder: "CVC"
 										})]
@@ -34079,11 +34290,78 @@ function StudentDashboard() {
 								]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/student/Dashboard.tsx:521:13",
+								"data-uid": "src/pages/student/Dashboard.tsx:615:13",
 								"data-prohibitions": "[]",
 								className: "w-full text-lg h-12 font-bold shadow-md",
 								onClick: handleFinalizeEnrollment,
 								children: "Confirmar e Pagar"
+							})
+						]
+					})]
+				})
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dialog, {
+				"data-uid": "src/pages/student/Dashboard.tsx:625:7",
+				"data-prohibitions": "[editContent]",
+				open: !!selectedSpeaker,
+				onOpenChange: (o) => !o && setSelectedSpeaker(null),
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
+					"data-uid": "src/pages/student/Dashboard.tsx:626:9",
+					"data-prohibitions": "[editContent]",
+					className: "sm:max-w-[450px] p-0 overflow-hidden",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/student/Dashboard.tsx:627:11",
+						"data-prohibitions": "[editContent]",
+						className: "bg-primary/10 p-8 flex flex-col items-center justify-center relative",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/student/Dashboard.tsx:628:13",
+								"data-prohibitions": "[]",
+								className: "w-32 h-32 rounded-full overflow-hidden border-4 border-background shadow-xl mb-4",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+									"data-uid": "src/pages/student/Dashboard.tsx:629:15",
+									"data-prohibitions": "[editContent]",
+									src: selectedSpeaker?.avatar,
+									alt: selectedSpeaker?.name,
+									className: "w-full h-full object-cover"
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
+								"data-uid": "src/pages/student/Dashboard.tsx:635:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-2xl font-bold text-center",
+								children: selectedSpeaker?.name
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/student/Dashboard.tsx:638:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-sm font-medium text-primary mt-1 uppercase tracking-wider",
+								children: selectedSpeaker?.type === "internal" ? "Membro da Equipe" : "Convidado Especial"
+							})
+						]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/pages/student/Dashboard.tsx:642:11",
+						"data-prohibitions": "[editContent]",
+						className: "p-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+								"data-uid": "src/pages/student/Dashboard.tsx:643:13",
+								"data-prohibitions": "[]",
+								className: "font-semibold text-lg mb-2",
+								children: "Sobre o Palestrante"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/pages/student/Dashboard.tsx:644:13",
+								"data-prohibitions": "[editContent]",
+								className: "text-muted-foreground leading-relaxed text-sm",
+								children: selectedSpeaker?.bio
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+								"data-uid": "src/pages/student/Dashboard.tsx:645:13",
+								"data-prohibitions": "[]",
+								className: "w-full mt-6",
+								onClick: () => setSelectedSpeaker(null),
+								children: "Fechar"
 							})
 						]
 					})]
@@ -37799,77 +38077,84 @@ function ManagerDashboard() {
 			link: `${basePath}/enrollments`
 		}
 	];
+	if (user?.role === "manager" || user?.role === "admin") stats.push({
+		title: "Aparência",
+		value: "Temas",
+		icon: Palette,
+		desc: "Personalizar visual",
+		link: "/manager/appearance"
+	});
 	const recentActivity = myEnrollments.flatMap((e) => e.activityLog.map((act) => ({
 		...act,
 		courseTitle: courses.find((c) => c.id === e.courseId)?.title
 	}))).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/manager/Dashboard.tsx:57:5",
+		"data-uid": "src/pages/manager/Dashboard.tsx:67:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-8 pb-10",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/manager/Dashboard.tsx:58:7",
+				"data-uid": "src/pages/manager/Dashboard.tsx:68:7",
 				"data-prohibitions": "[editContent]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-					"data-uid": "src/pages/manager/Dashboard.tsx:59:9",
+					"data-uid": "src/pages/manager/Dashboard.tsx:69:9",
 					"data-prohibitions": "[editContent]",
 					className: "text-3xl font-bold tracking-tight",
 					children: user?.role === "instructor" ? "Painel do Professor" : "Visão Geral"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/pages/manager/Dashboard.tsx:62:9",
+					"data-uid": "src/pages/manager/Dashboard.tsx:72:9",
 					"data-prohibitions": "[]",
 					className: "text-muted-foreground mt-1",
 					children: "Acompanhe os indicadores dos seus cursos."
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/manager/Dashboard.tsx:65:7",
+				"data-uid": "src/pages/manager/Dashboard.tsx:75:7",
 				"data-prohibitions": "[editContent]",
-				className: "grid sm:grid-cols-2 lg:grid-cols-3 gap-6",
+				className: "grid sm:grid-cols-2 lg:grid-cols-4 gap-6",
 				children: stats.map((stat) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-					"data-uid": "src/pages/manager/Dashboard.tsx:67:11",
+					"data-uid": "src/pages/manager/Dashboard.tsx:77:11",
 					"data-prohibitions": "[editContent]",
 					to: stat.link,
 					className: "group outline-none",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-						"data-uid": "src/pages/manager/Dashboard.tsx:68:13",
+						"data-uid": "src/pages/manager/Dashboard.tsx:78:13",
 						"data-prohibitions": "[editContent]",
 						className: "hover:border-primary/50 transition-colors h-full flex flex-col bg-card",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-							"data-uid": "src/pages/manager/Dashboard.tsx:69:15",
+							"data-uid": "src/pages/manager/Dashboard.tsx:79:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-row items-center justify-between pb-2",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-								"data-uid": "src/pages/manager/Dashboard.tsx:70:17",
+								"data-uid": "src/pages/manager/Dashboard.tsx:80:17",
 								"data-prohibitions": "[editContent]",
 								className: "text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors",
 								children: stat.title
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/manager/Dashboard.tsx:73:17",
+								"data-uid": "src/pages/manager/Dashboard.tsx:83:17",
 								"data-prohibitions": "[]",
 								className: "p-2 bg-primary/10 rounded-md text-primary group-hover:scale-110 transition-transform",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(stat.icon, {
-									"data-uid": "src/pages/manager/Dashboard.tsx:74:19",
+									"data-uid": "src/pages/manager/Dashboard.tsx:84:19",
 									"data-prohibitions": "[editContent]",
 									className: "size-5"
 								})
 							})]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-							"data-uid": "src/pages/manager/Dashboard.tsx:77:15",
+							"data-uid": "src/pages/manager/Dashboard.tsx:87:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex-1 flex flex-col justify-end",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/manager/Dashboard.tsx:78:17",
+								"data-uid": "src/pages/manager/Dashboard.tsx:88:17",
 								"data-prohibitions": "[editContent]",
 								className: "text-4xl font-bold tracking-tight mb-2",
 								children: stat.value
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/Dashboard.tsx:79:17",
+								"data-uid": "src/pages/manager/Dashboard.tsx:89:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-center text-xs text-muted-foreground",
 								children: [stat.desc, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, {
-									"data-uid": "src/pages/manager/Dashboard.tsx:81:19",
+									"data-uid": "src/pages/manager/Dashboard.tsx:91:19",
 									"data-prohibitions": "[editContent]",
 									className: "ml-auto size-4 opacity-0 group-hover:opacity-100 transition-opacity"
 								})]
@@ -37879,45 +38164,45 @@ function ManagerDashboard() {
 				}, stat.title))
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/manager/Dashboard.tsx:89:7",
+				"data-uid": "src/pages/manager/Dashboard.tsx:99:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid lg:grid-cols-2 gap-6 mt-8",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/manager/Dashboard.tsx:90:9",
+					"data-uid": "src/pages/manager/Dashboard.tsx:100:9",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-						"data-uid": "src/pages/manager/Dashboard.tsx:91:11",
+						"data-uid": "src/pages/manager/Dashboard.tsx:101:11",
 						"data-prohibitions": "[]",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/manager/Dashboard.tsx:92:13",
+							"data-uid": "src/pages/manager/Dashboard.tsx:102:13",
 							"data-prohibitions": "[]",
 							className: "text-lg",
 							children: "Atividade Recente (Seus Cursos)"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-						"data-uid": "src/pages/manager/Dashboard.tsx:94:11",
+						"data-uid": "src/pages/manager/Dashboard.tsx:104:11",
 						"data-prohibitions": "[editContent]",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/manager/Dashboard.tsx:95:13",
+							"data-uid": "src/pages/manager/Dashboard.tsx:105:13",
 							"data-prohibitions": "[editContent]",
 							className: "space-y-4",
 							children: [recentActivity.map((act) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/manager/Dashboard.tsx:97:17",
+								"data-uid": "src/pages/manager/Dashboard.tsx:107:17",
 								"data-prohibitions": "[editContent]",
 								className: "flex items-center gap-4 text-sm border-b pb-4 last:border-0 last:pb-0",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										"data-uid": "src/pages/manager/Dashboard.tsx:101:19",
+										"data-uid": "src/pages/manager/Dashboard.tsx:111:19",
 										"data-prohibitions": "[editContent]",
 										className: "size-2 bg-primary rounded-full"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/manager/Dashboard.tsx:102:19",
+										"data-uid": "src/pages/manager/Dashboard.tsx:112:19",
 										"data-prohibitions": "[editContent]",
 										className: "flex-1",
 										children: [
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/manager/Dashboard.tsx:103:21",
+												"data-uid": "src/pages/manager/Dashboard.tsx:113:21",
 												"data-prohibitions": "[editContent]",
 												className: "font-medium",
 												children: act.type
@@ -37925,7 +38210,7 @@ function ManagerDashboard() {
 											" - ",
 											act.details,
 											/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-												"data-uid": "src/pages/manager/Dashboard.tsx:104:21",
+												"data-uid": "src/pages/manager/Dashboard.tsx:114:21",
 												"data-prohibitions": "[editContent]",
 												className: "text-muted-foreground text-xs",
 												children: act.courseTitle
@@ -37933,14 +38218,14 @@ function ManagerDashboard() {
 										]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/manager/Dashboard.tsx:106:19",
+										"data-uid": "src/pages/manager/Dashboard.tsx:116:19",
 										"data-prohibitions": "[editContent]",
 										className: "text-muted-foreground text-xs",
 										children: new Date(act.date).toLocaleDateString()
 									})
 								]
 							}, act.id)), recentActivity.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/manager/Dashboard.tsx:112:17",
+								"data-uid": "src/pages/manager/Dashboard.tsx:122:17",
 								"data-prohibitions": "[]",
 								className: "text-muted-foreground text-sm",
 								children: "Nenhuma atividade recente."
@@ -42925,6 +43210,112 @@ function StudentDetails() {
 	});
 }
 //#endregion
+//#region src/pages/manager/AppearanceSettings.tsx
+function AppearanceSettings() {
+	const { themeSettings, updateThemeSettings } = useLmsStore();
+	const [arrowColor, setArrowColor] = (0, import_react.useState)(themeSettings.carouselArrowColor);
+	const handleSave = () => {
+		updateThemeSettings({
+			...themeSettings,
+			carouselArrowColor: arrowColor
+		});
+		toast$1.success("Configurações de aparência salvas com sucesso!");
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/manager/AppearanceSettings.tsx:20:5",
+		"data-prohibitions": "[]",
+		className: "space-y-6 max-w-4xl mx-auto pb-10",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/manager/AppearanceSettings.tsx:21:7",
+			"data-prohibitions": "[]",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
+				"data-uid": "src/pages/manager/AppearanceSettings.tsx:22:9",
+				"data-prohibitions": "[]",
+				className: "text-3xl font-bold tracking-tight text-brand",
+				children: "Aparência e Personalização"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/pages/manager/AppearanceSettings.tsx:23:9",
+				"data-prohibitions": "[]",
+				className: "text-muted-foreground mt-1",
+				children: "Customize a identidade visual da plataforma para combinar com sua marca."
+			})]
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+			"data-uid": "src/pages/manager/AppearanceSettings.tsx:28:7",
+			"data-prohibitions": "[]",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
+				"data-uid": "src/pages/manager/AppearanceSettings.tsx:29:9",
+				"data-prohibitions": "[]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardTitle, {
+					"data-uid": "src/pages/manager/AppearanceSettings.tsx:30:11",
+					"data-prohibitions": "[]",
+					className: "flex items-center gap-2",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Palette, {
+						"data-uid": "src/pages/manager/AppearanceSettings.tsx:31:13",
+						"data-prohibitions": "[editContent]",
+						className: "h-5 w-5 text-primary"
+					}), "Cores dos Componentes"]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardDescription, {
+					"data-uid": "src/pages/manager/AppearanceSettings.tsx:34:11",
+					"data-prohibitions": "[]",
+					children: "Defina as cores principais para elementos de navegação e destaque visual."
+				})]
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+				"data-uid": "src/pages/manager/AppearanceSettings.tsx:38:9",
+				"data-prohibitions": "[]",
+				className: "space-y-6",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/pages/manager/AppearanceSettings.tsx:39:11",
+					"data-prohibitions": "[]",
+					className: "space-y-3",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label$2, {
+							"data-uid": "src/pages/manager/AppearanceSettings.tsx:40:13",
+							"data-prohibitions": "[]",
+							children: "Cor das Setas do Carrossel"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+							"data-uid": "src/pages/manager/AppearanceSettings.tsx:41:13",
+							"data-prohibitions": "[]",
+							className: "flex items-center gap-4",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+								"data-uid": "src/pages/manager/AppearanceSettings.tsx:42:15",
+								"data-prohibitions": "[editContent]",
+								type: "color",
+								value: arrowColor,
+								onChange: (e) => setArrowColor(e.target.value),
+								className: "w-20 h-14 p-1 cursor-pointer"
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+								"data-uid": "src/pages/manager/AppearanceSettings.tsx:48:15",
+								"data-prohibitions": "[editContent]",
+								type: "text",
+								value: arrowColor,
+								onChange: (e) => setArrowColor(e.target.value),
+								className: "w-32 uppercase font-mono"
+							})]
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							"data-uid": "src/pages/manager/AppearanceSettings.tsx:55:13",
+							"data-prohibitions": "[]",
+							className: "text-sm text-muted-foreground",
+							children: "Esta cor será aplicada aos ícones de navegação (setas) em todos os carrosséis da plataforma, mantendo a consistência com a sua identidade visual."
+						})
+					]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+					"data-uid": "src/pages/manager/AppearanceSettings.tsx:61:11",
+					"data-prohibitions": "[]",
+					onClick: handleSave,
+					className: "mt-4",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
+						"data-uid": "src/pages/manager/AppearanceSettings.tsx:62:13",
+						"data-prohibitions": "[editContent]",
+						className: "mr-2 h-4 w-4"
+					}), "Salvar Alterações"]
+				})]
+			})]
+		})]
+	});
+}
+//#endregion
 //#region src/pages/manager/commercial/ProductsTab.tsx
 function ProductsTab() {
 	const { products, speakers, addProduct, updateProduct, deleteProduct } = useCommercialStore();
@@ -46435,26 +46826,26 @@ function ProtectedRoute({ children, allowedRoles }) {
 		isAuthenticated: !!s.user
 	}));
 	if (!isAuthenticated || !user) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-		"data-uid": "src/App.tsx:62:12",
+		"data-uid": "src/App.tsx:63:12",
 		"data-prohibitions": "[editContent]",
 		to: "/login",
 		replace: true
 	});
 	if (allowedRoles && !allowedRoles.includes(user.role)) {
 		if (user.role === "manager" || user.role === "admin") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-			"data-uid": "src/App.tsx:68:14",
+			"data-uid": "src/App.tsx:69:14",
 			"data-prohibitions": "[editContent]",
 			to: "/manager/dashboard",
 			replace: true
 		});
 		if (user.role === "instructor") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-			"data-uid": "src/App.tsx:69:44",
+			"data-uid": "src/App.tsx:70:44",
 			"data-prohibitions": "[editContent]",
 			to: "/instructor/dashboard",
 			replace: true
 		});
 		return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-			"data-uid": "src/App.tsx:70:12",
+			"data-uid": "src/App.tsx:71:12",
 			"data-prohibitions": "[editContent]",
 			to: "/student/dashboard",
 			replace: true
@@ -46470,53 +46861,44 @@ function App() {
 		if (ref) localStorage.setItem("affiliate_ref", ref);
 	}, []);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BrowserRouter, {
-		"data-uid": "src/App.tsx:89:5",
+		"data-uid": "src/App.tsx:90:5",
 		"data-prohibitions": "[editContent]",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Toaster, {
-				"data-uid": "src/App.tsx:90:7",
-				"data-prohibitions": "[editContent]"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LiveNotifier, {
 				"data-uid": "src/App.tsx:91:7",
 				"data-prohibitions": "[editContent]"
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LiveNotifier, {
 				"data-uid": "src/App.tsx:92:7",
+				"data-prohibitions": "[editContent]"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Routes, {
+				"data-uid": "src/App.tsx:93:7",
 				"data-prohibitions": "[editContent]",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:93:9",
+						"data-uid": "src/App.tsx:94:9",
 						"data-prohibitions": "[editContent]",
 						path: "/",
 						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Index, {
-							"data-uid": "src/App.tsx:93:34",
-							"data-prohibitions": "[editContent]"
-						})
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:94:9",
-						"data-prohibitions": "[editContent]",
-						path: "/sobre",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(About, {
-							"data-uid": "src/App.tsx:94:39",
+							"data-uid": "src/App.tsx:94:34",
 							"data-prohibitions": "[editContent]"
 						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 						"data-uid": "src/App.tsx:95:9",
 						"data-prohibitions": "[editContent]",
-						path: "/cursos",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Courses, {
-							"data-uid": "src/App.tsx:95:40",
+						path: "/sobre",
+						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(About, {
+							"data-uid": "src/App.tsx:95:39",
 							"data-prohibitions": "[editContent]"
 						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 						"data-uid": "src/App.tsx:96:9",
 						"data-prohibitions": "[editContent]",
-						path: "/planos",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plans, {
+						path: "/cursos",
+						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Courses, {
 							"data-uid": "src/App.tsx:96:40",
 							"data-prohibitions": "[editContent]"
 						})
@@ -46524,122 +46906,131 @@ function App() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 						"data-uid": "src/App.tsx:97:9",
 						"data-prohibitions": "[editContent]",
-						path: "/contato",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Contact, {
-							"data-uid": "src/App.tsx:97:41",
+						path: "/planos",
+						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plans, {
+							"data-uid": "src/App.tsx:97:40",
 							"data-prohibitions": "[editContent]"
 						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 						"data-uid": "src/App.tsx:98:9",
 						"data-prohibitions": "[editContent]",
-						path: "/login",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
-							"data-uid": "src/App.tsx:98:39",
+						path: "/contato",
+						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Contact, {
+							"data-uid": "src/App.tsx:98:41",
 							"data-prohibitions": "[editContent]"
 						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
 						"data-uid": "src/App.tsx:99:9",
 						"data-prohibitions": "[editContent]",
+						path: "/login",
+						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Login, {
+							"data-uid": "src/App.tsx:99:39",
+							"data-prohibitions": "[editContent]"
+						})
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+						"data-uid": "src/App.tsx:100:9",
+						"data-prohibitions": "[editContent]",
 						path: "/validate-certificate/:id",
 						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ValidateCertificate, {
-							"data-uid": "src/App.tsx:99:58",
+							"data-uid": "src/App.tsx:100:58",
 							"data-prohibitions": "[editContent]"
 						})
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-						"data-uid": "src/App.tsx:102:9",
+						"data-uid": "src/App.tsx:103:9",
 						"data-prohibitions": "[editContent]",
 						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
-							"data-uid": "src/App.tsx:102:25",
+							"data-uid": "src/App.tsx:103:25",
 							"data-prohibitions": "[editContent]"
 						}),
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:104:11",
+								"data-uid": "src/App.tsx:105:11",
 								"data-prohibitions": "[editContent]",
 								path: "/store",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:107:15",
+									"data-uid": "src/App.tsx:108:15",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Storefront, {
-										"data-uid": "src/App.tsx:108:17",
+										"data-uid": "src/App.tsx:109:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:112:11",
+								"data-uid": "src/App.tsx:113:11",
 								"data-prohibitions": "[editContent]",
 								path: "/store/product/:id",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:115:15",
+									"data-uid": "src/App.tsx:116:15",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProductDetails, {
-										"data-uid": "src/App.tsx:116:17",
+										"data-uid": "src/App.tsx:117:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:122:11",
+								"data-uid": "src/App.tsx:123:11",
 								"data-prohibitions": "[editContent]",
 								path: "/student/dashboard",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:125:15",
+									"data-uid": "src/App.tsx:126:15",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
-										"data-uid": "src/App.tsx:126:17",
+										"data-uid": "src/App.tsx:127:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:130:11",
+								"data-uid": "src/App.tsx:131:11",
 								"data-prohibitions": "[editContent]",
 								path: "/student/courses",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:133:15",
+									"data-uid": "src/App.tsx:134:15",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDashboard, {
-										"data-uid": "src/App.tsx:134:17",
+										"data-uid": "src/App.tsx:135:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:138:11",
+								"data-uid": "src/App.tsx:139:11",
 								"data-prohibitions": "[editContent]",
 								path: "/student/course/:id",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:141:15",
+									"data-uid": "src/App.tsx:142:15",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CoursePlayer, {
-										"data-uid": "src/App.tsx:142:17",
+										"data-uid": "src/App.tsx:143:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:146:11",
+								"data-uid": "src/App.tsx:147:11",
 								"data-prohibitions": "[editContent]",
 								path: "/student/certificate/:id",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:149:15",
+									"data-uid": "src/App.tsx:150:15",
 									"data-prohibitions": "[]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Certificate, {
-										"data-uid": "src/App.tsx:150:17",
+										"data-uid": "src/App.tsx:151:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:156:11",
+								"data-uid": "src/App.tsx:157:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/dashboard",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:159:15",
+									"data-uid": "src/App.tsx:160:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46647,17 +47038,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerDashboard, {
-										"data-uid": "src/App.tsx:160:17",
+										"data-uid": "src/App.tsx:161:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:164:11",
+								"data-uid": "src/App.tsx:165:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/grade-exams",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:167:15",
+									"data-uid": "src/App.tsx:168:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46665,17 +47056,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(GradeExams, {
-										"data-uid": "src/App.tsx:168:17",
+										"data-uid": "src/App.tsx:169:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:172:11",
+								"data-uid": "src/App.tsx:173:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/revenue",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:175:15",
+									"data-uid": "src/App.tsx:176:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46683,17 +47074,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Revenue, {
-										"data-uid": "src/App.tsx:176:17",
+										"data-uid": "src/App.tsx:177:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:180:11",
+								"data-uid": "src/App.tsx:181:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/questions",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:183:15",
+									"data-uid": "src/App.tsx:184:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46701,17 +47092,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(QuestionBank, {
-										"data-uid": "src/App.tsx:184:17",
+										"data-uid": "src/App.tsx:185:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:188:11",
+								"data-uid": "src/App.tsx:189:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/live-classes",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:191:15",
+									"data-uid": "src/App.tsx:192:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46719,17 +47110,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LiveClasses, {
-										"data-uid": "src/App.tsx:192:17",
+										"data-uid": "src/App.tsx:193:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:196:11",
+								"data-uid": "src/App.tsx:197:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/lesson-generator",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:199:15",
+									"data-uid": "src/App.tsx:200:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46737,17 +47128,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LessonGenerator, {
-										"data-uid": "src/App.tsx:200:17",
+										"data-uid": "src/App.tsx:201:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:204:11",
+								"data-uid": "src/App.tsx:205:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/engagement",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:207:15",
+									"data-uid": "src/App.tsx:208:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46755,17 +47146,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EngagementDashboard, {
-										"data-uid": "src/App.tsx:208:17",
+										"data-uid": "src/App.tsx:209:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:212:11",
+								"data-uid": "src/App.tsx:213:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/commercial",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:215:15",
+									"data-uid": "src/App.tsx:216:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46773,17 +47164,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommercialDashboard, {
-										"data-uid": "src/App.tsx:216:17",
+										"data-uid": "src/App.tsx:217:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:220:11",
+								"data-uid": "src/App.tsx:221:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/courses",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:223:15",
+									"data-uid": "src/App.tsx:224:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -46791,227 +47182,241 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerCourses, {
-										"data-uid": "src/App.tsx:224:17",
+										"data-uid": "src/App.tsx:225:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:230:11",
+								"data-uid": "src/App.tsx:231:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/dashboard",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:233:15",
+									"data-uid": "src/App.tsx:234:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerDashboard, {
-										"data-uid": "src/App.tsx:234:17",
+										"data-uid": "src/App.tsx:235:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:238:11",
+								"data-uid": "src/App.tsx:239:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/courses",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:241:15",
+									"data-uid": "src/App.tsx:242:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerCourses, {
-										"data-uid": "src/App.tsx:242:17",
+										"data-uid": "src/App.tsx:243:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:246:11",
+								"data-uid": "src/App.tsx:247:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/course/:id",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:249:15",
+									"data-uid": "src/App.tsx:250:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
-										"data-uid": "src/App.tsx:250:17",
+										"data-uid": "src/App.tsx:251:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:254:11",
+								"data-uid": "src/App.tsx:255:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/courses/new",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:257:15",
+									"data-uid": "src/App.tsx:258:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseEditor, {
-										"data-uid": "src/App.tsx:258:17",
+										"data-uid": "src/App.tsx:259:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:262:11",
+								"data-uid": "src/App.tsx:263:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/enrollments",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:265:15",
+									"data-uid": "src/App.tsx:266:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ManagerEnrollments, {
-										"data-uid": "src/App.tsx:266:17",
+										"data-uid": "src/App.tsx:267:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:270:11",
+								"data-uid": "src/App.tsx:271:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/students/:id",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:273:15",
+									"data-uid": "src/App.tsx:274:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StudentDetails, {
-										"data-uid": "src/App.tsx:274:17",
+										"data-uid": "src/App.tsx:275:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:278:11",
+								"data-uid": "src/App.tsx:279:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/reports",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:281:15",
+									"data-uid": "src/App.tsx:282:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Reports, {
-										"data-uid": "src/App.tsx:282:17",
+										"data-uid": "src/App.tsx:283:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:286:11",
+								"data-uid": "src/App.tsx:287:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/finance",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:289:15",
+									"data-uid": "src/App.tsx:290:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FinancialReports, {
-										"data-uid": "src/App.tsx:290:17",
+										"data-uid": "src/App.tsx:291:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:294:11",
+								"data-uid": "src/App.tsx:295:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/notifications",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:297:15",
+									"data-uid": "src/App.tsx:298:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotificationSettings, {
-										"data-uid": "src/App.tsx:298:17",
+										"data-uid": "src/App.tsx:299:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:302:11",
+								"data-uid": "src/App.tsx:303:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/integrations",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:305:15",
+									"data-uid": "src/App.tsx:306:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Integrations, {
-										"data-uid": "src/App.tsx:306:17",
+										"data-uid": "src/App.tsx:307:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:310:11",
+								"data-uid": "src/App.tsx:311:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/commissions",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:313:15",
+									"data-uid": "src/App.tsx:314:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommissionSettings, {
-										"data-uid": "src/App.tsx:314:17",
+										"data-uid": "src/App.tsx:315:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:318:11",
+								"data-uid": "src/App.tsx:319:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/payments",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:321:15",
+									"data-uid": "src/App.tsx:322:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PaymentSettings, {
-										"data-uid": "src/App.tsx:322:17",
+										"data-uid": "src/App.tsx:323:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:326:11",
+								"data-uid": "src/App.tsx:327:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/live-classes",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:329:15",
+									"data-uid": "src/App.tsx:330:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LiveClasses, {
-										"data-uid": "src/App.tsx:330:17",
+										"data-uid": "src/App.tsx:331:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:334:11",
+								"data-uid": "src/App.tsx:335:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/lesson-generator",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:337:15",
+									"data-uid": "src/App.tsx:338:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(LessonGenerator, {
-										"data-uid": "src/App.tsx:338:17",
+										"data-uid": "src/App.tsx:339:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:342:11",
+								"data-uid": "src/App.tsx:343:11",
 								"data-prohibitions": "[editContent]",
 								path: "/manager/commercial",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:345:15",
+									"data-uid": "src/App.tsx:346:15",
 									"data-prohibitions": "[]",
 									allowedRoles: ["manager", "admin"],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommercialDashboard, {
-										"data-uid": "src/App.tsx:346:17",
+										"data-uid": "src/App.tsx:347:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:352:11",
+								"data-uid": "src/App.tsx:351:11",
+								"data-prohibitions": "[editContent]",
+								path: "/manager/appearance",
+								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
+									"data-uid": "src/App.tsx:354:15",
+									"data-prohibitions": "[]",
+									allowedRoles: ["manager", "admin"],
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AppearanceSettings, {
+										"data-uid": "src/App.tsx:355:17",
+										"data-prohibitions": "[editContent]"
+									})
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+								"data-uid": "src/App.tsx:361:11",
 								"data-prohibitions": "[editContent]",
 								path: "/partner/dashboard",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:355:15",
+									"data-uid": "src/App.tsx:364:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"partner",
@@ -47019,17 +47424,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-										"data-uid": "src/App.tsx:356:17",
+										"data-uid": "src/App.tsx:365:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:360:11",
+								"data-uid": "src/App.tsx:369:11",
 								"data-prohibitions": "[editContent]",
 								path: "/instructor/partner",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:363:15",
+									"data-uid": "src/App.tsx:372:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"instructor",
@@ -47037,17 +47442,17 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-										"data-uid": "src/App.tsx:364:17",
+										"data-uid": "src/App.tsx:373:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:368:11",
+								"data-uid": "src/App.tsx:377:11",
 								"data-prohibitions": "[editContent]",
 								path: "/student/partner",
 								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProtectedRoute, {
-									"data-uid": "src/App.tsx:371:15",
+									"data-uid": "src/App.tsx:380:15",
 									"data-prohibitions": "[]",
 									allowedRoles: [
 										"student",
@@ -47056,7 +47461,7 @@ function App() {
 										"admin"
 									],
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PartnerDashboard, {
-										"data-uid": "src/App.tsx:372:17",
+										"data-uid": "src/App.tsx:381:17",
 										"data-prohibitions": "[editContent]"
 									})
 								})
@@ -47064,11 +47469,11 @@ function App() {
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-						"data-uid": "src/App.tsx:378:9",
+						"data-uid": "src/App.tsx:387:9",
 						"data-prohibitions": "[editContent]",
 						path: "*",
 						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NotFound, {
-							"data-uid": "src/App.tsx:378:34",
+							"data-uid": "src/App.tsx:387:34",
 							"data-prohibitions": "[editContent]"
 						})
 					})
@@ -47085,4 +47490,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-Bixvyola.js.map
+//# sourceMappingURL=index-DD7CfAmd.js.map
