@@ -17,6 +17,7 @@ import {
   Phone,
   Video,
   Bot,
+  Activity,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -41,6 +42,7 @@ const getNavigation = (role?: string) => {
       return [
         { name: 'Dashboard', href: '/instructor/dashboard', icon: LayoutDashboard },
         { name: 'Aulas ao Vivo', href: '/instructor/live-classes', icon: Video },
+        { name: 'Engajamento', href: '/instructor/engagement', icon: Activity },
         { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
         { name: 'Gerador de Aulas AI', href: '/instructor/lesson-generator', icon: Bot },
         { name: 'Banco de Questões', href: '/instructor/questions', icon: ShieldAlert },

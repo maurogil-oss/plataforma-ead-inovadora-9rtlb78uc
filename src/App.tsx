@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from '@/components/ui/sonner'
+import { LiveNotifier } from '@/components/LiveNotifier'
 import Layout from '@/components/Layout'
 import Index from '@/pages/Index'
 import NotFound from '@/pages/NotFound'
@@ -20,6 +22,7 @@ import GradeExams from '@/pages/instructor/GradeExams'
 import Revenue from '@/pages/instructor/Revenue'
 import LiveClasses from '@/pages/instructor/LiveClasses'
 import LessonGenerator from '@/pages/instructor/LessonGenerator'
+import EngagementDashboard from '@/pages/instructor/EngagementDashboard'
 
 import ManagerDashboard from '@/pages/manager/Dashboard'
 import Courses from '@/pages/manager/Courses'
@@ -80,6 +83,8 @@ export default function App() {
 
   return (
     <Router>
+      <Toaster />
+      <LiveNotifier />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/sobre" element={<About />} />
@@ -163,6 +168,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
                 <LessonGenerator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/instructor/engagement"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <EngagementDashboard />
               </ProtectedRoute>
             }
           />

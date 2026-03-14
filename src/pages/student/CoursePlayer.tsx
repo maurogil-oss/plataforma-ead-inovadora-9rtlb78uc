@@ -17,6 +17,7 @@ import {
   Video,
   Calendar,
   Clock,
+  PlayCircle,
 } from 'lucide-react'
 
 export default function CoursePlayer() {
@@ -33,6 +34,7 @@ export default function CoursePlayer() {
 
   const course = courses.find((c) => c.id === id)
   const enrollment = enrollments.find((e) => e.courseId === id && e.studentId === user?.id)
+
   const courseLiveClasses = liveClasses
     .filter((lc) => lc.courseId === id)
     .sort(
@@ -40,6 +42,20 @@ export default function CoursePlayer() {
         new Date(`${a.date}T${a.startTime}`).getTime() -
         new Date(`${b.date}T${b.startTime}`).getTime(),
     )
+
+  const upcomingLiveClasses = courseLiveClasses.filter((lc) => {
+    const start = new Date(`${lc.date}T${lc.startTime}`)
+    const end = new Date(start.getTime() + lc.durationMinutes * 60000)
+    return new Date() <= end
+  })
+
+  const pastLiveClasses = courseLiveClasses
+    .filter((lc) => {
+      const start = new Date(`${lc.date}T${lc.startTime}`)
+      const end = new Date(start.getTime() + lc.durationMinutes * 60000)
+      return new Date() > end
+    })
+    .reverse() // Reverse to show most recent past classes first
 
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Record<string, any>>({})
@@ -122,6 +138,7 @@ export default function CoursePlayer() {
     activeLesson && activeModule
       ? checkLockStatus(activeLesson, activeModule)
       : { locked: false, reason: '' }
+
   const handleComplete = () => activeLesson && markLessonComplete(enrollment.id, activeLesson.id)
 
   const handleSubmitExam = () => {
@@ -232,7 +249,7 @@ export default function CoursePlayer() {
       <div className="flex items-center justify-between mb-6 pb-4 border-b">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild>
-            <Link to="/student">
+            <Link to="/student/dashboard">
               <ArrowLeft className="size-4" />
             </Link>
           </Button>
@@ -257,8 +274,8 @@ export default function CoursePlayer() {
             value="live"
             className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2 relative"
           >
-            <Video className="mr-2 size-4" /> Aulas ao Vivo
-            {courseLiveClasses.some((lc) => {
+            <Video className="mr-2 size-4" /> Aulas ao Vivo e Gravações
+            {upcomingLiveClasses.some((lc) => {
               const now = new Date()
               const s = new Date(`${lc.date}T${lc.startTime}`)
               return now >= s && now <= new Date(s.getTime() + lc.durationMinutes * 60000)
@@ -458,22 +475,21 @@ export default function CoursePlayer() {
           </div>
         </TabsContent>
 
-        <TabsContent value="live" className="outline-none mt-0">
-          <div className="bg-card border rounded-xl p-6 shadow-sm min-h-[60vh]">
-            <h2 className="text-2xl font-bold mb-6">Agenda de Aulas ao Vivo</h2>
-            {courseLiveClasses.length === 0 ? (
+        <TabsContent value="live" className="outline-none mt-0 space-y-12">
+          <div className="bg-card border rounded-xl p-6 shadow-sm min-h-[40vh]">
+            <h2 className="text-2xl font-bold mb-6">Próximas Aulas ao Vivo</h2>
+            {upcomingLiveClasses.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg">
                 <Video className="mx-auto size-12 opacity-20 mb-4" />
-                <p>Nenhuma aula ao vivo agendada para este curso no momento.</p>
+                <p>Nenhuma aula ao vivo agendada para o futuro neste curso.</p>
               </div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {courseLiveClasses.map((lc) => {
+                {upcomingLiveClasses.map((lc) => {
                   const start = new Date(`${lc.date}T${lc.startTime}`)
                   const end = new Date(start.getTime() + lc.durationMinutes * 60000)
                   const now = new Date()
                   const isLive = now >= start && now <= end
-                  const isPast = now > end
 
                   return (
                     <div
@@ -485,10 +501,6 @@ export default function CoursePlayer() {
                           {isLive ? (
                             <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded animate-pulse uppercase tracking-wide">
                               Ao Vivo Agora
-                            </span>
-                          ) : isPast ? (
-                            <span className="bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
-                              Finalizada
                             </span>
                           ) : (
                             <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
@@ -527,7 +539,7 @@ export default function CoursePlayer() {
                         </Button>
                       ) : (
                         <Button className="w-full" variant="outline" disabled>
-                          {isPast ? 'Sessão Encerrada' : 'Aguardando Horário'}
+                          Aguardando Horário
                         </Button>
                       )}
                     </div>
@@ -536,6 +548,52 @@ export default function CoursePlayer() {
               </div>
             )}
           </div>
+
+          {pastLiveClasses.length > 0 && (
+            <div className="bg-card border rounded-xl p-6 shadow-sm">
+              <h2 className="text-2xl font-bold mb-6">Sessões Passadas & Gravações</h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {pastLiveClasses.map((lc) => {
+                  const start = new Date(`${lc.date}T${lc.startTime}`)
+
+                  return (
+                    <div key={lc.id} className="border rounded-xl p-5 flex flex-col bg-muted/20">
+                      <div className="flex justify-between items-start mb-3">
+                        <Badge variant="secondary">Finalizada</Badge>
+                        <div className="flex items-center text-xs font-medium text-muted-foreground">
+                          <Calendar className="size-3 mr-1" />
+                          {start.toLocaleDateString('pt-BR')}
+                        </div>
+                      </div>
+                      <h3 className="font-bold text-base leading-tight mb-2 flex-1">{lc.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        {lc.description}
+                      </p>
+
+                      {lc.recordingUrl ? (
+                        <Button
+                          className="w-full bg-primary/10 text-primary hover:bg-primary/20"
+                          asChild
+                        >
+                          <a href={lc.recordingUrl} target="_blank" rel="noreferrer">
+                            <PlayCircle className="mr-2 size-4" /> Assistir Gravação
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button
+                          className="w-full bg-muted text-muted-foreground"
+                          variant="secondary"
+                          disabled
+                        >
+                          Gravação Indisponível
+                        </Button>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

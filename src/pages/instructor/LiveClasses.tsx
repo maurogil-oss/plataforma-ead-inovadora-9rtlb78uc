@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Video, Plus, Trash2, Edit, ExternalLink } from 'lucide-react'
+import { Video, Plus, Trash2, Edit, ExternalLink, Link as LinkIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function LiveClasses() {
@@ -40,8 +40,8 @@ export default function LiveClasses() {
     .filter((lc) => myCourseIds.includes(lc.courseId))
     .sort(
       (a, b) =>
-        new Date(`${a.date}T${a.startTime}`).getTime() -
-        new Date(`${b.date}T${b.startTime}`).getTime(),
+        new Date(`${b.date}T${b.startTime}`).getTime() -
+        new Date(`${a.date}T${a.startTime}`).getTime(), // Sort newest first for recordings
     )
 
   const handleSave = () => {
@@ -54,17 +54,6 @@ export default function LiveClasses() {
     ) {
       return toast.error('Preencha todos os campos obrigatórios.')
     }
-
-    // URL Validation
-    const url = editing.url.toLowerCase()
-    const p = editing.platform
-    if (p === 'meet' && !url.includes('meet.google.com'))
-      return toast.error('A URL não parece ser do Google Meet.')
-    if (p === 'zoom' && !url.includes('zoom.us'))
-      return toast.error('A URL não parece ser do Zoom.')
-    if (p === 'teams' && !url.includes('teams.microsoft.com'))
-      return toast.error('A URL não parece ser do MS Teams.')
-    if (!url.startsWith('http')) return toast.error('Insira uma URL válida (http/https).')
 
     if (editing.id) {
       updateLiveClass(editing as LiveClass)
@@ -85,6 +74,7 @@ export default function LiveClasses() {
       durationMinutes: 60,
       date: '',
       startTime: '',
+      recordingUrl: '',
     })
     setOpen(true)
   }
@@ -95,7 +85,7 @@ export default function LiveClasses() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Gerenciamento de Aulas ao Vivo</h1>
           <p className="text-muted-foreground mt-1">
-            Agende e gerencie sessões interativas via Meet, Zoom ou Teams.
+            Agende sessões interativas e adicione links de gravação após a aula.
           </p>
         </div>
         <Button onClick={openNew}>
@@ -110,7 +100,7 @@ export default function LiveClasses() {
               <TableHead>Status</TableHead>
               <TableHead>Título / Curso</TableHead>
               <TableHead>Data e Hora</TableHead>
-              <TableHead>Plataforma</TableHead>
+              <TableHead>Gravação</TableHead>
               <TableHead className="text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -127,9 +117,7 @@ export default function LiveClasses() {
                 <TableRow key={lc.id}>
                   <TableCell>
                     {isLive ? (
-                      <Badge className="bg-red-500 hover:bg-red-600 animate-pulse">
-                        Ao Vivo Agora
-                      </Badge>
+                      <Badge className="bg-red-500 hover:bg-red-600 animate-pulse">Ao Vivo</Badge>
                     ) : isPast ? (
                       <Badge variant="secondary">Finalizada</Badge>
                     ) : (
@@ -139,7 +127,7 @@ export default function LiveClasses() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium">{lc.title}</div>
+                    <div className="font-medium line-clamp-1">{lc.title}</div>
                     <div className="text-xs text-muted-foreground">{course?.title}</div>
                   </TableCell>
                   <TableCell>
@@ -151,15 +139,25 @@ export default function LiveClasses() {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Video className="size-4 text-muted-foreground" />
-                      <span className="capitalize text-sm">{lc.platform}</span>
-                    </div>
+                    {lc.recordingUrl ? (
+                      <a
+                        href={lc.recordingUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs flex items-center text-primary hover:underline"
+                      >
+                        <LinkIcon className="mr-1 size-3" /> Disponível
+                      </a>
+                    ) : isPast ? (
+                      <span className="text-xs text-muted-foreground italic">Sem gravação</span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">-</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" asChild>
-                        <a href={lc.url} target="_blank" rel="noreferrer" title="Testar Link">
+                        <a href={lc.url} target="_blank" rel="noreferrer" title="Testar Sala">
                           <ExternalLink className="size-4" />
                         </a>
                       </Button>
@@ -202,7 +200,7 @@ export default function LiveClasses() {
           <DialogHeader>
             <DialogTitle>{editing?.id ? 'Editar Aula' : 'Nova Aula ao Vivo'}</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto px-1">
             <div className="space-y-2">
               <Label>Curso Relacionado</Label>
               <Select
@@ -290,8 +288,16 @@ export default function LiveClasses() {
                 />
               </div>
             </div>
+            <div className="space-y-2 pt-2 border-t">
+              <Label className="text-primary">URL da Gravação (Opcional)</Label>
+              <Input
+                value={editing?.recordingUrl || ''}
+                onChange={(e) => setEditing({ ...editing, recordingUrl: e.target.value })}
+                placeholder="Insira o link após a aula para os alunos assistirem..."
+              />
+            </div>
             <Button className="w-full mt-4" size="lg" onClick={handleSave}>
-              Salvar e Agendar
+              Salvar Sessão
             </Button>
           </div>
         </DialogContent>

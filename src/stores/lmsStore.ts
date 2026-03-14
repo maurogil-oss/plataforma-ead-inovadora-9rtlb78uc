@@ -139,6 +139,8 @@ export interface LiveClass {
   date: string
   startTime: string
   durationMinutes: number
+  recordingUrl?: string
+  attendees?: string[]
 }
 
 const MOCK_QUESTIONS: BankQuestion[] = [
@@ -218,7 +220,22 @@ const getMockLiveClasses = (): LiveClass[] => {
   const liveStartTime = new Date(now.getTime() - 10 * 60000)
   const liveTimeStr = `${liveStartTime.getHours().toString().padStart(2, '0')}:${liveStartTime.getMinutes().toString().padStart(2, '0')}`
 
+  // Create a live class that starts in exactly 14 minutes
+  const upcomingStartTime = new Date(now.getTime() + 14 * 60000)
+  const upcomingTimeStr = `${upcomingStartTime.getHours().toString().padStart(2, '0')}:${upcomingStartTime.getMinutes().toString().padStart(2, '0')}`
+
   return [
+    {
+      id: 'lc_soon',
+      courseId: 'c1',
+      title: 'Tira Dúvidas - Próxima Turma',
+      description: 'Entre para tirar suas dúvidas ao vivo.',
+      platform: 'meet',
+      url: 'https://meet.google.com/test-soon',
+      date: upcomingStartTime.toISOString().split('T')[0],
+      startTime: upcomingTimeStr,
+      durationMinutes: 45,
+    },
     {
       id: 'lc1',
       courseId: 'c1',
@@ -231,15 +248,17 @@ const getMockLiveClasses = (): LiveClass[] => {
       durationMinutes: 60,
     },
     {
-      id: 'lc2',
+      id: 'lc_past',
       courseId: 'c1',
-      title: 'Mentoria Extra: Metodologias Ágeis',
-      description: 'Discussão profunda sobre Scrum e Kanban na prática.',
+      title: 'Gravação: Fundamentos Ágeis (Semana Passada)',
+      description: 'Sessão passada com introdução profunda aos conceitos de Scrum.',
       platform: 'zoom',
-      url: 'https://zoom.us/j/123456789',
-      date: new Date(now.getTime() + 86400000 * 2).toISOString().split('T')[0], // 2 days from now
+      url: 'https://zoom.us/j/past123',
+      date: new Date(now.getTime() - 86400000 * 7).toISOString().split('T')[0],
       startTime: '19:00',
       durationMinutes: 90,
+      recordingUrl: 'https://youtube.com/watch?v=mock',
+      attendees: ['s1'],
     },
   ]
 }
@@ -333,7 +352,15 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
       completedLessons: ['l1'],
       examScores: {},
       examSubmissions: {},
-      activityLog: [],
+      activityLog: [
+        {
+          id: 'act_mock1',
+          date: new Date().toISOString(),
+          type: 'lesson_complete',
+          details: 'Aula concluída',
+          timeSpentMinutes: 15,
+        },
+      ],
     },
   ],
   bankQuestions: MOCK_QUESTIONS,

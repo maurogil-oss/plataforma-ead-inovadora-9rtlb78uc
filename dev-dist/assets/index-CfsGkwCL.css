@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');@import url('https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');@import url('https://cdn.jsdelivr.net/npm/geist@1.0.3/dist/fonts/geist-sans/style.css');section[aria-label^='Notifications'] {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 
 *, ::before, ::after{
   --tw-border-spacing-x: 0;
@@ -1222,6 +1226,9 @@ section[aria-label='Notifications alt+T'] {
 .ml-auto{
   margin-left: auto;
 }
+.mr-1{
+  margin-right: 0.25rem;
+}
 .mr-2{
   margin-right: 0.5rem;
 }
@@ -1472,6 +1479,9 @@ section[aria-label='Notifications alt+T'] {
 }
 .min-h-\[40px\]{
   min-height: 40px;
+}
+.min-h-\[40vh\]{
+  min-height: 40vh;
 }
 .min-h-\[500px\]{
   min-height: 500px;
@@ -2731,6 +2741,10 @@ section[aria-label='Notifications alt+T'] {
 .text-accent-foreground{
   color: hsl(var(--accent-foreground));
 }
+.text-amber-500{
+  --tw-text-opacity: 1;
+  color: rgb(245 158 11 / var(--tw-text-opacity, 1));
+}
 .text-amber-600{
   --tw-text-opacity: 1;
   color: rgb(217 119 6 / var(--tw-text-opacity, 1));
@@ -2802,6 +2816,9 @@ section[aria-label='Notifications alt+T'] {
 }
 .text-primary-foreground{
   color: hsl(var(--primary-foreground));
+}
+.text-primary\/80{
+  color: hsl(var(--primary) / 0.8);
 }
 .text-red-600{
   --tw-text-opacity: 1;
@@ -3288,6 +3305,9 @@ section[aria-label='Notifications alt+T'] {
 }
 .hover\:bg-muted\/50:hover{
   background-color: hsl(var(--muted) / 0.5);
+}
+.hover\:bg-primary\/20:hover{
+  background-color: hsl(var(--primary) / 0.2);
 }
 .hover\:bg-primary\/80:hover{
   background-color: hsl(var(--primary) / 0.8);
