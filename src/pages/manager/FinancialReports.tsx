@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useLmsStore } from '@/stores/lmsStore'
+import { downloadCSV, printPDF } from '@/lib/export'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import {
   Table,
@@ -9,7 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Download, FileText, File } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function FinancialReports() {
   const { transactions, courses, students, instructors } = useLmsStore()
@@ -30,30 +40,100 @@ export default function FinancialReports() {
     return acc + (split?.amount || 0)
   }, 0)
 
-  // Revenue by Course Calculation
   const revenueByCourse = useMemo(() => {
     return courses
       .map((c) => {
         const courseTxs = transactions.filter((t) => t.courseId === c.id)
         const total = courseTxs.reduce((sum, t) => sum + t.amount, 0)
-        return {
-          id: c.id,
-          title: c.title,
-          totalRevenue: total,
-          salesCount: courseTxs.length,
-        }
+        return { id: c.id, title: c.title, totalRevenue: total, salesCount: courseTxs.length }
       })
       .filter((c) => c.salesCount > 0)
       .sort((a, b) => b.totalRevenue - a.totalRevenue)
   }, [courses, transactions])
 
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    toast.info('Preparando exportação financeira...', { id: 'export-fin-toast' })
+    await new Promise((r) => setTimeout(r, 600))
+
+    try {
+      const title = 'Relatório Financeiro Detalhado'
+      const headers = [
+        'Data',
+        'Produto / Curso',
+        'Comprador',
+        'Valor Total (R$)',
+        'Lucro Plataforma (R$)',
+        'Repasse Prof. (R$)',
+        'Repasse Afil. (R$)',
+      ]
+
+      const rows = transactions.map((t) => {
+        const course = courses.find((c) => c.id === t.courseId)
+        const buyer = students.find((s) => s.id === t.studentId)
+        const platSplit = t.splits.find((s) => s.role === 'platform')
+        const instSplit = t.splits.find((s) => s.role === 'instructor')
+        const partSplit = t.splits.find((s) => s.role === 'partner')
+
+        return [
+          new Date(t.date).toLocaleString('pt-BR'),
+          course?.title || 'Não Identificado',
+          buyer?.name || '-',
+          t.amount.toFixed(2),
+          platSplit?.amount.toFixed(2) || '0.00',
+          instSplit?.amount.toFixed(2) || '0.00',
+          partSplit?.amount.toFixed(2) || '0.00',
+        ]
+      })
+
+      const summary = [
+        `Receita Bruta Total:::R$ ${totalRevenue.toFixed(2)}`,
+        `Receita Líquida (Plataforma):::R$ ${platformProfit.toFixed(2)}`,
+        `Repasse aos Autores/Prof.:::R$ ${instructorPayouts.toFixed(2)}`,
+        `Repasse a Afiliados:::R$ ${affiliatePayouts.toFixed(2)}`,
+      ]
+
+      if (format === 'csv') {
+        downloadCSV(`financeiro_${Date.now()}`, headers, rows)
+      } else {
+        printPDF(title, headers, rows, summary)
+      }
+
+      toast.success('Relatório financeiro exportado!', { id: 'export-fin-toast' })
+    } catch (e) {
+      toast.error('Erro ao processar exportação.', { id: 'export-fin-toast' })
+    }
+  }
+
   return (
     <div className="space-y-8 pb-10">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-brand">Relatório Financeiro</h1>
-        <p className="text-muted-foreground mt-1">
-          Acompanhe o faturamento geral, performance de vendas por curso e comissões.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-brand">Relatório Financeiro</h1>
+          <p className="text-muted-foreground mt-1">
+            Acompanhe o faturamento geral, performance de vendas por curso e comissões.
+          </p>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="border-brand text-brand font-bold">
+              <Download className="mr-2 size-4" /> Exportar Relatório
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuItem
+              onClick={() => handleExport('csv')}
+              className="font-medium cursor-pointer"
+            >
+              <FileText className="mr-2 size-4 text-brand" /> Exportar como CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleExport('pdf')}
+              className="font-medium cursor-pointer"
+            >
+              <File className="mr-2 size-4 text-orange-600" /> Exportar como PDF
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -136,13 +216,6 @@ export default function FinancialReports() {
                 </TableCell>
               </TableRow>
             ))}
-            {revenueByCourse.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={3} className="text-center py-6 text-muted-foreground">
-                  Nenhuma venda registrada ainda.
-                </TableCell>
-              </TableRow>
-            )}
           </TableBody>
         </Table>
       </Card>
@@ -168,7 +241,6 @@ export default function FinancialReports() {
               {transactions.map((t) => {
                 const course = courses.find((c) => c.id === t.courseId)
                 const buyer = students.find((s) => s.id === t.studentId)
-
                 const platSplit = t.splits.find((s) => s.role === 'platform')
                 const instSplit = t.splits.find((s) => s.role === 'instructor')
                 const partSplit = t.splits.find((s) => s.role === 'partner')
@@ -192,19 +264,9 @@ export default function FinancialReports() {
                     </TableCell>
                     <TableCell className="text-right bg-primary/5 font-extrabold text-primary">
                       {platSplit ? `R$ ${platSplit.amount.toFixed(2)}` : '-'}
-                      {platSplit && (
-                        <div className="text-[10px] font-semibold text-primary/70">
-                          {platSplit.percentage}%
-                        </div>
-                      )}
                     </TableCell>
                     <TableCell className="text-right font-semibold text-slate-700">
                       {instSplit ? `R$ ${instSplit.amount.toFixed(2)}` : '-'}
-                      {instSplit && (
-                        <div className="text-[10px] text-muted-foreground font-medium">
-                          {instSplit.percentage}%
-                        </div>
-                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       {partSplit ? (
@@ -212,15 +274,12 @@ export default function FinancialReports() {
                           <div className="text-emerald-600 font-bold">
                             R$ {partSplit.amount.toFixed(2)}
                           </div>
-                          <div className="text-[10px] text-muted-foreground font-medium truncate max-w-[100px] ml-auto">
-                            {partnerName} ({partSplit.percentage}%)
+                          <div className="text-[10px] text-muted-foreground truncate max-w-[100px] ml-auto">
+                            {partnerName}
                           </div>
                         </>
                       ) : (
-                        <Badge
-                          variant="outline"
-                          className="text-[10px] text-slate-400 border-slate-200"
-                        >
+                        <Badge variant="outline" className="text-[10px] text-slate-400">
                           Direta
                         </Badge>
                       )}
@@ -228,13 +287,6 @@ export default function FinancialReports() {
                   </TableRow>
                 )
               })}
-              {transactions.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    Nenhuma transação registrada.
-                  </TableCell>
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </div>

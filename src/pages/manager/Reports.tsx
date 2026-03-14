@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useLmsStore } from '@/stores/lmsStore'
+import { downloadCSV, printPDF } from '@/lib/export'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -17,10 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { Download, Users, BookOpen, Activity } from 'lucide-react'
+import { Download, Users, BookOpen, Activity, FileText, File } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function Reports() {
@@ -28,14 +35,11 @@ export default function Reports() {
   const [activeTab, setActiveTab] = useState('students')
   const [courseFilter, setCourseFilter] = useState('all')
 
-  const handleExport = () => toast.success('Relatório exportado com sucesso!')
-
   const filteredEnrollments = useMemo(() => {
     if (courseFilter === 'all') return enrollments
     return enrollments.filter((e) => e.courseId === courseFilter)
   }, [enrollments, courseFilter])
 
-  // Data: Development by Student
   const studentReports = useMemo(() => {
     const studentData = new Map()
     filteredEnrollments.forEach((e) => {
@@ -67,7 +71,6 @@ export default function Reports() {
     })
   }, [filteredEnrollments, students, courses])
 
-  // Data: Development by Course
   const courseReports = useMemo(() => {
     const relevantCourses =
       courseFilter === 'all' ? courses : courses.filter((c) => c.id === courseFilter)
@@ -75,7 +78,6 @@ export default function Reports() {
     return relevantCourses.map((c) => {
       const courseEnrolls = enrollments.filter((e) => e.courseId === c.id)
       const totalLessons = c.modules.reduce((acc, m) => acc + m.lessons.length, 0) || 0
-
       let sumProgress = 0
       let completedCount = 0
 
@@ -95,7 +97,6 @@ export default function Reports() {
     })
   }, [enrollments, courses, courseFilter])
 
-  // Data: Student Activity
   const activityReports = useMemo(() => {
     return filteredEnrollments
       .flatMap((e) =>
@@ -108,6 +109,52 @@ export default function Reports() {
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }, [filteredEnrollments, students, courses])
 
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    toast.info('Preparando exportação...', { id: 'export-toast' })
+    await new Promise((r) => setTimeout(r, 600)) // Simulation delay for UX
+
+    try {
+      let headers: string[] = []
+      let rows: any[][] = []
+      let title = ''
+
+      if (activeTab === 'students') {
+        title = 'Relatório de Desempenho por Aluno'
+        headers = ['Identificação', 'E-mail', 'Cursos Matriculados', 'Progresso Médio (%)']
+        rows = studentReports.map((s) => [
+          s.name || '-',
+          s.email || '-',
+          s.courseCount,
+          s.avgProgress,
+        ])
+      } else if (activeTab === 'courses') {
+        title = 'Relatório de Desempenho por Curso'
+        headers = ['Nome do Curso', 'Total de Alunos', 'Concluíram', 'Conclusão Média (%)']
+        rows = courseReports.map((c) => [c.title, c.studentsCount, c.completedCount, c.avgProgress])
+      } else {
+        title = 'Relatório de Atividades'
+        headers = ['Data / Hora', 'Aluno', 'Curso', 'Atividade Realizada', 'Detalhes']
+        rows = activityReports.map((act) => [
+          new Date(act.date).toLocaleString('pt-BR'),
+          act.student?.name || '-',
+          act.course?.title || '-',
+          act.type.replace('_', ' ').toUpperCase(),
+          act.details || '-',
+        ])
+      }
+
+      if (format === 'csv') {
+        downloadCSV(`relatorio_${activeTab}_${Date.now()}`, headers, rows)
+      } else {
+        printPDF(title, headers, rows)
+      }
+
+      toast.success('Relatório exportado com sucesso!', { id: 'export-toast' })
+    } catch (error) {
+      toast.error('Erro ao exportar dados.', { id: 'export-toast' })
+    }
+  }
+
   return (
     <div className="space-y-8 pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -117,12 +164,30 @@ export default function Reports() {
             Acompanhe o engajamento e a evolução dos alunos.
           </p>
         </div>
-        <Button variant="outline" onClick={handleExport} className="border-brand text-brand">
-          <Download className="mr-2 size-4" /> Exportar Dados
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="border-brand text-brand font-bold">
+              <Download className="mr-2 size-4" /> Exportar Dados
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuItem
+              onClick={() => handleExport('csv')}
+              className="font-medium cursor-pointer"
+            >
+              <FileText className="mr-2 size-4 text-brand" /> Exportar como CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleExport('pdf')}
+              className="font-medium cursor-pointer"
+            >
+              <File className="mr-2 size-4 text-orange-600" /> Exportar como PDF
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
-      <div className="bg-slate-50 p-4 rounded-xl border flex items-center gap-4 shadow-sm">
+      <div className="bg-slate-50 p-4 rounded-xl border flex flex-col md:flex-row items-center gap-4 shadow-sm">
         <label className="text-sm font-bold text-brand shrink-0">Filtrar por Curso:</label>
         <Select value={courseFilter} onValueChange={setCourseFilter}>
           <SelectTrigger className="w-full md:max-w-md bg-white">
@@ -161,7 +226,7 @@ export default function Reports() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="students" className="mt-0">
+        <TabsContent value="students" className="mt-0 outline-none">
           <Card className="border-slate-200 shadow-sm">
             <Table>
               <TableHeader className="bg-slate-50">
@@ -191,19 +256,12 @@ export default function Reports() {
                     </TableCell>
                   </TableRow>
                 ))}
-                {studentReports.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
-                      Nenhum aluno encontrado para os filtros selecionados.
-                    </TableCell>
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           </Card>
         </TabsContent>
 
-        <TabsContent value="courses" className="mt-0">
+        <TabsContent value="courses" className="mt-0 outline-none">
           <Card className="border-slate-200 shadow-sm">
             <Table>
               <TableHeader className="bg-slate-50">
@@ -236,19 +294,12 @@ export default function Reports() {
                     </TableCell>
                   </TableRow>
                 ))}
-                {courseReports.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                      Nenhum curso encontrado.
-                    </TableCell>
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           </Card>
         </TabsContent>
 
-        <TabsContent value="activity" className="mt-0">
+        <TabsContent value="activity" className="mt-0 outline-none">
           <Card className="border-slate-200 shadow-sm">
             <div className="overflow-x-auto">
               <Table>
@@ -278,13 +329,6 @@ export default function Reports() {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {activityReports.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                        Nenhuma atividade registrada no período.
-                      </TableCell>
-                    </TableRow>
-                  )}
                 </TableBody>
               </Table>
             </div>

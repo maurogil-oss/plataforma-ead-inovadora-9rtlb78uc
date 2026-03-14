@@ -1011,6 +1011,9 @@ section[aria-label='Notifications alt+T'] {
 .invisible{
   visibility: hidden;
 }
+.collapse{
+  visibility: collapse;
+}
 .fixed{
   position: fixed;
 }
@@ -1586,6 +1589,9 @@ section[aria-label='Notifications alt+T'] {
 }
 .w-5{
   width: 1.25rem;
+}
+.w-52{
+  width: 13rem;
 }
 .w-6{
   width: 1.5rem;
@@ -2852,6 +2858,10 @@ section[aria-label='Notifications alt+T'] {
 .text-muted-foreground{
   color: hsl(var(--muted-foreground));
 }
+.text-orange-600{
+  --tw-text-opacity: 1;
+  color: rgb(234 88 12 / var(--tw-text-opacity, 1));
+}
 .text-popover-foreground{
   color: hsl(var(--popover-foreground));
 }
@@ -2860,9 +2870,6 @@ section[aria-label='Notifications alt+T'] {
 }
 .text-primary-foreground{
   color: hsl(var(--primary-foreground));
-}
-.text-primary\/70{
-  color: hsl(var(--primary) / 0.7);
 }
 .text-primary\/80{
   color: hsl(var(--primary) / 0.8);
