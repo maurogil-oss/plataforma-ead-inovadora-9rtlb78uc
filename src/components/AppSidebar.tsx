@@ -71,15 +71,18 @@ export function AppSidebar() {
   const navigation = getNavigation(user?.role)
 
   return (
-    <div className="flex h-full w-72 flex-col border-r border-brand/20 bg-brand text-brand-foreground shadow-xl">
-      <div className="flex h-20 items-center px-6 border-b border-white/10 bg-brand">
-        <Link to="/" className="flex items-center gap-3 w-full group">
-          <Logo className="h-10 w-auto transition-transform duration-300 group-hover:scale-105 text-white" />
+    <div className="flex h-full w-72 lg:w-80 flex-col border-r border-brand/20 bg-brand text-brand-foreground shadow-xl z-20 relative">
+      <div className="flex h-24 md:h-28 items-center px-6 border-b border-white/10 bg-brand py-4 shrink-0">
+        <Link to="/" className="flex items-center gap-3 w-full group justify-start overflow-hidden">
+          <Logo
+            imgClassName="h-16 md:h-20 w-auto max-w-[240px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
+            className="text-white"
+          />
         </Link>
       </div>
 
       <div className="flex-1 overflow-y-auto py-6 custom-scrollbar">
-        <div className="px-4 mb-2 text-xs font-bold text-white/50 uppercase tracking-wider">
+        <div className="px-5 mb-3 text-[11px] font-extrabold text-white/50 uppercase tracking-widest">
           Menu Principal
         </div>
         <nav className="space-y-1.5 px-3">
@@ -90,78 +93,80 @@ export function AppSidebar() {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200',
+                  'flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200',
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'text-brand-foreground/80 hover:bg-white/10 hover:text-white',
+                    ? 'bg-primary text-primary-foreground shadow-md translate-x-1'
+                    : 'text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1',
                 )}
               >
                 <item.icon
                   className={cn(
-                    'h-5 w-5',
+                    'h-5 w-5 shrink-0',
                     isActive ? 'text-primary-foreground' : 'text-brand-foreground/60',
                   )}
                 />
-                {item.name}
+                <span className="truncate">{item.name}</span>
               </Link>
             )
           })}
         </nav>
 
-        <div className="px-4 mt-8 mb-2 text-xs font-bold text-white/50 uppercase tracking-wider">
+        <div className="px-5 mt-10 mb-3 text-[11px] font-extrabold text-white/50 uppercase tracking-widest">
           Institucional
         </div>
         <nav className="space-y-1.5 px-3">
           <Link
             to="/cursos"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white"
+            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
           >
-            <BookOpen className="h-5 w-5 text-brand-foreground/60" />
-            Catálogo de Cursos
+            <BookOpen className="h-5 w-5 shrink-0 text-brand-foreground/60" />
+            <span className="truncate">Catálogo de Cursos</span>
           </Link>
           <Link
             to="/planos"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white"
+            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
           >
-            <CreditCard className="h-5 w-5 text-brand-foreground/60" />
-            Planos de Assinatura
+            <CreditCard className="h-5 w-5 shrink-0 text-brand-foreground/60" />
+            <span className="truncate">Planos de Assinatura</span>
           </Link>
           <Link
             to="/contato"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white"
+            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
           >
-            <Phone className="h-5 w-5 text-brand-foreground/60" />
-            Central de Contato
+            <Phone className="h-5 w-5 shrink-0 text-brand-foreground/60" />
+            <span className="truncate">Central de Contato</span>
           </Link>
           <Link
             to="/sobre"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white"
+            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
           >
-            <Users className="h-5 w-5 text-brand-foreground/60" />
-            Sobre o Observatório
+            <Users className="h-5 w-5 shrink-0 text-brand-foreground/60" />
+            <span className="truncate">Sobre o Observatório</span>
           </Link>
         </nav>
       </div>
 
-      <div className="border-t border-white/10 p-4 bg-brand/90">
-        <div className="flex items-center gap-3 mb-4 px-2">
-          <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-inner">
+      <div className="border-t border-white/10 p-5 bg-brand/95 shrink-0">
+        <div className="flex items-center gap-4 mb-5 px-1">
+          <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-lg font-bold shadow-inner shrink-0">
             {user?.name?.charAt(0) || 'U'}
           </div>
           <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-bold text-white truncate">{user?.name || 'Usuário'}</span>
-            <span className="text-xs text-brand-foreground/60 truncate capitalize font-medium">
+            <span className="text-base font-bold text-white truncate">
+              {user?.name || 'Usuário'}
+            </span>
+            <span className="text-sm text-brand-foreground/60 truncate capitalize font-medium">
               {user?.role || 'student'}
             </span>
           </div>
         </div>
         <Button
           variant="outline"
-          className="w-full justify-start text-brand-foreground/80 border-white/20 bg-transparent hover:bg-white/10 hover:text-white"
+          className="w-full justify-start text-brand-foreground/80 border-white/20 bg-transparent hover:bg-white/10 hover:text-white hover:border-white/30 h-11"
           onClick={() => logout()}
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          Sair do Sistema
+          <LogOut className="mr-2 h-5 w-5" />
+          <span className="font-bold">Sair do Sistema</span>
         </Button>
       </div>
     </div>

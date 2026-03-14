@@ -4,11 +4,12 @@ import logoUrl from '@/assets/logomarca-observatorio-academy-nova-86843.png'
 
 interface LogoProps {
   className?: string
+  imgClassName?: string
   collapsed?: boolean
   linkTo?: string
 }
 
-export function Logo({ className, collapsed, linkTo = '/' }: LogoProps) {
+export function Logo({ className, imgClassName, collapsed, linkTo = '/' }: LogoProps) {
   return (
     <Link to={linkTo} className={cn('flex items-center gap-2 transition-all', className)}>
       <img
@@ -16,7 +17,8 @@ export function Logo({ className, collapsed, linkTo = '/' }: LogoProps) {
         alt="Observatório Academy"
         className={cn(
           'object-contain transition-all duration-300',
-          collapsed ? 'h-8 w-8 object-cover object-left' : 'h-12 w-auto',
+          collapsed ? 'h-10 w-10 object-cover object-left' : 'h-16 md:h-20 w-auto',
+          imgClassName,
         )}
       />
     </Link>

@@ -30,46 +30,52 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 dark:bg-slate-950">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex flex-col items-center justify-center space-y-6 mb-8">
-          <div className="p-4 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-            <Logo className="h-16 w-auto" linkTo="#" />
+      <div className="w-full max-w-[440px] space-y-8">
+        <div className="flex flex-col items-center justify-center space-y-8 mb-8 mt-4">
+          <div className="p-8 md:p-10 bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 w-full flex items-center justify-center transition-all hover:shadow-md">
+            <Logo imgClassName="h-24 md:h-32 w-auto object-contain" linkTo="#" />
           </div>
-          <div className="text-center space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-              Bem-vindo à Plataforma
+          <div className="text-center space-y-2 px-4">
+            <h2 className="text-3xl font-extrabold tracking-tight text-brand dark:text-white">
+              Acesso à Plataforma
             </h2>
-            <p className="text-slate-500 dark:text-slate-400">
-              Acesse o ambiente educacional e painel de gestão
+            <p className="text-base text-slate-500 dark:text-slate-400 font-medium">
+              Entre com suas credenciais para continuar
             </p>
           </div>
         </div>
 
-        <Card className="border-0 shadow-xl shadow-slate-200/50 dark:shadow-none dark:border dark:border-slate-800">
+        <Card className="border-0 shadow-2xl shadow-brand/5 dark:shadow-none dark:border dark:border-slate-800 rounded-2xl overflow-hidden">
           <form onSubmit={handleLogin}>
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-xl">Login</CardTitle>
-              <CardDescription>Insira suas credenciais para continuar</CardDescription>
+            <CardHeader className="space-y-2 bg-white dark:bg-slate-900 pb-8 pt-8">
+              <CardTitle className="text-2xl font-bold">Login</CardTitle>
+              <CardDescription className="text-base">
+                Bem-vindo de volta! Sentimos sua falta.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">E-mail</Label>
+            <CardContent className="space-y-5 bg-white dark:bg-slate-900">
+              <div className="space-y-2.5">
+                <Label htmlFor="email" className="text-sm font-bold text-slate-700">
+                  Endereço de E-mail
+                </Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="admin@observatorio.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="focus-visible:ring-blue-500"
+                  className="focus-visible:ring-brand h-12 text-base px-4 bg-slate-50 border-slate-200"
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Senha</Label>
+                  <Label htmlFor="password" className="text-sm font-bold text-slate-700">
+                    Sua Senha
+                  </Label>
                   <Link
                     to="#"
-                    className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 hover:underline"
+                    className="text-sm font-semibold text-brand hover:text-brand/80 dark:text-blue-400 hover:underline"
                   >
                     Esqueceu a senha?
                   </Link>
@@ -79,26 +85,27 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="focus-visible:ring-blue-500"
+                  className="focus-visible:ring-brand h-12 text-base px-4 bg-slate-50 border-slate-200"
                   required
                 />
               </div>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
+            <CardFooter className="flex flex-col space-y-5 bg-white dark:bg-slate-900 pb-8 pt-4">
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                size="lg"
+                className="w-full bg-brand hover:bg-brand/90 text-white h-12 text-base font-bold shadow-lg shadow-brand/20"
                 disabled={isLoading}
               >
-                {isLoading ? 'Entrando...' : 'Entrar na Plataforma'}
+                {isLoading ? 'Autenticando...' : 'Entrar na Plataforma'}
               </Button>
-              <div className="text-center text-sm text-slate-500">
-                Não possui conta?{' '}
+              <div className="text-center text-[15px] text-slate-500 font-medium">
+                Não possui conta ainda?{' '}
                 <Link
                   to="/register"
-                  className="font-semibold text-orange-500 hover:text-orange-600 hover:underline"
+                  className="font-bold text-orange-500 hover:text-orange-600 hover:underline ml-1"
                 >
-                  Cadastre-se
+                  Cadastre-se agora
                 </Link>
               </div>
             </CardFooter>
