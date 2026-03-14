@@ -259,33 +259,34 @@ export default function Index() {
             <div className="absolute inset-0">
               <img
                 src="https://img.usecurling.com/p/1920/1080?q=highway%20traffic%20cone&color=orange"
-                alt={featuredCourse.title}
-                className="w-full h-full object-cover"
+                alt="Mobilidade Urbana"
+                className="w-full h-full object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+              {/* Reduced overlays to let the background city landscape stand out more clearly */}
+              <div className="absolute inset-0 bg-gradient-to-r from-background/80 md:from-background/40 via-background/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/5 to-transparent" />
             </div>
 
             <div className="container mx-auto px-4 md:px-8 relative z-10">
-              <div className="max-w-3xl space-y-6 animate-fade-in-up">
+              <div className="max-w-3xl space-y-6 animate-fade-in-up bg-background/60 dark:bg-background/50 p-6 md:p-10 rounded-3xl backdrop-blur-md border border-border/50 shadow-2xl">
                 <div className="flex items-center gap-3">
-                  <Badge className="bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-xs px-3 py-1 border-none shadow-md">
-                    Módulo Atualizado
+                  <Badge className="bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest text-xs px-3 py-1 border-none shadow-md">
+                    Plataforma EAD
                   </Badge>
-                  <span className="text-foreground/80 font-bold text-sm uppercase tracking-wider shadow-sm drop-shadow-md">
+                  <span className="text-foreground font-extrabold text-sm uppercase tracking-wider shadow-sm drop-shadow-md">
                     {featuredCourse.area}
                   </span>
                 </div>
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.1] drop-shadow-lg text-foreground">
-                  {featuredCourse.title}
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.1] drop-shadow-xl text-foreground">
+                  Educação que transforma a mobilidade urbana
                 </h1>
-                <p className="text-xl md:text-2xl text-foreground/80 font-medium leading-relaxed max-w-2xl drop-shadow-md line-clamp-3">
+                <p className="text-xl md:text-2xl text-foreground/90 font-semibold leading-relaxed max-w-2xl drop-shadow-md line-clamp-3">
                   {featuredCourse.description}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 pt-8">
+                <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <Button
                     size="lg"
-                    className="h-14 px-8 text-lg font-bold shadow-xl"
+                    className="h-14 px-8 text-lg font-bold shadow-xl hover:scale-105 transition-transform bg-orange-600 hover:bg-orange-700 text-white border-none"
                     onClick={() => navigate('/login')}
                   >
                     <Play className="mr-2 size-6 fill-current" /> Acessar Conteúdo
@@ -293,7 +294,7 @@ export default function Index() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-14 px-8 text-lg font-bold bg-background/50 border-foreground/20 hover:bg-background/80 backdrop-blur-md"
+                    className="h-14 px-8 text-lg font-bold bg-background/50 border-border hover:bg-background/80 backdrop-blur-md shadow-lg hover:scale-105 transition-transform"
                     onClick={() => navigate('/cursos')}
                   >
                     <Info className="mr-2 size-6" /> Ver Programa

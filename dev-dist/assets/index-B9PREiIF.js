@@ -28654,88 +28654,88 @@ function Index() {
 					className: "relative w-full h-[90vh] min-h-[700px] flex items-center mb-16 pt-32",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						"data-uid": "src/pages/Index.tsx:259:13",
-						"data-prohibitions": "[]",
+						"data-prohibitions": "[editContent]",
 						className: "absolute inset-0",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								"data-uid": "src/pages/Index.tsx:260:15",
 								"data-prohibitions": "[editContent]",
 								src: "https://img.usecurling.com/p/1920/1080?q=highway%20traffic%20cone&color=orange",
-								alt: featuredCourse.title,
-								className: "w-full h-full object-cover"
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/Index.tsx:265:15",
-								"data-prohibitions": "[editContent]",
-								className: "absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"
+								alt: "Mobilidade Urbana",
+								className: "w-full h-full object-cover object-center"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 								"data-uid": "src/pages/Index.tsx:266:15",
 								"data-prohibitions": "[editContent]",
-								className: "absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"
+								className: "absolute inset-0 bg-gradient-to-r from-background/80 md:from-background/40 via-background/10 to-transparent"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/Index.tsx:267:15",
+								"data-prohibitions": "[editContent]",
+								className: "absolute inset-0 bg-gradient-to-t from-background via-background/5 to-transparent"
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/Index.tsx:269:13",
+						"data-uid": "src/pages/Index.tsx:270:13",
 						"data-prohibitions": "[editContent]",
 						className: "container mx-auto px-4 md:px-8 relative z-10",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/Index.tsx:270:15",
+							"data-uid": "src/pages/Index.tsx:271:15",
 							"data-prohibitions": "[editContent]",
-							className: "max-w-3xl space-y-6 animate-fade-in-up",
+							className: "max-w-3xl space-y-6 animate-fade-in-up bg-background/60 dark:bg-background/50 p-6 md:p-10 rounded-3xl backdrop-blur-md border border-border/50 shadow-2xl",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/Index.tsx:271:17",
+									"data-uid": "src/pages/Index.tsx:272:17",
 									"data-prohibitions": "[editContent]",
 									className: "flex items-center gap-3",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge$1, {
-										"data-uid": "src/pages/Index.tsx:272:19",
+										"data-uid": "src/pages/Index.tsx:273:19",
 										"data-prohibitions": "[]",
-										className: "bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-xs px-3 py-1 border-none shadow-md",
-										children: "Módulo Atualizado"
+										className: "bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest text-xs px-3 py-1 border-none shadow-md",
+										children: "Plataforma EAD"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/Index.tsx:275:19",
+										"data-uid": "src/pages/Index.tsx:276:19",
 										"data-prohibitions": "[editContent]",
-										className: "text-foreground/80 font-bold text-sm uppercase tracking-wider shadow-sm drop-shadow-md",
+										className: "text-foreground font-extrabold text-sm uppercase tracking-wider shadow-sm drop-shadow-md",
 										children: featuredCourse.area
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-									"data-uid": "src/pages/Index.tsx:279:17",
-									"data-prohibitions": "[editContent]",
-									className: "text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.1] drop-shadow-lg text-foreground",
-									children: featuredCourse.title
+									"data-uid": "src/pages/Index.tsx:280:17",
+									"data-prohibitions": "[]",
+									className: "text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.1] drop-shadow-xl text-foreground",
+									children: "Educação que transforma a mobilidade urbana"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/Index.tsx:282:17",
+									"data-uid": "src/pages/Index.tsx:283:17",
 									"data-prohibitions": "[editContent]",
-									className: "text-xl md:text-2xl text-foreground/80 font-medium leading-relaxed max-w-2xl drop-shadow-md line-clamp-3",
+									className: "text-xl md:text-2xl text-foreground/90 font-semibold leading-relaxed max-w-2xl drop-shadow-md line-clamp-3",
 									children: featuredCourse.description
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/Index.tsx:285:17",
+									"data-uid": "src/pages/Index.tsx:286:17",
 									"data-prohibitions": "[]",
-									className: "flex flex-col sm:flex-row gap-4 pt-8",
+									className: "flex flex-col sm:flex-row gap-4 pt-6",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-										"data-uid": "src/pages/Index.tsx:286:19",
+										"data-uid": "src/pages/Index.tsx:287:19",
 										"data-prohibitions": "[]",
 										size: "lg",
-										className: "h-14 px-8 text-lg font-bold shadow-xl",
+										className: "h-14 px-8 text-lg font-bold shadow-xl hover:scale-105 transition-transform bg-orange-600 hover:bg-orange-700 text-white border-none",
 										onClick: () => navigate("/login"),
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Play, {
-											"data-uid": "src/pages/Index.tsx:291:21",
+											"data-uid": "src/pages/Index.tsx:292:21",
 											"data-prohibitions": "[editContent]",
 											className: "mr-2 size-6 fill-current"
 										}), " Acessar Conteúdo"]
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-										"data-uid": "src/pages/Index.tsx:293:19",
+										"data-uid": "src/pages/Index.tsx:294:19",
 										"data-prohibitions": "[]",
 										size: "lg",
 										variant: "outline",
-										className: "h-14 px-8 text-lg font-bold bg-background/50 border-foreground/20 hover:bg-background/80 backdrop-blur-md",
+										className: "h-14 px-8 text-lg font-bold bg-background/50 border-border hover:bg-background/80 backdrop-blur-md shadow-lg hover:scale-105 transition-transform",
 										onClick: () => navigate("/cursos"),
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Info, {
-											"data-uid": "src/pages/Index.tsx:299:21",
+											"data-uid": "src/pages/Index.tsx:300:21",
 											"data-prohibitions": "[editContent]",
 											className: "mr-2 size-6"
 										}), " Ver Programa"]
@@ -28745,75 +28745,75 @@ function Index() {
 						})
 					})]
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/pages/Index.tsx:306:11",
+					"data-uid": "src/pages/Index.tsx:307:11",
 					"data-prohibitions": "[editContent]",
 					className: "h-32"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/Index.tsx:309:9",
+					"data-uid": "src/pages/Index.tsx:310:9",
 					"data-prohibitions": "[editContent]",
 					className: "space-y-16 md:space-y-24 pb-32 -mt-10 relative z-20",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-							"data-uid": "src/pages/Index.tsx:310:11",
+							"data-uid": "src/pages/Index.tsx:311:11",
 							"data-prohibitions": "[editContent]",
 							className: "container mx-auto px-4 md:px-8",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/Index.tsx:311:13",
+								"data-uid": "src/pages/Index.tsx:312:13",
 								"data-prohibitions": "[]",
 								className: "mb-8",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-									"data-uid": "src/pages/Index.tsx:312:15",
+									"data-uid": "src/pages/Index.tsx:313:15",
 									"data-prohibitions": "[]",
 									className: "text-3xl md:text-4xl font-extrabold tracking-tight",
 									children: "Corpo Docente & Especialistas"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/Index.tsx:315:15",
+									"data-uid": "src/pages/Index.tsx:316:15",
 									"data-prohibitions": "[]",
 									className: "text-muted-foreground mt-2 text-lg font-medium",
 									children: "Capacite-se diretamente com as maiores autoridades técnicas do setor."
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/Index.tsx:319:13",
+								"data-uid": "src/pages/Index.tsx:320:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6",
 								children: speakers.map((speaker) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SpeakerCardRender, {
-									"data-uid": "src/pages/Index.tsx:321:17",
+									"data-uid": "src/pages/Index.tsx:322:17",
 									"data-prohibitions": "[editContent]",
 									speaker
 								}, speaker.id))
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-							"data-uid": "src/pages/Index.tsx:326:11",
+							"data-uid": "src/pages/Index.tsx:327:11",
 							"data-prohibitions": "[editContent]",
 							className: "container mx-auto px-4 md:px-8",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/Index.tsx:327:13",
+									"data-uid": "src/pages/Index.tsx:328:13",
 									"data-prohibitions": "[]",
 									className: "mb-8 flex items-end justify-between border-b pb-4",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/Index.tsx:328:15",
+										"data-uid": "src/pages/Index.tsx:329:15",
 										"data-prohibitions": "[]",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-											"data-uid": "src/pages/Index.tsx:329:17",
+											"data-uid": "src/pages/Index.tsx:330:17",
 											"data-prohibitions": "[]",
 											className: "text-3xl md:text-4xl font-extrabold tracking-tight text-brand dark:text-white",
 											children: "Programas de Especialização"
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-											"data-uid": "src/pages/Index.tsx:332:17",
+											"data-uid": "src/pages/Index.tsx:333:17",
 											"data-prohibitions": "[]",
 											className: "text-muted-foreground mt-2 text-lg font-medium",
 											children: "Programas educacionais de alta especialização focados em Segurança e Inteligência Urbana."
 										})]
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/Index.tsx:337:15",
+										"data-uid": "src/pages/Index.tsx:338:15",
 										"data-prohibitions": "[]",
 										variant: "ghost",
 										asChild: true,
 										className: "hidden sm:flex font-bold",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/Index.tsx:338:17",
+											"data-uid": "src/pages/Index.tsx:339:17",
 											"data-prohibitions": "[]",
 											to: "/cursos",
 											children: "Ver Todas as Trilhas"
@@ -28821,7 +28821,7 @@ function Index() {
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/Index.tsx:341:13",
+									"data-uid": "src/pages/Index.tsx:342:13",
 									"data-prohibitions": "[editContent]",
 									className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6",
 									children: courses.slice(0, 5).map((course) => {
@@ -28829,7 +28829,7 @@ function Index() {
 										const enrollment = user ? enrollments.find((e) => e.courseId === course.id && e.studentId === user.id) : null;
 										const progress = enrollment && totalLessons > 0 ? Math.round(enrollment.completedLessons.length / totalLessons * 100) : 0;
 										return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CourseCardRender, {
-											"data-uid": "src/pages/Index.tsx:353:19",
+											"data-uid": "src/pages/Index.tsx:354:19",
 											"data-prohibitions": "[editContent]",
 											course,
 											navigate,
@@ -28838,17 +28838,17 @@ function Index() {
 									})
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/Index.tsx:362:13",
+									"data-uid": "src/pages/Index.tsx:363:13",
 									"data-prohibitions": "[]",
 									className: "mt-6 text-center sm:hidden",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/Index.tsx:363:15",
+										"data-uid": "src/pages/Index.tsx:364:15",
 										"data-prohibitions": "[]",
 										variant: "outline",
 										className: "w-full font-bold",
 										asChild: true,
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/Index.tsx:364:17",
+											"data-uid": "src/pages/Index.tsx:365:17",
 											"data-prohibitions": "[]",
 											to: "/cursos",
 											children: "Ver Todas as Trilhas"
@@ -28858,60 +28858,60 @@ function Index() {
 							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-							"data-uid": "src/pages/Index.tsx:369:11",
+							"data-uid": "src/pages/Index.tsx:370:11",
 							"data-prohibitions": "[editContent]",
 							className: "container mx-auto px-4 md:px-8 bg-muted/30 py-16 rounded-3xl border border-border",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/Index.tsx:370:13",
+								"data-uid": "src/pages/Index.tsx:371:13",
 								"data-prohibitions": "[]",
 								className: "mb-8",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-									"data-uid": "src/pages/Index.tsx:371:15",
+									"data-uid": "src/pages/Index.tsx:372:15",
 									"data-prohibitions": "[]",
 									className: "text-3xl md:text-4xl font-extrabold tracking-tight",
 									children: "Artigos Técnicos & Atualidades"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/Index.tsx:374:15",
+									"data-uid": "src/pages/Index.tsx:375:15",
 									"data-prohibitions": "[]",
 									className: "text-muted-foreground mt-2 text-lg font-medium",
 									children: "Notícias da indústria e publicações acadêmicas sobre segurança viária."
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/Index.tsx:378:13",
+								"data-uid": "src/pages/Index.tsx:379:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
 								children: MOCK_ARTICLES.map((article) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArticleCardRender, {
-									"data-uid": "src/pages/Index.tsx:380:17",
+									"data-uid": "src/pages/Index.tsx:381:17",
 									"data-prohibitions": "[editContent]",
 									article
 								}, article.id))
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-							"data-uid": "src/pages/Index.tsx:385:11",
+							"data-uid": "src/pages/Index.tsx:386:11",
 							"data-prohibitions": "[editContent]",
 							className: "container mx-auto px-4 md:px-8",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/Index.tsx:386:13",
+								"data-uid": "src/pages/Index.tsx:387:13",
 								"data-prohibitions": "[]",
 								className: "mb-8",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-									"data-uid": "src/pages/Index.tsx:387:15",
+									"data-uid": "src/pages/Index.tsx:388:15",
 									"data-prohibitions": "[]",
 									className: "text-3xl md:text-4xl font-extrabold tracking-tight",
 									children: "Acervo Técnico & Documentos"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/Index.tsx:390:15",
+									"data-uid": "src/pages/Index.tsx:391:15",
 									"data-prohibitions": "[]",
 									className: "text-muted-foreground mt-2 text-lg font-medium",
 									children: "Materiais ricos e manuais normativos disponíveis para leitura aprofundada."
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/Index.tsx:394:13",
+								"data-uid": "src/pages/Index.tsx:395:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6",
 								children: ebooks.map((ebook) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EbookCardRender, {
-									"data-uid": "src/pages/Index.tsx:396:17",
+									"data-uid": "src/pages/Index.tsx:397:17",
 									"data-prohibitions": "[editContent]",
 									product: ebook,
 									navigate
@@ -28922,65 +28922,65 @@ function Index() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
-				"data-uid": "src/pages/Index.tsx:403:7",
+				"data-uid": "src/pages/Index.tsx:404:7",
 				"data-prohibitions": "[editContent]",
 				className: "bg-muted/30 border-t border-border py-16",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/pages/Index.tsx:404:9",
+					"data-uid": "src/pages/Index.tsx:405:9",
 					"data-prohibitions": "[editContent]",
 					className: "container mx-auto px-4 md:px-8",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/Index.tsx:405:11",
+						"data-uid": "src/pages/Index.tsx:406:11",
 						"data-prohibitions": "[]",
 						className: "grid grid-cols-1 md:grid-cols-4 gap-12 mb-12",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/Index.tsx:406:13",
+								"data-uid": "src/pages/Index.tsx:407:13",
 								"data-prohibitions": "[]",
 								className: "col-span-1 md:col-span-2 space-y-6",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/Index.tsx:407:15",
+									"data-uid": "src/pages/Index.tsx:408:15",
 									"data-prohibitions": "[]",
 									className: "flex items-center gap-3",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Logo, {
-										"data-uid": "src/pages/Index.tsx:408:17",
+										"data-uid": "src/pages/Index.tsx:409:17",
 										"data-prohibitions": "[editContent]",
 										imgClassName: "h-10 w-auto opacity-70 grayscale"
 									})
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-									"data-uid": "src/pages/Index.tsx:410:15",
+									"data-uid": "src/pages/Index.tsx:411:15",
 									"data-prohibitions": "[]",
 									className: "text-base text-muted-foreground max-w-sm leading-relaxed font-medium",
 									children: "Transformando o futuro da mobilidade e segurança urbana através de educação e inovação técnica."
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/Index.tsx:415:13",
+								"data-uid": "src/pages/Index.tsx:416:13",
 								"data-prohibitions": "[]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-									"data-uid": "src/pages/Index.tsx:416:15",
+									"data-uid": "src/pages/Index.tsx:417:15",
 									"data-prohibitions": "[]",
 									className: "font-bold mb-6 tracking-wide uppercase",
 									children: "Plataforma Educacional"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-									"data-uid": "src/pages/Index.tsx:417:15",
+									"data-uid": "src/pages/Index.tsx:418:15",
 									"data-prohibitions": "[]",
 									className: "space-y-4 text-sm font-semibold text-muted-foreground",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-										"data-uid": "src/pages/Index.tsx:418:17",
+										"data-uid": "src/pages/Index.tsx:419:17",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/Index.tsx:419:19",
+											"data-uid": "src/pages/Index.tsx:420:19",
 											"data-prohibitions": "[]",
 											to: "/cursos",
 											className: "hover:text-foreground transition-colors",
 											children: "Trilhas de Capacitação"
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-										"data-uid": "src/pages/Index.tsx:423:17",
+										"data-uid": "src/pages/Index.tsx:424:17",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/Index.tsx:424:19",
+											"data-uid": "src/pages/Index.tsx:425:19",
 											"data-prohibitions": "[]",
 											to: "/forum",
 											className: "hover:text-foreground transition-colors",
@@ -28990,32 +28990,32 @@ function Index() {
 								})]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/Index.tsx:430:13",
+								"data-uid": "src/pages/Index.tsx:431:13",
 								"data-prohibitions": "[]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-									"data-uid": "src/pages/Index.tsx:431:15",
+									"data-uid": "src/pages/Index.tsx:432:15",
 									"data-prohibitions": "[]",
 									className: "font-bold mb-6 tracking-wide uppercase",
 									children: "Institucional"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("ul", {
-									"data-uid": "src/pages/Index.tsx:432:15",
+									"data-uid": "src/pages/Index.tsx:433:15",
 									"data-prohibitions": "[]",
 									className: "space-y-4 text-sm font-semibold text-muted-foreground",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-										"data-uid": "src/pages/Index.tsx:433:17",
+										"data-uid": "src/pages/Index.tsx:434:17",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/Index.tsx:434:19",
+											"data-uid": "src/pages/Index.tsx:435:19",
 											"data-prohibitions": "[]",
 											to: "/sobre",
 											className: "hover:text-foreground transition-colors",
 											children: "Sobre a Academia"
 										})
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("li", {
-										"data-uid": "src/pages/Index.tsx:438:17",
+										"data-uid": "src/pages/Index.tsx:439:17",
 										"data-prohibitions": "[]",
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link$1, {
-											"data-uid": "src/pages/Index.tsx:439:19",
+											"data-uid": "src/pages/Index.tsx:440:19",
 											"data-prohibitions": "[]",
 											to: "/contato",
 											className: "hover:text-foreground transition-colors",
@@ -29026,11 +29026,11 @@ function Index() {
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/Index.tsx:446:11",
+						"data-uid": "src/pages/Index.tsx:447:11",
 						"data-prohibitions": "[editContent]",
 						className: "pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-bold text-muted-foreground",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-							"data-uid": "src/pages/Index.tsx:447:13",
+							"data-uid": "src/pages/Index.tsx:448:13",
 							"data-prohibitions": "[editContent]",
 							children: [
 								"© ",
@@ -47461,4 +47461,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-DimadhUR.js.map
+//# sourceMappingURL=index-B9PREiIF.js.map
