@@ -112,6 +112,21 @@ export interface WebhookConfig {
   events: string[]
 }
 
+export interface BiWebhook {
+  id: string
+  url: string
+  events: string[]
+  active: boolean
+}
+
+export interface ReportSchedule {
+  id: string
+  type: 'financial' | 'academic' | 'sales'
+  frequency: 'daily' | 'weekly' | 'monthly'
+  emails: string
+  active: boolean
+}
+
 export interface TransactionSplit {
   role: 'platform' | 'instructor' | 'partner'
   userId: string | 'platform'
@@ -216,11 +231,9 @@ const getMockLiveClasses = (): LiveClass[] => {
   const now = new Date()
   const todayStr = now.toISOString().split('T')[0]
 
-  // Create a live class that started 10 mins ago and lasts 60 mins
   const liveStartTime = new Date(now.getTime() - 10 * 60000)
   const liveTimeStr = `${liveStartTime.getHours().toString().padStart(2, '0')}:${liveStartTime.getMinutes().toString().padStart(2, '0')}`
 
-  // Create a live class that starts in exactly 14 minutes
   const upcomingStartTime = new Date(now.getTime() + 14 * 60000)
   const upcomingTimeStr = `${upcomingStartTime.getHours().toString().padStart(2, '0')}:${upcomingStartTime.getMinutes().toString().padStart(2, '0')}`
 
@@ -271,6 +284,8 @@ interface LMSStore {
   bankQuestions: BankQuestion[]
   transactions: Transaction[]
   liveClasses: LiveClass[]
+  reportSchedules: ReportSchedule[]
+  biWebhooks: BiWebhook[]
   commissionSettings: { defaultInstructorRate: number; defaultPartnerRate: number }
   notificationSettings: { emailNewLesson: boolean; emailExamReminder: boolean }
   paymentSettings: { provider: string; apiKey: string }
@@ -304,6 +319,14 @@ interface LMSStore {
   updateLiveClass: (lc: LiveClass) => void
   deleteLiveClass: (id: string) => void
 
+  addReportSchedule: (s: ReportSchedule) => void
+  updateReportSchedule: (s: ReportSchedule) => void
+  deleteReportSchedule: (id: string) => void
+
+  addBiWebhook: (w: BiWebhook) => void
+  updateBiWebhook: (w: BiWebhook) => void
+  deleteBiWebhook: (id: string) => void
+
   updateNotificationSettings: (s: { emailNewLesson: boolean; emailExamReminder: boolean }) => void
   updatePaymentSettings: (s: { provider: string; apiKey: string }) => void
   addWebhook: (w: WebhookConfig) => void
@@ -332,7 +355,7 @@ const checkCourseCompletion = (enrollment: Enrollment, course: Course): Enrollme
   return enrollment
 }
 
-export const useLmsStore = create<LMSStore>((set, get) => ({
+export const useLmsStore = create<LMSStore>((set) => ({
   courses: MOCK_COURSES,
   students: [{ id: 's1', name: 'João Aluno', email: 'student@empresa.com', role: 'student' }],
   instructors: [
@@ -378,6 +401,23 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
     },
   ],
   liveClasses: getMockLiveClasses(),
+  reportSchedules: [
+    {
+      id: 'sched_1',
+      type: 'financial',
+      frequency: 'monthly',
+      emails: 'diretoria@onsv.org.br',
+      active: true,
+    },
+  ],
+  biWebhooks: [
+    {
+      id: 'bi_1',
+      url: 'https://powerbi.onsv.org.br/webhook/data',
+      events: ['new_sale', 'course_completed'],
+      active: true,
+    },
+  ],
   commissionSettings: { defaultInstructorRate: 50, defaultPartnerRate: 20 },
   notificationSettings: { emailNewLesson: true, emailExamReminder: true },
   paymentSettings: { provider: 'Stripe', apiKey: '' },
@@ -444,12 +484,6 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
         ]
       }
 
-      s.webhooks
-        .filter((w) => w.events.includes('enrollment'))
-        .forEach((w) =>
-          console.log(`[Webhook -> ${w.url}] Event: enrollment`, { studentId, courseId }),
-        )
-
       return {
         transactions: newTransactions,
         enrollments: [
@@ -510,16 +544,6 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
         const course = s.courses.find((c) => c.id === e.courseId)
         if (course) {
           updatedE = checkCourseCompletion(updatedE, course)
-          if (updatedE.isCompleted && !e.isCompleted) {
-            s.webhooks
-              .filter((w) => w.events.includes('course_completed'))
-              .forEach((w) =>
-                console.log(`[Webhook -> ${w.url}] Event: course_completed`, {
-                  studentId: e.studentId,
-                  courseId: e.courseId,
-                }),
-              )
-          }
         }
         return updatedE
       })
@@ -578,11 +602,6 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
         const course = s.courses.find((c) => c.id === e.courseId)
         if (course) {
           updatedE = checkCourseCompletion(updatedE, course)
-          if (updatedE.isCompleted && !e.isCompleted) {
-            s.webhooks
-              .filter((w) => w.events.includes('course_completed'))
-              .forEach((w) => console.log(`[Webhook -> ${w.url}] Event: course_completed`))
-          }
         }
         return updatedE
       }),
@@ -598,6 +617,19 @@ export const useLmsStore = create<LMSStore>((set, get) => ({
   updateLiveClass: (lc) =>
     set((s) => ({ liveClasses: s.liveClasses.map((l) => (l.id === lc.id ? lc : l)) })),
   deleteLiveClass: (id) => set((s) => ({ liveClasses: s.liveClasses.filter((l) => l.id !== id) })),
+
+  addReportSchedule: (sched) => set((s) => ({ reportSchedules: [...s.reportSchedules, sched] })),
+  updateReportSchedule: (sched) =>
+    set((s) => ({
+      reportSchedules: s.reportSchedules.map((x) => (x.id === sched.id ? sched : x)),
+    })),
+  deleteReportSchedule: (id) =>
+    set((s) => ({ reportSchedules: s.reportSchedules.filter((x) => x.id !== id) })),
+
+  addBiWebhook: (w) => set((s) => ({ biWebhooks: [...s.biWebhooks, w] })),
+  updateBiWebhook: (w) =>
+    set((s) => ({ biWebhooks: s.biWebhooks.map((x) => (x.id === w.id ? w : x)) })),
+  deleteBiWebhook: (id) => set((s) => ({ biWebhooks: s.biWebhooks.filter((x) => x.id !== id) })),
 
   updateNotificationSettings: (s) => set({ notificationSettings: s }),
   updatePaymentSettings: (s) => set({ paymentSettings: s }),

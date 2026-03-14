@@ -1,7 +1,6 @@
-import { useState, useMemo } from 'react'
-import { useLmsStore } from '@/stores/lmsStore'
+import { useState } from 'react'
 import { downloadCSV, printPDF } from '@/lib/export'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Table,
@@ -27,91 +26,32 @@ import {
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { Download, Users, BookOpen, Activity, FileText, File } from 'lucide-react'
+import {
+  Download,
+  Users,
+  BookOpen,
+  Activity,
+  FileText,
+  File,
+  BarChart3,
+  CalendarClock,
+  Webhook,
+} from 'lucide-react'
 import { toast } from 'sonner'
+import { useReportsData } from '@/hooks/useReportsData'
+
+import ComparativeDashboard from './reports/ComparativeDashboard'
+import ReportScheduling from './reports/ReportScheduling'
+import BiIntegrations from './reports/BiIntegrations'
 
 export default function Reports() {
-  const { enrollments, students, courses } = useLmsStore()
-  const [activeTab, setActiveTab] = useState('students')
-  const [courseFilter, setCourseFilter] = useState('all')
-
-  const filteredEnrollments = useMemo(() => {
-    if (courseFilter === 'all') return enrollments
-    return enrollments.filter((e) => e.courseId === courseFilter)
-  }, [enrollments, courseFilter])
-
-  const studentReports = useMemo(() => {
-    const studentData = new Map()
-    filteredEnrollments.forEach((e) => {
-      if (!studentData.has(e.studentId)) {
-        studentData.set(e.studentId, {
-          student: students.find((s) => s.id === e.studentId),
-          enrollments: [],
-        })
-      }
-      studentData.get(e.studentId).enrollments.push(e)
-    })
-
-    return Array.from(studentData.values()).map(({ student, enrollments }) => {
-      let totalProgress = 0
-      enrollments.forEach((e: any) => {
-        const c = courses.find((x) => x.id === e.courseId)
-        const totalLessons = c?.modules.reduce((acc, m) => acc + m.lessons.length, 0) || 0
-        totalProgress += totalLessons > 0 ? (e.completedLessons.length / totalLessons) * 100 : 0
-      })
-      const avgProgress = enrollments.length > 0 ? totalProgress / enrollments.length : 0
-
-      return {
-        id: student?.id,
-        name: student?.name,
-        email: student?.email,
-        courseCount: enrollments.length,
-        avgProgress: Math.round(avgProgress),
-      }
-    })
-  }, [filteredEnrollments, students, courses])
-
-  const courseReports = useMemo(() => {
-    const relevantCourses =
-      courseFilter === 'all' ? courses : courses.filter((c) => c.id === courseFilter)
-
-    return relevantCourses.map((c) => {
-      const courseEnrolls = enrollments.filter((e) => e.courseId === c.id)
-      const totalLessons = c.modules.reduce((acc, m) => acc + m.lessons.length, 0) || 0
-      let sumProgress = 0
-      let completedCount = 0
-
-      courseEnrolls.forEach((e) => {
-        const progress = totalLessons > 0 ? (e.completedLessons.length / totalLessons) * 100 : 0
-        sumProgress += progress
-        if (e.isCompleted) completedCount++
-      })
-
-      return {
-        id: c.id,
-        title: c.title,
-        studentsCount: courseEnrolls.length,
-        avgProgress: courseEnrolls.length > 0 ? Math.round(sumProgress / courseEnrolls.length) : 0,
-        completedCount,
-      }
-    })
-  }, [enrollments, courses, courseFilter])
-
-  const activityReports = useMemo(() => {
-    return filteredEnrollments
-      .flatMap((e) =>
-        e.activityLog.map((act) => ({
-          ...act,
-          student: students.find((s) => s.id === e.studentId),
-          course: courses.find((c) => c.id === e.courseId),
-        })),
-      )
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  }, [filteredEnrollments, students, courses])
+  const { courseFilter, setCourseFilter, studentReports, courseReports, activityReports, courses } =
+    useReportsData()
+  const [activeTab, setActiveTab] = useState('comparative')
 
   const handleExport = async (format: 'csv' | 'pdf') => {
     toast.info('Preparando exportação...', { id: 'export-toast' })
-    await new Promise((r) => setTimeout(r, 600)) // Simulation delay for UX
+    await new Promise((r) => setTimeout(r, 600))
 
     try {
       let headers: string[] = []
@@ -131,7 +71,7 @@ export default function Reports() {
         title = 'Relatório de Desempenho por Curso'
         headers = ['Nome do Curso', 'Total de Alunos', 'Concluíram', 'Conclusão Média (%)']
         rows = courseReports.map((c) => [c.title, c.studentsCount, c.completedCount, c.avgProgress])
-      } else {
+      } else if (activeTab === 'activity') {
         title = 'Relatório de Atividades'
         headers = ['Data / Hora', 'Aluno', 'Curso', 'Atividade Realizada', 'Detalhes']
         rows = activityReports.map((act) => [
@@ -141,13 +81,15 @@ export default function Reports() {
           act.type.replace('_', ' ').toUpperCase(),
           act.details || '-',
         ])
+      } else {
+        toast.error('Apenas as abas de dados tabulares suportam exportação direta no momento.', {
+          id: 'export-toast',
+        })
+        return
       }
 
-      if (format === 'csv') {
-        downloadCSV(`relatorio_${activeTab}_${Date.now()}`, headers, rows)
-      } else {
-        printPDF(title, headers, rows)
-      }
+      if (format === 'csv') downloadCSV(`relatorio_${activeTab}_${Date.now()}`, headers, rows)
+      else printPDF(title, headers, rows)
 
       toast.success('Relatório exportado com sucesso!', { id: 'export-toast' })
     } catch (error) {
@@ -161,12 +103,12 @@ export default function Reports() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-brand">Dashboard de Relatórios</h1>
           <p className="text-muted-foreground mt-1">
-            Acompanhe o engajamento e a evolução dos alunos.
+            Acompanhe o engajamento, programe envios automáticos e gerencie integrações.
           </p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="border-brand text-brand font-bold">
+            <Button variant="outline" className="border-brand text-brand font-bold shadow-sm">
               <Download className="mr-2 size-4" /> Exportar Dados
             </Button>
           </DropdownMenuTrigger>
@@ -181,50 +123,82 @@ export default function Reports() {
               onClick={() => handleExport('pdf')}
               className="font-medium cursor-pointer"
             >
-              <File className="mr-2 size-4 text-orange-600" /> Exportar como PDF
+              <File className="mr-2 size-4 text-primary" /> Exportar como PDF
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <div className="bg-slate-50 p-4 rounded-xl border flex flex-col md:flex-row items-center gap-4 shadow-sm">
-        <label className="text-sm font-bold text-brand shrink-0">Filtrar por Curso:</label>
-        <Select value={courseFilter} onValueChange={setCourseFilter}>
-          <SelectTrigger className="w-full md:max-w-md bg-white">
-            <SelectValue placeholder="Todos os cursos" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todos os Cursos</SelectItem>
-            {courses.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.title}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto gap-2 bg-transparent mb-6">
+        <TabsList className="flex flex-wrap w-full h-auto gap-2 bg-transparent mb-6 justify-start">
+          <TabsTrigger
+            value="comparative"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-2.5 font-bold tracking-wide"
+          >
+            <BarChart3 className="mr-2 size-4" /> Visão Comparativa
+          </TabsTrigger>
           <TabsTrigger
             value="students"
-            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-3 font-semibold"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-2.5 font-bold tracking-wide"
           >
-            <Users className="mr-2 size-4" /> Desempenho por Aluno
+            <Users className="mr-2 size-4" /> Por Aluno
           </TabsTrigger>
           <TabsTrigger
             value="courses"
-            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-3 font-semibold"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-2.5 font-bold tracking-wide"
           >
-            <BookOpen className="mr-2 size-4" /> Desempenho por Curso
+            <BookOpen className="mr-2 size-4" /> Por Curso
           </TabsTrigger>
           <TabsTrigger
             value="activity"
-            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-3 font-semibold"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-2.5 font-bold tracking-wide"
           >
-            <Activity className="mr-2 size-4" /> Relatório de Atividades
+            <Activity className="mr-2 size-4" /> Atividades
+          </TabsTrigger>
+          <TabsTrigger
+            value="scheduling"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-2.5 font-bold tracking-wide"
+          >
+            <CalendarClock className="mr-2 size-4" /> Agendamentos
+          </TabsTrigger>
+          <TabsTrigger
+            value="bi-integration"
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border bg-white shadow-sm py-2.5 font-bold tracking-wide"
+          >
+            <Webhook className="mr-2 size-4" /> Integração BI
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="comparative" className="mt-0 outline-none">
+          <ComparativeDashboard />
+        </TabsContent>
+
+        <TabsContent value="scheduling" className="mt-0 outline-none">
+          <ReportScheduling />
+        </TabsContent>
+
+        <TabsContent value="bi-integration" className="mt-0 outline-none">
+          <BiIntegrations />
+        </TabsContent>
+
+        {['students', 'courses', 'activity'].includes(activeTab) && (
+          <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row items-center gap-4 shadow-sm mb-6">
+            <label className="text-sm font-bold text-brand shrink-0">Filtrar por Curso:</label>
+            <Select value={courseFilter} onValueChange={setCourseFilter}>
+              <SelectTrigger className="w-full md:max-w-md bg-white">
+                <SelectValue placeholder="Todos os cursos" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os Cursos</SelectItem>
+                {courses.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         <TabsContent value="students" className="mt-0 outline-none">
           <Card className="border-slate-200 shadow-sm">
