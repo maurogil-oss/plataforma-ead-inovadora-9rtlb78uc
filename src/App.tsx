@@ -36,7 +36,10 @@ import CommissionSettings from '@/pages/manager/CommissionSettings'
 import PaymentSettings from '@/pages/manager/PaymentSettings'
 import StudentDetails from '@/pages/manager/StudentDetails'
 
-// Shared
+// Shared Commercial
+import CommercialDashboard from '@/pages/manager/CommercialDashboard'
+import Storefront from '@/pages/shared/Storefront'
+import ProductDetails from '@/pages/shared/ProductDetails'
 import PartnerDashboard from '@/pages/shared/PartnerDashboard'
 import QuestionBank from '@/pages/shared/QuestionBank'
 
@@ -96,6 +99,24 @@ export default function App() {
 
         {/* App Layout for authenticated routes */}
         <Route element={<Layout />}>
+          {/* Shared Store Routes */}
+          <Route
+            path="/store"
+            element={
+              <ProtectedRoute>
+                <Storefront />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/store/product/:id"
+            element={
+              <ProtectedRoute>
+                <ProductDetails />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Student Routes */}
           <Route
             path="/student/dashboard"
@@ -176,6 +197,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
                 <EngagementDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/instructor/commercial"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <CommercialDashboard />
               </ProtectedRoute>
             }
           />
@@ -282,6 +311,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
                 <LessonGenerator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/manager/commercial"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <CommercialDashboard />
               </ProtectedRoute>
             }
           />

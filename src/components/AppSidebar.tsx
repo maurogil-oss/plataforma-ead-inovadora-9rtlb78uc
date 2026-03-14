@@ -18,6 +18,8 @@ import {
   Video,
   Bot,
   Activity,
+  ShoppingCart,
+  Store,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -28,6 +30,8 @@ const getNavigation = (role?: string) => {
     case 'manager':
       return [
         { name: 'Dashboard', href: '/manager/dashboard', icon: LayoutDashboard },
+        { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
+        { name: 'Gestão Comercial', href: '/manager/commercial', icon: Store },
         { name: 'Cursos', href: '/manager/courses', icon: BookOpen },
         { name: 'Aulas ao Vivo', href: '/manager/live-classes', icon: Video },
         { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
@@ -41,6 +45,8 @@ const getNavigation = (role?: string) => {
     case 'instructor':
       return [
         { name: 'Dashboard', href: '/instructor/dashboard', icon: LayoutDashboard },
+        { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
+        { name: 'Gestão Comercial', href: '/instructor/commercial', icon: Store },
         { name: 'Aulas ao Vivo', href: '/instructor/live-classes', icon: Video },
         { name: 'Engajamento', href: '/instructor/engagement', icon: Activity },
         { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
@@ -53,6 +59,7 @@ const getNavigation = (role?: string) => {
     default:
       return [
         { name: 'Meu Aprendizado', href: '/student/dashboard', icon: BookOpen },
+        { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
         { name: 'Programa de Parceiros', href: '/student/partner', icon: Handshake },
       ]
   }

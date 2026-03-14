@@ -33,6 +33,12 @@ export function TopHeader({ onMenuClick }: { onMenuClick?: () => void }) {
               Cursos
             </Link>
             <Link
+              to="/store"
+              className="text-sm font-semibold text-foreground/80 hover:text-[#176a7e] transition-colors"
+            >
+              Loja
+            </Link>
+            <Link
               to="/planos"
               className="text-sm font-semibold text-foreground/80 hover:text-[#176a7e] transition-colors"
             >
