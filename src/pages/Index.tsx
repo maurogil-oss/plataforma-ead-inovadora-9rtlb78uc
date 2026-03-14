@@ -7,8 +7,17 @@ import { useCommercialStore } from '@/stores/commercialStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 
-const CourseCardRender = ({ course, navigate }: { course: Course; navigate: any }) => (
+const CourseCardRender = ({
+  course,
+  navigate,
+  progress = 0,
+}: {
+  course: Course
+  navigate: any
+  progress?: number
+}) => (
   <Card
     className="group overflow-hidden border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-2 relative h-full flex flex-col cursor-pointer"
     onClick={() => navigate('/cursos')}
@@ -54,6 +63,15 @@ const CourseCardRender = ({ course, navigate }: { course: Course; navigate: any 
         <span className="border border-slate-500 bg-slate-800/80 px-2 py-0.5 rounded text-[10px] uppercase drop-shadow-sm ml-auto font-bold tracking-wider">
           {course.area}
         </span>
+      </div>
+
+      <div className="mt-4 w-full">
+        <div className="flex justify-between items-center mb-1.5">
+          <span className="text-[11px] font-bold text-slate-200 drop-shadow-md">
+            {progress}% concluído
+          </span>
+        </div>
+        <Progress value={progress} className="h-1.5 bg-slate-700/60" />
       </div>
     </CardContent>
   </Card>
@@ -115,7 +133,7 @@ const SpeakerCardRender = ({ speaker }: { speaker: any }) => (
 )
 
 export default function Index() {
-  const { courses } = useLmsStore()
+  const { courses, enrollments } = useLmsStore()
   const { products, speakers } = useCommercialStore()
   const user = useAuthStore((s) => s.user)
   const navigate = useNavigate()
@@ -265,9 +283,25 @@ export default function Index() {
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {courses.slice(0, 5).map((course) => (
-                <CourseCardRender key={course.id} course={course} navigate={navigate} />
-              ))}
+              {courses.slice(0, 5).map((course) => {
+                const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0)
+                const enrollment = user
+                  ? enrollments.find((e) => e.courseId === course.id && e.studentId === user.id)
+                  : null
+                const progress =
+                  enrollment && totalLessons > 0
+                    ? Math.round((enrollment.completedLessons.length / totalLessons) * 100)
+                    : 0
+
+                return (
+                  <CourseCardRender
+                    key={course.id}
+                    course={course}
+                    navigate={navigate}
+                    progress={progress}
+                  />
+                )
+              })}
             </div>
             <div className="mt-6 text-center sm:hidden">
               <Button variant="outline" className="w-full font-bold" asChild>
