@@ -18705,7 +18705,7 @@ var MOCK_COURSES = [
 		title: "Fundamentos de Segurança Viária",
 		area: "Segurança Viária",
 		description: "Aprenda os conceitos básicos e avançados para reduzir acidentes e preservar vidas no trânsito.",
-		thumbnail: "https://img.usecurling.com/p/1200/800?q=traffic%20cone&color=orange",
+		thumbnail: "https://img.usecurling.com/p/1200/800?q=highway%20traffic%20cone&color=orange",
 		price: 197,
 		instructorId: "i1",
 		passingGrade: 70,
@@ -18749,7 +18749,7 @@ var MOCK_COURSES = [
 		id: "c2",
 		title: "Gestão de Mobilidade Urbana",
 		area: "Mobilidade",
-		description: "Estratégias e tecnologias para otimizar o fluxo de veículos e pedestres nas grandes cidades.",
+		description: "Estratégias e technologies para otimizar o fluxo de veículos e pedestres nas grandes cidades.",
 		thumbnail: "https://img.usecurling.com/p/800/600?q=urban%20mobility&color=green",
 		price: 297,
 		instructorId: "i1",
@@ -28755,7 +28755,7 @@ function Index() {
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
 								"data-uid": "src/pages/Index.tsx:205:15",
 								"data-prohibitions": "[editContent]",
-								src: featuredCourse.thumbnail,
+								src: "https://img.usecurling.com/p/1920/1080?q=highway%20traffic%20cone&color=orange",
 								alt: featuredCourse.title,
 								className: "w-full h-full object-cover"
 							}),
@@ -49148,4 +49148,4 @@ function App() {
 }));
 //#endregion
 
-//# sourceMappingURL=index-B0XUysVj.js.map
+//# sourceMappingURL=index-B9NfECWd.js.map

@@ -210,7 +210,7 @@ const MOCK_COURSES: Course[] = [
     area: 'Segurança Viária',
     description:
       'Aprenda os conceitos básicos e avançados para reduzir acidentes e preservar vidas no trânsito.',
-    thumbnail: 'https://img.usecurling.com/p/1200/800?q=traffic%20cone&color=orange',
+    thumbnail: 'https://img.usecurling.com/p/1200/800?q=highway%20traffic%20cone&color=orange',
     price: 197.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -253,7 +253,7 @@ const MOCK_COURSES: Course[] = [
     title: 'Gestão de Mobilidade Urbana',
     area: 'Mobilidade',
     description:
-      'Estratégias e tecnologias para otimizar o fluxo de veículos e pedestres nas grandes cidades.',
+      'Estratégias e technologies para otimizar o fluxo de veículos e pedestres nas grandes cidades.',
     thumbnail: 'https://img.usecurling.com/p/800/600?q=urban%20mobility&color=green',
     price: 297.0,
     instructorId: 'i1',

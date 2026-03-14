@@ -203,7 +203,7 @@ export default function Index() {
           <section className="relative w-full h-[90vh] min-h-[700px] flex items-center mb-16 pt-32">
             <div className="absolute inset-0">
               <img
-                src={featuredCourse.thumbnail}
+                src="https://img.usecurling.com/p/1920/1080?q=highway%20traffic%20cone&color=orange"
                 alt={featuredCourse.title}
                 className="w-full h-full object-cover"
               />
