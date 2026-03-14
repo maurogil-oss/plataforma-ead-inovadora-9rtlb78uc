@@ -15,11 +15,11 @@ export default function Courses() {
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-white tracking-tight">
-            Catálogo de Cursos
+            Trilhas de Capacitação
           </h1>
           <p className="text-xl text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed">
-            Explore nossos cursos de alta qualidade e seja um especialista nas áreas de Segurança
-            Viária, Mobilidade e Cidades Inteligentes.
+            Explore nossos programas educacionais de alta qualificação e forme-se como especialista
+            em Segurança Viária, Mobilidade e Cidades Inteligentes.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function Courses() {
 
                 {c.isNew && (
                   <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
-                    <Sparkles className="size-3" /> Novo
+                    <Sparkles className="size-3" /> Atualizado
                   </div>
                 )}
 
@@ -72,7 +72,7 @@ export default function Courses() {
                   className="w-full font-bold shadow-md text-base bg-white text-slate-900 hover:bg-slate-200"
                   asChild
                 >
-                  <Link to="/login">Assinar e Assistir</Link>
+                  <Link to="/login">Realizar Matrícula</Link>
                 </Button>
               </CardFooter>
             </Card>

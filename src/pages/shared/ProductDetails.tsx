@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { ArrowLeft, ShoppingCart, BadgePercent } from 'lucide-react'
+import { ArrowLeft, BookOpen, BadgePercent } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 
@@ -19,7 +19,7 @@ export default function ProductDetails() {
 
   const product = products.find((p) => p.id === id)
   if (!product)
-    return <div className="p-8 text-center text-brand font-bold">Produto não encontrado.</div>
+    return <div className="p-8 text-center text-brand font-bold">Conteúdo não encontrado.</div>
 
   const speaker = speakers.find((s) => s.id === product.speakerId)
 
@@ -28,24 +28,24 @@ export default function ProductDetails() {
     const validCoupon = coupons.find((c) => c.code === couponCode.toUpperCase() && c.isActive)
 
     if (!validCoupon) {
-      return toast.error('Cupom inválido ou inativo.')
+      return toast.error('Código inválido ou inativo.')
     }
     if (validCoupon.maxUses && validCoupon.currentUses >= validCoupon.maxUses) {
-      return toast.error('O limite de uso deste cupom já foi atingido.')
+      return toast.error('O limite de uso deste código já foi atingido.')
     }
     if (validCoupon.validCourseIds?.length) {
       if (!product.courseId || !validCoupon.validCourseIds.includes(product.courseId)) {
-        return toast.error('Este cupom não se aplica a este produto específico.')
+        return toast.error('Este código não se aplica a este material específico.')
       }
     }
 
     setAppliedCoupon(validCoupon)
-    toast.success('Cupom aplicado com sucesso!')
+    toast.success('Benefício aplicado com sucesso!')
   }
 
   const handleFinalize = () => {
     if (appliedCoupon) incrementCouponUsage(appliedCoupon.id)
-    toast.success('Compra confirmada! O material já está disponível na sua conta.')
+    toast.success('Inscrição confirmada! O material já está disponível na sua conta.')
     setShowCheckout(false)
   }
 
@@ -61,7 +61,7 @@ export default function ProductDetails() {
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
       <Button variant="ghost" asChild className="mb-4 text-brand">
         <Link to="/store">
-          <ArrowLeft className="mr-2 size-4" /> Voltar para Loja
+          <ArrowLeft className="mr-2 size-4" /> Voltar ao Acervo
         </Link>
       </Button>
 
@@ -76,7 +76,7 @@ export default function ProductDetails() {
 
         <div className="md:col-span-7 space-y-6">
           <Badge className="uppercase tracking-wider font-semibold bg-brand text-brand-foreground hover:bg-brand/90">
-            {product.type === 'ebook' ? 'E-Book Digital' : 'Curso Online'}
+            {product.type === 'ebook' ? 'Documento Digital' : 'Programa de Especialização'}
           </Badge>
 
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-brand leading-tight">
@@ -112,7 +112,7 @@ export default function ProductDetails() {
                 setShowCheckout(true)
               }}
             >
-              <ShoppingCart className="mr-2 size-5" /> Adquirir Agora
+              <BookOpen className="mr-2 size-5" /> Realizar Matrícula
             </Button>
           </div>
 
@@ -123,7 +123,7 @@ export default function ProductDetails() {
           {speaker && (
             <Card className="mt-8 border-slate-200 shadow-sm overflow-hidden">
               <div className="bg-brand/5 px-6 py-3 border-b border-slate-200 text-sm font-bold text-brand uppercase tracking-wider">
-                Sobre o Autor / Especialista
+                Sobre o Docente / Especialista
               </div>
               <CardContent className="p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
                 <img
@@ -156,7 +156,7 @@ export default function ProductDetails() {
       <Dialog open={showCheckout} onOpenChange={setShowCheckout}>
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
-            <DialogTitle className="text-brand text-xl">Resumo do Pedido</DialogTitle>
+            <DialogTitle className="text-brand text-xl">Resumo da Inscrição</DialogTitle>
           </DialogHeader>
           <div className="space-y-5 py-4">
             <div className="flex gap-4 items-center">
@@ -170,18 +170,18 @@ export default function ProductDetails() {
                   {product.title}
                 </h3>
                 <p className="text-xs text-muted-foreground uppercase mt-1 font-semibold">
-                  {product.type}
+                  {product.type === 'ebook' ? 'Documento Digital' : 'Especialização'}
                 </p>
               </div>
             </div>
 
             <div className="space-y-2 border-b pb-4">
               <label className="text-sm font-semibold flex items-center gap-2 text-brand">
-                <BadgePercent className="size-4 text-primary" /> Código Promocional
+                <BadgePercent className="size-4 text-primary" /> Código Institucional / Promocional
               </label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="Insira o cupom"
+                  placeholder="Insira o código"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value)}
                   className="uppercase font-mono"
@@ -208,17 +208,17 @@ export default function ProductDetails() {
 
             <div className="bg-slate-50 p-4 rounded-lg border space-y-2">
               <div className="flex justify-between text-sm text-slate-500 font-medium">
-                <span>Valor do Produto:</span>
+                <span>Valor do Programa:</span>
                 <span>R$ {basePrice.toFixed(2)}</span>
               </div>
               {appliedCoupon && (
                 <div className="flex justify-between text-sm text-success font-bold">
-                  <span>Desconto ({appliedCoupon.code}):</span>
+                  <span>Isenção/Bolsa ({appliedCoupon.code}):</span>
                   <span>- R$ {discountAmount.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between items-center font-bold pt-2 border-t border-slate-200 mt-2">
-                <span className="text-brand">Total da Compra:</span>
+                <span className="text-brand">Investimento Final:</span>
                 <span className="text-2xl text-primary">R$ {finalPrice.toFixed(2)}</span>
               </div>
             </div>
@@ -235,7 +235,7 @@ export default function ProductDetails() {
             )}
 
             <Button className="w-full text-lg h-12 font-bold shadow-md" onClick={handleFinalize}>
-              Confirmar Compra
+              Confirmar Inscrição
             </Button>
           </div>
         </DialogContent>

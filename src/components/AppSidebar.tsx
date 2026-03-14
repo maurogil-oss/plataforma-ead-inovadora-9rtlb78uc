@@ -18,7 +18,7 @@ import {
   Video,
   Bot,
   Activity,
-  ShoppingCart,
+  LibraryBig,
   Store,
   Film,
   Compass,
@@ -33,11 +33,11 @@ const getNavigation = (role?: string) => {
     case 'manager':
       return [
         { name: 'Dashboard', href: '/manager/dashboard', icon: LayoutDashboard },
-        { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
+        { name: 'Acervo Técnico', href: '/store', icon: LibraryBig },
         { name: 'Gestão Comercial', href: '/manager/commercial', icon: Store },
         { name: 'Cursos', href: '/manager/courses', icon: BookOpen },
         { name: 'Aulas ao Vivo', href: '/manager/live-classes', icon: Video },
-        { name: 'Fórum da Comunidade', href: '/forum', icon: MessageSquare },
+        { name: 'Fórum Institucional', href: '/forum', icon: MessageSquare },
         { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
         { name: 'Relatórios', href: '/manager/reports', icon: PieChart },
         { name: 'Financeiro', href: '/manager/finance', icon: CreditCard },
@@ -49,10 +49,10 @@ const getNavigation = (role?: string) => {
     case 'instructor':
       return [
         { name: 'Dashboard', href: '/instructor/dashboard', icon: LayoutDashboard },
-        { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
+        { name: 'Acervo Técnico', href: '/store', icon: LibraryBig },
         { name: 'Gestão Comercial', href: '/instructor/commercial', icon: Store },
         { name: 'Aulas ao Vivo', href: '/instructor/live-classes', icon: Video },
-        { name: 'Fórum da Comunidade', href: '/forum', icon: MessageSquare },
+        { name: 'Fórum Institucional', href: '/forum', icon: MessageSquare },
         { name: 'Engajamento', href: '/instructor/engagement', icon: Activity },
         { name: 'Avaliar Provas', href: '/instructor/grade-exams', icon: CheckCircle },
         { name: 'Gerador de Aulas AI', href: '/instructor/lesson-generator', icon: Bot },
@@ -65,8 +65,8 @@ const getNavigation = (role?: string) => {
       return [
         { name: 'Início', href: '/student/dashboard', icon: Film },
         { name: 'Meu Aprendizado', href: '/student/courses', icon: BookOpen },
-        { name: 'Descobrir', href: '/store', icon: Compass },
-        { name: 'Fórum da Comunidade', href: '/forum', icon: MessageSquare },
+        { name: 'Descobrir Especializações', href: '/store', icon: Compass },
+        { name: 'Fórum Institucional', href: '/forum', icon: MessageSquare },
         { name: 'Programa de Parceiros', href: '/student/partner', icon: Handshake },
       ]
   }
@@ -124,7 +124,7 @@ export function AppSidebar() {
             className="flex items-center gap-4 rounded-lg px-4 py-3.5 text-[15px] font-bold transition-all duration-300 text-slate-400 hover:bg-slate-900 hover:text-slate-100 hover:translate-x-1 border-l-4 border-transparent"
           >
             <CreditCard className="h-5 w-5 shrink-0 text-slate-500" strokeWidth={2} />
-            <span className="truncate">Planos de Assinatura</span>
+            <span className="truncate">Planos de Investimento</span>
           </Link>
           <Link
             to="/contato"

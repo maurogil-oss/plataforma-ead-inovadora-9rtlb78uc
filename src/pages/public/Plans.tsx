@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 const PLANS = [
   {
     name: 'Básico',
-    desc: 'Ideal para conhecer a plataforma.',
+    desc: 'Ideal para iniciar a jornada técnica.',
     priceMo: 29,
     priceYr: 19,
     features: [
@@ -20,35 +20,35 @@ const PLANS = [
       'Certificado digital simples',
       'Assista no Computador ou Celular',
     ],
-    cta: 'Assinar Básico',
+    cta: 'Realizar Matrícula',
     popular: false,
   },
   {
-    name: 'Padrão',
-    desc: 'Para quem busca acelerar a carreira.',
+    name: 'Especialista',
+    desc: 'Para quem busca liderança e capacitação profunda.',
     priceMo: 49,
     priceYr: 39,
     features: [
       'Acesso ilimitado ao catálogo',
       'Qualidade Full HD (1080p)',
-      'Certificados com validação QR Code',
-      'Materiais extras em PDF e Planilhas',
+      'Certificados com validação institucional QR Code',
+      'Acesso ao acervo de documentos e estudos',
     ],
-    cta: 'Assinar Padrão',
+    cta: 'Realizar Matrícula',
     popular: true,
   },
   {
     name: 'Premium',
-    desc: 'A experiência educacional definitiva.',
+    desc: 'A experiência educacional e imersiva definitiva.',
     priceMo: 89,
     priceYr: 69,
     features: [
-      'Tudo do plano Padrão',
+      'Tudo do plano Especialista',
       'Qualidade 4K Ultra HD',
-      'Mentorias ao vivo semanais',
-      'Correção de provas humanizada',
+      'Mentorias acadêmicas ao vivo semanais',
+      'Correção de avaliações humanizada por docentes',
     ],
-    cta: 'Assinar Premium',
+    cta: 'Realizar Matrícula',
     popular: false,
   },
 ]
@@ -62,10 +62,10 @@ export default function Plans() {
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-white tracking-tight">
-            Escolha seu Plano
+            Investimento e Matrícula
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto font-medium">
-            Assista onde quiser. Cancele quando quiser.
+            Capacite-se no seu ritmo. Acesso total aos conteúdos acadêmicos.
           </p>
         </div>
 
@@ -113,7 +113,7 @@ export default function Plans() {
               >
                 {plan.popular && (
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-6 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
-                    Mais Assinado
+                    Mais Procurado
                   </div>
                 )}
                 <CardHeader className="text-center pb-8 pt-8 border-b border-slate-800">

@@ -13,7 +13,7 @@ export function PublicHeader() {
 
         <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
           <Link to="/cursos" className="text-sm font-medium hover:text-primary transition-colors">
-            Cursos
+            Trilhas de Capacitação
           </Link>
           <Link to="/sobre" className="text-sm font-medium hover:text-primary transition-colors">
             Sobre

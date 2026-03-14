@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Play, Info, Layers, Clock, PlusCircle, Sparkles } from 'lucide-react'
+import { Play, Info, Layers, Clock, PlusCircle, Sparkles, BookOpen } from 'lucide-react'
 import { Logo } from '@/components/Logo'
 import { useLmsStore, Course } from '@/stores/lmsStore'
 import { useCommercialStore } from '@/stores/commercialStore'
@@ -8,6 +8,33 @@ import { useAuthStore } from '@/stores/authStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+
+const MOCK_ARTICLES = [
+  {
+    id: 'a1',
+    title: 'Impacto das Novas Resoluções do CONTRAN',
+    date: '12 Nov 2025',
+    excerpt:
+      'Uma análise técnica sobre as mais recentes atualizações legislativas e seus efeitos práticos na engenharia de tráfego urbano.',
+    image: 'https://img.usecurling.com/p/600/400?q=legal%20document&color=orange',
+  },
+  {
+    id: 'a2',
+    title: 'Análise de Tecnologias de Segurança Viária',
+    date: '05 Nov 2025',
+    excerpt:
+      'Estudo de viabilidade e eficiência da adoção de radares inteligentes e semaforização adaptativa em vias de alto fluxo.',
+    image: 'https://img.usecurling.com/p/600/400?q=traffic%20light&color=orange',
+  },
+  {
+    id: 'a3',
+    title: 'Estudo sobre Comportamento no Trânsito Brasileiro',
+    date: '28 Out 2025',
+    excerpt:
+      'Pesquisa comportamental que mapeia os principais fatores de risco na interação entre condutores de modais distintos nas metrópoles.',
+    image: 'https://img.usecurling.com/p/600/400?q=urban%20mobility&color=orange',
+  },
+]
 
 const CourseCardRender = ({
   course,
@@ -39,13 +66,13 @@ const CourseCardRender = ({
           size="sm"
           className="w-full bg-white text-slate-900 hover:bg-slate-200 font-bold shadow-md"
         >
-          <PlusCircle className="mr-2 size-4" /> Ver Detalhes
+          <PlusCircle className="mr-2 size-4" /> Ver Programa
         </Button>
       </div>
 
       {course.isNew && (
         <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
-          <Sparkles className="size-3" /> Novo
+          <Sparkles className="size-3" /> Atualizado
         </div>
       )}
     </div>
@@ -91,7 +118,7 @@ const EbookCardRender = ({ product, navigate }: { product: any; navigate: any })
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
       <div className="absolute top-3 right-3 bg-red-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30">
-        E-book
+        Acervo Técnico
       </div>
 
       <div className="absolute bottom-4 left-4 right-4 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 z-30 hidden sm:block">
@@ -99,7 +126,7 @@ const EbookCardRender = ({ product, navigate }: { product: any; navigate: any })
           size="sm"
           className="w-full bg-white text-slate-900 hover:bg-slate-200 font-bold shadow-md"
         >
-          <Info className="mr-2 size-4" /> Adquirir Leitura
+          <BookOpen className="mr-2 size-4" /> Acessar Documento
         </Button>
       </div>
     </div>
@@ -132,6 +159,34 @@ const SpeakerCardRender = ({ speaker }: { speaker: any }) => (
   </Card>
 )
 
+const ArticleCardRender = ({ article }: { article: any }) => (
+  <Card className="group flex flex-col h-full overflow-hidden border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="aspect-video relative overflow-hidden bg-slate-800">
+      <img
+        src={article.image}
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        alt={article.title}
+      />
+    </div>
+    <CardContent className="p-6 flex-1 flex flex-col">
+      <div className="flex items-center gap-3 mb-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">
+        <span>{article.date}</span>
+      </div>
+      <h3 className="font-bold text-xl mb-3 text-slate-900 dark:text-white leading-tight group-hover:text-primary transition-colors line-clamp-2">
+        {article.title}
+      </h3>
+      <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-3">
+        {article.excerpt}
+      </p>
+      <div className="mt-auto">
+        <Button variant="link" className="px-0 text-primary font-bold">
+          Leia mais &rarr;
+        </Button>
+      </div>
+    </CardContent>
+  </Card>
+)
+
 export default function Index() {
   const { courses, enrollments } = useLmsStore()
   const { products, speakers } = useCommercialStore()
@@ -154,13 +209,13 @@ export default function Index() {
               to="/cursos"
               className="text-sm font-bold text-foreground/80 hover:text-foreground transition-colors uppercase tracking-wide"
             >
-              Catálogo
+              Trilhas de Capacitação
             </Link>
             <Link
               to="/forum"
               className="text-sm font-bold text-foreground/80 hover:text-foreground transition-colors uppercase tracking-wide"
             >
-              Fórum
+              Fórum Institucional
             </Link>
             <Link
               to="/sobre"
@@ -172,7 +227,7 @@ export default function Index() {
               to="/planos"
               className="text-sm font-bold text-foreground/80 hover:text-foreground transition-colors uppercase tracking-wide"
             >
-              Planos
+              Investimento
             </Link>
           </nav>
           <div className="flex items-center gap-3 md:gap-4 shrink-0">
@@ -190,7 +245,7 @@ export default function Index() {
                   <Link to="/login">Entrar</Link>
                 </Button>
                 <Button className="font-bold shadow-lg h-10 md:h-11 px-4 md:px-6" asChild>
-                  <Link to="/login">Assine Agora</Link>
+                  <Link to="/login">Matrículas Abertas</Link>
                 </Button>
               </>
             )}
@@ -215,7 +270,7 @@ export default function Index() {
               <div className="max-w-3xl space-y-6 animate-fade-in-up">
                 <div className="flex items-center gap-3">
                   <Badge className="bg-red-600 hover:bg-red-700 text-white font-black uppercase tracking-widest text-xs px-3 py-1 border-none shadow-md">
-                    Lançamento
+                    Módulo Atualizado
                   </Badge>
                   <span className="text-foreground/80 font-bold text-sm uppercase tracking-wider shadow-sm drop-shadow-md">
                     {featuredCourse.area}
@@ -233,7 +288,7 @@ export default function Index() {
                     className="h-14 px-8 text-lg font-bold shadow-xl"
                     onClick={() => navigate('/login')}
                   >
-                    <Play className="mr-2 size-6 fill-current" /> Assistir Agora
+                    <Play className="mr-2 size-6 fill-current" /> Acessar Conteúdo
                   </Button>
                   <Button
                     size="lg"
@@ -241,7 +296,7 @@ export default function Index() {
                     className="h-14 px-8 text-lg font-bold bg-background/50 border-foreground/20 hover:bg-background/80 backdrop-blur-md"
                     onClick={() => navigate('/cursos')}
                   >
-                    <Info className="mr-2 size-6" /> Mais Informações
+                    <Info className="mr-2 size-6" /> Ver Programa
                   </Button>
                 </div>
               </div>
@@ -255,10 +310,10 @@ export default function Index() {
           <section className="container mx-auto px-4 md:px-8">
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                Palestras & Especialistas
+                Corpo Docente & Especialistas
               </h2>
               <p className="text-muted-foreground mt-2 text-lg font-medium">
-                Aprenda diretamente com as maiores autoridades do setor.
+                Capacite-se diretamente com as maiores autoridades técnicas do setor.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -272,14 +327,15 @@ export default function Index() {
             <div className="mb-8 flex items-end justify-between border-b pb-4">
               <div>
                 <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-brand dark:text-white">
-                  Cursos em Destaque
+                  Programas de Especialização
                 </h2>
                 <p className="text-muted-foreground mt-2 text-lg font-medium">
-                  Trilhas de conhecimento focadas em Segurança e Inteligência Urbana.
+                  Programas educacionais de alta especialização focados em Segurança e Inteligência
+                  Urbana.
                 </p>
               </div>
               <Button variant="ghost" asChild className="hidden sm:flex font-bold">
-                <Link to="/cursos">Ver Todos</Link>
+                <Link to="/cursos">Ver Todas as Trilhas</Link>
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -305,18 +361,34 @@ export default function Index() {
             </div>
             <div className="mt-6 text-center sm:hidden">
               <Button variant="outline" className="w-full font-bold" asChild>
-                <Link to="/cursos">Ver Todos os Cursos</Link>
+                <Link to="/cursos">Ver Todas as Trilhas</Link>
               </Button>
+            </div>
+          </section>
+
+          <section className="container mx-auto px-4 md:px-8 bg-muted/30 py-16 rounded-3xl border border-border">
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+                Artigos Técnicos & Atualidades
+              </h2>
+              <p className="text-muted-foreground mt-2 text-lg font-medium">
+                Notícias da indústria e publicações acadêmicas sobre segurança viária.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {MOCK_ARTICLES.map((article) => (
+                <ArticleCardRender key={article.id} article={article} />
+              ))}
             </div>
           </section>
 
           <section className="container mx-auto px-4 md:px-8">
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                Biblioteca Digital (E-books)
+                Acervo Técnico & Documentos
               </h2>
               <p className="text-muted-foreground mt-2 text-lg font-medium">
-                Materiais ricos e manuais práticos disponíveis para leitura.
+                Materiais ricos e manuais normativos disponíveis para leitura aprofundada.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
@@ -337,20 +409,20 @@ export default function Index() {
               </div>
               <p className="text-base text-muted-foreground max-w-sm leading-relaxed font-medium">
                 Transformando o futuro da mobilidade e segurança urbana através de educação e
-                inovação.
+                inovação técnica.
               </p>
             </div>
             <div>
-              <h4 className="font-bold mb-6 tracking-wide uppercase">Plataforma</h4>
+              <h4 className="font-bold mb-6 tracking-wide uppercase">Plataforma Educacional</h4>
               <ul className="space-y-4 text-sm font-semibold text-muted-foreground">
                 <li>
                   <Link to="/cursos" className="hover:text-foreground transition-colors">
-                    Catálogo de Cursos
+                    Trilhas de Capacitação
                   </Link>
                 </li>
                 <li>
                   <Link to="/forum" className="hover:text-foreground transition-colors">
-                    Fórum da Comunidade
+                    Fórum Institucional
                   </Link>
                 </li>
               </ul>

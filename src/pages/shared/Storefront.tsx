@@ -9,13 +9,10 @@ import { Rocket, Sparkles } from 'lucide-react'
 
 const categories = [
   { id: 'all', label: 'Todos' },
-  { id: 'ebook', label: 'eBooks' },
-  { id: 'course', label: 'Cursos' },
-  { id: 'expansion1', label: 'Future Products 1 (Em Breve)' },
-  { id: 'expansion2', label: 'Future Products 2 (Em Breve)' },
-  { id: 'expansion3', label: 'Future Products 3 (Em Breve)' },
-  { id: 'expansion4', label: 'Future Products 4 (Em Breve)' },
-  { id: 'expansion5', label: 'Future Products 5 (Em Breve)' },
+  { id: 'ebook', label: 'Artigos & Documentos' },
+  { id: 'course', label: 'Especializações' },
+  { id: 'expansion1', label: 'Simpósios (Em Breve)' },
+  { id: 'expansion2', label: 'Certificações (Em Breve)' },
 ]
 
 export default function Storefront() {
@@ -29,9 +26,11 @@ export default function Storefront() {
   return (
     <div className="space-y-8 pb-10">
       <div className="text-center md:text-left mb-8">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Loja / Marketplace</h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+          Acervo Técnico & Programas
+        </h1>
         <p className="text-muted-foreground mt-2 text-lg">
-          Explore nossos e-books, cursos e conteúdos exclusivos.
+          Explore nossos artigos, manuais e trilhas de especialização.
         </p>
       </div>
 
@@ -68,7 +67,7 @@ export default function Storefront() {
 
                     {/* Badge Novo para itens recentes */}
                     <div className="absolute top-3 left-3 bg-blue-600 text-white font-black px-2.5 py-0.5 rounded text-[10px] uppercase tracking-widest shadow-md z-30 flex items-center gap-1">
-                      <Sparkles className="size-3" /> Novo
+                      <Sparkles className="size-3" /> Atualizado
                     </div>
                   </div>
                   <CardHeader className="pb-2">
@@ -106,10 +105,10 @@ export default function Storefront() {
           ) : (
             <div className="text-center py-20 border-2 border-dashed rounded-xl bg-muted/20">
               <Rocket className="mx-auto size-12 text-muted-foreground opacity-30 mb-4" />
-              <h3 className="text-xl font-bold text-foreground">Novidades em Breve!</h3>
+              <h3 className="text-xl font-bold text-foreground">Novos Materiais em Breve!</h3>
               <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-                Estamos preparando conteúdos incríveis para esta categoria. Fique de olho e
-                acompanhe as próximas atualizações da plataforma.
+                Nosso comitê técnico está preparando conteúdos aprofundados para esta categoria.
+                Acompanhe as próximas atualizações.
               </p>
             </div>
           )}
