@@ -7,6 +7,7 @@ interface LogoProps {
   imgClassName?: string
   collapsed?: boolean
   linkTo?: string
+  showText?: boolean
 }
 
 export function Logo({ className, imgClassName, collapsed, linkTo = '/' }: LogoProps) {
@@ -16,8 +17,10 @@ export function Logo({ className, imgClassName, collapsed, linkTo = '/' }: LogoP
         src={logoUrl}
         alt="Observatório Academy"
         className={cn(
-          'object-contain transition-all duration-300',
-          collapsed ? 'h-24 w-24 object-cover object-left' : 'h-48 md:h-60 w-auto max-w-full',
+          'object-contain transition-all duration-500',
+          collapsed
+            ? 'h-24 w-24 object-cover object-left'
+            : 'h-64 md:h-80 w-auto max-w-full drop-shadow-md',
           imgClassName,
         )}
       />

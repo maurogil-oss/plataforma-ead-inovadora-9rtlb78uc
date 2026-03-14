@@ -6,15 +6,15 @@ import { Logo } from '@/components/Logo'
 export default function About() {
   const pillars = [
     {
-      title: 'Conhecimento Prático',
+      title: 'Conteúdo Imersivo',
       description:
-        'Conteúdos elaborados e focados no que realmente importa para a sua evolução no mercado de trabalho.',
+        'Aulas em altíssima qualidade visual, projetadas para manter você engajado do início ao fim, como na sua série favorita.',
       icon: <BookOpen className="h-6 w-6 text-primary" />,
     },
     {
       title: 'Inovação Constante',
       description:
-        'As metodologias mais recentes aplicadas ao seu aprendizado através de nossa tecnologia.',
+        'As metodologias mais recentes aplicadas ao seu aprendizado através de nossa tecnologia de streaming educacional.',
       icon: <Lightbulb className="h-6 w-6 text-primary" />,
     },
     {
@@ -26,7 +26,7 @@ export default function About() {
     {
       title: 'Foco no Aluno',
       description:
-        'Suporte dedicado e acompanhamento do progresso para garantir a melhor taxa de conclusão.',
+        'Suporte dedicado e acompanhamento do progresso em tempo real para garantir a melhor taxa de conclusão.',
       icon: <Target className="h-6 w-6 text-primary" />,
     },
     {
@@ -38,19 +38,23 @@ export default function About() {
     {
       title: 'Excelência',
       description:
-        'Instrutores criteriosamente selecionados para entregar a mais alta qualidade educacional.',
+        'Instrutores criteriosamente selecionados para entregar a mais alta qualidade educacional do mercado.',
       icon: <Award className="h-6 w-6 text-primary" />,
     },
   ]
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <header className="border-b border-slate-200 bg-white sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
+      <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50 shadow-sm">
+        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <Logo className="h-10 w-auto transition-transform duration-300 group-hover:scale-105" />
+            <Logo className="h-12 w-auto transition-transform duration-300 group-hover:scale-105 filter drop-shadow-md" />
           </Link>
-          <Button variant="ghost" asChild className="text-brand font-bold">
+          <Button
+            variant="ghost"
+            asChild
+            className="text-white font-bold hover:bg-white/10 hover:text-white"
+          >
             <Link to="/">
               <ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao Início
             </Link>
@@ -59,27 +63,29 @@ export default function About() {
       </header>
 
       <main className="flex-1">
-        <section className="py-24 bg-slate-50 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1200/800?q=education&color=gray&dpr=1')] opacity-[0.03] bg-cover bg-center" />
+        <section className="py-24 md:py-32 relative overflow-hidden bg-slate-900 border-b border-slate-800">
+          <div className="absolute inset-0 bg-[url('https://img.usecurling.com/p/1200/800?q=cinema&color=blue&dpr=1')] opacity-[0.1] bg-cover bg-center" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent" />
           <div className="container mx-auto px-4 text-center max-w-4xl relative z-10">
-            <Logo className="h-28 mx-auto mb-10 w-auto drop-shadow-sm transition-transform duration-500 hover:scale-105" />
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-brand">
-              Sobre o Observatório Academy
+            <Logo className="h-32 md:h-48 mx-auto mb-10 w-auto drop-shadow-2xl transition-transform duration-500 hover:scale-105" />
+            <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-8 text-white drop-shadow-lg">
+              A Revolução do Aprendizado
             </h1>
-            <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium">
-              O <strong className="font-extrabold text-brand">Observatório Academy (DEMO)</strong> é
-              muito mais do que uma plataforma de ensino. Somos um ecossistema dedicado a
-              transformar o futuro do aprendizado online, conectando instrutores apaixonados a
-              alunos em busca de excelência contínua.
+            <p className="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-3xl mx-auto font-medium">
+              O <strong className="font-extrabold text-white">Observatório Academy (DEMO)</strong>{' '}
+              traz a experiência fluida e viciante das plataformas de streaming para o universo da
+              educação profissional.
             </p>
           </div>
         </section>
 
-        <section className="py-24 bg-white border-t border-slate-200">
+        <section className="py-24 bg-slate-950">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-extrabold text-brand mb-4">Pilares da Academia</h2>
-              <p className="text-slate-600 max-w-2xl mx-auto font-medium">
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
+                Pilares da Academia
+              </h2>
+              <p className="text-slate-400 max-w-2xl mx-auto font-medium text-lg">
                 Nossos valores fundamentais que guiam cada recurso construído e cada curso oferecido
                 em nossa plataforma.
               </p>
@@ -89,48 +95,54 @@ export default function About() {
               {pillars.map((pillar, i) => (
                 <div
                   key={i}
-                  className="bg-slate-50 p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1 group"
+                  className="bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-lg hover:shadow-2xl hover:border-slate-700 transition-all duration-300 hover:-translate-y-2 group"
                 >
-                  <div className="h-14 w-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 border border-slate-200 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors">
+                  <div className="h-14 w-14 bg-slate-800 rounded-xl shadow-inner flex items-center justify-center mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     {pillar.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-brand mb-3">{pillar.title}</h3>
-                  <p className="text-slate-600 font-medium leading-relaxed">{pillar.description}</p>
+                  <h3 className="text-xl font-bold text-white mb-3">{pillar.title}</h3>
+                  <p className="text-slate-400 font-medium leading-relaxed">{pillar.description}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="py-20 bg-brand text-brand-foreground relative overflow-hidden">
-          <div className="absolute inset-0 bg-brand-foreground/5" />
+        <section className="py-24 bg-red-600 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/20" />
           <div className="container mx-auto px-4 text-center max-w-3xl relative z-10">
-            <h2 className="text-3xl font-extrabold mb-6">Pronto para iniciar sua jornada?</h2>
-            <p className="text-brand-foreground/80 mb-8 text-lg font-medium">
-              Junte-se a milhares de alunos que já estão transformando suas carreiras com o
-              Observatório Academy (DEMO).
+            <h2 className="text-4xl font-black mb-6 drop-shadow-md">
+              Pronto para maratonar conhecimento?
+            </h2>
+            <p className="text-white/90 mb-10 text-xl font-medium drop-shadow">
+              Junte-se a milhares de alunos que já estão transformando suas carreiras com a
+              experiência Observatório Academy (DEMO).
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="font-bold shadow-lg" asChild>
-                <Link to="/cursos">Explorar Cursos</Link>
+              <Button
+                size="lg"
+                className="font-bold shadow-xl h-14 px-8 text-lg bg-white text-red-600 hover:bg-slate-100"
+                asChild
+              >
+                <Link to="/cursos">Explorar o Catálogo</Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 font-bold"
+                className="border-white/30 text-white hover:bg-white/10 font-bold h-14 px-8 text-lg backdrop-blur-sm"
                 asChild
               >
-                <Link to="/register">Criar Conta Grátis</Link>
+                <Link to="/login">Criar Conta Grátis</Link>
               </Button>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="py-10 bg-brand">
-        <div className="container mx-auto px-4 text-center text-brand-foreground/60 font-medium">
+      <footer className="py-12 bg-slate-950 border-t border-slate-900">
+        <div className="container mx-auto px-4 text-center text-slate-500 font-medium">
           <Logo
-            className="h-8 w-auto mx-auto mb-6 opacity-50 hover:opacity-100 transition-opacity text-white"
+            className="h-12 w-auto mx-auto mb-6 opacity-30 hover:opacity-100 transition-opacity filter grayscale hover:grayscale-0"
             showText={false}
           />
           <p>

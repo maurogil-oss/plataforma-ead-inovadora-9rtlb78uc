@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
 import {
   ArrowLeft,
   Lock,
@@ -55,15 +56,29 @@ export default function CoursePlayer() {
       const end = new Date(start.getTime() + lc.durationMinutes * 60000)
       return new Date() > end
     })
-    .reverse() // Reverse to show most recent past classes first
+    .reverse()
 
   const [activeLessonId, setActiveLessonId] = useState<string | null>(null)
   const [answers, setAnswers] = useState<Record<string, any>>({})
   const [currentExamQuestions, setCurrentExamQuestions] = useState<BankQuestion[]>([])
 
   useEffect(() => {
-    if (course && !activeLessonId) setActiveLessonId(course.modules[0]?.lessons[0]?.id || null)
-  }, [course, activeLessonId])
+    if (course && !activeLessonId) {
+      let firstUncompleted = null
+      if (enrollment) {
+        for (const m of course.modules) {
+          for (const l of m.lessons) {
+            if (!enrollment.completedLessons.includes(l.id)) {
+              firstUncompleted = l.id
+              break
+            }
+          }
+          if (firstUncompleted) break
+        }
+      }
+      setActiveLessonId(firstUncompleted || course.modules[0]?.lessons[0]?.id || null)
+    }
+  }, [course, activeLessonId, enrollment])
 
   const activeModule = course?.modules.find((m) => m.lessons.some((l) => l.id === activeLessonId))
   const activeLesson = activeModule?.lessons.find((l) => l.id === activeLessonId)
@@ -179,7 +194,7 @@ export default function CoursePlayer() {
     switch (lesson.type) {
       case 'video':
         return (
-          <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative">
+          <div className="aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative shadow-inner">
             <video
               src={lesson.mediaUrl}
               controls
@@ -190,7 +205,7 @@ export default function CoursePlayer() {
         )
       case 'audio':
         return (
-          <div className="p-8 bg-muted/30 rounded-lg flex flex-col items-center justify-center space-y-4 border">
+          <div className="p-8 bg-muted/30 rounded-lg flex flex-col items-center justify-center space-y-4 border shadow-sm">
             <FileAudio className="size-16 text-primary opacity-50" />
             <audio src={lesson.mediaUrl} controls className="w-full max-w-md" />
           </div>
@@ -200,14 +215,14 @@ export default function CoursePlayer() {
           <img
             src={lesson.mediaUrl}
             alt={lesson.title}
-            className="w-full rounded-lg max-h-[70vh] object-contain bg-muted"
+            className="w-full rounded-lg max-h-[70vh] object-contain bg-muted shadow-sm"
           />
         )
       case 'pdf':
         return (
           <iframe
             src={lesson.mediaUrl}
-            className="w-full h-[70vh] rounded-lg border bg-white"
+            className="w-full h-[70vh] rounded-lg border bg-white shadow-sm"
             title={lesson.title}
           />
         )
@@ -235,7 +250,7 @@ export default function CoursePlayer() {
       case 'text':
         return (
           <div
-            className="prose max-w-none p-6 bg-card border rounded-lg"
+            className="prose dark:prose-invert max-w-none p-6 md:p-8 bg-card border rounded-lg shadow-sm"
             dangerouslySetInnerHTML={{ __html: lesson.content || '<p>Vazio</p>' }}
           />
         )
@@ -246,17 +261,20 @@ export default function CoursePlayer() {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)]">
-      <div className="flex items-center justify-between mb-6 pb-4 border-b">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b gap-4">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" asChild>
+          <Button variant="outline" size="icon" asChild className="shrink-0">
             <Link to="/student/dashboard">
               <ArrowLeft className="size-4" />
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold">{course.title}</h1>
+          <h1 className="text-2xl font-bold line-clamp-1">{course.title}</h1>
         </div>
         {enrollment.isCompleted && (
-          <Button asChild className="bg-success hover:bg-success/90 text-success-foreground">
+          <Button
+            asChild
+            className="bg-success hover:bg-success/90 text-success-foreground shrink-0 w-full sm:w-auto"
+          >
             <Link to={`/student/certificate/${course.id}`}>Visualizar Certificado</Link>
           </Button>
         )}
@@ -266,13 +284,13 @@ export default function CoursePlayer() {
         <TabsList className="w-full justify-start border-b rounded-none px-0 h-auto bg-transparent pb-4 mb-6 gap-6">
           <TabsTrigger
             value="content"
-            className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2"
+            className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2 font-semibold"
           >
             Conteúdo do Curso
           </TabsTrigger>
           <TabsTrigger
             value="live"
-            className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2 relative"
+            className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary border border-transparent data-[state=active]:border-primary/20 rounded-md px-4 py-2 font-semibold relative"
           >
             <Video className="mr-2 size-4" /> Aulas ao Vivo e Gravações
             {upcomingLiveClasses.some((lc) => {
@@ -292,16 +310,18 @@ export default function CoursePlayer() {
           value="content"
           className="flex gap-6 flex-1 items-start flex-col lg:flex-row mt-0 outline-none"
         >
-          <div className="w-full lg:w-[320px] flex flex-col border rounded-xl bg-card shrink-0 shadow-sm">
+          <div className="w-full lg:w-[340px] flex flex-col border rounded-xl bg-card shrink-0 shadow-sm overflow-hidden">
             {course.modules.map((m) => (
               <div key={m.id} className="border-b last:border-0">
-                <div className="p-3 bg-muted/40 font-semibold text-sm flex items-center justify-between">
+                <div className="p-3.5 bg-muted/40 font-bold text-sm flex items-center justify-between">
                   <span>{m.title}</span>
                   {isModuleCompleted(m.id) && (
-                    <span className="text-success text-xs">✓ Concluído</span>
+                    <span className="text-success text-xs bg-success/10 px-2 py-0.5 rounded">
+                      Concluído
+                    </span>
                   )}
                 </div>
-                <div className="p-1 space-y-0.5">
+                <div className="p-1.5 space-y-0.5">
                   {m.lessons.map((l) => {
                     const lLock = checkLockStatus(l, m)
                     const isDone = enrollment.completedLessons.includes(l.id)
@@ -309,15 +329,17 @@ export default function CoursePlayer() {
                       <button
                         key={l.id}
                         onClick={() => setActiveLessonId(l.id)}
-                        className={`w-full text-left p-2.5 px-3 text-sm rounded-md flex items-center gap-2 transition-colors ${activeLessonId === l.id ? 'bg-primary text-primary-foreground font-medium shadow-sm' : 'hover:bg-muted/50'} ${lLock.locked ? 'opacity-60 cursor-not-allowed' : ''}`}
+                        className={`w-full text-left p-2.5 px-3 text-sm rounded-md flex items-center gap-3 transition-colors ${activeLessonId === l.id ? 'bg-primary text-primary-foreground font-bold shadow-sm' : 'hover:bg-muted/60 font-medium'} ${lLock.locked ? 'opacity-60 cursor-not-allowed' : ''}`}
                       >
                         <span className="flex-shrink-0">
                           {lLock.locked ? (
-                            <Lock className="size-3.5" />
+                            <Lock className="size-4 opacity-70" />
                           ) : isDone ? (
-                            <span className="text-success font-bold text-lg leading-none">✓</span>
+                            <span className="text-success font-extrabold text-lg leading-none">
+                              ✓
+                            </span>
                           ) : (
-                            <span className="w-3.5 h-3.5 rounded-full border-2 border-current opacity-30 inline-block" />
+                            <span className="w-4 h-4 rounded-full border-[2.5px] border-current opacity-30 inline-block" />
                           )}
                         </span>
                         <span className="truncate flex-1">{l.title}</span>
@@ -331,21 +353,21 @@ export default function CoursePlayer() {
 
           <div className="flex-1 w-full bg-card border rounded-xl p-6 lg:p-10 shadow-sm min-h-[60vh] flex flex-col">
             {activeLesson && currentLock.locked ? (
-              <div className="flex-1 flex items-center justify-center flex-col text-center space-y-4">
-                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center flex-col text-center space-y-4 py-12">
+                <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-2">
                   <Lock className="size-10 text-muted-foreground" />
                 </div>
                 <h2 className="text-2xl font-bold">Conteúdo Bloqueado</h2>
-                <p className="text-muted-foreground">{currentLock.reason}</p>
+                <p className="text-muted-foreground max-w-md mx-auto">{currentLock.reason}</p>
               </div>
             ) : activeLesson ? (
               <div className="w-full mx-auto space-y-8 flex-1 flex flex-col">
-                <div className="flex justify-between items-start gap-4 flex-wrap">
-                  <h2 className="text-3xl font-bold tracking-tight">{activeLesson.title}</h2>
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                  <h2 className="text-3xl font-extrabold tracking-tight">{activeLesson.title}</h2>
                   {activeLesson.downloadable &&
                     activeLesson.mediaUrl &&
                     activeLesson.type !== 'excel' && (
-                      <Button variant="outline" asChild size="sm">
+                      <Button variant="outline" asChild size="sm" className="shrink-0 font-bold">
                         <a href={activeLesson.mediaUrl} target="_blank" rel="noreferrer" download>
                           <Download className="mr-2 size-4" /> Material
                         </a>
@@ -355,27 +377,29 @@ export default function CoursePlayer() {
                 <div className="flex-1 w-full relative">{renderMedia(activeLesson)}</div>
 
                 {activeLesson.type === 'exam' && (
-                  <div className="space-y-8 bg-muted/5 p-6 rounded-xl border">
+                  <div className="space-y-8 bg-muted/5 p-6 md:p-8 rounded-xl border shadow-sm">
                     {submission?.isPending && (
-                      <div className="p-4 bg-warning/20 text-warning-foreground rounded-lg font-medium">
-                        Aguardando correção.
+                      <div className="p-4 bg-warning/20 text-warning-foreground border border-warning/30 rounded-lg font-bold">
+                        Aguardando correção do professor.
                       </div>
                     )}
                     {submission && !submission.isPending && (
-                      <div className="p-4 bg-success/10 border border-success/30 rounded-lg flex justify-between">
+                      <div className="p-5 bg-success/10 border border-success/30 rounded-lg flex justify-between items-center shadow-sm">
                         <div>
-                          <p className="text-sm font-semibold text-success-foreground mb-1">
+                          <p className="text-sm font-bold text-success-foreground mb-1 uppercase tracking-wider">
                             Nota Final
                           </p>
-                          <p className="text-3xl font-bold">
+                          <p className="text-4xl font-extrabold text-success">
                             {enrollment.examScores[activeLesson.id]?.toFixed(1)}{' '}
-                            <span className="text-lg text-muted-foreground">/ 100</span>
+                            <span className="text-xl text-success-foreground/60">/ 100</span>
                           </p>
                         </div>
                         {activeLesson.examConfig?.minGradeRequired && (
                           <div className="text-right">
-                            <p className="text-sm text-muted-foreground mb-1">Mínimo</p>
-                            <p className="font-semibold">
+                            <p className="text-xs font-bold text-muted-foreground mb-1 uppercase tracking-wider">
+                              Nota Mínima
+                            </p>
+                            <p className="font-extrabold text-lg text-foreground">
                               {activeLesson.examConfig.minGradeRequired}
                             </p>
                           </div>
@@ -383,8 +407,8 @@ export default function CoursePlayer() {
                       </div>
                     )}
                     {currentExamQuestions.map((q, i) => (
-                      <div key={q.id} className="border p-6 rounded-lg bg-card shadow-sm space-y-4">
-                        <p className="font-semibold text-lg">
+                      <div key={q.id} className="border p-6 rounded-xl bg-card shadow-sm space-y-5">
+                        <p className="font-bold text-lg leading-relaxed">
                           {i + 1}. {q.text}
                         </p>
                         {q.type === 'single' && (
@@ -392,16 +416,17 @@ export default function CoursePlayer() {
                             disabled={!!submission}
                             value={answers[q.id]?.toString()}
                             onValueChange={(v) => setAnswers({ ...answers, [q.id]: parseInt(v) })}
+                            className="space-y-2"
                           >
                             {q.options?.map((opt, oIdx) => (
                               <div
                                 key={oIdx}
-                                className="flex items-center space-x-3 p-2 hover:bg-muted/50 rounded"
+                                className="flex items-center space-x-3 p-3 hover:bg-muted/50 rounded-lg border border-transparent hover:border-border transition-colors"
                               >
                                 <RadioGroupItem value={oIdx.toString()} id={`${q.id}-${oIdx}`} />
                                 <Label
                                   htmlFor={`${q.id}-${oIdx}`}
-                                  className="text-base font-normal flex-1 cursor-pointer"
+                                  className="text-base font-medium flex-1 cursor-pointer leading-snug"
                                 >
                                   {opt}
                                 </Label>
@@ -414,7 +439,7 @@ export default function CoursePlayer() {
                             {q.options?.map((opt, oIdx) => (
                               <div
                                 key={oIdx}
-                                className="flex items-center space-x-3 p-2 hover:bg-muted/50 rounded"
+                                className="flex items-center space-x-3 p-3 hover:bg-muted/50 rounded-lg border border-transparent hover:border-border transition-colors"
                               >
                                 <Checkbox
                                   disabled={!!submission}
@@ -425,7 +450,7 @@ export default function CoursePlayer() {
                                     setAnswers({ ...answers, [q.id]: arr })
                                   }}
                                 />
-                                <Label className="text-base font-normal flex-1 cursor-pointer">
+                                <Label className="text-base font-medium flex-1 cursor-pointer leading-snug">
                                   {opt}
                                 </Label>
                               </div>
@@ -437,14 +462,18 @@ export default function CoursePlayer() {
                             disabled={!!submission}
                             value={answers[q.id] || ''}
                             onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
-                            placeholder="Escreva sua resposta..."
-                            className="h-40 text-base"
+                            placeholder="Escreva sua resposta detalhada..."
+                            className="h-40 text-base resize-y"
                           />
                         )}
                       </div>
                     ))}
                     {!submission && (
-                      <Button size="lg" className="w-full text-lg" onClick={handleSubmitExam}>
+                      <Button
+                        size="lg"
+                        className="w-full text-lg h-14 font-bold shadow-md"
+                        onClick={handleSubmitExam}
+                      >
                         Enviar Avaliação
                       </Button>
                     )}
@@ -461,30 +490,39 @@ export default function CoursePlayer() {
                           ? 'secondary'
                           : 'default'
                       }
+                      className={
+                        enrollment.completedLessons.includes(activeLesson.id)
+                          ? 'font-bold'
+                          : 'font-bold shadow-md'
+                      }
                     >
                       {enrollment.completedLessons.includes(activeLesson.id)
-                        ? 'Concluída'
+                        ? 'Aula Concluída'
                         : 'Marcar como Concluída'}
                     </Button>
                   </div>
                 )}
               </div>
             ) : (
-              <p>Selecione uma aula</p>
+              <div className="flex-1 flex items-center justify-center text-muted-foreground font-medium">
+                Selecione uma aula no menu lateral
+              </div>
             )}
           </div>
         </TabsContent>
 
-        <TabsContent value="live" className="outline-none mt-0 space-y-12">
-          <div className="bg-card border rounded-xl p-6 shadow-sm min-h-[40vh]">
-            <h2 className="text-2xl font-bold mb-6">Próximas Aulas ao Vivo</h2>
+        <TabsContent value="live" className="outline-none mt-0 space-y-8">
+          <div className="bg-card border rounded-xl p-6 md:p-8 shadow-sm">
+            <h2 className="text-2xl font-bold mb-6 tracking-tight">Próximas Aulas ao Vivo</h2>
             {upcomingLiveClasses.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-lg">
+              <div className="text-center py-16 text-muted-foreground border-2 border-dashed rounded-xl bg-muted/20">
                 <Video className="mx-auto size-12 opacity-20 mb-4" />
-                <p>Nenhuma aula ao vivo agendada para o futuro neste curso.</p>
+                <p className="font-medium text-lg">
+                  Nenhuma aula ao vivo agendada para o futuro neste curso.
+                </p>
               </div>
             ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {upcomingLiveClasses.map((lc) => {
                   const start = new Date(`${lc.date}T${lc.startTime}`)
                   const end = new Date(start.getTime() + lc.durationMinutes * 60000)
@@ -494,51 +532,53 @@ export default function CoursePlayer() {
                   return (
                     <div
                       key={lc.id}
-                      className={`border rounded-xl p-5 flex flex-col transition-all ${isLive ? 'border-red-500 shadow-md ring-1 ring-red-500/20' : 'bg-background hover:shadow-sm'}`}
+                      className={`border rounded-xl p-6 flex flex-col transition-all ${isLive ? 'border-red-500 shadow-lg ring-1 ring-red-500/20' : 'bg-background hover:shadow-md'}`}
                     >
-                      <div className="flex justify-between items-start mb-4">
+                      <div className="flex justify-between items-start mb-5">
                         <div className="space-y-1">
                           {isLive ? (
-                            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded animate-pulse uppercase tracking-wide">
+                            <span className="bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded animate-pulse uppercase tracking-widest shadow-sm">
                               Ao Vivo Agora
                             </span>
                           ) : (
-                            <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded uppercase tracking-wide">
+                            <span className="bg-primary/10 text-primary text-xs font-bold px-2.5 py-1 rounded uppercase tracking-widest">
                               Agendada
                             </span>
                           )}
                         </div>
-                        <span className="text-xs font-medium bg-muted px-2 py-0.5 rounded uppercase">
+                        <span className="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded uppercase tracking-wider">
                           {lc.platform}
                         </span>
                       </div>
-                      <h3 className="font-bold text-lg leading-tight mb-2">{lc.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-1">
+                      <h3 className="font-extrabold text-xl leading-tight mb-3 text-brand dark:text-white">
+                        {lc.title}
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 line-clamp-2 flex-1 font-medium">
                         {lc.description}
                       </p>
 
-                      <div className="space-y-2 mb-6">
-                        <div className="flex items-center text-sm font-medium">
-                          <Calendar className="size-4 mr-2 text-muted-foreground" />
+                      <div className="space-y-3 mb-8 bg-muted/40 p-4 rounded-lg border border-border/50">
+                        <div className="flex items-center text-sm font-semibold">
+                          <Calendar className="size-4 mr-3 text-primary" />
                           {start.toLocaleDateString('pt-BR')}
                         </div>
-                        <div className="flex items-center text-sm font-medium">
-                          <Clock className="size-4 mr-2 text-muted-foreground" />
+                        <div className="flex items-center text-sm font-semibold">
+                          <Clock className="size-4 mr-3 text-primary" />
                           {lc.startTime} ({lc.durationMinutes} min)
                         </div>
                       </div>
 
                       {isLive ? (
                         <Button
-                          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold"
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold h-12 shadow-md"
                           asChild
                         >
                           <a href={lc.url} target="_blank" rel="noreferrer">
-                            <Video className="mr-2 size-4" /> Entrar na Sala
+                            <Video className="mr-2 size-5" /> Entrar na Sala
                           </a>
                         </Button>
                       ) : (
-                        <Button className="w-full" variant="outline" disabled>
+                        <Button className="w-full font-bold h-12" variant="outline" disabled>
                           Aguardando Horário
                         </Button>
                       )}
@@ -550,29 +590,36 @@ export default function CoursePlayer() {
           </div>
 
           {pastLiveClasses.length > 0 && (
-            <div className="bg-card border rounded-xl p-6 shadow-sm">
-              <h2 className="text-2xl font-bold mb-6">Sessões Passadas & Gravações</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="bg-card border rounded-xl p-6 md:p-8 shadow-sm">
+              <h2 className="text-2xl font-bold mb-6 tracking-tight">
+                Sessões Passadas & Gravações
+              </h2>
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {pastLiveClasses.map((lc) => {
                   const start = new Date(`${lc.date}T${lc.startTime}`)
 
                   return (
-                    <div key={lc.id} className="border rounded-xl p-5 flex flex-col bg-muted/20">
-                      <div className="flex justify-between items-start mb-3">
-                        <Badge variant="secondary">Finalizada</Badge>
-                        <div className="flex items-center text-xs font-medium text-muted-foreground">
-                          <Calendar className="size-3 mr-1" />
+                    <div
+                      key={lc.id}
+                      className="border rounded-xl p-6 flex flex-col bg-muted/10 hover:bg-muted/30 transition-colors"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <Badge variant="secondary" className="font-bold">
+                          Finalizada
+                        </Badge>
+                        <div className="flex items-center text-xs font-bold text-muted-foreground">
+                          <Calendar className="size-3.5 mr-1.5" />
                           {start.toLocaleDateString('pt-BR')}
                         </div>
                       </div>
-                      <h3 className="font-bold text-base leading-tight mb-2 flex-1">{lc.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      <h3 className="font-bold text-lg leading-tight mb-3 flex-1">{lc.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-6 line-clamp-2 font-medium">
                         {lc.description}
                       </p>
 
                       {lc.recordingUrl ? (
                         <Button
-                          className="w-full bg-primary/10 text-primary hover:bg-primary/20"
+                          className="w-full font-bold shadow-sm h-11 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
                           asChild
                         >
                           <a href={lc.recordingUrl} target="_blank" rel="noreferrer">
@@ -581,7 +628,7 @@ export default function CoursePlayer() {
                         </Button>
                       ) : (
                         <Button
-                          className="w-full bg-muted text-muted-foreground"
+                          className="w-full font-bold h-11 bg-muted text-muted-foreground"
                           variant="secondary"
                           disabled
                         >

@@ -1,59 +1,53 @@
 import { Link } from 'react-router-dom'
 import { Logo } from '@/components/Logo'
 import { Button } from '@/components/ui/button'
-import { Menu } from 'lucide-react'
 
 export function PublicHeader() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:bg-slate-950/95 dark:border-slate-800">
-      <div className="container mx-auto flex min-h-[160px] md:min-h-[220px] items-center justify-between px-4 md:px-6 py-6">
-        <div className="flex items-center h-full max-w-[50%] md:max-w-[40%]">
-          <Logo imgClassName="h-32 sm:h-48 md:h-60 max-h-[180px] md:max-h-[200px] w-auto object-contain" />
-        </div>
-        <nav className="hidden md:flex items-center gap-8">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950/90 backdrop-blur shadow-sm">
+      <div className="container mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3">
+          <Logo className="h-12 w-auto filter drop-shadow-md" />
+        </Link>
+        <nav className="hidden md:flex gap-8">
           <Link
-            to="/courses"
-            className="text-lg font-semibold text-slate-700 hover:text-brand dark:text-slate-300 dark:hover:text-blue-400 transition-colors"
+            to="/cursos"
+            className="text-sm font-bold text-slate-300 hover:text-white transition-colors uppercase tracking-wide"
           >
-            Cursos
+            Catálogo
           </Link>
           <Link
-            to="/about"
-            className="text-lg font-semibold text-slate-700 hover:text-brand dark:text-slate-300 dark:hover:text-blue-400 transition-colors"
+            to="/sobre"
+            className="text-sm font-bold text-slate-300 hover:text-white transition-colors uppercase tracking-wide"
           >
-            Sobre Nós
+            Sobre
           </Link>
-          <div className="flex items-center gap-4 ml-6 border-l border-slate-200 dark:border-slate-800 pl-6">
-            <Link to="/login">
-              <Button variant="ghost" size="lg" className="text-lg font-bold h-12 px-6">
-                Entrar
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button
-                size="lg"
-                className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold px-8 h-12 shadow-md"
-              >
-                Criar Conta
-              </Button>
-            </Link>
-          </div>
+          <Link
+            to="/planos"
+            className="text-sm font-bold text-slate-300 hover:text-white transition-colors uppercase tracking-wide"
+          >
+            Planos
+          </Link>
+          <Link
+            to="/contato"
+            className="text-sm font-bold text-slate-300 hover:text-white transition-colors uppercase tracking-wide"
+          >
+            Contato
+          </Link>
         </nav>
-        <div className="md:hidden flex items-center gap-4 shrink-0">
-          <Link to="/login">
-            <Button
-              size="default"
-              className="bg-brand hover:bg-brand/90 text-white font-bold h-11 px-5"
-            >
-              Login
-            </Button>
-          </Link>
+        <div className="flex items-center gap-3">
           <Button
-            variant="outline"
-            size="icon"
-            className="h-11 w-11 text-slate-700 border-slate-200"
+            variant="ghost"
+            asChild
+            className="hidden sm:inline-flex text-white font-bold hover:text-white hover:bg-white/10"
           >
-            <Menu className="h-6 w-6" />
+            <Link to="/login">Entrar</Link>
+          </Button>
+          <Button
+            className="font-bold shadow-md bg-primary hover:bg-primary/90 text-primary-foreground"
+            asChild
+          >
+            <Link to="/student/dashboard">Acessar Conta</Link>
           </Button>
         </div>
       </div>

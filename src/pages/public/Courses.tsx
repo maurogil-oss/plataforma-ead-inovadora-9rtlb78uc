@@ -3,7 +3,7 @@ import { PublicHeader } from '@/components/PublicHeader'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Tag } from 'lucide-react'
+import { Tag, PlayCircle, Clock, Layers } from 'lucide-react'
 
 const MOCK_COURSES = [
   {
@@ -13,6 +13,8 @@ const MOCK_COURSES = [
     cat: 'Design',
     price: 197.0,
     img: 'https://img.usecurling.com/p/600/400?q=ui%20design&color=blue',
+    duration: '12h',
+    modules: 6,
   },
   {
     id: 2,
@@ -21,6 +23,8 @@ const MOCK_COURSES = [
     cat: 'Tecnologia',
     price: 297.0,
     img: 'https://img.usecurling.com/p/600/400?q=code&color=purple',
+    duration: '24h',
+    modules: 12,
   },
   {
     id: 3,
@@ -29,6 +33,8 @@ const MOCK_COURSES = [
     cat: 'Marketing',
     price: 147.0,
     img: 'https://img.usecurling.com/p/600/400?q=marketing&color=orange',
+    duration: '8h',
+    modules: 4,
   },
   {
     id: 4,
@@ -37,6 +43,8 @@ const MOCK_COURSES = [
     cat: 'Negócios',
     price: 247.0,
     img: 'https://img.usecurling.com/p/600/400?q=agile&color=green',
+    duration: '10h',
+    modules: 5,
   },
   {
     id: 5,
@@ -45,6 +53,8 @@ const MOCK_COURSES = [
     cat: 'Tecnologia',
     price: 397.0,
     img: 'https://img.usecurling.com/p/600/400?q=data&color=cyan',
+    duration: '32h',
+    modules: 16,
   },
   {
     id: 6,
@@ -53,50 +63,69 @@ const MOCK_COURSES = [
     cat: 'Carreira',
     price: 197.0,
     img: 'https://img.usecurling.com/p/600/400?q=leadership&color=gray',
+    duration: '14h',
+    modules: 7,
   },
 ]
 
 export default function Courses() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-950 text-slate-50 flex flex-col">
       <PublicHeader />
       <main className="flex-1 container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-brand tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-white tracking-tight">
             Catálogo de Cursos
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto font-medium">
+          <p className="text-xl text-slate-400 max-w-3xl mx-auto font-medium leading-relaxed">
             Explore nossos cursos de alta qualidade e acelere sua carreira profissional com a melhor
-            metodologia do mercado.
+            metodologia do mercado. Formato Netflix para um aprendizado imersivo.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {MOCK_COURSES.map((c) => (
             <Card
               key={c.id}
-              className="overflow-hidden flex flex-col hover:shadow-xl transition-all hover:-translate-y-1 border-slate-200 bg-white"
+              className="group overflow-hidden flex flex-col hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-2 border-slate-800 bg-slate-900 cursor-pointer"
             >
-              <div className="relative h-48 bg-slate-200">
-                <img src={c.img} alt={c.title} className="w-full h-full object-cover" />
-                <Badge className="absolute top-3 left-3 bg-brand/95 text-white hover:bg-brand border-none shadow-sm backdrop-blur-sm font-bold uppercase tracking-wider text-[10px]">
+              <div className="relative aspect-video bg-slate-800 overflow-hidden">
+                <img
+                  src={c.img}
+                  alt={c.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <PlayCircle className="size-16 text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300" />
+                </div>
+
+                <Badge className="absolute top-3 left-3 bg-red-600 hover:bg-red-700 text-white border-none shadow-md font-black uppercase tracking-widest text-[10px]">
                   {c.cat}
                 </Badge>
-                <div className="absolute bottom-3 right-3 bg-primary text-primary-foreground font-extrabold px-3 py-1.5 rounded-md shadow-lg flex items-center gap-1.5 text-sm">
-                  <Tag className="size-4" /> R$ {c.price.toFixed(2)}
+                <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white font-black px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs border border-white/10">
+                  <Tag className="size-3 text-primary" /> R$ {c.price.toFixed(2)}
                 </div>
               </div>
-              <CardHeader className="pb-3">
-                <CardTitle className="line-clamp-2 text-xl leading-tight text-brand">
+              <CardContent className="flex-1 p-5 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-950 pt-16 pb-5 pointer-events-none">
+                <CardTitle className="line-clamp-2 text-xl leading-tight text-white group-hover:text-primary transition-colors font-bold mb-2">
                   {c.title}
                 </CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <p className="text-slate-600 font-medium line-clamp-3 leading-relaxed">{c.desc}</p>
+                <div className="flex items-center text-xs text-slate-300 font-bold gap-3">
+                  <span className="flex items-center gap-1">
+                    <Clock className="size-3" /> {c.duration}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Layers className="size-3" /> {c.modules} Módulos
+                  </span>
+                </div>
               </CardContent>
-              <CardFooter className="pt-0">
-                <Button className="w-full font-bold shadow-md text-base" asChild>
-                  <Link to="/login">Garantir Vaga</Link>
+              <CardFooter className="pt-0 p-4 bg-slate-900 border-t border-slate-800">
+                <Button
+                  className="w-full font-bold shadow-md text-base bg-white text-slate-900 hover:bg-slate-200"
+                  asChild
+                >
+                  <Link to="/login">Assinar e Assistir</Link>
                 </Button>
               </CardFooter>
             </Card>

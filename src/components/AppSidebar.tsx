@@ -20,6 +20,8 @@ import {
   Activity,
   ShoppingCart,
   Store,
+  Film,
+  Compass,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -58,8 +60,9 @@ const getNavigation = (role?: string) => {
     case 'student':
     default:
       return [
-        { name: 'Meu Aprendizado', href: '/student/dashboard', icon: BookOpen },
-        { name: 'Loja / Marketplace', href: '/store', icon: ShoppingCart },
+        { name: 'Início', href: '/student/dashboard', icon: Film },
+        { name: 'Meu Aprendizado', href: '/student/courses', icon: BookOpen },
+        { name: 'Descobrir', href: '/store', icon: Compass },
         { name: 'Programa de Parceiros', href: '/student/partner', icon: Handshake },
       ]
   }
@@ -71,39 +74,41 @@ export function AppSidebar() {
   const navigation = getNavigation(user?.role)
 
   return (
-    <div className="flex h-full w-72 lg:w-80 flex-col border-r border-brand/20 bg-brand text-brand-foreground shadow-xl z-20 relative">
-      <div className="flex min-h-[180px] md:min-h-[220px] items-center px-4 md:px-6 border-b border-white/10 bg-brand py-6 shrink-0 justify-center">
+    <div className="flex h-full w-72 lg:w-80 flex-col bg-slate-950 text-slate-300 shadow-2xl z-20 relative border-r border-slate-800 transition-all duration-300">
+      <div className="flex min-h-[160px] md:min-h-[200px] items-center px-4 md:px-6 py-6 shrink-0 justify-center">
         <Link to="/" className="flex items-center justify-center w-full group overflow-hidden">
           <Logo
-            imgClassName="h-40 md:h-52 w-full max-w-[280px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
+            imgClassName="h-32 md:h-44 w-full max-w-[280px] object-contain transition-transform duration-500 group-hover:scale-110 filter drop-shadow-lg"
             className="text-white w-full justify-center"
           />
         </Link>
       </div>
 
-      <div className="flex-1 overflow-y-auto py-6 custom-scrollbar">
-        <div className="px-5 mb-3 text-[11px] font-extrabold text-white/50 uppercase tracking-widest">
+      <div className="flex-1 overflow-y-auto py-6 custom-scrollbar px-3">
+        <div className="px-4 mb-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
           Menu Principal
         </div>
-        <nav className="space-y-1.5 px-3">
+        <nav className="space-y-1">
           {navigation.map((item) => {
-            const isActive = location.pathname.startsWith(item.href)
+            const isActive =
+              location.pathname === item.href || location.pathname.startsWith(item.href + '/')
             return (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200',
+                  'flex items-center gap-4 rounded-lg px-4 py-3.5 text-[15px] font-bold transition-all duration-300',
                   isActive
-                    ? 'bg-primary text-primary-foreground shadow-md translate-x-1'
-                    : 'text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1',
+                    ? 'bg-slate-800 text-white shadow-md border-l-4 border-primary'
+                    : 'text-slate-400 hover:bg-slate-900 hover:text-slate-100 hover:translate-x-1 border-l-4 border-transparent',
                 )}
               >
                 <item.icon
                   className={cn(
-                    'h-5 w-5 shrink-0',
-                    isActive ? 'text-primary-foreground' : 'text-brand-foreground/60',
+                    'h-5 w-5 shrink-0 transition-colors',
+                    isActive ? 'text-primary' : 'text-slate-500',
                   )}
+                  strokeWidth={isActive ? 2.5 : 2}
                 />
                 <span className="truncate">{item.name}</span>
               </Link>
@@ -111,62 +116,55 @@ export function AppSidebar() {
           })}
         </nav>
 
-        <div className="px-5 mt-10 mb-3 text-[11px] font-extrabold text-white/50 uppercase tracking-widest">
+        <div className="px-4 mt-12 mb-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
           Institucional
         </div>
-        <nav className="space-y-1.5 px-3">
-          <Link
-            to="/cursos"
-            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
-          >
-            <BookOpen className="h-5 w-5 shrink-0 text-brand-foreground/60" />
-            <span className="truncate">Catálogo de Cursos</span>
-          </Link>
+        <nav className="space-y-1">
           <Link
             to="/planos"
-            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
+            className="flex items-center gap-4 rounded-lg px-4 py-3.5 text-[15px] font-bold transition-all duration-300 text-slate-400 hover:bg-slate-900 hover:text-slate-100 hover:translate-x-1 border-l-4 border-transparent"
           >
-            <CreditCard className="h-5 w-5 shrink-0 text-brand-foreground/60" />
+            <CreditCard className="h-5 w-5 shrink-0 text-slate-500" strokeWidth={2} />
             <span className="truncate">Planos de Assinatura</span>
           </Link>
           <Link
             to="/contato"
-            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
+            className="flex items-center gap-4 rounded-lg px-4 py-3.5 text-[15px] font-bold transition-all duration-300 text-slate-400 hover:bg-slate-900 hover:text-slate-100 hover:translate-x-1 border-l-4 border-transparent"
           >
-            <Phone className="h-5 w-5 shrink-0 text-brand-foreground/60" />
+            <Phone className="h-5 w-5 shrink-0 text-slate-500" strokeWidth={2} />
             <span className="truncate">Central de Contato</span>
           </Link>
           <Link
             to="/sobre"
-            className="flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-semibold transition-all duration-200 text-brand-foreground/80 hover:bg-white/10 hover:text-white hover:translate-x-1"
+            className="flex items-center gap-4 rounded-lg px-4 py-3.5 text-[15px] font-bold transition-all duration-300 text-slate-400 hover:bg-slate-900 hover:text-slate-100 hover:translate-x-1 border-l-4 border-transparent"
           >
-            <Users className="h-5 w-5 shrink-0 text-brand-foreground/60" />
-            <span className="truncate">Sobre o Observatório</span>
+            <Users className="h-5 w-5 shrink-0 text-slate-500" strokeWidth={2} />
+            <span className="truncate">Sobre a Plataforma</span>
           </Link>
         </nav>
       </div>
 
-      <div className="border-t border-white/10 p-5 bg-brand/95 shrink-0">
-        <div className="flex items-center gap-4 mb-5 px-1">
-          <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-lg font-bold shadow-inner shrink-0">
+      <div className="p-5 bg-slate-900/50 shrink-0 border-t border-slate-800/50">
+        <div className="flex items-center gap-4 mb-5 px-2">
+          <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-primary text-lg font-black shadow-inner shrink-0 border border-primary/30">
             {user?.name?.charAt(0) || 'U'}
           </div>
           <div className="flex flex-col overflow-hidden">
-            <span className="text-base font-bold text-white truncate">
+            <span className="text-sm font-extrabold text-white truncate">
               {user?.name || 'Usuário'}
             </span>
-            <span className="text-sm text-brand-foreground/60 truncate capitalize font-medium">
+            <span className="text-xs text-slate-400 truncate uppercase tracking-widest font-bold mt-0.5">
               {user?.role || 'student'}
             </span>
           </div>
         </div>
         <Button
           variant="outline"
-          className="w-full justify-start text-brand-foreground/80 border-white/20 bg-transparent hover:bg-white/10 hover:text-white hover:border-white/30 h-11"
+          className="w-full justify-start text-slate-300 border-slate-700 bg-transparent hover:bg-slate-800 hover:text-white hover:border-slate-600 h-12 transition-all duration-300"
           onClick={() => logout()}
         >
-          <LogOut className="mr-2 h-5 w-5" />
-          <span className="font-bold">Sair do Sistema</span>
+          <LogOut className="mr-3 h-5 w-5" />
+          <span className="font-extrabold">Sair da Conta</span>
         </Button>
       </div>
     </div>

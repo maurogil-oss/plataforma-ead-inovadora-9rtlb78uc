@@ -74,9 +74,10 @@ function ProtectedRoute({
 }
 
 export default function App() {
-  // Brand persistence and affiliate tracking
   useEffect(() => {
     document.title = 'Observatório Academy (DEMO)'
+    // Force dark mode class on html tag since the app is Netflix-themed now
+    document.documentElement.classList.add('dark')
     const params = new URLSearchParams(window.location.search)
     const ref = params.get('ref')
     if (ref) {
@@ -127,6 +128,14 @@ export default function App() {
             }
           />
           <Route
+            path="/student/courses"
+            element={
+              <ProtectedRoute>
+                <StudentDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/student/course/:id"
             element={
               <ProtectedRoute>
@@ -148,7 +157,7 @@ export default function App() {
             path="/instructor/dashboard"
             element={
               <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
-                <StudentDashboard />
+                <ManagerDashboard />
               </ProtectedRoute>
             }
           />
@@ -208,6 +217,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/instructor/courses"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <Courses />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Manager/Admin Routes */}
           <Route
@@ -235,6 +252,14 @@ export default function App() {
             }
           />
           <Route
+            path="/manager/courses/new"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <CourseEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/manager/enrollments"
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
@@ -243,7 +268,7 @@ export default function App() {
             }
           />
           <Route
-            path="/manager/student/:id"
+            path="/manager/students/:id"
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
                 <StudentDetails />

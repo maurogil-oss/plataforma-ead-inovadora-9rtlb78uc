@@ -186,10 +186,11 @@ const MOCK_QUESTIONS: BankQuestion[] = [
 const MOCK_COURSES: Course[] = [
   {
     id: 'c1',
-    title: 'Fundamentos de Gestão de Projetos',
-    area: 'Gestão Empresarial',
-    description: 'Aprenda os conceitos básicos.',
-    thumbnail: 'https://img.usecurling.com/p/800/600?q=business&color=blue',
+    title: 'Fundamentos de Gestão de Projetos Ágeis',
+    area: 'Negócios',
+    description:
+      'Aprenda os conceitos básicos e avançados para dominar o gerenciamento de qualquer equipe com agilidade.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=agile%20team&color=blue',
     price: 197.0,
     instructorId: 'i1',
     passingGrade: 70,
@@ -201,7 +202,7 @@ const MOCK_COURSES: Course[] = [
         lessons: [
           {
             id: 'l1',
-            title: 'O que é um projeto?',
+            title: 'O que é um projeto ágil?',
             type: 'video',
             content: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
@@ -220,6 +221,142 @@ const MOCK_COURSES: Course[] = [
             type: 'exam',
             prerequisiteLessonIds: ['l2'],
             examConfig: { mode: 'manual', manualQuestionIds: ['bq1', 'bq2'], minGradeRequired: 50 },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'c2',
+    title: 'Masterclass: ReactJS e Interfaces Modernas',
+    area: 'Tecnologia',
+    description:
+      'Um mergulho profundo na biblioteca mais utilizada no mundo corporativo para a criação de sistemas web incríveis.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=programming%20code&color=purple',
+    price: 297.0,
+    instructorId: 'i1',
+    passingGrade: 70,
+    batches: [],
+    modules: [
+      {
+        id: 'm2',
+        title: 'Primeiros Passos',
+        lessons: [
+          {
+            id: 'l2_1',
+            title: 'Setup Inicial',
+            type: 'video',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          },
+          {
+            id: 'l2_2',
+            title: 'Componentes Funcionais',
+            type: 'video',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'c3',
+    title: 'Data Science na Prática com Python',
+    area: 'Dados',
+    description:
+      'Aprenda a analisar milhares de dados, criar dashboards e extrair inteligência para tomada de decisões.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=data%20analysis&color=cyan',
+    price: 397.0,
+    instructorId: 'i1',
+    passingGrade: 70,
+    batches: [],
+    modules: [
+      {
+        id: 'm3',
+        title: 'Fundamentos',
+        lessons: [
+          {
+            id: 'l3_1',
+            title: 'Introdução ao Pandas',
+            type: 'video',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'c4',
+    title: 'Estratégias Avançadas de Marketing Digital',
+    area: 'Marketing',
+    description:
+      'Transforme o alcance da sua marca com táticas comprovadas pelas maiores agências do mundo.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=digital%20marketing&color=orange',
+    price: 147.0,
+    instructorId: 'i1',
+    passingGrade: 70,
+    batches: [],
+    modules: [
+      {
+        id: 'm4',
+        title: 'Tráfego Pago',
+        lessons: [
+          {
+            id: 'l4_1',
+            title: 'Meta Ads',
+            type: 'video',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'c5',
+    title: 'Liderança e Gestão de Pessoas',
+    area: 'Carreira',
+    description:
+      'Desenvolva a soft skill mais procurada pelos CEOs: a habilidade de guiar pessoas a resultados exponenciais.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=leadership&color=gray',
+    price: 197.0,
+    instructorId: 'i1',
+    passingGrade: 70,
+    batches: [],
+    modules: [
+      {
+        id: 'm5',
+        title: 'A Arte da Liderança',
+        lessons: [
+          {
+            id: 'l5_1',
+            title: 'Comunicação Não-Violenta',
+            type: 'video',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'c6',
+    title: 'UX/UI Design: Do Zero ao Protótipo',
+    area: 'Design',
+    description:
+      'Aprenda Figma, fundamentos de usabilidade e crie portfólios que atraem recrutadores globais.',
+    thumbnail: 'https://img.usecurling.com/p/800/600?q=ui%20design&color=pink',
+    price: 247.0,
+    instructorId: 'i1',
+    passingGrade: 70,
+    batches: [],
+    modules: [
+      {
+        id: 'm6',
+        title: 'Wireframes',
+        lessons: [
+          {
+            id: 'l6_1',
+            title: 'Baixa vs Alta Fidelidade',
+            type: 'video',
+            mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
           },
         ],
       },
@@ -335,7 +472,8 @@ interface LMSStore {
 
 const checkCourseCompletion = (enrollment: Enrollment, course: Course): Enrollment => {
   const allLessonIds = course.modules.flatMap((m) => m.lessons.map((l) => l.id))
-  const isCompleted = allLessonIds.every((id) => enrollment.completedLessons.includes(id))
+  const isCompleted =
+    allLessonIds.length > 0 && allLessonIds.every((id) => enrollment.completedLessons.includes(id))
   if (isCompleted && !enrollment.isCompleted) {
     return {
       ...enrollment,
@@ -382,6 +520,23 @@ export const useLmsStore = create<LMSStore>((set) => ({
           type: 'lesson_complete',
           details: 'Aula concluída',
           timeSpentMinutes: 15,
+        },
+      ],
+    },
+    {
+      id: 'e2',
+      studentId: 's1',
+      courseId: 'c2',
+      completedLessons: ['l2_1'],
+      examScores: {},
+      examSubmissions: {},
+      activityLog: [
+        {
+          id: 'act_mock2',
+          date: new Date().toISOString(),
+          type: 'lesson_complete',
+          details: 'Aula concluída',
+          timeSpentMinutes: 10,
         },
       ],
     },

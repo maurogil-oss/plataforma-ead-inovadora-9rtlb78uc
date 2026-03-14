@@ -5,7 +5,6 @@ import { useAuthStore } from '@/stores/authStore'
 import { useCommercialStore, Coupon } from '@/stores/commercialStore'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   Select,
@@ -16,8 +15,124 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { PlayCircle, PlusCircle, Tag, Radio, BadgePercent } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
+import { PlayCircle, PlusCircle, Tag, Radio, BadgePercent, Info, Clock, Layers } from 'lucide-react'
 import { toast } from 'sonner'
+
+const CourseCard = ({
+  course,
+  onClick,
+  actionLabel,
+  actionIcon: Icon,
+}: {
+  course: Course
+  onClick: () => void
+  actionLabel: string
+  actionIcon: any
+}) => {
+  return (
+    <Card
+      className="group overflow-hidden border-border/50 bg-card hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative h-full flex flex-col cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="aspect-video relative overflow-hidden bg-muted">
+        <img
+          src={course.thumbnail}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          alt={course.title}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+
+        <div className="absolute bottom-3 left-3 right-3 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+          <Button
+            size="sm"
+            className="w-full bg-primary text-primary-foreground font-bold shadow-md"
+          >
+            <Icon className="mr-2 size-4" /> {actionLabel}
+          </Button>
+        </div>
+
+        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white font-bold px-2.5 py-1 rounded shadow-sm flex items-center gap-1.5 text-xs border border-white/10">
+          <Tag className="size-3 text-primary" />{' '}
+          {course.price > 0 ? `R$ ${course.price.toFixed(2)}` : 'Grátis'}
+        </div>
+      </div>
+      <CardContent className="p-4 flex-1 flex flex-col">
+        <div className="text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest">
+          {course.area}
+        </div>
+        <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
+          {course.title}
+        </h3>
+        <div className="mt-3 flex items-center text-xs text-muted-foreground font-medium gap-3">
+          <span className="flex items-center gap-1">
+            <Clock className="size-3" /> {course.modules.length * 2}h
+          </span>
+          <span className="flex items-center gap-1">
+            <Layers className="size-3" /> {course.modules.length} Mód.
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+const ContinueWatchingCard = ({
+  course,
+  enrollment,
+  onClick,
+}: {
+  course: Course
+  enrollment: Enrollment
+  onClick: () => void
+}) => {
+  const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0)
+  const progress =
+    totalLessons > 0 ? Math.round((enrollment.completedLessons.length / totalLessons) * 100) : 0
+
+  return (
+    <Card
+      className="group overflow-hidden border-border/50 bg-card hover:shadow-2xl transition-all duration-300 hover:scale-[1.03] hover:-translate-y-1 relative h-full flex flex-col cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="aspect-video relative overflow-hidden bg-muted">
+        <img
+          src={course.thumbnail}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          alt={course.title}
+        />
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <PlayCircle className="size-16 text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform duration-300" />
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-secondary/80 backdrop-blur-sm z-10">
+          <div
+            className="h-full bg-primary transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+      <CardContent className="p-4 flex-1 flex flex-col">
+        <div className="text-[10px] font-bold text-primary mb-1.5 uppercase tracking-widest">
+          {course.area}
+        </div>
+        <h3 className="font-bold text-base leading-tight group-hover:text-primary transition-colors flex-1 line-clamp-2">
+          {course.title}
+        </h3>
+        <div className="mt-4 flex items-center justify-between text-xs font-medium">
+          <span className="text-muted-foreground">Progresso atual</span>
+          <span className="text-primary font-bold">{progress}%</span>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
 
 export default function StudentDashboard() {
   const user = useAuthStore((s) => s.user)
@@ -66,18 +181,11 @@ export default function StudentDashboard() {
     if (!couponCode || !enrollCourse) return
     const validCoupon = coupons.find((c) => c.code === couponCode.toUpperCase() && c.isActive)
 
-    if (!validCoupon) {
-      return toast.error('Cupom inválido ou inativo.')
-    }
-    if (validCoupon.maxUses && validCoupon.currentUses >= validCoupon.maxUses) {
+    if (!validCoupon) return toast.error('Cupom inválido ou inativo.')
+    if (validCoupon.maxUses && validCoupon.currentUses >= validCoupon.maxUses)
       return toast.error('O limite de uso deste cupom já foi atingido.')
-    }
-    if (
-      validCoupon.validCourseIds?.length &&
-      !validCoupon.validCourseIds.includes(enrollCourse.id)
-    ) {
+    if (validCoupon.validCourseIds?.length && !validCoupon.validCourseIds.includes(enrollCourse.id))
       return toast.error('Este cupom não é válido para este curso.')
-    }
 
     setAppliedCoupon(validCoupon)
     toast.success('Cupom aplicado com sucesso!')
@@ -88,9 +196,7 @@ export default function StudentDashboard() {
     const affiliateRef = localStorage.getItem('lms_affiliate_ref') || undefined
     enrollStudent(user.id, enrollCourse!.id, selectedBatch || undefined, affiliateRef)
 
-    if (appliedCoupon) {
-      incrementCouponUsage(appliedCoupon.id)
-    }
+    if (appliedCoupon) incrementCouponUsage(appliedCoupon.id)
 
     toast.success('Pagamento Aprovado! Matrícula confirmada.')
     setEnrollCourse(null)
@@ -104,12 +210,26 @@ export default function StudentDashboard() {
     : 0
   const finalPrice = Math.max(0, basePrice - discountAmount)
 
+  const featuredMyCourse = myCourses.length > 0 ? myCourses[0] : null
+  const featuredCourse = featuredMyCourse?.course || availableCourses[0] || courses[0]
+
+  const recommendedCourses = availableCourses.slice(0, 5)
+  const newCourses = [...availableCourses].reverse().slice(0, 5)
+  const availableCoursesByArea = availableCourses.reduce(
+    (acc, c) => {
+      if (!acc[c.area]) acc[c.area] = []
+      acc[c.area].push(c)
+      return acc
+    },
+    {} as Record<string, Course[]>,
+  )
+
   return (
-    <div className="space-y-12 pb-10">
+    <div className="space-y-12 pb-16 pt-2 overflow-x-hidden">
       {activeLiveClasses.length > 0 && (
-        <Alert className="border-red-500 bg-red-50 text-red-900">
-          <Radio className="size-5 text-red-600 animate-pulse" />
-          <AlertTitle className="font-bold text-lg text-red-700">
+        <Alert className="border-red-500 bg-red-50 dark:bg-red-950/50 text-red-900 dark:text-red-200 shadow-md">
+          <Radio className="size-5 text-red-600 dark:text-red-400 animate-pulse" />
+          <AlertTitle className="font-bold text-lg text-red-700 dark:text-red-300">
             Atenção! Aula ao vivo acontecendo agora.
           </AlertTitle>
           <AlertDescription className="mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -119,7 +239,7 @@ export default function StudentDashboard() {
             </span>
             <Button
               size="sm"
-              className="bg-red-600 hover:bg-red-700 text-white shrink-0"
+              className="bg-red-600 hover:bg-red-700 text-white shrink-0 shadow-sm"
               onClick={() => navigate(`/student/course/${activeLiveClasses[0].courseId}`)}
             >
               Acessar Transmissão
@@ -128,106 +248,196 @@ export default function StudentDashboard() {
         </Alert>
       )}
 
-      <section>
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold tracking-tight text-brand">Meus Cursos</h1>
-          <p className="text-muted-foreground mt-1">Continue seu aprendizado de onde parou.</p>
-        </div>
-        {myCourses.length === 0 ? (
-          <div className="p-8 text-center border border-dashed rounded-xl bg-muted/20 text-muted-foreground">
-            Você ainda não possui matrículas ativas.
+      {featuredCourse && (
+        <section className="relative w-full rounded-[2rem] overflow-hidden min-h-[450px] lg:min-h-[550px] flex flex-col justify-end p-8 md:p-12 shadow-2xl group border border-border/50">
+          <div className="absolute inset-0">
+            <img
+              src={featuredCourse.thumbnail}
+              alt={featuredCourse.title}
+              className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent" />
           </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {myCourses.map(({ course, enrollment }) => {
-              const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0)
-              const progress =
-                totalLessons > 0
-                  ? Math.round((enrollment.completedLessons.length / totalLessons) * 100)
-                  : 0
-              return (
-                <Card
-                  key={course.id}
-                  className="overflow-hidden group hover:shadow-md transition-shadow border-border/50"
-                >
-                  <div className="h-40 relative">
-                    <img
-                      src={course.thumbnail}
-                      alt={course.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-brand/20" />
-                  </div>
-                  <CardContent className="p-5 space-y-4">
-                    <h3 className="font-bold text-lg line-clamp-2 leading-tight group-hover:text-primary">
-                      {course.title}
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-medium text-muted-foreground">
-                        <span>Progresso</span>
-                        <span className="text-brand">{progress}%</span>
-                      </div>
-                      <Progress value={progress} className="h-1.5" />
-                    </div>
-                    <Button asChild className="w-full">
-                      <Link to={`/student/course/${course.id}`}>
-                        <PlayCircle className="mr-2 size-4" /> Continuar Aula
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        )}
-      </section>
-
-      <section>
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold tracking-tight text-brand">Catálogo de Cursos</h2>
-          <p className="text-muted-foreground mt-1">Explore novas áreas de conhecimento.</p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {availableCourses.map((course) => (
-            <Card key={course.id} className="overflow-hidden flex flex-col border-border/50">
-              <div className="h-40 bg-muted relative">
-                <img
-                  src={course.thumbnail}
-                  className="w-full h-full object-cover opacity-90"
-                  alt=""
-                />
-                <div className="absolute top-3 right-3 bg-brand/90 text-white font-bold px-2 py-1 rounded shadow-sm flex items-center gap-1.5 text-sm">
-                  <Tag className="size-3 text-primary" /> R$ {course.price.toFixed(2)}
-                </div>
-              </div>
-              <CardContent className="p-5 flex-1 flex flex-col">
-                <div className="text-xs font-semibold text-primary mb-1 uppercase tracking-wider">
-                  {course.area}
-                </div>
-                <h3 className="font-bold text-lg mb-2 leading-tight text-brand">{course.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-6 flex-1">
-                  {course.description}
-                </p>
+          <div className="relative z-10 max-w-3xl space-y-5 animate-fade-in-up">
+            <div className="flex items-center gap-3">
+              <Badge className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest text-xs px-3 py-1 border-none">
+                Destaque
+              </Badge>
+              <span className="text-slate-300 font-semibold text-sm uppercase tracking-wider">
+                {featuredCourse.area}
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-md">
+              {featuredCourse.title}
+            </h1>
+            <p className="text-lg md:text-xl text-slate-300 font-medium line-clamp-2 max-w-2xl drop-shadow-sm">
+              {featuredCourse.description}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              {featuredMyCourse ? (
                 <Button
-                  variant="outline"
-                  className="w-full text-brand border-brand/20 hover:bg-brand hover:text-white"
-                  onClick={() => handleEnrollClick(course)}
+                  size="lg"
+                  className="h-14 px-8 text-lg font-bold shadow-xl"
+                  onClick={() => navigate(`/student/course/${featuredCourse.id}`)}
                 >
-                  <PlusCircle className="mr-2 size-4" /> Comprar Curso
+                  <PlayCircle className="mr-2 size-5" /> Continuar Assistindo
                 </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+              ) : (
+                <Button
+                  size="lg"
+                  className="h-14 px-8 text-lg font-bold shadow-xl"
+                  onClick={() => handleEnrollClick(featuredCourse)}
+                >
+                  <PlusCircle className="mr-2 size-5" /> Inscrever-se Agora
+                </Button>
+              )}
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-14 px-8 text-lg font-bold bg-white/10 text-white border-white/20 hover:bg-white/20 hover:text-white backdrop-blur-sm"
+                onClick={() => {
+                  if (featuredMyCourse) navigate(`/student/course/${featuredCourse.id}`)
+                  else handleEnrollClick(featuredCourse)
+                }}
+              >
+                <Info className="mr-2 size-5" />{' '}
+                {featuredMyCourse ? 'Ver Aulas' : 'Mais Informações'}
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {myCourses.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">
+            Continuar Assistindo
+          </h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-4 px-1">
+              {myCourses.map(({ course, enrollment }) => (
+                <CarouselItem
+                  key={course.id}
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                >
+                  <ContinueWatchingCard
+                    course={course}
+                    enrollment={enrollment}
+                    onClick={() => navigate(`/student/course/${course.id}`)}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+            </div>
+          </Carousel>
+        </section>
+      )}
+
+      {recommendedCourses.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">
+            Recomendados para Você
+          </h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-4 px-1">
+              {recommendedCourses.map((course) => (
+                <CarouselItem
+                  key={course.id}
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                >
+                  <CourseCard
+                    course={course}
+                    onClick={() => handleEnrollClick(course)}
+                    actionLabel="Ver Detalhes"
+                    actionIcon={Info}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+            </div>
+          </Carousel>
+        </section>
+      )}
+
+      {newCourses.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">Novos Cursos</h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-4 px-1">
+              {newCourses.map((course) => (
+                <CarouselItem
+                  key={course.id}
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                >
+                  <CourseCard
+                    course={course}
+                    onClick={() => handleEnrollClick(course)}
+                    actionLabel="Adicionar à Lista"
+                    actionIcon={PlusCircle}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+            </div>
+          </Carousel>
+        </section>
+      )}
+
+      {Object.entries(availableCoursesByArea).map(([area, areaCourses]) => (
+        <section key={area} className="space-y-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight px-1">Trilha: {area}</h2>
+          <Carousel opts={{ align: 'start', dragFree: true }} className="w-full">
+            <CarouselContent className="-ml-4 py-4 px-1">
+              {areaCourses.map((course) => (
+                <CarouselItem
+                  key={course.id}
+                  className="pl-4 basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+                >
+                  <CourseCard
+                    course={course}
+                    onClick={() => handleEnrollClick(course)}
+                    actionLabel="Ver Detalhes"
+                    actionIcon={Info}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="hidden lg:block">
+              <CarouselPrevious className="-left-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+              <CarouselNext className="-right-4 h-12 w-12 border-2 bg-background/95 backdrop-blur shadow-sm hover:bg-background" />
+            </div>
+          </Carousel>
+        </section>
+      ))}
 
       <Dialog open={!!enrollCourse} onOpenChange={(o) => !o && setEnrollCourse(null)}>
-        <DialogContent className="sm:max-w-[450px]">
-          <DialogHeader>
-            <DialogTitle className="text-brand">Finalizar Matrícula</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-5 py-4">
-            <h3 className="font-bold text-lg leading-tight">{enrollCourse?.title}</h3>
+        <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden">
+          <div className="h-32 bg-muted relative">
+            {enrollCourse?.thumbnail && (
+              <img
+                src={enrollCourse.thumbnail}
+                className="w-full h-full object-cover"
+                alt="Curso"
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent" />
+          </div>
+          <div className="px-6 pb-6 space-y-5">
+            <DialogHeader className="mt-2">
+              <DialogTitle className="text-brand text-2xl leading-tight">
+                {enrollCourse?.title}
+              </DialogTitle>
+            </DialogHeader>
 
             <div className="space-y-2 border-b pb-4">
               <label className="text-sm font-semibold flex items-center gap-2">
@@ -260,26 +470,28 @@ export default function StudentDashboard() {
               </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-lg border space-y-2">
-              <div className="flex justify-between text-sm text-muted-foreground">
+            <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border space-y-2">
+              <div className="flex justify-between text-sm text-muted-foreground font-medium">
                 <span>Valor Base:</span>
                 <span>R$ {basePrice.toFixed(2)}</span>
               </div>
               {appliedCoupon && (
-                <div className="flex justify-between text-sm text-success font-medium">
+                <div className="flex justify-between text-sm text-success font-bold">
                   <span>Desconto ({appliedCoupon.code}):</span>
                   <span>- R$ {discountAmount.toFixed(2)}</span>
                 </div>
               )}
               <div className="flex justify-between items-center font-bold pt-2 border-t mt-2">
-                <span className="text-brand">Total a Pagar:</span>
+                <span className="text-brand dark:text-white">Total a Pagar:</span>
                 <span className="text-2xl text-primary">R$ {finalPrice.toFixed(2)}</span>
               </div>
             </div>
 
             {enrollCourse?.batches && enrollCourse.batches.length > 0 && (
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-brand">Turma / Ciclo de Ensino</label>
+                <label className="text-sm font-semibold text-brand dark:text-white">
+                  Turma / Ciclo de Ensino
+                </label>
                 <Select value={selectedBatch} onValueChange={setSelectedBatch}>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione a turma desejada" />
@@ -298,8 +510,8 @@ export default function StudentDashboard() {
 
             {finalPrice > 0 && (
               <div className="bg-muted/30 p-4 rounded-lg border border-dashed space-y-3">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Dados de Pagamento (Ambiente Seguro)
+                <p className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                  <Radio className="size-4" /> Pagamento Seguro
                 </p>
                 <Input placeholder="Número do Cartão" />
                 <div className="flex gap-2">
@@ -309,7 +521,10 @@ export default function StudentDashboard() {
               </div>
             )}
 
-            <Button className="w-full text-lg h-12" onClick={handleFinalizeEnrollment}>
+            <Button
+              className="w-full text-lg h-12 font-bold shadow-md"
+              onClick={handleFinalizeEnrollment}
+            >
               Confirmar e Pagar
             </Button>
           </div>
