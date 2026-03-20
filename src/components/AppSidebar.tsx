@@ -23,6 +23,7 @@ import {
   Film,
   Compass,
   MessageSquare,
+  Target,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -39,7 +40,8 @@ const getNavigation = (role?: string) => {
         { name: 'Aulas ao Vivo', href: '/manager/live-classes', icon: Video },
         { name: 'Fórum Institucional', href: '/forum', icon: MessageSquare },
         { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
-        { name: 'Relatórios', href: '/manager/reports', icon: PieChart },
+        { name: 'Relatórios Gerais', href: '/manager/reports', icon: PieChart },
+        { name: 'Relatório KPIs', href: '/manager/kpis', icon: Target },
         { name: 'Financeiro', href: '/manager/finance', icon: CreditCard },
         { name: 'Gerador de Aulas AI', href: '/manager/lesson-generator', icon: Bot },
         { name: 'Comunicações', href: '/manager/notifications', icon: Bell },

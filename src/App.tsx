@@ -42,6 +42,7 @@ import CommissionSettings from '@/pages/manager/CommissionSettings'
 import PaymentSettings from '@/pages/manager/PaymentSettings'
 import StudentDetails from '@/pages/manager/StudentDetails'
 import AppearanceSettings from '@/pages/manager/AppearanceSettings'
+import KPIDashboard from '@/pages/manager/KPIDashboard'
 
 // Shared Commercial
 import CommercialDashboard from '@/pages/manager/CommercialDashboard'
@@ -257,6 +258,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
                 <ManagerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/manager/kpis"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <KPIDashboard />
               </ProtectedRoute>
             }
           />
