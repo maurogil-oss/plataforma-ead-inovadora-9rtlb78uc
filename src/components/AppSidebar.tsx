@@ -24,6 +24,7 @@ import {
   Compass,
   MessageSquare,
   Target,
+  FolderOpen,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
@@ -37,6 +38,7 @@ const getNavigation = (role?: string) => {
         { name: 'Acervo Técnico', href: '/store', icon: LibraryBig },
         { name: 'Gestão Comercial', href: '/manager/commercial', icon: Store },
         { name: 'Cursos', href: '/manager/courses', icon: BookOpen },
+        { name: 'Biblioteca de Arquivos', href: '/manager/media', icon: FolderOpen },
         { name: 'Aulas ao Vivo', href: '/manager/live-classes', icon: Video },
         { name: 'Fórum Institucional', href: '/forum', icon: MessageSquare },
         { name: 'Matrículas', href: '/manager/enrollments', icon: Users },
@@ -53,6 +55,7 @@ const getNavigation = (role?: string) => {
         { name: 'Dashboard', href: '/instructor/dashboard', icon: LayoutDashboard },
         { name: 'Acervo Técnico', href: '/store', icon: LibraryBig },
         { name: 'Gestão Comercial', href: '/instructor/commercial', icon: Store },
+        { name: 'Biblioteca de Arquivos', href: '/instructor/media', icon: FolderOpen },
         { name: 'Aulas ao Vivo', href: '/instructor/live-classes', icon: Video },
         { name: 'Fórum Institucional', href: '/forum', icon: MessageSquare },
         { name: 'Engajamento', href: '/instructor/engagement', icon: Activity },

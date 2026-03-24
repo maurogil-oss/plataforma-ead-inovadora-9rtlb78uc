@@ -17,6 +17,9 @@ import ForumIndex from '@/pages/shared/ForumIndex'
 import ForumTopicList from '@/pages/shared/ForumTopicList'
 import ForumTopicView from '@/pages/shared/ForumTopicView'
 
+// Shared Media Library
+import MediaLibrary from '@/pages/shared/MediaLibrary'
+
 // Student
 import StudentDashboard from '@/pages/student/Dashboard'
 import CoursePlayer from '@/pages/student/CoursePlayer'
@@ -251,6 +254,14 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/instructor/media"
+            element={
+              <ProtectedRoute allowedRoles={['instructor', 'manager', 'admin']}>
+                <MediaLibrary />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Manager/Admin Routes */}
           <Route
@@ -290,6 +301,14 @@ export default function App() {
             element={
               <ProtectedRoute allowedRoles={['manager', 'admin']}>
                 <CourseEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/manager/media"
+            element={
+              <ProtectedRoute allowedRoles={['manager', 'admin']}>
+                <MediaLibrary />
               </ProtectedRoute>
             }
           />

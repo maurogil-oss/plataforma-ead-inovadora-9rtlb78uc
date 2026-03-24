@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { useLmsStore, Course } from '@/stores/lmsStore'
+import { useLmsStore, Course, MediaAsset } from '@/stores/lmsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,7 +19,20 @@ import {
   AccordionContent,
 } from '@/components/ui/accordion'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Plus, Trash2, ArrowLeft, Save, DollarSign } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Plus,
+  Trash2,
+  ArrowLeft,
+  Save,
+  DollarSign,
+  FolderOpen,
+  Search,
+  FileText,
+  Video,
+  Image as ImageIcon,
+  File,
+} from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function CourseEditor() {
@@ -45,6 +58,12 @@ export default function CourseEditor() {
       instructorId: user?.role === 'instructor' ? user.id : '',
     }
   })
+
+  const [mediaSelectLesson, setMediaSelectLesson] = useState<{
+    modId: string
+    lessonId: string
+  } | null>(null)
+  const [mediaSearch, setMediaSearch] = useState('')
 
   if (!course) return <div className="p-8">Curso não encontrado.</div>
 
@@ -86,8 +105,27 @@ export default function CourseEditor() {
     })
   }
 
+  const onSelectAsset = (asset: MediaAsset) => {
+    if (!mediaSelectLesson) return
+    let newType = 'video'
+    if (asset.type === 'pdf') newType = 'pdf'
+    if (asset.type === 'image') newType = 'image'
+    if (asset.type === 'document') newType = 'file'
+
+    updateLesson(mediaSelectLesson.modId, mediaSelectLesson.lessonId, {
+      assetId: asset.id,
+      mediaUrl: asset.url,
+      type: newType,
+    })
+    setMediaSelectLesson(null)
+    toast.success('Arquivo vinculado à aula!')
+  }
+
   const allModules = course.modules
   const allLessons = course.modules.flatMap((m) => m.lessons)
+  const filteredModalAssets = store.mediaAssets.filter((a) =>
+    a.name.toLowerCase().includes(mediaSearch.toLowerCase()),
+  )
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-16">
@@ -100,8 +138,8 @@ export default function CourseEditor() {
           </Button>
           <h1 className="text-2xl font-bold">{isNew ? 'Criar Curso' : 'Editar Curso'}</h1>
         </div>
-        <Button onClick={handleSave}>
-          <Save className="mr-2 size-4" /> Salvar
+        <Button onClick={handleSave} className="font-bold shadow-md">
+          <Save className="mr-2 size-4" /> Salvar Curso
         </Button>
       </div>
 
@@ -208,6 +246,7 @@ export default function CourseEditor() {
           <h2 className="text-lg font-semibold">Estrutura de Módulos & Trilhas</h2>
           <Button
             variant="outline"
+            className="font-bold"
             onClick={() =>
               setCourse({
                 ...course,
@@ -334,6 +373,7 @@ export default function CourseEditor() {
                                 <SelectItem value="image">Imagem</SelectItem>
                                 <SelectItem value="text">Texto Rico</SelectItem>
                                 <SelectItem value="exam">Avaliação / Prova</SelectItem>
+                                <SelectItem value="file">Arquivo Genérico</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -343,14 +383,34 @@ export default function CourseEditor() {
                               <label className="text-xs font-semibold">
                                 URL da Mídia / Arquivo
                               </label>
-                              <Input
-                                className="h-8 bg-background"
-                                placeholder="https://..."
-                                value={lesson.mediaUrl || ''}
-                                onChange={(e) =>
-                                  updateLesson(mod.id, lesson.id, { mediaUrl: e.target.value })
-                                }
-                              />
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  className="h-8 bg-background flex-1"
+                                  placeholder="https://..."
+                                  value={lesson.mediaUrl || ''}
+                                  onChange={(e) =>
+                                    updateLesson(mod.id, lesson.id, {
+                                      mediaUrl: e.target.value,
+                                      assetId: undefined,
+                                    })
+                                  }
+                                />
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() =>
+                                    setMediaSelectLesson({ modId: mod.id, lessonId: lesson.id })
+                                  }
+                                  className="h-8 shrink-0 font-bold text-primary"
+                                >
+                                  <FolderOpen className="mr-2 size-3" /> Biblioteca
+                                </Button>
+                              </div>
+                              {lesson.assetId && (
+                                <p className="text-[10px] text-primary mt-1 font-semibold flex items-center gap-1">
+                                  <FolderOpen className="size-3" /> Arquivo vinculado à Biblioteca
+                                </p>
+                              )}
                             </div>
                           )}
                         </div>
@@ -424,7 +484,12 @@ export default function CourseEditor() {
                   ))}
                 </div>
                 <div className="p-4 bg-muted/5 border-t">
-                  <Button variant="secondary" size="sm" onClick={() => addLesson(mod.id)}>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => addLesson(mod.id)}
+                    className="font-bold"
+                  >
                     <Plus className="mr-2 size-3" /> Adicionar Aula
                   </Button>
                 </div>
@@ -433,6 +498,61 @@ export default function CourseEditor() {
           ))}
         </Accordion>
       </div>
+
+      <Dialog open={!!mediaSelectLesson} onOpenChange={(o) => !o && setMediaSelectLesson(null)}>
+        <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col p-6">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <FolderOpen className="size-5 text-primary" /> Selecionar Arquivo da Biblioteca
+            </DialogTitle>
+          </DialogHeader>
+          <div className="relative mb-4 shrink-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar arquivo..."
+              className="pl-9 h-11"
+              value={mediaSearch}
+              onChange={(e) => setMediaSearch(e.target.value)}
+            />
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredModalAssets.map((asset) => (
+              <Card
+                key={asset.id}
+                className="cursor-pointer hover:border-primary border-transparent border bg-muted/30 transition-colors flex flex-col group"
+                onClick={() => onSelectAsset(asset)}
+              >
+                <div className="h-24 bg-muted flex items-center justify-center border-b">
+                  {asset.type === 'video' && (
+                    <Video className="size-8 text-slate-400 group-hover:scale-110 transition-transform" />
+                  )}
+                  {asset.type === 'pdf' && (
+                    <FileText className="size-8 text-slate-400 group-hover:scale-110 transition-transform" />
+                  )}
+                  {asset.type === 'image' && (
+                    <ImageIcon className="size-8 text-slate-400 group-hover:scale-110 transition-transform" />
+                  )}
+                  {asset.type === 'document' && (
+                    <File className="size-8 text-slate-400 group-hover:scale-110 transition-transform" />
+                  )}
+                </div>
+                <CardContent className="p-3">
+                  <p className="font-bold text-sm line-clamp-2 leading-tight mb-1">{asset.name}</p>
+                  <p className="text-[10px] text-muted-foreground uppercase font-semibold">
+                    {asset.type}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+            {filteredModalAssets.length === 0 && (
+              <div className="col-span-full py-12 text-center text-muted-foreground">
+                <FolderOpen className="size-10 mx-auto mb-2 opacity-30" />
+                <p>Nenhum arquivo encontrado.</p>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -2,6 +2,18 @@ import { create } from 'zustand'
 
 export type LessonType = 'video' | 'text' | 'exam' | 'pdf' | 'excel' | 'audio' | 'image' | 'file'
 export type QuestionType = 'single' | 'multiple' | 'essay'
+export type MediaType = 'video' | 'pdf' | 'image' | 'document'
+
+export interface MediaAsset {
+  id: string
+  name: string
+  description?: string
+  type: MediaType
+  url: string
+  tags: string[]
+  uploadDate: string
+  sizeBytes: number
+}
 
 export interface BankQuestion {
   id: string
@@ -28,6 +40,7 @@ export interface Lesson {
   type: LessonType
   content?: string
   mediaUrl?: string
+  assetId?: string
   downloadable?: boolean
   fileUrl?: string
   examConfig?: ExamConfig
@@ -166,7 +179,7 @@ export interface ThemeSettings {
 
 export interface ForumTopic {
   id: string
-  forumId: string // 'general' or courseId
+  forumId: string
   authorId: string
   title: string
   content: string
@@ -181,6 +194,27 @@ export interface ForumReply {
   content: string
   createdAt: string
 }
+
+const MOCK_MEDIA: MediaAsset[] = [
+  {
+    id: 'a1',
+    name: 'Apresentação_Visão_Zero.mp4',
+    type: 'video',
+    url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+    tags: ['Introdução', 'Vídeo'],
+    uploadDate: new Date(Date.now() - 86400000).toISOString(),
+    sizeBytes: 15400000,
+  },
+  {
+    id: 'a2',
+    name: 'Manual_de_Sinalizacao_Urbana_2025.pdf',
+    type: 'pdf',
+    url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    tags: ['Manual', 'PDF', 'Técnico'],
+    uploadDate: new Date(Date.now() - 186400000).toISOString(),
+    sizeBytes: 3200000,
+  },
+]
 
 const MOCK_QUESTIONS: BankQuestion[] = [
   {
@@ -228,6 +262,7 @@ const MOCK_COURSES: Course[] = [
             type: 'video',
             content: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
             mediaUrl: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+            assetId: 'a1',
           },
           {
             id: 'l2',
@@ -236,6 +271,7 @@ const MOCK_COURSES: Course[] = [
             mediaUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
             downloadable: true,
             prerequisiteLessonIds: ['l1'],
+            assetId: 'a2',
           },
           {
             id: 'l_exam',
@@ -455,6 +491,8 @@ interface LMSStore {
   forumTopics: ForumTopic[]
   forumReplies: ForumReply[]
 
+  mediaAssets: MediaAsset[]
+
   addCourse: (c: Course) => void
   updateCourse: (c: Course) => void
   deleteCourse: (id: string) => void
@@ -499,6 +537,10 @@ interface LMSStore {
 
   addForumTopic: (t: ForumTopic) => void
   addForumReply: (r: ForumReply) => void
+
+  addMediaAsset: (m: MediaAsset) => void
+  updateMediaAsset: (m: MediaAsset) => void
+  deleteMediaAsset: (id: string) => void
 }
 
 const checkCourseCompletion = (enrollment: Enrollment, course: Course): Enrollment => {
@@ -632,6 +674,8 @@ export const useLmsStore = create<LMSStore>((set) => ({
       createdAt: new Date().toISOString(),
     },
   ],
+
+  mediaAssets: MOCK_MEDIA,
 
   addForumTopic: (t) => set((s) => ({ forumTopics: [...s.forumTopics, t] })),
   addForumReply: (r) =>
@@ -856,4 +900,9 @@ export const useLmsStore = create<LMSStore>((set) => ({
   addWebhook: (w) => set((s) => ({ webhooks: [...s.webhooks, w] })),
   deleteWebhook: (id) => set((s) => ({ webhooks: s.webhooks.filter((w) => w.id !== id) })),
   updateThemeSettings: (s) => set({ themeSettings: s }),
+
+  addMediaAsset: (m) => set((s) => ({ mediaAssets: [m, ...s.mediaAssets] })),
+  updateMediaAsset: (m) =>
+    set((s) => ({ mediaAssets: s.mediaAssets.map((x) => (x.id === m.id ? m : x)) })),
+  deleteMediaAsset: (id) => set((s) => ({ mediaAssets: s.mediaAssets.filter((x) => x.id !== id) })),
 }))
